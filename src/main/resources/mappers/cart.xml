@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.CartDao">
+	<select id="getList" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
+	SELECT
+		t.*,
+		CASE
+			WHEN p.deli_cost > 0 THEN
+			<!-- 묶음 배송비가 존재할 경우 그룹별로 처음에만 배송비 설정, 나머지는 0원 설정 -->
+				CASE
+					WHEN t.seq=p.min_package_seq THEN p.deli_cost
+					ELSE 0
+				END
+			ELSE t.calc_deli_cost
+		END deliCost,
+		IFNULL(p.deli_cost,0) packageDeliCost
+	FROM (
+		SELECT
+			i.min_cnt AS limitCnt,
+			c.seq,
+			c.member_seq AS memberSeq,
+			c.option_value_seq AS optionValueSeq,
+			c.order_cnt AS count,
+			c.direct_flag AS directFlag,
+			c.reg_date AS regDate,
+			ov.value_name AS valueName,
+			ov.option_price AS optionPrice,
+			ov.stock_cnt AS stockCount,
+			ov.stock_flag AS stockFlag,
+			o.option_name AS optionName,
+			i.seq AS itemSeq,
+			i.img1 AS img1,
+			i.name,
+			i.sell_price AS sellPrice,
+			i.seller_seq AS sellerSeq,
+			i.tax_code AS taxCode,
+			u.name AS sellerName,
+			s.jachigu_code AS jachiguCode,
+			(SELECT COUNT(*) FROM sm_item_option_value WHERE option_seq=ov.option_seq ) AS optionCount,
+			i.deli_type_code AS deliTypeCode,
+			<!-- 조건부 무료 배송 조건에 해당될 경우, 배송비 0원 -->
+			<!-- CASE
+			  WHEN i.deli_free_amount > 0 AND f.sum_price >= i.deli_free_amount THEN 0
+			  ELSE i.deli_cost
+			END AS calc_deli_cost, -->
+			0 AS calc_deli_cost,
+			c.deli_prepaid_flag AS deliPrepaidFlag,
+			i.deli_package_flag AS deliPackageFlag,
+			0 AS deliFreeAmount, <!-- i.deli_free_amount AS deliFreeAmount, -->
+			ic.cate_name AS cateLv1Name
+        FROM
+			sm_cart c INNER JOIN
+			sm_item_option_value ov ON c.option_value_seq=ov.seq INNER JOIN
+			sm_item_option o       ON ov.option_seq=o.seq AND o.show_flag='Y' INNER JOIN
+			sm_item i ON c.item_seq=i.seq LEFT OUTER JOIN
+			sm_item_category ic ON (i.cate_lv1_seq=ic.seq) LEFT OUTER JOIN
+			sm_user u ON i.seller_seq=u.seq LEFT OUTER JOIN
+			sm_seller s ON u.seq = s.seq LEFT OUTER JOIN
+			sm_member me ON c.member_seq=me.seq LEFT OUTER JOIN (
+			<!-- 회원별 동일상품 총 주문 금액 가져오기(조건부 무료 배송 여부 체크) -->
+			SELECT
+				c.item_seq, SUM((i.sell_price+o.option_price) * c.order_cnt) sum_price
+			FROM
+				sm_cart c LEFT OUTER JOIN
+				sm_item i ON (c.item_seq=i.seq) LEFT OUTER JOIN
+				sm_item_option_value o ON (c.option_value_seq=o.seq)
+			WHERE i.status_code='Y' 
+			<if test="cartSeqs != ''">
+				AND c.seq IN (${cartSeqs})
+			</if>
+			<choose>
+				<when test="memberSeq eq null and notLoginKey != ''">
+				AND c.not_login_key = #{notLoginKey} <!-- 비회원 -->
+				</when>
+				<otherwise>
+				AND c.member_seq=#{memberSeq}
+				</otherwise>
+			</choose>
+				AND i.deli_type_code='10'  <!-- 착불 배송 -->
+				AND i.deli_cost > 0        <!-- 배송비 존재 -->
+				AND i.deli_free_amount > 0 <!-- 무료배송 조건 금액 존재 -->
+			GROUP BY c.item_seq
+			) f ON c.item_seq=f.item_seq
+		WHERE i.status_code='Y'
+		<if test="directFlag != ''">
+			AND c.direct_flag=#{directFlag}
+		</if>
+		<if test="cartSeqs != ''">
+			AND c.seq IN (${cartSeqs})
+		</if>
+		<choose>
+			<when test="memberSeq eq null and notLoginKey != ''">
+			AND c.not_login_key = #{notLoginKey} <!-- 비회원 -->
+			</when>
+			<otherwise>
+			AND c.member_seq=#{memberSeq}
+			</otherwise>
+		</choose>
+		) t LEFT OUTER JOIN (
+			<!-- 판매자 묶음배송비 가져오기 -->
+			SELECT
+				i.seller_seq,
+				i.deli_package_flag,
+				0 AS deli_cost, <!-- i.deli_cost, -->
+				MIN(c.seq) AS min_package_seq
+			FROM
+				sm_cart c LEFT OUTER JOIN
+				sm_item i ON (c.item_seq=i.seq)
+			WHERE i.status_code='Y'	
+				AND direct_flag='N'
+			<if test="cartSeqs != ''">
+				AND c.seq IN (${cartSeqs})
+			</if>
+			<choose>
+				<when test="memberSeq eq null and notLoginKey != ''">
+				AND c.not_login_key = #{notLoginKey} <!-- 비회원 -->
+				</when>
+				<otherwise>
+				AND c.member_seq=#{memberSeq}
+				</otherwise>
+			</choose>
+				AND c.direct_flag='N'       <!-- 장바구니 주문 -->
+				AND i.deli_type_code='10'   <!-- 착불 배송 -->
+				AND i.deli_cost > 0         <!-- 배송비 존재 -->
+				AND i.deli_package_flag='Y' <!-- 묶음 배송 가능 -->
+				AND IFNULL(i.deli_free_amount,0) = 0 <!-- 무료배송 조건금액 0원 -->
+			GROUP BY
+				i.seller_seq, i.deli_package_flag, i.deli_cost
+			HAVING COUNT(*) >= 2
+		) p ON (t.sellerSeq=p.seller_seq AND t.deliPackageFlag=p.deli_package_flag AND t.calc_deli_cost=p.deli_cost) 
+		ORDER BY t.sellerSeq ASC, t.deliPackageFlag ASC, t.calc_deli_cost ASC, t.seq ASC
+	</select>
+
+  <select id="getListTotalCount" parameterType="com.smpro.vo.ItemVo" resultType="int">
+    SELECT
+      COUNT(*) AS cnt
+    FROM
+      sm_cart a INNER JOIN
+      sm_item_option_value b ON a.option_value_seq=b.seq INNER JOIN
+      sm_item_option c       ON b.option_seq=c.seq INNER JOIN
+      sm_item d              ON c.item_seq=d.seq
+    WHERE
+      a.member_seq=#{memberSeq}
+      AND d.status_code='Y'
+      <if test="directFlag != ''">
+      	AND a.direct_flag=#{directFlag}
+	  	</if>
+  </select>
+
+  <select id="getVo" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
+    SELECT
+      a.seq,
+      a.member_seq AS memberSeq,
+      a.option_value_seq AS optionValueSeq,
+      a.order_cnt AS count,
+      a.direct_flag AS directFlag,
+      a.reg_date AS regDate,
+      a.deli_prepaid_flag AS deliPrepaidFlag,
+      b.value_name AS valueName,
+      b.option_price AS optionPrice,
+      b.stock_cnt AS stockCount,
+      c.option_name AS optionName,
+	  d.sell_price AS sellPrice,
+	  d.cate_lv1_seq AS categoryLv1Seq,
+      d.seq AS itemSeq,
+      d.img1 AS img1,
+      d.name,
+      d.supply_price AS supplyPrice,
+      d.supply_master_price AS supplyMasterPrice,
+      d.seller_seq AS sellerSeq,
+      d.tax_code AS taxCode,
+      d.deli_type_code AS deliTypeCode,
+      d.deli_cost AS deliCost,
+      d.deli_free_amount AS deliFreeAmount,
+      d.deli_prepaid_flag AS deliPrepaidFlag,
+      d.deli_package_flag AS deliPackageFlag,
+      e.name AS sellerName,
+      (SELECT COUNT(*) FROM sm_item_option_value WHERE option_seq=b.option_seq ) AS optionCount,
+      h.name AS masterName,
+      h.seq AS masterSeq
+    FROM
+      sm_cart a INNER JOIN
+      sm_item_option_value b ON a.option_value_seq=b.seq INNER JOIN
+      sm_item_option c       ON b.option_seq=c.seq AND c.show_flag='Y' INNER JOIN
+	  sm_item d ON c.item_seq=d.seq LEFT OUTER JOIN
+      sm_user e              ON d.seller_seq=e.seq AND e.type_code='S' LEFT OUTER JOIN
+      sm_seller g            ON d.seller_seq=g.seq LEFT OUTER JOIN
+      sm_user h              ON g.master_seq=h.seq
+    WHERE a.seq=#{seq}
+  </select>
+
+	<insert id="insertVo" parameterType="com.smpro.vo.ItemVo" useGeneratedKeys="true" keyProperty="seq">
+		INSERT INTO sm_cart (
+			member_seq,
+			option_value_seq,
+			order_cnt,
+			direct_flag,
+			item_seq,
+			reg_date,
+			deli_prepaid_flag,
+			not_login_key
+		) VALUES (
+			#{memberSeq},
+			#{optionValueSeq},
+			#{count},
+			#{directFlag},
+			#{itemSeq},
+			NOW(), 
+			#{deliPrepaidFlag},
+			#{notLoginKey}
+		)
+	</insert>
+
+  <update id="updateVo" parameterType="com.smpro.vo.ItemVo">
+    UPDATE sm_cart SET
+      order_cnt=#{count}
+      , direct_flag='N'
+      <!-- 업데이트된다면 즉시구매를 통해서 오는 상품은 아닐 것이다 -->
+      <if test="deliPrepaidFlag != ''">
+        , deli_prepaid_flag=#{deliPrepaidFlag}
+      </if>
+    WHERE seq=#{seq}
+  </update>
+
+  <delete id="deleteVo" parameterType="com.smpro.vo.ItemVo">
+    DELETE FROM sm_cart WHERE seq=#{seq}
+  </delete>
+  
+  <!-- 장바구니 3일 지난 상품 자동 삭제 -->
+  <delete id="deleteBatch">
+  	DELETE FROM sm_cart
+	WHERE
+		DATE_ADD(now(), INTERVAL -3 DAY) > reg_date <!-- 현재 시점에서 3일이 지난 건-->
+  </delete>
+</mapper>

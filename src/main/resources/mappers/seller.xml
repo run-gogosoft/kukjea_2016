@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.SellerDao">
+	<insert id="regSellerData" parameterType="com.smpro.vo.SellerVo">
+		INSERT INTO sm_seller (
+			seq, ceo_name, biz_no, biz_type, biz_kind,
+			total_sales, amount_of_worker, tax_type_flag,
+			tel, fax, postcode, addr1, addr2,
+			sales_name, sales_tel, sales_cell, sales_email,
+			account_bank, account_no, account_owner,
+			default_deli_company, return_name, return_cell, return_postcode, 
+			return_addr1, return_addr2, intro, main_item, social_activity,
+			adjust_name, adjust_email, adjust_tel, jachigu_code ,auth_category
+		) VALUES (
+			#{seq}, #{ceoName}, #{bizNo}, #{bizType}, #{bizKind},
+			#{totalSales}, #{amountOfWorker}, #{taxTypeFlag},
+			#{tel}, #{fax}, #{postcode}, #{addr1}, #{addr2},
+			#{salesName}, #{salesTel}, #{salesCell}, #{salesEmail},
+			#{accountBank}, #{accountNo}, #{accountOwner},
+			#{defaultDeliCompany}, #{returnName}, #{returnCell}, #{returnPostCode},
+			#{returnAddr1}, #{returnAddr2}, #{intro}, #{mainItem}, #{socialActivity},
+			#{adjustName}, #{adjustEmail}, #{adjustTel}, #{jachiguCode}, #{authCategory}
+		)
+	</insert>
+	
+	<update id="updateComment" parameterType="com.smpro.vo.SellerVo">
+		UPDATE sm_seller SET
+			comment = #{comment}
+		WHERE
+			seq=#{seq}
+	</update>
+
+	<!--총판/판매자 정보 수정-->
+	<update id="modUserData" parameterType="com.smpro.vo.SellerVo">
+		UPDATE sm_user SET
+			<if test="name != ''">
+				<!-- 법인명 값이 넘어올 경우만 수정 -->
+				name=#{name},
+			</if>
+			<if test="nickname != ''">
+				<!-- 상점명 값이 넘어올 경우만 수정 -->
+				nickname=#{nickname},
+			</if>
+			<if test="password != ''">
+				<!-- 패스워드 값이 넘어올 경우만 수정 -->
+				password=#{password},
+			</if>
+			mod_date=NOW()
+		WHERE seq=#{seq}
+	</update>
+	<update id="modSellerData" parameterType="com.smpro.vo.SellerVo">
+		UPDATE sm_seller SET
+			ceo_name=#{ceoName}, biz_type=#{bizType}, biz_kind=#{bizKind},
+			total_sales=#{totalSales}, amount_of_worker=#{amountOfWorker}, tax_type_flag=#{taxTypeFlag},
+			tel=#{tel}, fax=#{fax}, postcode=#{postcode}, addr1=#{addr1}, addr2=#{addr2},
+			sales_name=#{salesName}, sales_tel=#{salesTel}, sales_cell=#{salesCell}, sales_email=#{salesEmail},
+			account_bank=#{accountBank}, account_no=#{accountNo}, account_owner=#{accountOwner},
+			default_deli_company=#{defaultDeliCompany}, return_name=#{returnName}, return_cell=#{returnCell}, return_postcode=#{returnPostCode},
+			return_addr1=#{returnAddr1}, return_addr2=#{returnAddr2}, intro=#{intro}, main_item=#{mainItem}, social_activity=#{socialActivity},
+			adjust_name=#{adjustName}, adjust_email=#{adjustEmail}, adjust_tel=#{adjustTel}, jachigu_code=#{jachiguCode}, auth_category=#{authCategory}
+			<if test="loginType eq 'A'.toString() and bizNo != ''">
+			<!-- 관리자일 경우에만 사업자번호를 수정할 수 있다. -->
+			, biz_no=#{bizNo}
+			</if>
+		WHERE seq=#{seq}
+	</update>
+
+	<!-- 승인/폐점 처리 -->
+	<update id="updateUserStatus" parameterType="com.smpro.vo.SellerVo">
+		UPDATE sm_user SET
+			status_code=#{statusCode}, mod_date=NOW()
+		WHERE seq=#{seq}
+	</update>
+	<update id="updateSellerStatus" parameterType="com.smpro.vo.SellerVo">
+		UPDATE sm_seller SET
+	<choose>
+		<when test="statusCode eq 'Y'.toString()">
+			approval_date=NOW()
+		</when>
+		<when test="statusCode eq 'N'.toString()">
+			stop_date=NOW()
+		</when>
+		<when test="statusCode eq 'X'.toString()">
+			close_date=NOW()
+		</when>
+	</choose>
+		WHERE seq=#{seq}
+	</update>
+
+	<!--총판/판매자 리스트-->
+	<select id="getList" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.SellerVo">
+		SELECT
+			U.seq,
+			U.id,
+			U.name,
+			U.nickname,
+			U.grade_code AS gradeCode,
+			U.status_code AS statusCode,
+			S.tax_type_flag AS taxTypeFlag,
+			S.ceo_name AS ceoName,
+			S.tel,
+			S.sales_name AS salesName,
+			S.sales_tel  AS salesTel,
+			S.sales_cell  AS salesCell,
+			S.approval_date  AS approvalDate,
+			S.intro,
+			U.type_code AS typeCode,
+			S.biz_no AS bizNo,
+			S.biz_type AS bizType,
+			S.biz_kind AS bizKind,
+			S.total_sales AS totalSales,
+			S.amount_of_worker AS amountOfWorker,
+			S.fax,
+			S.postcode,
+			S.addr1,
+			S.addr2,
+			(SELECT name FROM sm_common WHERE group_code=8 AND value=U.grade_code) gradeText,
+			(SELECT name FROM sm_common WHERE group_code=1 AND value=U.status_code) statusText,
+			(SELECT count(*) FROM sm_item i WHERE i.seller_seq=U.seq) AS totalItemCount,
+			(SELECT count(*) FROM sm_item i WHERE i.seller_seq=U.seq AND i.status_code='Y') AS sellItemCount,
+			U.reg_date   AS regDate,
+			CASE
+       		  WHEN
+          	    (SELECT count(*) FROM sm_filename WHERE parent_code='seller' AND sm_filename.parent_seq=S.seq) > 0
+          	    THEN 'Y'
+        	  ELSE 'N'
+      	  	END isFile,
+      	  	S.auth_category AS authCategory
+		FROM
+			sm_user U LEFT OUTER JOIN
+			sm_seller S ON U.seq=S.seq
+		WHERE U.type_code=#{typeCode}
+		<if test="loginType eq 'D'.toString()">
+			<!-- 총판 로그인 경우 해당 총판 하위 판매자만 보이도록 조건 설정-->
+			AND S.master_seq=#{loginSeq}
+		</if>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(U.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="jachiguCode != null and jachiguCode != ''">
+			AND jachigu_code = #{jachiguCode}
+		</if>
+		<if test="statusCode != ''">
+			AND U.status_code = #{statusCode}
+		</if>
+		<if test="gradeCode != null">
+			AND U.grade_code = #{gradeCode}
+		</if>
+		<if test="authCategoryArr != null and authCategoryArr.length != 0">
+			AND ( 1=1
+			<foreach collection="authCategoryArr" item="item" >
+				AND S.auth_category LIKE CONCAT('%',#{item},'%')
+			</foreach>
+			)
+		</if>
+		<if test="findword != ''">
+			<choose>
+				<when test="search eq 'id'">AND U.id LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'name'">AND U.name LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'nickname'">AND U.nickname LIKE CONCAT('%',#{findword},'%')</when>
+			</choose>
+		</if>
+		ORDER BY U.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	<!--총판/판매자 리스트 레코드 수-->
+	<select id="getListCount" parameterType="com.smpro.vo.SellerVo" resultType="int">
+		SELECT COUNT(*)	FROM sm_user u
+		LEFT OUTER JOIN sm_seller s ON u.seq=s.seq
+		WHERE u.type_code=#{typeCode}
+		<if test="loginType eq 'D'.toString()">
+			<!-- 총판 로그인 경우 해당 총판 하위 판매자만 보이도록 조건 설정-->
+			AND s.master_seq=#{loginSeq}
+		</if>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(u.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="jachiguCode != null and jachiguCode != ''">
+			AND jachigu_code = #{jachiguCode}
+		</if>
+		<if test="statusCode != ''">
+			AND u.status_code = #{statusCode}
+		</if>
+		<if test="gradeCode != null">
+			AND u.grade_code = #{gradeCode}
+		</if>
+		<if test="authCategoryArr != null and authCategoryArr.length != 0">
+			AND ( 1=1
+			<foreach collection="authCategoryArr" item="item" >
+				AND s.auth_category LIKE CONCAT('%',#{item},'%')
+			</foreach>
+			)
+		</if>
+		<if test="findword != ''">
+			<choose>
+				<when test="search eq 'id'">AND u.id LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'name'">AND u.name LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'nickname'">AND u.nickname LIKE CONCAT('%',#{findword},'%')</when>
+			</choose>
+		</if>
+	</select>
+	<!--판매자 상세 정보-->
+	<select id="getData" parameterType="int" resultType="com.smpro.vo.SellerVo">
+		SELECT
+			u.seq,
+			u.id,
+			u.name,
+			u.type_code AS typeCode,
+			u.grade_code AS gradeCode,
+			u.status_code AS statusCode,
+			s.tax_type_flag AS taxTypeFlag,
+			(SELECT name FROM sm_common WHERE group_code=1 AND value=u.status_code) statusText,
+			(SELECT name FROM sm_common WHERE group_code=8 AND value=u.grade_code) gradeText,
+			s.ceo_name AS ceoName,
+			s.biz_no AS bizNo,
+			s.biz_type AS bizType,
+			s.biz_kind AS bizKind,
+			s.total_sales AS totalSales,
+			s.amount_of_worker AS amountOfWorker,
+			s.tel,
+			s.fax,
+			s.postcode,
+			s.addr1,
+			s.addr2,
+			s.sales_name AS salesName,
+			s.sales_tel AS salesTel,
+			s.sales_cell AS salesCell,
+			s.sales_email AS salesEmail,
+			s.account_bank AS accountBank,
+			s.account_no AS accountNo,
+			s.account_owner AS accountOwner,
+			s.default_deli_company AS defaultDeliCompany,
+			s.return_name AS returnName,
+			s.return_cell AS returnCell,
+			s.return_postcode AS returnPostCode,
+			s.return_addr1 AS returnAddr1,
+			s.return_addr2 AS returnAddr2,
+			s.intro AS intro,
+			s.main_item AS mainItem,
+			s.social_activity AS socialActivity,
+			u.nickname,
+			s.master_seq AS masterSeq,
+			(SELECT name FROM sm_user WHERE seq=s.master_seq) AS masterName,
+			s.approval_date AS approvalDate,
+			u.mod_date AS modDate,
+			u.reg_date AS regDate,
+			s.adjust_name AS adjustName,
+			s.adjust_email AS adjustEmail,
+			s.adjust_tel AS adjustTel,
+			s.jachigu_code AS jachiguCode,
+			s.comment AS comment,
+			s.auth_category AS authCategory,
+			CASE
+       		  WHEN
+          	    (SELECT count(*) FROM sm_filename WHERE parent_code='seller' AND sm_filename.parent_seq=s.seq) > 0
+          	    THEN 'Y'
+        	  ELSE 'N'
+      	  	END isFile
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_seller s ON (u.seq=s.seq)
+		WHERE u.seq=#{seq}
+	</select>
+	<!--판매자 상세 정보 간략-->
+	<select id="getVoSimple" parameterType="int" resultType="com.smpro.vo.SellerVo">
+		SELECT
+			u.seq,
+			u.id,
+			u.name
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_seller s ON (u.seq=s.seq)
+		WHERE u.seq=#{seq}
+	</select>
+	<!-- 간략 리스트 -->
+	<select id="getSimpleList" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.UserVo">
+		SELECT
+			seq, name
+		FROM
+			sm_user
+		WHERE 1=1
+		<if test="statusCode != ''">
+			AND status_code=#{statusCode}
+		</if>
+		<if test="typeCode != ''">
+			AND type_code=#{typeCode}
+		</if>
+		ORDER BY seq DESC
+	</select>
+	<!-- 사업자 번호 체크 -->
+	<select id="getBizNoCnt" parameterType="String" resultType="int">
+		SELECT COUNT(*) cnt FROM sm_seller WHERE biz_no=#{bizNo}
+	</select>
+
+
+	<!--요청을 위한 임시 매핑(지워야함)-->
+	<select id="getSellerSeq" parameterType="String" resultType="com.smpro.vo.UserVo">
+		SELECT
+			u.seq
+		FROM
+			sm_user u
+		WHERE
+			u.id=#{id}
+		AND u.type_code='S'
+	</select>
+	
+	<select id="getShopSellerSeq" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.UserVo">
+		SELECT
+			u.seq
+		FROM
+			sm_user u
+		WHERE u.id=#{id}
+		AND u.password=#{password}
+		AND u.type_code='S'
+		AND u.status_code IN ('H', 'N')
+	</select>
+	
+	<!-- 주간 판매자 승인 -->
+	<select id="getSellerRegCntForWeek" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_seller s ON (u.seq=s.seq)
+		WHERE
+			u.status_code='Y'
+			AND s.approval_date >= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -7 DAY), '%Y%m%d')
+	</select>
+	
+	<!-- 판매자 시퀀스 쿼리(함께누리몰 데이터 이관용) -->
+	<select id="getSeqByOldSeq" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT seq FROM sm_user WHERE type_code='S' AND old_seq=#{value}
+	</select>
+	
+	<delete id="deleteSeller" parameterType="java.lang.Integer">
+		DELETE FROM sm_user WHERE seq=#{value} AND type_code='S' AND status_code='H'
+	</delete>
+</mapper>

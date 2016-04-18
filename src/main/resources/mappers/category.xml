@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.CategoryDao">
+	<select id="getList" parameterType="com.smpro.vo.CategoryVo" resultType="com.smpro.vo.CategoryVo">
+		SELECT
+			  seq
+			, parent_seq AS parentSeq
+			, cate_name AS name
+			, order_no AS orderNo
+			, depth
+			, show_flag AS showFlag
+			, mod_date AS modDate
+			, reg_date AS regDate
+		FROM sm_item_category
+		WHERE 1=1
+		<if test="depth > 0">
+			AND depth=#{depth}
+		</if>
+		<if test="parentSeq != null">
+			AND parent_seq=#{parentSeq}
+		</if>
+		<if test="showFlag != ''">
+			AND show_flag=#{showFlag}
+		</if>
+		ORDER BY order_no ASC
+	</select>
+	<select id="getListSimple" parameterType="com.smpro.vo.CategoryVo" resultType="com.smpro.vo.CategoryVo">
+		SELECT seq, cate_name AS name, show_flag AS showFlag FROM sm_item_category
+		WHERE 1=1
+		<if test="depth > 0">
+			AND depth=#{depth}
+		</if>
+		<if test="parentSeq != null">
+			AND parent_seq=#{parentSeq}
+		</if>
+		<if test="showFlag != ''">
+			AND show_flag=#{showFlag}
+		</if>
+		ORDER BY order_no ASC
+  </select>
+	<select id="getVo" parameterType="int" resultType="com.smpro.vo.CategoryVo">
+		SELECT
+			  seq
+			, parent_seq AS parentSeq
+			, cate_name AS name
+			, order_no AS orderNo
+			, depth
+			, show_flag AS showFlag
+			, mod_date AS modDate
+			, reg_date AS regDate
+		FROM sm_item_category
+		WHERE seq=#{value}
+	</select>
+	<select id="getLv1Value" parameterType="int" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_item_category
+		WHERE
+			seq=#{seq}
+			AND depth=1
+	</select>
+	<select id="getLv2Value" parameterType="int" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_item_category
+		WHERE
+			seq=#{seq}
+			AND depth=2
+	</select>
+	<select id="getVoSimple" parameterType="int" resultType="com.smpro.vo.CategoryVo">
+		SELECT cate_name AS name FROM sm_item_category
+		WHERE seq=#{value}
+	</select>
+
+	<select id="getListForSearch" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.CategoryVo">
+		SELECT t.*	FROM(
+			SELECT
+				c.seq,
+				c.parent_seq AS parentSeq,
+				c.depth,
+				c.cate_name AS NAME,
+				(SELECT COUNT(*) FROM sm_item i LEFT OUTER JOIN sm_seller s ON(i.seller_seq=s.seq) LEFT OUTER JOIN sm_user u ON(s.seq=u.seq)
+				<choose>
+					<when test="cateLv1Seq == null and cateLv2Seq == null and cateLv3Seq == null">
+						WHERE i.cate_lv1_seq=c.seq
+					</when>
+					<when test="cateLv1Seq != null and cateLv2Seq == null">
+						WHERE i.cate_lv2_seq=c.seq
+					</when>
+					<when test="cateLv2Seq != null">
+						WHERE i.cate_lv3_seq=c.seq
+					</when>
+					<when test="cateLv3Seq != null">
+						WHERE i.cate_lv3_seq=c.seq
+					</when>
+				</choose>
+				AND i.status_code=#{statusCode}
+				<if test="jachiguCode != ''">
+					AND s.jachigu_code=#{jachiguCode}
+ 				</if>
+				<choose>
+					<when test="startPrice == 0 and endPrice == 0">
+					</when>
+					<when test="endPrice == 0">
+						AND i.sell_price >= #{startPrice}
+					</when>
+					<when test="startPrice == 0">
+						<![CDATA[ AND i.sell_price <= #{endPrice} ]]>
+					</when>
+					<when test="startPrice != 0 and endPrice != 0">
+						AND i.sell_price BETWEEN #{startPrice} AND #{endPrice}
+					</when>
+				</choose>
+				AND (LOWER(i.NAME) LIKE CONCAT('%',LOWER(#{name}),'%') OR LOWER(u.name) LIKE CONCAT('%',LOWER(#{name}),'%'))
+				<if test="memberTypeCode != 'P'.toString()">
+					AND i.cate_lv1_seq != 53
+				</if>
+				) AS count
+			FROM
+				sm_item_category c
+			WHERE show_flag='Y'
+			<choose>
+				<when test="cateLv1Seq == null and cateLv2Seq == null and cateLv3Seq == null">
+					AND depth='1'
+				</when>
+				<when test="cateLv1Seq != null and cateLv2Seq == null">
+					AND depth='2'
+					AND parent_seq=#{cateLv1Seq}
+				</when>
+				<when test="cateLv2Seq != null">
+					AND depth='3'
+					AND parent_seq=#{cateLv2Seq}
+				</when>
+				<when test="cateLv3Seq != null">
+					AND depth='3'
+					AND seq=#{cateLv3Seq}
+				</when>
+			</choose>
+		) t
+		WHERE 1=1
+		AND t.count != 0
+	</select>
+
+	<insert id="insertVo" parameterType="com.smpro.vo.CategoryVo">
+		INSERT INTO sm_item_category (
+			parent_seq,
+			cate_name,
+			order_no,
+			depth,
+			show_flag,
+			mod_date,
+			reg_date
+		) VALUES (
+			#{parentSeq},
+			#{name},
+			#{orderNo},
+			#{depth},
+			#{showFlag},
+			NOW(),
+			NOW()
+		)
+	</insert>
+
+	<update id="updateVo" parameterType="com.smpro.vo.CategoryVo">
+		UPDATE sm_item_category SET
+			  cate_name=#{name}
+			, show_flag=#{showFlag}
+			, mod_date=NOW()
+		WHERE seq=#{seq}
+	</update>
+
+	<update id="updateOrderNo" parameterType="com.smpro.vo.CategoryVo">
+		UPDATE sm_item_category SET
+			  order_no=#{orderNo}
+			, mod_date=NOW()
+		WHERE seq=#{seq}
+	</update>
+
+	<delete id="deleteVo" parameterType="int">
+		DELETE FROM sm_item_category
+		WHERE seq=#{value}
+	</delete>
+
+	<select id="getFirstDepthSeq" parameterType="com.smpro.vo.CategoryVo" resultType="String">
+		SELECT MAX(seq) AS seq	FROM sm_item_category
+		WHERE depth=#{depth}
+	</select>
+</mapper>

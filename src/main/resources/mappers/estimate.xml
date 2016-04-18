@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.EstimateDao">
+	<!--견적신청 리스트  -->
+	<select id="getList" parameterType="com.smpro.vo.EstimateVo" resultType="com.smpro.vo.EstimateVo">
+		SELECT
+			e.seq,
+			e.order_detail_seq AS orderDetailSeq,
+			d.order_seq AS orderSeq,
+			c1.name AS statusText,
+			c2.name AS typeName,
+			e.item_seq AS itemSeq,
+			i.name AS itemName,
+			v.value_name AS optionValue,
+			CASE WHEN i.type_code = 'E' THEN 0 ELSE i.sell_price+IFNULL(v.option_price,0) END sellprice,
+			e.qty,
+			e.amount, 
+			u1.name AS sellerName,
+			u2.name AS memberName,
+			u2.seq AS memberSeq,
+			e.type_code AS typeCode,
+			e.request,
+			e.reg_date AS regDate,
+			i.img1,
+			e.status_code AS statusCode
+		FROM
+			sm_estimate e LEFT OUTER JOIN
+			sm_order_detail d ON (e.order_detail_seq=d.seq) LEFT OUTER JOIN
+			sm_item i ON (e.item_seq=i.seq) LEFT OUTER JOIN
+			sm_user u1 ON (i.seller_seq=u1.seq) LEFT OUTER JOIN
+			sm_user u2 ON (e.member_seq=u2.seq) LEFT OUTER JOIN
+			sm_item_option_value v ON (e.option_value_seq=v.seq) LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=32 AND e.status_code=c1.value) LEFT OUTER JOIN
+			sm_common c2 ON (c2.group_code=33 AND e.type_code=c2.value)
+		WHERE
+		<choose>
+			<when test="loginType eq 'A'.toString()">
+				<!--  관리자 -->
+				1=1
+			</when>
+			<when test="loginType eq 'S'.toString()">
+				<!-- 판매자 -->
+				u1.seq = #{loginSeq}
+			</when>
+			<when test="loginType eq 'C'.toString()">
+				<!-- 회원 -->
+				e.member_seq = #{loginSeq}
+			</when>	
+		</choose>
+		
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(e.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="statusCode != ''">
+			AND e.status_code = #{statusCode}
+		</if>
+		<if test="typeCode != ''">
+			AND e.type_code = #{typeCode}
+		</if>
+		<if test="memberName != ''">
+			AND u2.name LIKE CONCAT('%',#{memberName},'%')
+		</if>
+		<if test="itemSeq != null">
+			AND e.item_seq = #{itemSeq}
+		</if>
+		ORDER BY seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<!--견적신청 리스트 카운트 -->
+	<select id="getListCount" parameterType="com.smpro.vo.EstimateVo" resultType="int">
+		SELECT
+			COUNT(*) cnt
+		FROM
+			sm_estimate e LEFT OUTER JOIN
+			sm_item i ON (e.item_seq=i.seq) LEFT OUTER JOIN
+			sm_user u1 ON (i.seller_seq=u1.seq) LEFT OUTER JOIN
+			sm_user u2 ON (e.member_seq=u2.seq)
+		WHERE
+		<choose>
+			<when test="loginType eq 'A'.toString()">
+				<!-- 관리자 -->
+				1=1
+			</when>
+			<when test="loginType eq 'S'.toString()">
+				<!-- 판매자 -->
+				u1.seq = #{loginSeq}
+			</when>
+			<when test="loginType eq 'C'.toString()">
+				<!-- 회원 -->
+				e.member_seq = #{loginSeq}
+			</when>	
+		</choose>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(e.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="statusCode != ''">
+			AND e.status_code = #{statusCode}
+		</if>
+		<if test="typeCode != ''">
+			AND e.type_code = #{typeCode}
+		</if>
+		<if test="memberName != ''">
+			AND u2.name LIKE CONCAT('%',#{memberName},'%')
+		</if>
+		<if test="itemSeq != null">
+			AND e.item_seq = #{itemSeq}
+		</if>
+	</select>
+	
+	<!--견적신청 상세정보-->
+	<select id="getVo" parameterType="java.lang.Integer" resultType="com.smpro.vo.EstimateVo">
+		SELECT
+			e.seq,
+			e.member_seq AS memberSeq,
+			e.item_seq AS itemSeq,
+			e.option_value_seq AS optionValueSeq,
+			e.order_detail_seq AS orderDetailSeq,
+			e.amount,
+			e.qty,
+			e.type_code AS typeCode,
+			e.status_code AS statusCode,
+			e.request,
+			e.reg_date AS regDate,
+			i.name AS itemName,
+			i.sell_price AS sellPrice,
+			c.cate_name AS cateLv1Name
+		FROM
+			sm_estimate e LEFT OUTER JOIN
+			sm_item i ON (e.item_seq=i.seq) LEFT OUTER JOIN
+			sm_item_category c ON (i.cate_lv1_seq=c.seq)
+		WHERE
+			e.seq=#{seq}
+	</select>
+	
+	<!--견적신청 등록-->
+	<insert id="regVo" parameterType="com.smpro.vo.EstimateVo">
+		INSERT INTO sm_estimate (
+			member_seq, item_seq, option_value_seq, qty, type_code, status_code, request, reg_date 
+		) VALUES (
+			#{memberSeq}, #{itemSeq}, #{optionValueSeq}, #{qty}, #{typeCode}, 1, #{request}, NOW()
+		)
+	</insert>
+
+	<!--견적신청 수정-->
+	<update id="modVo" parameterType="com.smpro.vo.EstimateVo">
+		UPDATE sm_estimate SET mod_date = NOW()
+			, status_code = #{statusCode}
+			<if test="qty > 0">
+				, qty = #{qty}
+			</if>
+			<if test="amount > 0">
+				, amount = #{amount}
+			</if>
+			<if test="request != ''">
+				, request = #{request}
+			</if>
+		WHERE 
+			<choose>
+				<when test="loginType eq 'C'">
+				<!-- 고객은 접수 상태일 경우에만 수정이 가능하다. -->
+					status_code = '1' AND
+				</when>
+				<otherwise>
+				<!-- 관리자/입점업체는 주문완료 이전 상태일 경우에만 수정이 가능하다. -->
+					'3' > status_code  AND
+				</otherwise>
+			</choose>
+			seq=#{seq}
+	</update>
+	
+	<!--견적신청 결제완료 업데이트-->
+	<update id="updateStatus" parameterType="com.smpro.vo.EstimateVo">
+		UPDATE sm_estimate SET
+			status_code = '3'
+			, order_detail_seq = #{orderDetailSeq}
+		WHERE 
+			seq=#{seq}
+			AND member_seq = #{loginSeq}  <!-- 견적 결제완료를 수행하는 해당 회원인지 체크 -->
+	</update>
+	
+	<!--견적신청 삭제-->
+	<delete id="delVo" parameterType="java.lang.Integer">
+		DELETE FROM sm_estimate 
+		WHERE 
+			seq=#{seq} 
+			AND status_code != '3' 
+	</delete>
+	
+	<!-- 비교견적 신청 처리 현황 리스트 -->
+	<select id="getListCompare" parameterType="com.smpro.vo.EstimateVo" resultType="com.smpro.vo.EstimateVo">
+		SELECT
+			d.seq AS orderDetailSeq,
+			d.order_seq AS orderSeq,
+			c1.name AS orderStatusText,
+			o.member_name AS memberName,
+			o.member_seq AS memberSeq,
+			d.item_name AS itemName,
+			d.sell_price AS sellPrice,
+			d.order_cnt AS orderCnt,
+			d.seller_name AS sellerName,
+			d.reg_date AS orderRegDate,
+			e.reg_date AS regDate,
+			d.seller_seq AS sellerSeq,
+			i.img1,
+			e.seq
+		FROM
+			sm_order_detail d LEFT OUTER JOIN
+			sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
+			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN (
+				SELECT order_seq, seller_seq, MAX(seq) seq, MAX(reg_date) reg_date FROM sm_estimate_compare GROUP BY order_seq, seller_seq
+			) e ON (d.order_seq=e.order_seq AND d.seller_seq=e.seller_seq) LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=6 AND d.status_code=c1.value)
+		WHERE o.estimate_compare_flag = 'Y'
+		<if test="loginType eq 'S'.toString()">
+			<!-- 판매자일 경우 -->
+			AND d.seller_seq=#{loginSeq}
+		</if>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(d.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="statusCode != ''">
+			<choose>
+				<when test="statusCode eq 'Y'.toString()">
+					AND e.seq IS NOT NULL
+				</when>
+				<otherwise>
+					AND e.seq IS NULL
+				</otherwise>
+			</choose>
+		</if>
+		<if test="findword != ''">
+			<choose>
+				<when test="search eq 'order_detail_seq'">AND d.seq=#{findword}</when>
+				<when test="search eq 'order_seq'">AND d.order_seq=#{findword}</when>
+				<when test="search eq 'member_name'">AND o.member_name LIKE CONCAT('%',#{findword},'%')</when>
+			</choose>
+		</if>
+		ORDER BY d.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<!-- 비교견적 신청 리스트 카운트 -->
+	<select id="getListCountCompare" parameterType="com.smpro.vo.EstimateVo" resultType="int">
+		SELECT
+			COUNT(*) cnt
+		FROM
+			sm_order_detail d LEFT OUTER JOIN
+			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN (
+				SELECT order_seq, seller_seq, MAX(seq) seq FROM sm_estimate_compare GROUP BY order_seq, seller_seq
+			) e ON (d.order_seq=e.order_seq AND d.seller_seq=e.seller_seq)
+		WHERE o.estimate_compare_flag = 'Y'
+		<if test="loginType eq 'S'.toString()">
+			<!-- 판매자일 경우 -->
+			AND d.seller_seq=#{loginSeq}
+		</if>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(d.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="statusCode != ''">
+			<choose>
+				<when test="statusCode eq 'Y'.toString()">
+					AND e.seq IS NOT NULL
+				</when>
+				<otherwise>
+					AND e.seq IS NULL
+				</otherwise>
+			</choose>
+		</if>
+		<if test="findword != ''">
+			<choose>
+				<when test="search eq 'order_detail_seq'">AND d.seq=#{findword}</when>
+				<when test="search eq 'order_seq'">AND d.order_seq=#{findword}</when>
+				<when test="search eq 'member_name'">AND o.member_name LIKE CONCAT('%',#{findword},'%')</when>
+			</choose>
+		</if>
+	</select>
+	
+	<!-- 비교 견적 파일 첨부 리스트 -->
+	<select id="getListCompareFile" parameterType="com.smpro.vo.EstimateVo" resultType="com.smpro.vo.EstimateVo">
+		SELECT		
+			e.seq,
+			e.order_seq AS orderSeq,
+			e.seller_seq AS sellerSeq,
+			u.name AS sellerName,
+			e.file,
+			e.file_name AS fileName,
+			e.reg_date AS regDate
+		FROM
+			sm_estimate_compare e LEFT OUTER JOIN
+			sm_order o ON (e.order_seq=o.seq) LEFT OUTER JOIN
+			sm_user u ON (e.seller_seq=u.seq)
+		WHERE e.order_seq = #{orderSeq}
+		<choose>
+			<when test="loginType eq 'S'.toString()">
+				<!-- 판매자 -->
+				AND e.seller_seq=#{loginSeq}
+			</when>
+			<when test="loginType eq 'C'.toString()">
+				<!-- 회원 -->
+				AND o.member_seq = #{loginSeq}
+			</when>	
+		</choose>
+		
+		ORDER BY e.seq ASC, e.seller_seq ASC
+	</select>
+	
+	<!-- 비교견적 상세 -->
+	<select id="getVoCompare" parameterType="java.lang.Integer" resultType="com.smpro.vo.EstimateVo">
+		SELECT
+			e.seq,
+			e.order_seq AS orderSeq,
+			e.file,
+			e.file_name AS fileName,
+			e.reg_date AS regDate,
+			(SELECT seller_name FROM sm_order_detail WHERE order_seq=e.order_seq LIMIT 1) sellerName
+		FROM
+			sm_estimate_compare e
+		WHERE
+			e.seq = #{seq}
+	</select>
+	
+	<!-- 비교견적 첨부파일 등록 -->
+	<insert id="regVoCompare" parameterType="com.smpro.vo.EstimateVo">
+		INSERT INTO sm_estimate_compare (
+			seq, order_seq, seller_seq, file, file_name, reg_date
+		) VALUES (
+			#{seq}, #{orderSeq}, #{sellerSeq}, #{file}, #{fileName}, NOW()
+		)
+	</insert>
+	
+	<!-- 비교견적 첨부파일 수정 -->
+	<update id="modVoCompare" parameterType="com.smpro.vo.EstimateVo">
+		UPDATE sm_estimate_compare SET
+			file = #{file}, mod_date = NOW()
+		WHERE 
+			seq = #{seq}
+	</update>
+	
+	<!--비교견적 삭제-->
+	<delete id="delVoCompare" parameterType="java.lang.Integer">
+		DELETE FROM sm_estimate_compare WHERE seq=#{seq}
+	</delete>
+	
+	<!--비교견적 시퀀스 생성 -->
+	<update id="createEstimateCompareSeq" parameterType="com.smpro.vo.EstimateVo">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT seq FROM sm_estimate_compare_seq
+		</selectKey>
+		UPDATE sm_estimate_compare_seq SET seq=seq+1
+	</update>
+	
+	<!-- 견적 리스트(주문 페이지 출력) -->
+	<select id="getListForOrder" parameterType="com.smpro.vo.EstimateVo" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			e.seq,
+			e.member_seq AS memberSeq,
+			e.option_value_seq AS optionValueSeq,
+			1 AS count,
+			e.qty AS estimateCount,
+			ov.value_name AS valueName,
+			ov.stock_cnt AS stockCount,
+			o.option_name AS optionName,
+			i.seq AS itemSeq,
+			i.img1 AS img1,
+			i.name,
+			e.amount AS sellPrice,
+			i.seller_seq AS sellerSeq,
+			i.tax_code AS taxCode,
+			s.name AS sellerName,
+			i.type_code AS typeCode
+        FROM
+			sm_estimate e INNER JOIN
+			sm_item_option_value ov ON (e.option_value_seq=ov.seq) INNER JOIN
+			sm_item_option o ON (ov.option_seq=o.seq AND o.show_flag='Y') INNER JOIN
+			sm_item i ON (e.item_seq=i.seq) LEFT OUTER JOIN
+			sm_user s ON (i.seller_seq=s.seq) LEFT OUTER JOIN
+			sm_member me ON (e.member_seq=me.seq)
+		WHERE
+			e.member_seq=#{memberSeq} AND i.status_code='Y'
+			AND e.seq=#{seq}
+	</select>
+	
+	<!-- 입점업체 영업담당자 휴대폰 정보 가져오기(SMS발송) -->
+	<select id="getSalesCell" resultType="java.lang.String">
+		SELECT
+			s.sales_cell
+		FROM
+			sm_item i LEFT OUTER JOIN
+			sm_seller s ON (i.seller_seq=s.seq) 
+		WHERE 
+			i.seq=#{itemSeq}
+	</select>
+</mapper>

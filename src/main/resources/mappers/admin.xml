@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.SystemDao">
+	<!--관리자 리스트-->
+	<select id="getAdminList" resultType="com.smpro.vo.AdminVo">
+		SELECT
+		  u.seq
+		  , u.id
+		  , u.name
+		  , u.nickname
+		  , u.type_code AS typeCode
+		  , u.status_code AS statusCode
+		  , u.grade_code AS gradeCode
+		  , (SELECT name FROM sm_common WHERE group_code=15 AND value=u.grade_code) AS gradeText
+		  , u.login_token AS loginToken
+		  , u.last_date AS lastDate
+		  , u.reg_date AS regDate
+		FROM
+		  sm_user u LEFT OUTER JOIN
+		  sm_admin a ON(a.seq=u.seq)
+		WHERE
+		  u.type_code IN ('A', 'P')
+		ORDER BY u.type_code ASC, u.seq ASC
+	</select>
+
+	<!--관리자 정보 상세-->
+	<select id="getAdminData" parameterType="com.smpro.vo.AdminVo" resultType="com.smpro.vo.AdminVo">
+		SELECT
+		  u.seq
+		  , u.id
+		  , u.password
+		  , u.name
+		  , u.nickname
+		  , u.type_code AS typeCode
+		  , u.status_code AS statusCode
+		  , u.grade_code AS gradeCode
+		  , (SELECT name FROM sm_common WHERE group_code=15 AND value=u.grade_code) AS gradeText
+		  , u.login_token AS loginToken
+		  , u.last_ip AS lastIp
+		  , u.last_date AS lastDate
+		  , u.temp_password AS tempPassword
+		  , u.temp_password_date AS tempPasswordDate
+		  , u.mod_password_date AS modPasswordDate
+		  , u.mod_date AS modDate
+		  , u.reg_date AS regDate
+		  , a.email
+		  , a.tel
+		  , a.cell
+		FROM
+		  sm_user u LEFT OUTER JOIN
+		  sm_admin a ON(a.seq=u.seq)
+		WHERE
+		  u.seq=#{seq}
+		ORDER BY u.type_code ASC, u.seq ASC
+	</select>
+
+	<!--관리자 등록-->
+	<insert id="insertData" parameterType="com.smpro.vo.AdminVo">
+        INSERT INTO sm_admin (
+		    seq, email, tel, cell
+		 ) values (
+		    #{seq}, #{email}, #{tel}, #{cell}
+		)
+	</insert>
+
+	<!--관리자 정보 수정-->
+	<update id="updateDataUser" parameterType="com.smpro.vo.AdminVo">
+		UPDATE
+		  sm_user
+		SET
+		  name=#{name}
+		  , nickname=#{nickname}
+		  , grade_code=#{gradeCode}
+		  , status_code=#{statusCode}
+		  , mod_date=NOW()
+		WHERE
+		  seq=#{seq}
+	</update>
+	<update id="updateDataAdmin" parameterType="com.smpro.vo.AdminVo">
+		UPDATE
+		  sm_admin
+		SET
+		  email=#{email}
+		  , tel=#{tel}
+		  , cell=#{cell}
+		WHERE
+		  seq=#{seq}
+	</update>
+
+	<!--관리자 권한 변경 로그-->
+	<insert id="insertAdminLog" parameterType="com.smpro.vo.AdminVo">
+		INSERT INTO sm_admin_log (
+			admin_seq, login_seq, grade_code, reg_date
+		) values (
+			#{seq}, #{loginSeq}, #{gradeCode}, NOW()
+		)
+	</insert>
+	
+	<select id="getSeqCnt" parameterType="int" resultType="int">
+		SELECT COUNT(*) cnt	FROM  sm_user WHERE seq=#{seq}
+	</select>
+</mapper>

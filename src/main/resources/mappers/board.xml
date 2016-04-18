@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.BoardDao">
+	<select id="getListCount" parameterType="com.smpro.vo.BoardVo" resultType="int">
+		SELECT COUNT(*) AS cnt
+		FROM sm_board b LEFT OUTER JOIN
+			 sm_user m ON(b.user_seq=m.seq) LEFT OUTER JOIN
+			 sm_item i ON(b.integration_seq = i.seq) LEFT OUTER JOIN
+			 sm_order_detail d ON(b.integration_seq = d.seq) LEFT OUTER JOIN
+			sm_member u ON(u.seq=m.seq)
+		WHERE
+		<choose>
+			<when test="groupCode == 'notice'">
+				b.group_code='N'
+				<!-- 판매자 로그인 -->
+				<if test="loginType eq 'S'.toString()">
+					AND b.cate_code=2
+				</if>
+			</when>
+			<when test="groupCode == 'one'">
+				b.group_code='O'
+				<!-- 관리자 로그인 -->
+				<if test="loginType eq 'A'.toString()">
+					<if test="userSeq != null">
+						AND b.user_seq=#{userSeq}
+					</if>
+				</if>
+				<!-- 회원 로그인 -->
+				<if test="loginType eq 'C'.toString()">
+					AND b.user_seq=#{loginSeq}
+				</if>
+			</when>
+			<when test="groupCode == 'qna'">
+				b.group_code='Q'
+				<!-- 관리자 로그인 -->
+				<if test="loginType eq 'A'.toString()">
+					<if test="userSeq != null">
+						AND b.user_seq=#{userSeq}
+					</if>
+				</if>
+				<!-- 판매자 로그인 -->
+				<if test="loginType eq 'S'.toString()">
+					AND i.seller_seq=#{loginSeq}
+				</if>
+				<!-- 회원 로그인 -->
+				<if test="loginType eq 'C'.toString()">
+					<if test="userSeq != null">
+						AND b.user_seq=#{userSeq}
+					</if>
+				</if>
+			</when>
+			<when test="groupCode == 'faq'">
+				b.group_code='F'
+			</when>
+		</choose>
+	
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(b.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		
+		<if test="findword != ''">
+			<choose>
+				<when test="search=='title'">
+					AND b.title LIKE CONCAT('%',#{findword},'%')
+				</when>
+				<when test="search=='content'">
+					AND b.content LIKE CONCAT('%',#{findword},'%')
+				</when>
+				<when test="search=='name'">
+					AND m.name LIKE CONCAT('%',#{findword},'%')
+				</when>
+			</choose>
+		</if>
+	
+		<if test="categoryCode != null">
+			AND b.cate_code=#{categoryCode}
+		</if>
+		
+		<if test="answerFlag != null">
+			AND b.answer_flag=#{answerFlag}
+		</if>
+		
+		<if test="integrationSeq != null">
+			AND b.integration_seq=#{integrationSeq}
+		</if>
+		<if test="mallSeq != null">
+			AND u.mall_seq = #{mallSeq}
+		</if>
+	</select>
+
+	<select id="getList" parameterType="com.smpro.vo.BoardVo" resultType="com.smpro.vo.BoardVo">
+		SELECT
+			@rownum := @rownum + 1 AS rowNumber
+			, b.seq
+			, b.user_seq AS userSeq
+			, b.integration_seq AS integrationSeq
+			, b.group_code AS groupCode
+			, b.cate_code AS categoryCode
+			, b.title
+			, b.content
+			, b.answer
+			, b.view_cnt AS viewCount
+			, b.answer_date AS answerDate
+			, b.reg_date AS regDate
+			, b.answer_flag AS answerFlag
+			, m.id
+			, m.name
+			, m.nickname AS nickName
+			, (SELECT name FROM sm_user WHERE type_code='M' AND seq=u.mall_seq) AS mallName
+			<if test="groupCode == 'qna'">
+		  	  , i.name AS itemName
+			  , i.img1 AS img1
+			  , i.img2 AS img2
+			  , i.img3 AS img3
+			  , i.img4 AS img4
+			</if>
+			, d.order_seq AS orderSeq
+			, CASE
+       		  WHEN
+          	    (SELECT count(*) 
+          	     FROM sm_filename 
+          	     WHERE 
+          	     <choose>
+					<when test="groupCode == 'notice'">
+						parent_code='noticeBoard' 
+					</when>
+					<when test="groupCode == 'one'">
+						parent_code='directBoard' 
+					</when>
+					<when test="groupCode == 'qna'">
+						parent_code='qnaBoard' 
+					</when>
+					<when test="groupCode == 'faq'">
+						parent_code='faqBoard' 
+					</when>
+				</choose>
+          	     AND sm_filename.parent_seq=b.seq) > 0
+          	    THEN 'Y'
+        	  ELSE 'N'
+      	  	END isFile
+		FROM
+			sm_board b LEFT OUTER JOIN
+			sm_user m ON(b.user_seq=m.seq) LEFT OUTER JOIN
+			sm_item i ON(b.integration_seq = i.seq) LEFT OUTER JOIN
+			sm_order_detail d ON(b.integration_seq = d.seq) LEFT OUTER JOIN
+			sm_member u ON(u.seq=m.seq), (SELECT @rownum := 0) r
+		WHERE		
+		<choose>
+			<when test="groupCode == 'notice'">
+				b.group_code='N'
+				<!-- 판매자 로그인 -->
+				<if test="loginType eq 'S'.toString()">
+					AND b.cate_code=2
+				</if>
+			</when>
+			<when test="groupCode == 'one'">
+				b.group_code='O'
+				<!-- 관리자 로그인 -->
+				<if test="loginType eq 'A'.toString()">
+					<if test="userSeq != null">
+						AND b.user_seq=#{userSeq}
+					</if>
+				</if>
+				<!-- 회원 로그인 -->
+				<if test="loginType eq 'C'.toString()">
+					AND b.user_seq=#{loginSeq}
+				</if>
+			</when>
+			<when test="groupCode == 'qna'">
+				b.group_code='Q'
+				<!-- 관리자 로그인 -->
+				<if test="loginType eq 'A'.toString()">
+					<if test="userSeq != null">
+						AND b.user_seq=#{userSeq}
+					</if>
+				</if>
+				<!-- 판매자 로그인 -->
+				<if test="loginType eq 'S'.toString()">
+					AND i.seller_seq=#{userSeq}
+				</if>
+				<!-- 회원 로그인 -->
+				<if test="loginType eq 'C'.toString()">
+					AND b.user_seq=#{userSeq}
+				</if>
+			</when>
+			<when test="groupCode == 'faq'">
+				b.group_code='F'
+			</when>
+		</choose>
+
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(b.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		
+		<if test="findword != ''">
+			<choose>
+				<when test="search=='title'">
+					AND b.title LIKE CONCAT('%',#{findword},'%')
+				</when>
+				<when test="search=='content'">
+					AND b.content LIKE CONCAT('%',#{findword},'%')
+				</when>
+				<when test="search=='name'">
+					AND m.name LIKE CONCAT('%',#{findword},'%')
+				</when>
+			</choose>
+		</if>
+
+		<if test="categoryCode != null">
+			AND b.cate_code=#{categoryCode}
+		</if>
+
+		<if test="answerFlag != null">
+			AND b.answer_flag=#{answerFlag}
+		</if>
+
+		<if test="integrationSeq != null">
+			AND b.integration_seq=#{integrationSeq}
+		</if>
+
+		<if test="mallSeq != null">
+			AND u.mall_seq = #{mallSeq}
+		</if>
+					
+		ORDER BY b.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getVo" parameterType="com.smpro.vo.BoardVo" resultType="com.smpro.vo.BoardVo">
+		SELECT
+			b.seq
+			, b.user_seq AS userSeq
+			, b.integration_seq AS integrationSeq
+			, b.group_code AS groupCode
+			, b.cate_code AS categoryCode
+			, b.title
+			, b.content
+			, b.answer
+			, b.view_cnt AS viewCount
+			, b.answer_date AS answerDate
+			, b.reg_date AS regDate
+			, m.name
+			, m.id
+			, m.nickname AS nickName
+			<if test="groupCode == 'qna'">
+			, i.name AS itemName
+			, i.img1 AS img1
+			, i.img2 AS img2
+			, i.img3 AS img3
+			, i.img4 AS img4
+			</if>
+			, mm.name AS answerName
+			, b.answer_seq AS answerSeq
+			, d.item_name AS itemName
+			, di.name AS itemName
+			, di.seq AS itemSeq
+			, di.img1 AS img1
+			, d.order_seq AS orderSeq
+			, (SELECT name FROM sm_user WHERE type_code='M' AND seq=u.mall_seq) AS mallName
+			, CASE
+       		  WHEN
+          	    (SELECT count(*) 
+          	     FROM sm_filename 
+          	     WHERE 
+          	     <choose>
+					<when test="groupCode == 'notice'">
+						parent_code='noticeBoard' 
+					</when>
+					<when test="groupCode == 'one'">
+						parent_code='directBoard' 
+					</when>
+					<when test="groupCode == 'qna'">
+						parent_code='qnaBoard' 
+					</when>
+					<when test="groupCode == 'faq'">
+						parent_code='faqBoard' 
+					</when>
+				</choose>
+          	     AND sm_filename.parent_seq=b.seq) > 0
+          	    THEN 'Y'
+        	  ELSE 'N'
+      	  	END isFile
+		FROM sm_board b LEFT OUTER JOIN
+			sm_user m ON(b.user_seq=m.seq) LEFT OUTER JOIN
+			sm_user mm ON(b.answer_seq = mm.seq) LEFT OUTER JOIN
+			sm_item i ON(b.integration_seq = i.seq) LEFT OUTER JOIN
+			sm_order_detail d ON(b.integration_seq = d.seq) LEFT OUTER JOIN
+			sm_item di ON(d.item_seq = di.seq) LEFT OUTER JOIN
+			sm_member u ON(u.seq=m.seq)
+		WHERE
+		b.seq = #{seq}
+		<choose>
+			<when test="groupCode == 'notice'">
+				AND group_code='N'
+			</when>
+			<when test="groupCode == 'one'">
+				AND group_code='O'
+			</when>
+			<when test="groupCode == 'qna'">
+				AND group_code='Q'
+			</when>
+			<when test="groupCode == 'faq'">
+				AND group_code='F'
+			</when>
+		</choose>
+
+		<if test="categoryCode != null">
+			AND cate_code=#{categoryCode}
+		</if>
+		<if test="userSeq != null">
+			AND user_seq=#{userSeq}
+		</if>
+	</select>
+
+	<update id="createSeq" parameterType="com.smpro.vo.BoardVo">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT seq FROM sm_board_seq
+		</selectKey>
+		UPDATE sm_board_seq SET seq=seq+1
+	</update>
+	
+	<insert id="insertData" parameterType="com.smpro.vo.BoardVo">
+		INSERT INTO sm_board (
+			seq
+			, user_seq
+			, group_code
+			, title
+			<if test="integrationSeq != null">
+				, integration_seq
+			</if>
+			<if test="mallSeq != null">
+				, mall_seq
+			</if>
+			<if test="categoryCode != null">
+				, cate_code
+			</if>
+			<if test="content != ''">
+				, content
+	      	</if>
+			, reg_date
+		) VALUES (
+			#{seq}
+			, #{userSeq}
+			, #{groupCode}
+			, #{title}
+			<if test="integrationSeq != null">
+				, #{integrationSeq}
+			</if>
+			<if test="mallSeq != null">
+				, #{mallSeq}
+			</if>
+			<if test="categoryCode != null">
+			, #{categoryCode}
+			</if>
+			<if test="content != ''">
+				, #{content}
+	      	</if>
+			, NOW()
+		)
+	</insert>
+	<update id="updateViewCnt" parameterType="com.smpro.vo.BoardVo">
+		UPDATE	sm_board SET
+				view_cnt=view_cnt+1
+		WHERE	seq = #{seq}
+	</update>
+	<update id="updateData" parameterType="com.smpro.vo.BoardVo">
+		UPDATE sm_board SET
+			<trim suffixOverrides=",">
+				<if test="title != ''">
+					title=#{title},
+				</if>
+				<if test="content != ''">
+					content=#{content},
+				</if>
+				<if test="categoryCode != null">
+					cate_code=#{categoryCode},
+				</if>
+				<if test="answer != ''">
+					answer = #{answer},
+					answer_date=NOW(),
+					answer_seq=#{answerSeq},
+					answer_flag=1,
+				</if>
+				<if test="answer == ''">
+					mod_date=NOW()
+				</if>
+				<if test="mallSeq != null">
+					, mall_seq = #{mallSeq}
+				</if>
+			</trim>
+		WHERE seq = #{seq}
+		<choose>
+			<when test="groupCode == 'notice'">
+				AND group_code='N'
+			</when>
+			<when test="groupCode == 'one'">
+				AND group_code='O'
+			</when>
+			<when test="groupCode == 'qna'">
+				AND group_code='Q'
+			</when>
+			<when test="groupCode == 'faq'">
+				AND group_code='F'
+			</when>
+		</choose>
+	</update>
+	<delete id="deleteData" parameterType="com.smpro.vo.BoardVo">
+		DELETE 	FROM sm_board
+		WHERE 	seq = #{seq}
+		<if test="userSeq != null">
+			AND		user_seq = #{userSeq}
+		</if>
+	</delete>
+	<select id="getDirectBoardRegCntForWeek" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_board b LEFT OUTER JOIN
+			sm_order_detail d ON (b.integration_seq = d.seq) LEFT OUTER JOIN
+			sm_user u ON (u.seq = d.seller_seq)
+		WHERE
+			group_code = 'O'
+		AND
+			DATE_FORMAT(b.reg_date, '%Y%m%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y%m%d' )
+	</select>
+
+	<select id="getItemQnaBoardRegCntForWeek" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_board b LEFT OUTER JOIN
+		    sm_item i ON (b.integration_seq = i.seq)
+		WHERE
+			group_code = 'Q'
+		AND
+			DATE_FORMAT(b.reg_date, '%Y%m%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y%m%d' )
+		<if test="loginType == 'S'.toString() || loginType == 'D'.toString()">
+			<if test="seq != ''">
+				AND	i.seller_seq = #{seq}
+			</if>
+		</if>
+	</select>
+</mapper>

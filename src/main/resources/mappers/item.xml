@@ -1,0 +1,1286 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.ItemDao">
+	<select id="getList" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			A.seq,
+			A.name,
+			A.status_code AS statusCode,
+			A.sell_price AS sellPrice,
+			A.supply_master_price AS supplyMasterPrice,
+			A.supply_price AS supplyPrice,
+			A.market_price AS marketPrice,
+			A.maker,
+			A.origin_country AS originCountry,
+			A.min_cnt AS minCnt,
+			A.seller_seq AS sellerSeq,
+			A.seller_item_code AS sellerItemCode,
+			A.cate_lv1_seq AS cateLv1Seq,
+			A.cate_lv2_seq AS cateLv2Seq,
+			A.cate_lv3_seq AS cateLv3Seq,
+			A.cate_lv4_seq AS cateLv4Seq,
+			A.brand,
+			A.model_name AS modelName,
+			A.make_date AS makeDate,
+			A.expire_date AS expireDate,
+			A.adult_flag AS adultFlag,
+			I.as_flag AS asFlag,
+			I.as_tel AS asTel,
+			A.img1 AS img1,
+			A.img2 AS img2,
+			A.img3 AS img3,
+			A.img4 AS img4,
+			A.deli_type_code AS deliTypeCode,
+			A.deli_cost AS deliCost,
+			A.deli_free_amount AS deliFreeAmount,
+			A.deli_prepaid_flag AS deliPrepaidFlag,
+			A.deli_package_flag AS deliPackageFlag,
+			A.tax_code AS taxCode,
+			A.mod_date AS modDate,
+			A.reg_date AS regDate,
+			B.cate_name AS cateLv1Name,
+			C.cate_name AS cateLv2Name,
+			D.cate_name AS cateLv3Name,
+			J.cate_name AS cateLv4Name,
+			E.name AS sellerName,
+			IFNULL(F.sales_tel,F.sales_cell) AS salesTel,
+			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = A.seq) AS itemGrade,
+			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq = A.seq) AS reviewCount,
+			(SELECT MAX(option_name) FROM sm_item_option WHERE item_seq = A.seq) AS optionName,
+			(SELECT GROUP_CONCAT(v.value_name SEPARATOR ',') FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS optionValues,
+			A.type_code AS typeCode,
+			c1.name AS statusName,
+			c2.name AS typeName,
+			c3.name AS taxName,
+			A.auth_category AS authCategory
+		FROM
+			sm_item A LEFT OUTER JOIN
+			sm_item_category B	ON A.cate_lv1_seq=B.seq LEFT OUTER JOIN
+			sm_item_category C	ON A.cate_lv2_seq=C.seq LEFT OUTER JOIN
+			sm_item_category D	ON A.cate_lv3_seq=D.seq LEFT OUTER JOIN
+			sm_item_category J	ON A.cate_lv4_seq=J.seq LEFT OUTER JOIN
+			sm_user E	ON A.seller_seq=E.seq	LEFT OUTER JOIN
+			sm_seller F	ON A.seller_seq=F.seq	LEFT OUTER JOIN
+			sm_item_detail I ON I.item_seq=A.seq LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=4 AND c1.value=A.status_code) LEFT OUTER JOIN
+			sm_common c2 ON (c2.group_code=34 AND c2.value=A.type_code) LEFT OUTER JOIN
+			sm_common c3 ON (c3.group_code=5 AND A.tax_code=c3.value)
+		WHERE 1=1
+		<choose>
+			<when test="loginType == 'S'.toString()">
+				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
+				AND A.seller_seq=#{loginSeq}
+			</when>
+			<when test="loginType == 'D'.toString()">
+				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
+				AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
+			</when>
+		</choose>
+		<if test="cateLv1Seq != null">
+			<choose>
+				<when test="cateLv1Seq == 0">
+					AND A.cate_lv1_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv1_seq=#{cateLv1Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv2Seq != null">
+			<choose>
+				<when test="cateLv2Seq == 0">
+					AND A.cate_lv2_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv2_seq=#{cateLv2Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv3Seq != null">
+			<choose>
+				<when test="cateLv3Seq == 0">
+					AND A.cate_lv3_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv3_seq=#{cateLv3Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv4Seq != null">
+			<choose>
+				<when test="cateLv4Seq == 0">
+					AND A.cate_lv4_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv4_seq=#{cateLv4Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
+			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
+		</if>
+		<if test="itemSearchType eq 'seq' and itemSearchValue != ''">
+			AND A.seq = #{itemSearchValue}
+		</if>
+		<if test="sellerSearchType eq 'sellerId' and sellerSearchValue != ''">
+			AND E.id LIKE CONCAT('%',#{sellerSearchValue},'%')
+		</if>
+		<if test="sellerSearchType eq 'sellerName' and sellerSearchValue != ''">
+			AND E.name LIKE CONCAT('%',#{sellerSearchValue},'%')
+		</if>
+		<if test="sellerSeq != null">
+			AND A.seller_seq = #{sellerSeq}
+		</if>
+		<if test="statusCode != ''">
+			AND A.status_code = #{statusCode}
+		</if>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(A.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		<if test="taxCode != ''">
+			AND A.tax_code = #{taxCode}
+		</if>
+		<if test="search != '' and findword != ''">
+			AND ${search} LIKE CONCAT('%',#{findword},'%')
+		</if>
+		<if test="deliTypeCode != ''">
+			AND A.deli_type_code = #{deliTypeCode}
+		</if>
+		<if test="authCategoryArr != null and authCategoryArr.length != 0">
+			AND ( 1=1
+			<foreach collection="authCategoryArr" item="item" >
+				AND A.auth_category LIKE CONCAT('%',#{item},'%')
+			</foreach>
+			)
+		</if>
+		<choose>
+			<when test="orderByName != '' and orderByType != ''">
+		ORDER BY ${orderByName} ${orderByType}
+			</when>
+			<otherwise>
+		ORDER BY A.seq DESC
+			</otherwise>
+		</choose>
+		
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getListTotalCount" parameterType="com.smpro.vo.ItemVo" resultType="int">
+		SELECT COUNT(*) FROM 
+			sm_item A LEFT OUTER JOIN 
+			sm_user E ON A.seller_seq=E.seq LEFT OUTER JOIN 
+			sm_seller F ON A.seller_seq=F.seq LEFT OUTER JOIN 
+			sm_user G ON F.master_seq=G.seq
+		WHERE 1=1
+		<choose>
+			<when test="loginType == 'S'.toString()">
+				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
+				AND A.seller_seq=#{loginSeq}
+			</when>
+			<when test="loginType == 'D'.toString()">
+				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
+				AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
+			</when>
+		</choose>
+		<if test="cateLv1Seq != null">
+			<choose>
+				<when test="cateLv1Seq == 0">
+					AND A.cate_lv1_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv1_seq=#{cateLv1Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv2Seq != null">
+			<choose>
+				<when test="cateLv2Seq == 0">
+					AND A.cate_lv2_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv2_seq=#{cateLv2Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv3Seq != null">
+			<choose>
+				<when test="cateLv3Seq == 0">
+					AND A.cate_lv3_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv3_seq=#{cateLv3Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv4Seq != null">
+			<choose>
+				<when test="cateLv4Seq == 0">
+					AND A.cate_lv4_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv4_seq=#{cateLv4Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
+			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
+		</if>
+		<if test="itemSearchType eq 'seq' and itemSearchValue != ''">
+			AND A.seq = #{itemSearchValue}
+		</if>
+		<if test="sellerSearchType eq 'sellerId' and sellerSearchValue != ''">
+			AND E.id LIKE CONCAT('%',#{sellerSearchValue},'%')
+		</if>
+		<if test="sellerSearchType eq 'sellerName' and sellerSearchValue != ''">
+			AND E.name LIKE CONCAT('%',#{sellerSearchValue},'%')
+		</if>
+		<if test="sellerSeq != null">
+			AND A.seller_seq = #{sellerSeq}
+		</if>
+		<if test="statusCode != ''">
+			AND A.status_code = #{statusCode}
+		</if>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(A.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		<if test="taxCode != ''">
+			AND A.tax_code = #{taxCode}
+		</if>
+		<if test="search != '' and findword != ''">
+			AND ${search} LIKE CONCAT('%',#{findword},'%')
+		</if>
+		<if test="deliTypeCode != ''">
+			AND A.deli_type_code = #{deliTypeCode}
+		</if>
+		<if test="authCategoryArr != null and authCategoryArr.length != 0">
+			AND ( 1=1
+			<foreach collection="authCategoryArr" item="item" >
+				AND A.auth_category LIKE CONCAT('%',#{item},'%')
+			</foreach>
+			)
+		</if>
+	</select>
+
+	<select id="getVoForOrderReg" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.OrderVo">
+		SELECT
+			a.seq AS itemSeq
+			, a.name AS itemName
+			, a.sell_price AS sellPrice
+			, a.supply_price AS supplyPrice
+			, a.supply_master_price AS supplyMasterPrice
+			, a.seller_seq AS sellerSeq
+			, a.tax_code AS taxCode
+			, b.master_seq  AS sellerMasterSeq
+			, c.name AS sellerName
+			, d.name AS sellerMasterName
+			, o.option_name as optionName
+			, (SELECT value_name FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS valueName
+			, (SELECT option_price FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS optionPrice
+			, (SELECT stock_cnt FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS stockCount
+		FROM
+			sm_item a LEFT OUTER JOIN
+			sm_item_option o on(a.seq=o.item_seq) LEFT OUTER JOIN
+			sm_seller b ON(a.seller_seq=b.seq) LEFT OUTER JOIN
+			sm_user c ON(b.seq=c.seq) LEFT OUTER JOIN
+			sm_user d ON(b.master_seq=d.seq)
+		WHERE a.seq=#{seq}
+	</select>
+
+	<select id="getListForBest" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			i.seq
+			, i.name
+			, i.sell_price AS sellPrice
+			, i.market_price AS marketPrice
+			, i.brand
+			, i.model_name AS modelName
+			, i.adult_flag AS adultFlag
+			, i.img1 AS img1
+			, i.img2 AS img2
+			, i.type_code AS typeCode
+			, (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = i.seq) AS itemGrade
+			, (SELECT COUNT(*) FROM sm_item_review WHERE item_seq = i.seq) AS reviewCount
+		FROM
+			sm_item i LEFT OUTER JOIN (
+				SELECT
+					item_seq, SUM(order_cnt) cnt
+				FROM
+					sm_order_detail
+				WHERE
+					status_code NOT IN ('90','99')
+				AND c10_date > DATE_ADD( NOW(), INTERVAL -31 DAY )
+				GROUP BY item_seq
+			) d ON (i.seq=d.item_seq)
+		WHERE 1=1
+			<!-- TODO 추후 주석 해제: AND d.item_seq IS NOT NULL  -->
+			AND i.status_code=#{statusCode}
+		ORDER BY d.cnt DESC, i.reg_date DESC 
+		LIMIT ${rowCount}
+	</select>
+
+	<select id="getVo" parameterType="java.lang.Integer" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			A.sell_price AS sellPrice,
+			A.status_code AS statusCode,
+			A.cate_lv1_seq AS cateLv1Seq,
+			A.cate_lv2_seq AS cateLv2Seq,
+			A.cate_lv3_seq AS cateLv3Seq,
+			A.cate_lv4_seq AS cateLv4Seq,
+			(SELECT cate_name FROM sm_item_category i WHERE i.seq=A.cate_lv1_seq) AS cateLv1Name,
+			(SELECT cate_name FROM sm_item_category B WHERE B.seq=A.cate_lv2_seq) AS cateLv2Name,
+			(SELECT cate_name FROM sm_item_category C WHERE C.seq=A.cate_lv3_seq) AS cateLv3Name,
+			(SELECT cate_name FROM sm_item_category D WHERE D.seq=A.cate_lv4_seq) AS cateLv4Name,
+			A.seq,
+			A.name,
+			A.supply_master_price AS supplyMasterPrice,
+			A.supply_price AS supplyPrice,
+			A.market_price AS marketPrice,
+			A.maker,
+			A.origin_country AS originCountry,
+			A.min_cnt AS minCnt,
+			A.seller_seq AS sellerSeq,
+			A.seller_item_code AS sellerItemCode,
+			A.brand,
+			A.model_name AS modelName,
+			A.make_date AS makeDate,
+			A.expire_date AS expireDate,
+			A.adult_flag AS adultFlag,
+			A.img1 AS img1,
+			A.img2 AS img2,
+			A.img3 AS img3,
+			A.img4 AS img4,
+			A.tax_code AS taxCode,
+			A.mod_date AS modDate,
+			A.reg_date AS regDate,
+			A.deli_type_code AS deliTypeCode,
+			A.deli_cost AS deliCost,
+			A.deli_free_amount AS deliFreeAmount,
+			A.deli_prepaid_flag AS deliPrepaidFlag,
+			A.deli_package_flag AS deliPackageFlag,
+			A.type_cd AS typeCd,
+			A.type_code AS typeCode,
+			B.content,
+			B.as_flag AS asFlag,
+			B.as_tel AS asTel,
+			B.as_content AS asContent,
+			B.detail1_img AS detailImg1,
+			B.detail2_img AS detailImg2,
+			B.detail3_img AS detailImg3,
+			B.detail1_alt AS detailAlt1,
+			B.detail2_alt AS detailAlt2,
+			B.detail3_alt AS detailAlt3,
+			B.use_code AS useCode,
+			F.name AS sellerName,
+			H.name AS masterName,
+			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = A.seq) AS itemGrade,
+			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq =A.seq) AS reviewCount,
+			G.return_name AS returnName,
+			G.return_cell AS returnCell,
+			A.auth_category AS authCategory,
+			c1.name AS statusName,
+			c2.name AS typeName
+		FROM
+			sm_item A INNER JOIN 
+			sm_item_detail B ON A.seq=B.item_seq LEFT OUTER JOIN 
+			sm_item_category C ON A.cate_lv1_seq=C.seq AND C.depth=1 LEFT OUTER JOIN 
+			sm_item_category D ON A.cate_lv2_seq=D.seq AND D.depth=2 LEFT OUTER JOIN 
+			sm_item_category E ON A.cate_lv3_seq=E.seq AND E.depth=3 LEFT OUTER JOIN 
+			sm_item_category J ON A.cate_lv4_seq=J.seq AND J.depth=4 LEFT OUTER JOIN 
+			sm_user F ON A.seller_seq=F.seq LEFT OUTER JOIN 
+			sm_seller G ON A.seller_seq=G.seq LEFT OUTER JOIN 
+			sm_user H ON G.master_seq=H.seq LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=4 AND c1.value=A.status_code) LEFT OUTER JOIN
+			sm_common c2 ON (c2.group_code=34 AND c2.value=A.type_code)
+		WHERE A.seq=#{seq}
+	</select>
+	
+	<update id="createSeq" parameterType="com.smpro.vo.ItemVo">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT seq FROM sm_item_seq
+		</selectKey>
+		UPDATE sm_item_seq SET seq=seq+1
+	</update>
+	
+	<insert id="insertVo" parameterType="com.smpro.vo.ItemVo">
+		INSERT INTO sm_item (
+			seq,
+			name,
+			<if test="statusCode != ''">
+				status_code,
+			</if>
+			sell_price,
+			supply_price,
+			market_price,
+			maker,
+			origin_country,
+			<if test="minCnt > 0">
+				min_cnt,
+			</if>
+			seller_seq,
+			seller_item_code,
+			cate_lv1_seq,
+			<if test="cateLv2Seq != null">
+				cate_lv2_seq,
+			</if>
+			<if test="cateLv3Seq != null">
+				cate_lv3_seq,
+			</if>
+			<if test="cateLv4Seq != null">
+				cate_lv4_seq,
+			</if>
+			brand,
+			model_name,
+			make_date,
+			expire_date,
+			adult_flag,
+			img1,
+			img2,
+			img3,
+			img4,
+			tax_code,
+			deli_type_code,
+			deli_cost,
+			deli_free_amount,
+			deli_prepaid_flag,
+			deli_package_flag,
+			type_cd,
+			type_code,
+			auth_category,
+			mod_date,
+			reg_date
+		) VALUES (
+			#{seq},
+			#{name},
+			<if test="statusCode != ''">
+				#{statusCode},
+			</if>
+			#{sellPrice},
+			#{supplyPrice},
+			#{marketPrice},
+			#{maker},
+			#{originCountry},
+			<if test="minCnt > 0">
+				#{minCnt},
+			</if>
+			#{sellerSeq},
+			#{sellerItemCode},
+			#{cateLv1Seq},
+			<if test="cateLv2Seq != null">
+				#{cateLv2Seq},
+			</if>
+			<if test="cateLv3Seq != null">
+				#{cateLv3Seq},
+			</if>
+			<if test="cateLv4Seq != null">
+				#{cateLv4Seq},
+			</if>
+			#{brand},
+			#{modelName},
+			#{makeDate},
+			#{expireDate},
+			#{adultFlag},
+			#{img1},
+			#{img2},
+			#{img3},
+			#{img4},
+			#{taxCode},
+			#{deliTypeCode},
+			#{deliCost},
+			#{deliFreeAmount},
+			#{deliPrepaidFlag},
+			#{deliPackageFlag},
+			#{typeCd},
+			#{typeCode},
+			#{authCategory},
+			NOW(),
+			NOW()
+		)
+	</insert>
+
+	<insert id="insertDetailVo" parameterType="com.smpro.vo.ItemVo">
+		INSERT INTO sm_item_detail (
+			item_seq
+			, content
+			, as_flag
+			, as_tel
+			, as_content
+			, detail1_img
+			, detail2_img
+			, detail3_img
+			, detail1_alt
+			, detail2_alt
+			, detail3_alt
+			, use_code
+			, mod_date
+			, reg_date
+		) VALUES (
+			#{seq}
+			, #{content}
+			, #{asFlag}
+			, #{asTel}
+			, #{asContent}
+			, #{detailImg1}
+			, #{detailImg2}
+			, #{detailImg3}
+			, #{detailAlt1}
+			, #{detailAlt2}
+			, #{detailAlt3}
+			, #{useCode}
+			, NOW()
+			, NOW()
+		)
+	</insert>
+
+	<update id="updateImgPath" parameterType="com.smpro.vo.ItemVo">
+		UPDATE	sm_item SET
+		<if test="img1 != ''">
+			img1=#{img1}
+		</if>
+		<if test="img2 != ''">
+			, img2=#{img2}
+		</if>
+		<if test="img3 != ''">
+			, img3=#{img3}
+		</if>
+		<if test="img4 != ''">
+			, img4=#{img4}
+		</if>
+		WHERE seq=#{seq}
+	</update>
+
+	<update id="updateVo" parameterType="com.smpro.vo.ItemVo">
+		UPDATE sm_item SET
+		name=#{name}
+		, status_code=#{statusCode}
+		, sell_price=#{sellPrice}
+		<if test="supplyMasterPrice != null">
+		, supply_master_price=#{supplyMasterPrice}
+		</if>
+		, supply_price=#{supplyPrice}
+		, market_price=#{marketPrice}
+		, maker=#{maker}
+		, origin_country=#{originCountry}
+		<if test="minCnt != null">
+		, min_cnt=#{minCnt}
+		</if>
+		<if test="sellerSeq != null">
+		, seller_seq=#{sellerSeq}
+		</if>
+		, seller_item_code=#{sellerItemCode}
+		, cate_lv1_seq=#{cateLv1Seq}
+		, cate_lv2_seq=#{cateLv2Seq}
+		, cate_lv3_seq=#{cateLv3Seq}
+		, cate_lv4_seq=#{cateLv4Seq}
+		, brand=#{brand}
+		, model_name=#{modelName}
+		, make_date=#{makeDate}
+		, expire_date=#{expireDate}
+		, adult_flag=#{adultFlag}
+		<if test="img1 != ''">
+			, img1=#{img1}
+		</if>
+		<if test="img2 != ''">
+			, img2=#{img2}
+		</if>
+		<if test="img3 != ''">
+			, img3=#{img3}
+		</if>
+		<if test="img4 != ''">
+			, img4=#{img4}
+		</if>
+		, tax_code=#{taxCode}
+		, deli_type_code=#{deliTypeCode}
+		, deli_cost=#{deliCost}
+		, deli_free_amount=#{deliFreeAmount}
+		, deli_prepaid_flag=#{deliPrepaidFlag}
+		, deli_package_flag=#{deliPackageFlag}
+		, type_code=#{typeCode}
+		, auth_category=#{authCategory}
+		, mod_date=NOW()
+		WHERE seq=#{seq}
+	</update>
+
+	<update id="updateDetailVo" parameterType="com.smpro.vo.ItemVo">
+		UPDATE sm_item_detail SET
+		as_flag=#{asFlag}
+		, as_tel=#{asTel}
+		, as_content=#{asContent}
+		<if test="detailImg1 != ''">
+			, detail1_img=#{detailImg1}
+		</if>
+		<if test="detailImg2 != ''">
+			, detail2_img=#{detailImg2}
+		</if>
+		<if test="detailImg3 != ''">
+			, detail3_img=#{detailImg3}
+		</if>
+		<if test="detailAlt1 != ''">
+			, detail1_alt=#{detailAlt1}
+		</if>
+		<if test="detailAlt2 != ''">
+			, detail2_alt=#{detailAlt2}
+		</if>
+		<if test="detailAlt3 != ''">
+			, detail3_alt=#{detailAlt3}
+		</if>
+		<if test="useCode != ''">
+		, use_code=#{useCode}
+		</if>
+		, content=#{content}
+		, mod_date=NOW()
+		WHERE item_seq=#{seq}
+	</update>
+
+	<update id="updateStatusCode" parameterType="com.smpro.vo.ItemVo">
+		UPDATE sm_item SET
+			status_code=#{statusCode}
+			, mod_date=NOW()
+		WHERE seq=#{seq}
+	</update>
+
+	<update id="updateCategory" parameterType="com.smpro.vo.ItemVo">
+		UPDATE sm_item SET
+			cate_lv1_seq=#{cateLv1Seq}
+			, cate_lv2_seq=#{cateLv2Seq}
+			, cate_lv3_seq=#{cateLv3Seq}
+			, cate_lv4_seq=#{cateLv4Seq}
+			, mod_date=NOW()
+		WHERE seq=#{seq}
+	</update>
+
+  <update id="batchUpdateVo" parameterType="com.smpro.vo.ItemVo">
+    UPDATE sm_item SET
+		mod_date=NOW()
+		<if test="name != ''">
+			, name=#{name}
+		</if>
+		<if test="sellPrice > 0">
+			, sell_price=#{sellPrice}
+		</if>
+		<if test="supplyMasterPrice > 0">
+			, supply_master_price=#{supplyMasterPrice}
+		</if>
+		<if test="supplyPrice > 0">
+			, supply_price=#{supplyPrice}
+		</if>
+		<if test="marketPrice > 0">
+			, market_price=#{marketPrice}
+		</if>
+		<if test="maker != ''">
+			, maker=#{maker}
+		</if>
+		<if test="originCountry != ''">
+			, origin_country=#{originCountry}
+		</if>
+		<if test="brand != ''">
+			, brand=#{brand}
+		</if>
+		<if test="modelName != ''">
+			, model_name=#{modelName}
+		</if>
+		<if test="makeDate != ''">
+			, make_date=#{makeDate}
+		</if>
+		<if test="expireDate != ''">
+			, expire_date=#{expireDate}
+		</if>
+		<if test="adultFlag != ''">
+			, adult_flag=#{adultFlag}
+		</if>
+		<if test="deliTypeCode != ''">
+			, deli_type_code=#{deliTypeCode}
+		</if>
+		<if test="deliCost > 0">
+			, deli_cost=#{deliCost}
+		</if>
+		<if test="deliFreeAmount > 0">
+			, deli_free_amount=#{deliFreeAmount}
+		</if>
+		<if test="deliPrepaidFlag != ''">
+			<choose>
+				<when test="deliPrepaidFlag eq 'YN'">
+			, deli_prepaid_flag = NULL
+				</when>
+				<otherwise>
+			, deli_prepaid_flag=#{deliPrepaidFlag}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="deliPackageFlag != ''">
+			, deli_package_flag=#{deliPackageFlag}
+		</if>
+		<if test="typeCode != ''">
+			, type_code=#{typeCode}
+		</if>
+		<if test="taxCode != ''">
+			, tax_code=#{taxCode}
+		</if>
+		<if test="authCategory != ''">
+			, auth_category=#{authCategory}
+		</if>
+    WHERE seq=#{seq}
+  </update>
+
+  <update id="batchUpdateDetailVo" parameterType="com.smpro.vo.ItemVo">
+		UPDATE sm_item_detail SET
+			mod_date=NOW()
+			<if test="asFlag != ''">
+				, as_flag=#{asFlag}
+			</if>
+			<if test="asTel != ''">
+				, as_tel=#{asTel}
+			</if>
+		WHERE item_seq=#{seq}
+  </update>
+
+	<delete id="deleteVo" parameterType="int">
+		DELETE FROM sm_item WHERE seq=#{value}
+	</delete>
+
+	<insert id="insertLogVo" parameterType="com.smpro.vo.ItemLogVo">
+		INSERT INTO sm_item_log (
+			item_seq,
+			action,
+			content,
+			login_seq,
+			login_type,
+			mod_content,
+			reg_date
+		) VALUES (
+			#{itemSeq},
+			#{action},
+			#{content},
+			#{loginSeq},
+			#{loginType},
+			#{modContent},
+			NOW()
+		)
+	</insert>
+
+	<select id="getLogList" parameterType="com.smpro.vo.ItemLogVo" resultType="com.smpro.vo.ItemLogVo">
+		SELECT
+			seq
+			, item_seq AS itemSeq
+			, action
+			, content
+			, mod_content AS modContent
+			, login_seq AS loginSeq
+			, login_type AS loginType
+			, reg_date AS regDate
+			, (SELECT id || ' (' || name || ')' FROM sm_user WHERE sm_user.seq=sm_item_log.login_seq) AS name
+		FROM sm_item_log
+		WHERE item_seq=#{seq}
+		ORDER BY seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getLogListTotalCount" parameterType="com.smpro.vo.ItemLogVo" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM sm_item_log
+		WHERE 1=1
+					AND item_seq=#{seq}
+	</select>
+
+	<!-- 상품 존재유무 검사 -->
+	<select id="getItemCnt" parameterType="int" resultType="int">
+		SELECT COUNT(*) cnt
+		FROM sm_item
+		WHERE seq=#{itemSeq}
+	</select>
+
+	<!-- 상품관리 -->
+	<select id="getItemRegCntForWeek" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+		COUNT(*) cnt
+		FROM
+		sm_item i
+		WHERE 1=1
+		AND i.status_code = 'Y'
+		AND DATE_FORMAT( i.reg_date, '%Y-%m-%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y-%m-%d' )
+		<if test="loginType == 'S'.toString() || loginType == 'D'.toString()">
+			AND	i.seller_seq = #{seq}
+		</if>
+	</select>
+
+	<!--상품의 판매자 시퀀스 읽어오기-->
+	<select id="getItemSellerSeq" parameterType="int" resultType="int">
+		SELECT IFNULL(seller_seq, 0) AS sellerSeq
+		FROM sm_item
+		WHERE seq=#{seq}
+	</select>
+	<!--상품의 총판 시퀀스 읽어오기-->
+	<select id="getItemMasterSeq" parameterType="int" resultType="int">
+		SELECT s.master_seq
+		FROM sm_seller s
+		WHERE s.seq = (
+			SELECT i.seller_seq
+			FROM sm_item i
+			WHERE i.seq = #{seq}
+		)
+	</select>
+
+	<!--상품 정보 고시-->
+	<select id="getTypeInfoList" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			type_cd AS typeCd
+			, type_nm AS typeNm
+		FROM sm_item_type
+	</select>
+
+	<select id="getPropList" parameterType="int" resultType="com.smpro.vo.ItemInfoNoticeVo">
+		SELECT
+			A.type_prop_id AS typePropId
+			, A.type_cd AS typeCd
+			, A.prop_cd AS propCd
+			, A.seq_no AS seqNo
+			, B.prop_nm AS propNm
+			, B.prop_type AS propType
+			, A.prop_note AS propNote
+			, B.default_val AS defaultVal
+			, B.ext_prop_cd1 AS extPropCd1
+			, B.radio_list AS radioList
+			, C.type_nm AS typeNm
+		FROM
+			sm_item_type_prop A
+			, sm_item_prop B
+			, sm_item_type C
+		WHERE 1=1
+					AND A.prop_cd = B.prop_cd AND A.type_cd = C.type_cd
+					AND A.type_cd = #{typeCd}
+					AND A.type_prop_id > 0
+		ORDER BY seq_no ASC
+	</select>
+
+	<select id="getInfo" parameterType="java.lang.Integer" resultType="map">
+		SELECT * FROM sm_item_add_info	WHERE item_seq=#{seq}
+	</select>
+
+	<insert id="insertInfo" parameterType="com.smpro.vo.ItemInfoNoticeVo">
+		INSERT INTO sm_item_add_info (
+		item_seq ,
+		<foreach collection="propValList" item="item" index="index" separator=",">
+			prop_val${index+1}
+		</foreach>
+		, reg_date
+		) VALUES (
+		#{itemSeq} ,
+		<foreach collection="propValList" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+		, NOW()
+		)
+	</insert>
+
+	<update id="updateTypeCd" parameterType="com.smpro.vo.ItemInfoNoticeVo">
+		UPDATE sm_item SET
+			type_cd=#{typeCd}
+		WHERE seq=#{itemSeq}
+	</update>
+
+	<update id="updateInfo" parameterType="com.smpro.vo.ItemInfoNoticeVo">
+		UPDATE sm_item_add_info SET
+		<foreach collection="propValList" item="item" index="index" separator=",">
+			prop_val${index+1}=#{item}
+		</foreach>
+		, reg_date=NOW()
+		WHERE item_seq = #{itemSeq}
+	</update>
+
+	<delete id="deleteInfo">
+		DELETE FROM sm_item_add_info WHERE item_seq=#{seq}
+	</delete>
+
+	<select id="getListSimple" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			i.sell_price AS sellPrice,
+			(SELECT cate_name FROM sm_item_category A WHERE A.seq=i.cate_lv1_seq) AS cateLv1Name,
+			(SELECT cate_name FROM sm_item_category B WHERE B.seq=i.cate_lv2_seq) AS cateLv2Name,
+			(SELECT cate_name FROM sm_item_category C WHERE C.seq=i.cate_lv3_seq) AS cateLv3Name,
+			(SELECT cate_name FROM sm_item_category D WHERE D.seq=i.cate_lv4_seq) AS cateLv4Name,
+			i.seq,
+			i.name,
+			i.status_code AS statusCode,
+			i.market_price AS marketPrice,
+			i.seller_seq AS sellerSeq,
+			i.brand,
+			i.model_name AS modelName,
+			i.img1 AS img1,
+			i.img2 AS img2,
+			i.img3 AS img3,
+			i.img4 AS img4,
+			i.deli_type_code AS deliTypeCode,
+			i.deli_cost AS deliCost,
+			u.name AS sellerName,
+			u.nickname,
+			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = i.seq) AS itemGrade,
+			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq = i.seq) AS reviewCount,
+			CASE WHEN o.stockCount=0 THEN 'Y' ELSE 'N' END AS soldOutFlag,
+			o.optionName,
+			o.optionSeq,
+			i.type_code AS typeCode
+		FROM
+			sm_item i LEFT OUTER JOIN
+			sm_item_category c ON(i.cate_lv1_seq=c.seq) LEFT OUTER JOIN
+			sm_user u	ON i.seller_seq=u.seq	LEFT OUTER JOIN (
+				SELECT
+					o.item_seq, o.seq AS optionSeq, SUM(ov.stock_cnt) AS stockCount, MIN(o.option_name) AS optionName
+				FROM
+					sm_item_option o	INNER JOIN
+					sm_item_option_value ov ON o.seq=ov.option_seq
+				WHERE show_flag='Y'
+
+				GROUP BY item_seq, o.seq
+			) o ON o.item_seq=i.seq LEFT OUTER JOIN
+			sm_seller s ON(i.seller_seq=s.seq)
+		WHERE 1=1
+		<choose>
+			<when test="loginType eq 'S'.toString()">
+				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
+				AND i.seller_seq=#{loginSeq}
+			</when>
+			<when test="loginType eq 'D'.toString()">
+				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
+				AND i.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
+			</when>
+		</choose>
+		<if test="cateLv1Seq != null">
+			AND i.cate_lv1_seq=#{cateLv1Seq}
+		</if>
+		<if test="cateLv2Seq != null">
+			AND i.cate_lv2_seq=#{cateLv2Seq}
+		</if>
+		<if test="cateLv3Seq != null">
+			AND i.cate_lv3_seq=#{cateLv3Seq}
+		</if>
+		<if test="cateLv4Seq != null">
+			AND i.cate_lv4_seq=#{cateLv4Seq}
+		</if>
+		<if test="name != ''">
+			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{name}),'%') OR LOWER(u.name) LIKE CONCAT('%',LOWER(#{name}),'%'))
+		</if>
+		<if test="sellerName != ''">
+			AND LOWER(u.name) LIKE CONCAT('%',LOWER(#{sellerName}),'%')
+		</if>
+		<if test="seq != null">
+			AND i.seq = #{seq}
+		</if>
+		<if test="statusCode != ''">
+			AND i.status_code = #{statusCode}
+		</if>
+		<if test="showFlag != ''">
+			AND c.show_flag=#{showFlag}
+		</if>
+		<if test="jachiguCode != ''">
+			AND s.jachigu_code=#{jachiguCode}
+ 		</if>
+ 		<if test="sellerSeq != null">
+			AND i.seller_seq=#{sellerSeq}
+ 		</if>
+ 		<if test="loginType != 'A'.toString()">
+ 			<if test="memberTypeCode != 'P'.toString()">
+				AND i.cate_lv1_seq != 53
+			</if>
+		</if>
+		<choose>
+			<when test="startPrice == 0 and endPrice == 0">
+			</when>
+			<when test="endPrice == 0">
+				AND i.sell_price >= #{startPrice}
+			</when>
+			<when test="startPrice == 0">
+				<![CDATA[ AND i.sell_price <= #{endPrice} ]]>
+			</when>
+			<when test="startPrice != 0 and endPrice != 0">
+				AND i.sell_price BETWEEN #{startPrice} AND #{endPrice}
+			</when>
+		</choose>
+		<choose>
+			<when test="orderType == 'highprice'">
+				ORDER BY i.type_code ASC, i.sell_price DESC, i.seq DESC
+			</when>
+			<when test="orderType == 'lowprice'">
+				ORDER BY i.type_code DESC, i.sell_price ASC, i.seq DESC
+			</when>
+			<otherwise>
+				ORDER BY i.seq DESC
+			</otherwise>
+		</choose>
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getListSimpleTotalCount" parameterType="com.smpro.vo.ItemVo" resultType="int">
+		SELECT
+			COUNT(*) cnt
+		FROM
+			sm_item i LEFT OUTER JOIN
+			sm_item_category c ON(i.cate_lv1_seq=c.seq) LEFT OUTER JOIN
+			sm_user u	ON i.seller_seq=u.seq LEFT OUTER JOIN
+			sm_seller s ON(i.seller_seq=s.seq)
+		WHERE 1=1
+		<choose>
+			<when test="loginType eq 'S'.toString()">
+				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
+				AND i.seller_seq=#{loginSeq}
+			</when>
+			<when test="loginType eq 'D'.toString()">
+				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
+				AND i.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
+			</when>
+		</choose>
+
+		<if test="cateLv1Seq != null">
+			AND i.cate_lv1_seq=#{cateLv1Seq}
+		</if>
+		<if test="cateLv2Seq != null">
+			AND i.cate_lv2_seq=#{cateLv2Seq}
+		</if>
+		<if test="cateLv3Seq != null">
+			AND i.cate_lv3_seq=#{cateLv3Seq}
+		</if>
+		<if test="cateLv4Seq != null">
+			AND i.cate_lv4_seq=#{cateLv4Seq}
+		</if>
+
+		<if test="name != ''">
+			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{name}),'%') OR LOWER(u.name) LIKE CONCAT('%',LOWER(#{name}),'%'))
+		</if>
+		<if test="sellerName != ''">
+			AND LOWER(u.name) LIKE CONCAT('%',LOWER(#{sellerName}),'%')
+		</if>
+		<if test="seq != null">
+			AND i.seq = #{seq}
+		</if>
+		<if test="statusCode != ''">
+			AND i.status_code = #{statusCode}
+		</if>
+		<if test="showFlag != ''">
+			AND c.show_flag=#{showFlag}
+ 		</if>
+ 		<if test="jachiguCode != ''">
+			AND s.jachigu_code=#{jachiguCode}
+ 		</if>
+ 		<if test="sellerSeq != null">
+			AND i.seller_seq=#{sellerSeq}
+ 		</if>
+ 		<if test="loginType != 'A'.toString()">
+ 			<if test="memberTypeCode != 'P'.toString()">
+				AND i.cate_lv1_seq != 53
+			</if>
+		</if>
+		<choose>
+			<when test="startPrice == 0 and endPrice == 0">
+			</when>
+			<when test="endPrice == 0">
+				AND i.sell_price >= #{startPrice}
+			</when>
+			<when test="startPrice == 0">
+				<![CDATA[ AND i.sell_price <= #{endPrice} ]]>
+			</when>
+			<when test="startPrice != 0 and endPrice != 0">
+				AND i.sell_price BETWEEN #{startPrice} AND #{endPrice}
+			</when>
+		</choose>
+	</select>
+
+	<select id="getFilterList" resultType="com.smpro.vo.FilterVo">
+		SELECT
+			seq,
+			filter_word AS filterWord,
+			reg_date AS regDate
+		FROM
+			sm_item_filter_word
+		ORDER BY seq DESC
+	</select>
+	<delete id="deleteFilter" parameterType="int">
+		DELETE FROM sm_item_filter_word WHERE seq=#{seq}
+	</delete>
+	<insert id="insertFilter" parameterType="String">
+		INSERT INTO sm_item_filter_word(
+			filter_word
+			, reg_date
+		)VALUES(
+			#{word}
+			, NOW()
+		)
+	</insert>
+	<select id="getSoldOutList" resultType="com.smpro.vo.ItemVo">
+		SELECT t.seq FROM (
+			SELECT
+				i.seq,
+				SUM(IFNULL(v.stock_cnt,0)) AS cnt
+			FROM
+				sm_item i LEFT OUTER JOIN
+				sm_item_option o ON(i.seq = o.item_seq) LEFT OUTER JOIN
+				sm_item_option_value v ON(o.seq = v.option_seq)
+			WHERE
+				i.status_code = 'Y'
+			GROUP BY i.seq
+		) t WHERE t.cnt = 0
+	</select>
+	<select id="getListExcel" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			A.seq,
+			A.name,
+			A.status_code AS statusCode,
+			A.sell_price AS sellPrice,
+			A.supply_master_price AS supplyMasterPrice,
+			A.supply_price AS supplyPrice,
+			A.market_price AS marketPrice,
+			A.maker,
+			A.origin_country AS originCountry,
+			A.min_cnt AS minCnt,
+			A.seller_seq AS sellerSeq,
+			A.seller_item_code AS sellerItemCode,
+			A.cate_lv1_seq AS cateLv1Seq,
+			A.cate_lv2_seq AS cateLv2Seq,
+			A.cate_lv3_seq AS cateLv3Seq,
+			A.cate_lv4_seq AS cateLv4Seq,
+			A.brand,
+			A.model_name AS modelName,
+			A.make_date AS makeDate,
+			A.expire_date AS expireDate,
+			A.adult_flag AS adultFlag,
+			I.as_flag AS asFlag,
+			I.as_tel AS asTel,
+			A.img1 AS img1,
+			A.img2 AS img2,
+			A.img3 AS img3,
+			A.img4 AS img4,
+			A.deli_type_code AS deliTypeCode,
+			A.deli_cost AS deliCost,
+			A.deli_free_amount AS deliFreeAmount,
+			A.deli_prepaid_flag AS deliPrepaidFlag,
+			A.deli_package_flag AS deliPackageFlag,
+			A.tax_code AS taxCode,
+			A.mod_date AS modDate,
+			A.reg_date AS regDate,
+			B.cate_name AS cateLv1Name,
+			C.cate_name AS cateLv2Name,
+			D.cate_name AS cateLv3Name,
+			J.cate_name AS cateLv4Name,
+			E.name AS sellerName,
+			F.sales_tel AS salesTel,
+			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = A.seq) AS itemGrade,
+			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq = A.seq) AS reviewCount,
+			(SELECT MAX(option_name) FROM sm_item_option WHERE item_seq = A.seq) AS optionName,
+			(SELECT GROUP_CONCAT(v.value_name SEPARATOR ',') FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq ORDER BY v.seq ASC) AS optionValues,
+			(SELECT GROUP_CONCAT(v.option_price SEPARATOR ',') FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq ORDER BY v.seq ASC) AS optionPrices,
+			(SELECT GROUP_CONCAT(v.stock_cnt SEPARATOR ',') FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq ORDER BY v.seq ASC) AS stockCounts,
+			A.type_code AS typeCode
+		FROM
+			sm_item A LEFT OUTER JOIN
+			sm_item_category B	ON A.cate_lv1_seq=B.seq LEFT OUTER JOIN
+			sm_item_category C	ON A.cate_lv2_seq=C.seq LEFT OUTER JOIN
+			sm_item_category D	ON A.cate_lv3_seq=D.seq LEFT OUTER JOIN
+			sm_item_category J	ON A.cate_lv4_seq=J.seq LEFT OUTER JOIN
+			sm_user E	ON A.seller_seq=E.seq	LEFT OUTER JOIN
+			sm_seller F	ON A.seller_seq=F.seq	LEFT OUTER JOIN
+			sm_item_detail I ON I.item_seq=A.seq
+		WHERE 1=1
+			<choose>
+				<when test="loginType eq 'S'.toString()">
+					<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
+					AND A.seller_seq=#{loginSeq}
+				</when>
+				<when test="loginType eq 'D'.toString()">
+					<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
+					AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
+				</when>
+			</choose>
+			<if test="cateLv1Seq != null">
+				AND A.cate_lv1_seq=#{cateLv1Seq}
+			</if>
+			<if test="cateLv2Seq != null">
+				AND A.cate_lv2_seq=#{cateLv2Seq}
+			</if>
+			<if test="cateLv3Seq != null">
+				AND A.cate_lv3_seq=#{cateLv3Seq}
+			</if>
+			<if test="cateLv4Seq != null">
+				AND A.cate_lv4_seq=#{cateLv4Seq}
+			</if>
+			<if test="name != ''">
+				AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{name}),'%')
+			</if>
+			<if test="seq != null">
+				AND A.seq = #{seq}
+			</if>
+			<if test="sellerId != ''">
+				AND E.id LIKE CONCAT('%',#{sellerId},'%')
+			</if>
+			<if test="sellerName != ''">
+				AND E.name LIKE CONCAT('%',#{sellerName},'%')
+			</if>
+			<if test="sellerSeq != null">
+				AND A.seller_seq = #{sellerSeq}
+			</if>
+			<if test="statusCode != ''">
+				AND A.status_code = #{statusCode}
+			</if>
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(A.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			</if>
+			<if test="taxCode != ''">
+				AND A.tax_code = #{taxCode}
+			</if>
+			<if test="search != '' and findword != ''">
+				AND ${search} LIKE CONCAT('%',#{findword},'%')
+			</if>
+			<if test="deliTypeCode != ''">
+				AND A.deli_type_code = #{deliTypeCode}
+			</if>
+		ORDER BY A.seq DESC
+		LIMIT ${rowCount}
+	</select>
+	
+	<update id="deleteImgPath" parameterType="com.smpro.vo.ItemVo">
+		UPDATE sm_item SET 
+			<if test="img1 != ''">
+				img1 = ''
+			</if>
+			<if test="img2 != ''">
+				img2 = ''
+			</if>
+			<if test="img3 != ''">
+				img3 = ''
+			</if>
+			<if test="img4 != ''">
+				img4 = ''
+			</if>
+		WHERE seq=#{seq}
+	</update>
+	
+	<update id="deleteDetailImgPath" parameterType="com.smpro.vo.ItemVo">
+		UPDATE sm_item_detail SET 
+			<if test="detailImg1 != ''">
+				detail1_img = ''
+			</if>
+			<if test="detailImg2 != ''">
+				detail2_img = ''
+			</if>
+			<if test="detailImg3 != ''">
+				detail3_img = ''
+			</if>
+		WHERE item_seq=#{seq}
+	</update>
+	
+	<!-- 상품로그 6개월 경과분 삭제 -->
+	<delete id="deleteLogBatch">
+		DELETE FROM sm_item_log
+		WHERE
+	 		DATE_ADD(now(), INTERVAL -6 MONTH) > reg_date <!-- 현재 시점에서 6개월이 지난 건 -->
+	</delete>
+	
+	<!-- 판매중인 상품 조회 -->
+	<select id="getListForSelling" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			i.seq,
+			i.status_code AS statusCode
+		FROM
+			sm_item i
+		WHERE status_code = 'Y'
+ 		<if test="sellerSeq != null">
+			AND i.seller_seq=#{sellerSeq}
+ 		</if>
+	</select>
+</mapper>

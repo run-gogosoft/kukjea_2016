@@ -1,0 +1,140 @@
+$default_size: 1080px;
+
+@charset "UTF-8";
+
+.breadcrumb-arrow {
+	display:inline-block;
+	margin:0 5px;
+}
+
+.main-menu {
+	float:left;
+	margin:0 0 70px 0;
+	padding:0;
+	width:202px;
+
+	li {
+		list-style:none;
+		width:202px;
+		color:#fff;
+		font-size:16px;
+		font-weight:bold;
+		text-align:center;
+		line-height:45px;
+
+		&:first-child {
+			line-height:50px;
+		}
+
+		a {
+			text-decoration:none;
+			color:#fff;
+		}
+	}
+
+	.main {
+		height:52px;
+		background-color:#4db7c9;
+	}
+
+	.faq , .notice {
+		height:42px;
+		font-size:14px;
+		background-color:#fbac18;
+	}
+
+	.faq-sub {
+		padding:18px 0 0 28px;
+		height:252px;
+		background-color:#fff;
+
+		.sub-list {
+			margin:0;
+			padding:0;
+
+			li {
+				margin-top:18px;
+				width:100px;
+				height:15px;
+				font-size:13px;
+				color:#999999;
+				text-align:left;
+				font-weight:normal;
+
+				.current {
+					color:#666666;
+					font-weight:bold;
+					text-decoration:none;
+				}
+
+				&:first-child {
+					margin-top:-15px;
+					color:#000;
+				}
+
+				a {
+					text-decoration:none;
+					color:#999999;
+				}
+			}
+		}
+	}
+}
+
+.board-title {
+	margin:35px auto 0 auto;
+	padding:0;
+	height:20px;
+	font-size:12px;
+	font-weight:bold;
+	color:#707070;
+}
+
+.board-title-sub {
+	margin:0 0 -30px 18px;
+  padding:0;
+
+  div {
+    list-style:none;
+    color:#707070;
+    font-size:12px;
+
+    &:before {
+    	content:"- ";
+    }
+  }
+}
+
+.cscenter-main-wrap {
+	margin:0 auto;
+	width:$default_size;
+}
+
+.main-content-wrap {
+	float:left;
+	margin-left:18px;
+	padding-top:20px;
+	width:860px;
+}
+
+.breadcrumb {
+	font-size:12px;
+	color:#333333;
+	background-color:#f1f1f1;
+	margin-bottom:10px;
+}
+
+.total-count-title {
+  margin-top:10px;
+  font-size:12px;
+  color:#707070;
+
+  span {
+    color:#4db7c9;
+  }
+}
+
+.non-row {
+	font-size:12px;
+	background-color:#fff
+}

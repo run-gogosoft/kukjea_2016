@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.MemberGroupDao">
+	<!--그룹 등록-->
+	<insert id="regVo" parameterType="com.smpro.vo.MemberGroupVo" useGeneratedKeys="true" keyProperty="seq">
+		INSERT INTO sm_member_group (
+			name, biz_no, biz_type, biz_kind, ceo_name, jachigu_code, invest_flag, fax, tax_name, tax_email, tax_tel
+		) VALUES (
+			#{name}, #{bizNo}, #{bizType}, #{bizKind}, #{ceoName}, #{jachiguCode}, #{investFlag}, #{fax}, #{taxName}, #{taxEmail}, #{taxTel}
+		)
+	</insert>
+
+	<!--그룹 수정-->
+	<update id="modVo" parameterType="com.smpro.vo.MemberGroupVo">
+		UPDATE sm_member_group SET
+			biz_type = #{bizType}, biz_kind = #{bizKind}, 
+			ceo_name = #{ceoName}, jachigu_code = #{jachiguCode}, invest_flag = #{investFlag}, fax = #{fax},
+			tax_name = #{taxName}, tax_email = #{taxEmail}, tax_tel = #{taxTel}
+		WHERE seq=#{seq}
+	</update>
+	
+	
+	<!--그룹 상세정보-->
+	<select id="getVo" parameterType="java.lang.Integer" resultType="com.smpro.vo.MemberGroupVo">
+		SELECT
+			g.seq,
+			g.name,
+			g.biz_no AS bizNo,
+			g.biz_type AS bizType,
+			g.biz_kind AS bizKind,
+			g.ceo_name AS ceoName,
+			g.jachigu_code AS jachiguCode,
+			g.invest_flag AS investFlag,
+			g.fax AS fax,
+			g.tax_name AS taxName,
+			g.tax_email AS taxEmail,
+			g.tax_tel AS taxTel,
+			c1.name AS jachiguName,
+			g.invest_flag AS investFlag
+		FROM
+			sm_member_group g LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=29 AND c1.value=g.jachigu_code)
+		WHERE
+			g.seq=#{seq}
+	</select>
+	
+	<!--주소 업데이트 -->
+	<update id="modAddr" parameterType="com.smpro.vo.MemberGroupVo">
+		UPDATE sm_member SET
+			postcode = #{postcode}, addr1 = #{addr1}, addr2 = #{addr2}
+		WHERE group_seq = #{seq}
+	</update>
+	
+	<!-- 사업자 번호 체크 -->
+	<select id="getBizNoCnt" parameterType="String" resultType="int">
+		SELECT COUNT(*) cnt FROM sm_member_group WHERE biz_no=#{bizNo}
+	</select>
+</mapper>

@@ -1,0 +1,239 @@
+<!------------------------------------------------------------------------------
+ FILE NAME : INIars.html
+ DATE : 2009/07
+ 
+ ARS 카드결제 호전환 요청 샘플
+ - 샘플에 구현된 코드는 인증 절차에 필요한 최소한의 정보를 설정하게됩니다.
+   개체, 필드를 누락/삭제하지 마십시오.
+                                                          http://www.inicis.com
+                                 Copyright 2009 Inicis, Co. All rights reserved.
+------------------------------------------------------------------------------>
+<html>    
+<head>
+<title>ARS 카드결제 호전환 요청 샘플</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="css/group.css" type="text/css">
+<style>
+body, tr, td {font-size:10pt; font-family:굴림,verdana; color:#433F37; line-height:19px;}
+table, img {border:none}
+
+/* Padding ******/ 
+.pl_01 {padding:1 10 0 10; line-height:19px;}
+.pl_03 {font-size:20pt; font-family:굴림,verdana; color:#FFFFFF; line-height:29px;}
+
+/* Link ******/ 
+.a:link  {font-size:9pt; color:#333333; text-decoration:none}
+.a:visited { font-size:9pt; color:#333333; text-decoration:none}
+.a:hover  {font-size:9pt; color:#0174CD; text-decoration:underline}
+
+.txt_03a:link  {font-size: 8pt;line-height:18px;color:#333333; text-decoration:none}
+.txt_03a:visited {font-size: 8pt;line-height:18px;color:#333333; text-decoration:none}
+.txt_03a:hover  {font-size: 8pt;line-height:18px;color:#EC5900; text-decoration:underline}
+</style>
+<script language=javascript>
+function conf(frm){
+
+		if(document.ini.mid.value == "")  // 필수항목 체크 (상점아이디)
+		{
+			alert("상점아이디가 빠졌습니다. 필수항목입니다.");
+			return false;
+		}
+		else{
+			return true;
+		}
+}
+</script>
+</head>
+
+<body bgcolor="#FFFFFF" text="#242424" leftmargin=0 topmargin=15 marginwidth=0 marginheight=0 bottommargin=0 rightmargin=0><center>
+<form name=ini method=post action="INIars_utf.jsp" onSubmit="return conf(this)"> 
+<table width="632" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td height="85" background="img/card.gif" style="padding:0 0 0 64">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td width="3%" valign="top"><img src="img/title_01.gif" width="8" height="27" vspace="5"></td>
+          <td width="97%" height="40" class="pl_03"><font color="#FFFFFF"><b>ARS 카드결제 호전환 요청</b></font></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr> 
+    <td align="center" bgcolor="6095BC"><table width="620" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td bgcolor="#FFFFFF" style="padding:8 0 0 56"> 
+            <br>
+            <table width="510" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="7"><img src="img/life.gif" width="7" height="30"></td>
+                <td background="img/center.gif"><img src="img/icon03.gif" width="12" height="10"> 
+                  <b>정보를 기입하신 후 버튼을 눌러주십시오.</b></td>
+                <td width="8"><img src="img/right.gif" width="8" height="30"></td>
+              </tr>
+            </table>
+            <br>
+            <table width="510" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="510" colspan="2"  style="padding:0 0 0 23"> 
+                  <table width="470" border="0" cellspacing="0" cellpadding="0">
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="177" height="26">상점아이디(M I D)</td>
+                      <td width="280">
+                        <select name=mid>
+                            <option value="happyicARS">happyicARS(함께누리몰)
+						<!--<option value="test001012">test001012(회선중복거절)
+							<option value="test001013">test001013(회선중복승인) -->
+                        </select>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">주문번호</td>
+                      <td width="343">
+                        <input type=text name=oid size=20 maxlength=16 value="8851213000000051">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">상품명</td>
+                      <td width="343">
+                        <input type=text name=goodsname size=20 maxlength=80 value="다리미">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>        
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">가격</td>
+                      <td width="343">
+                        <input type=text name=price size=20 maxlength=16 value="1000">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr> 
+                    <tr>
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">과세금액</td>
+                      <td width="343">
+                        <input type=text name=tax size=20 maxlength=16 value="">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                    <tr>
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">비과세금액</td>
+                      <td width="343">
+                        <input type=text name=taxfree size=20 maxlength=16 value="">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">구매자이름</td>
+                      <td width="343">
+                        <input type=text name=buyername size=20 maxlength=40 value="가자미">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>                    
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">전화번호</td>
+                      <td width="343">
+                        <input type=text name=buyertel size=20 maxlength=16 value="02-123-1234">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>                    
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">핸드폰번호</td>
+                      <td width="343">
+                        <input type=text name=buyerhpp size=20 maxlength=16 value="010-1111-2222">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                    <tr>
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">이메일</td>
+                      <td width="343">
+                        <input type=text name=buyeremail size=20 maxlength=100 value="illusio@inicis.com">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr> 
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">상담원 전화번호</td>
+                      <td width="343">
+                        <input type=text name=arstel size=20 maxlength=16 value="02-3430-5800">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                                                            <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">상점이름</td>
+                      <td width="343">
+                        <input type=text name=mername size=20 maxlength=40 value="이니시스">
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>
+                    <tr> 
+                      <td width="18" align="center"><img src="img/icon02.gif" width="7" height="7"></td>
+                      <td width="109" height="25">접수 방법</td>
+                      <td width="343">
+                        <select name=reqtype>
+                        	<option value="ARS">호전환
+                        	<option value="SMS">SMS
+                        </select>
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td height="1" colspan="3" align="center"  background="img/line.gif"></td>
+                    </tr>                     
+                    <tr valign="bottom"> 
+                      <td height="40" colspan="3" align="center">
+                        <input type=image src="img/button_04.gif" width="63" height="25">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            <br>
+          </td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr> 
+    <td><img src="img/bottom01.gif" width="632" height="13"></td>
+  </tr>
+</table>
+</center>
+</form>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+

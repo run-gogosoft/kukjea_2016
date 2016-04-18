@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.MemberDeliveryDao">
+	<insert id="regData" parameterType="com.smpro.vo.MemberDeliveryVo">
+		INSERT INTO sm_member_delivery (
+			member_seq,
+			title, name, tel, cell, 
+			postcode, addr1, addr2, default_flag, reg_date
+		) VALUES (
+			#{memberSeq},
+			#{title}, #{name}, #{tel}, #{cell}, 
+			#{postcode}, #{addr1}, #{addr2}, #{defaultFlag}, NOW()
+		)
+	</insert>
+
+	<update id="modData" parameterType="com.smpro.vo.MemberDeliveryVo">
+		UPDATE sm_member_delivery SET
+			title=#{title}, name=#{name}, tel=#{tel}, cell=#{cell},
+			postcode=#{postcode}, addr1=#{addr1}, addr2=#{addr2},
+			default_flag=#{defaultFlag}, mod_date=NOW()
+		WHERE seq=#{seq} AND member_seq=#{memberSeq} 
+	</update>
+	<delete id="delData" parameterType="com.smpro.vo.MemberDeliveryVo">
+		DELETE FROM sm_member_delivery WHERE seq=#{seq} AND member_seq=#{memberSeq}
+	</delete>
+	
+	<update id="initDefaultFlag" parameterType="com.smpro.vo.MemberDeliveryVo">
+		UPDATE sm_member_delivery SET
+			default_flag='N'
+		WHERE 1=1
+		AND member_seq=#{memberSeq}
+		AND default_flag='Y'
+	</update>
+		
+	<select id="getList" parameterType="com.smpro.vo.MemberDeliveryVo" resultType="com.smpro.vo.MemberDeliveryVo">
+		SELECT
+			A.seq,
+			A.title,
+			A.name,
+			A.tel,
+			A.cell,
+			A.postcode,
+			A.addr1,
+			A.addr2,
+			A.default_flag AS defaultFlag,
+			A.reg_date AS regDate
+		FROM
+			sm_member_delivery A
+		WHERE
+			A.member_seq=#{memberSeq}
+			<choose>
+				<when test="search eq 'title'">AND A.title LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'name'">AND A.name LIKE CONCAT('%',#{findword},'%')</when>
+			</choose>
+		ORDER BY A.seq DESC
+
+	</select>
+	
+	<select id="getData" parameterType="int" resultType="com.smpro.vo.MemberDeliveryVo">
+		SELECT
+			A.seq,
+			A.title,
+			A.name,
+			A.tel,
+			A.cell,
+			A.postcode,
+			A.addr1,
+			A.addr2,
+			A.default_flag AS defaultFlag,
+			A.reg_date AS regDate
+		FROM
+			sm_member_delivery A
+		WHERE
+			A.seq=#{seq}
+		ORDER BY A.seq DESC
+	</select>
+</mapper>

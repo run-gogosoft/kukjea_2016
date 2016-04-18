@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.SystemDao">
+	<!--공통코드 리스트-->
+	<select id="getCommonList" parameterType="com.smpro.vo.CommonVo" resultType="com.smpro.vo.CommonVo">
+		SELECT
+			seq
+			, group_code AS groupCode
+			, group_name AS groupName
+			, value
+			, name
+			, note
+		FROM
+			sm_common
+		WHERE
+			1=1
+		<if test="groupCode != null">
+			AND group_code=#{groupCode}
+		</if>
+		<if test="groupName != ''">
+			AND group_name=#{groupName}
+		</if>
+		ORDER BY
+			group_code ASC
+			, seq ASC
+	</select>
+	
+	<!--공통코드 조회(그룹코드별)-->
+	<select id="getCommonListByGroup" parameterType="int" resultType="com.smpro.vo.CommonVo">
+		SELECT
+		  value, name
+		FROM
+		  sm_common
+		WHERE
+		  group_code=#{groupCode}
+		ORDER BY seq ASC
+	</select>
+	
+	<!--공통코드 조회(코드값 기준 정렬)-->
+	<select id="getCommonListOrderByValue" parameterType="int" resultType="com.smpro.vo.CommonVo">
+		SELECT
+		  value, name
+		FROM
+		  sm_common
+		WHERE
+		  group_code=#{groupCode}
+		ORDER BY value ASC
+	</select>
+	
+	<insert id="insertCommon" parameterType="com.smpro.vo.CommonVo">
+		INSERT INTO sm_common (
+			group_code
+			, group_name
+			, value
+			, name
+			, note
+			, reg_date
+		) values (
+			#{groupCode}
+			, #{groupName}
+			, #{value}
+			, #{name}
+			, #{note}
+			, NOW()
+		)
+	</insert>
+	<update id="updateCommon" parameterType="com.smpro.vo.CommonVo">
+		UPDATE
+			sm_common
+		SET
+			group_code=#{groupCode}
+			, group_name=#{groupName}
+			, value=#{value}
+			, name=#{name}
+			, note=#{note}
+			, mod_date=NOW()
+		WHERE
+			seq=#{seq}
+	</update>
+	<delete id="deleteCommon" parameterType="com.smpro.vo.CommonVo">
+		DELETE
+		FROM sm_common
+		WHERE seq=#{seq}
+	</delete>
+
+	<!--배송업체관리 리스트-->
+	<select id="getDeliveryList" parameterType="com.smpro.vo.DeliCompanyVo" resultType="com.smpro.vo.DeliCompanyVo">
+		SELECT
+			seq AS deliSeq
+			, company_name AS deliCompanyName
+			, company_tel AS deliCompanyTel
+			, track_url AS deliTrackUrl
+			, complete_msg AS completeMsg
+			, use_flag AS useFlag
+		FROM
+			sm_deli_company
+		ORDER BY use_flag DESC, seq ASC
+	</select>
+	<insert id="insertDelivery" parameterType="com.smpro.vo.DeliCompanyVo">
+		INSERT INTO sm_deli_company (
+			company_name
+			, company_tel
+			, track_url
+			, complete_msg
+			, use_flag
+		) values (
+			#{deliCompanyName}
+			, #{deliCompanyTel}
+			, #{deliTrackUrl}
+			, #{completeMsg}
+			, #{useFlag}
+		)
+	</insert>
+	<update id="updateDelivery" parameterType="com.smpro.vo.DeliCompanyVo">
+		UPDATE
+			sm_deli_company
+		SET
+			company_name=#{deliCompanyName}
+			, company_tel=#{deliCompanyTel}
+			, track_url=#{deliTrackUrl}
+			, complete_msg=#{completeMsg}
+			, use_flag=#{useFlag}
+		WHERE
+			seq=#{deliSeq}
+	</update>
+	<delete id="deleteDelivery" parameterType="com.smpro.vo.DeliCompanyVo">
+		DELETE
+		FROM
+			sm_deli_company
+		WHERE
+			seq=#{deliSeq}
+	</delete>
+
+	<select id="getDeliCompanyVo" parameterType="int" resultType="com.smpro.vo.DeliCompanyVo">
+		SELECT
+			seq AS deliSeq
+			, company_name AS deliCompanyName
+			, complete_msg AS completeMsg
+		FROM
+			sm_deli_company
+		WHERE
+			seq=#{deliSeq}
+	</select>
+
+	<select id="getDeliCompany" resultType="com.smpro.vo.DeliCompanyVo">
+		SELECT
+			seq AS deliSeq
+			, company_name AS deliCompanyName
+		FROM
+			sm_deli_company
+	</select>
+
+	<select id="getNoticePopupList" resultType="com.smpro.vo.NoticePopupVo" parameterType="com.smpro.vo.NoticePopupVo">
+		SELECT
+			n.seq
+			, n.title
+			, n.type_code AS typeCode
+			, n.width
+			, n.height
+			, n.top_margin AS topMargin
+			, n.left_margin AS leftMargin
+			, n.status_code AS statusCode
+			, content_html AS contentHtml
+			, mall_seq AS mallSeq
+			, (SELECT name FROM sm_user WHERE seq=n.mall_seq) AS mallName
+		FROM
+			sm_notice_popup n
+		WHERE 1=1
+			<if test="typeCode != null and typeCode != ''">
+				AND type_code=#{typeCode}
+			</if>
+			<if test="mallSeq != null">
+				AND mall_seq=#{mallSeq}
+			</if>
+			<if test="statusCode != ''">
+				AND status_code=#{statusCode}
+			</if>
+		ORDER BY seq DESC
+	</select>
+
+	<select id="getNoticePopupVo" resultType="com.smpro.vo.NoticePopupVo" parameterType="Integer">
+		SELECT
+			n.seq
+			, n.title
+			, n.type_code AS typeCode
+			, n.width
+			, n.height
+			, n.top_margin AS topMargin
+			, n.left_margin AS leftMargin
+			, n.status_code AS statusCode
+			, n.content_html AS contentHtml
+			, n.mall_seq AS mallSeq
+			, (SELECT name FROM sm_user WHERE seq=n.mall_seq) AS mallName
+		FROM
+			sm_notice_popup n
+		WHERE 1=1
+			AND seq = #{seq}
+	</select>
+
+	<update id="createNoticePopupSeq" parameterType="com.smpro.vo.NoticePopupVo">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT seq FROM sm_notice_popup_seq
+		</selectKey>
+		UPDATE sm_notice_popup_seq SET seq=seq+1
+	</update>
+	
+	<insert id="insertNoticePopup" parameterType="com.smpro.vo.NoticePopupVo">
+		INSERT INTO sm_notice_popup(
+			seq 
+			, title
+			, type_code
+			, width
+			, height
+			, top_margin
+			, left_margin
+			, status_code
+			, content_html
+			, mall_seq
+		)
+		values (
+			#{seq}
+			, #{title}
+			, #{typeCode}
+			, #{width}
+			, #{height}
+			, #{topMargin}
+			, #{leftMargin}
+			, #{statusCode}
+			, #{contentHtml}
+			, #{mallSeq}
+		)
+	</insert>
+
+	<update id="updateNoticePopup" parameterType="com.smpro.vo.NoticePopupVo">
+		UPDATE
+			sm_notice_popup
+		SET
+			title=#{title}
+			, type_code=#{typeCode}
+			, width=#{width}
+			, height=#{height}
+			, top_margin=#{topMargin}
+			, left_margin=#{leftMargin}
+			, status_code=#{statusCode}
+			, content_html=#{contentHtml}
+			, mall_seq=#{mallSeq}
+		WHERE
+			seq=#{seq}
+	</update>
+
+	<select id="getControllerAuth" resultType="String" parameterType="com.smpro.vo.MemberVo">
+		SELECT
+			<if test="loginType == 'A'.toString()">
+				admin${gradeCode}_flag
+			</if>
+			<if test="loginType == 'S'.toString() || loginType == 'D'.toString() || loginType == 'M'.toString()">
+				seller_flag
+			</if>
+		FROM
+			sm_admin_permission
+		WHERE 1=1
+			<if test="controllerName != ''">
+				AND controller_name=#{controllerName}
+			</if>
+			<if test="controllerMethod != ''">
+				AND controller_method=#{controllerMethod}
+			</if>
+			<choose>
+				<when test="controllerDivision != ''">
+					AND controller_division=#{controllerDivision}
+				</when>
+				<otherwise>
+					AND (controller_division IS NULL OR controller_division = '')
+				</otherwise>
+			</choose>
+	</select>
+
+	<select id="getAdminGradeList" resultType="com.smpro.vo.MemberVo" parameterType="com.smpro.vo.MemberVo">
+		SELECT
+			seq,
+			controller_name AS controllerName,
+			controller_method AS controllerMethod,
+			controller_division AS controllerDivision,
+			controller_description AS controllerDescription,
+			admin0_flag AS admin0Flag,
+			admin1_flag AS admin1Flag,
+			admin2_flag AS admin2Flag,
+			admin3_flag AS admin3Flag,
+			admin4_flag AS admin4Flag,
+			admin5_flag AS admin5Flag,
+			admin6_flag AS admin6Flag,
+			admin7_flag AS admin7Flag,
+			admin8_flag AS admin8Flag,
+			admin9_flag AS admin9Flag,
+			seller_flag AS sellerFlag,
+			distributor_flag AS distributorFlag
+		FROM
+			sm_admin_permission
+		WHERE 1=1
+		<if test="controllerName != ''">
+			AND controller_name=#{controllerName}
+		</if>
+		ORDER BY seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getAdminGradeListCount" resultType="int" parameterType="com.smpro.vo.MemberVo">
+			SELECT
+				COUNT(*)
+			FROM
+				sm_admin_permission
+			WHERE 1=1
+				<if test="controllerName != ''">
+					AND controller_name=#{controllerName}
+				</if>
+	</select>
+
+	<select id="getAdminGradeVo" resultType="com.smpro.vo.MemberVo" parameterType="com.smpro.vo.MemberVo">
+        SELECT
+            seq
+            ,controller_name AS controllerName
+            ,controller_method AS controllerMethod
+            ,controller_division AS controllerDivision
+            ,controller_description AS controllerDescription
+            ,admin0_flag AS admin0Flag
+            ,admin1_flag AS admin1Flag
+            ,admin2_flag AS admin2Flag
+            ,admin3_flag AS admin3Flag
+            ,admin4_flag AS admin4Flag
+            ,admin5_flag AS admin5Flag
+            ,admin6_flag AS admin6Flag
+            ,admin7_flag AS admin7Flag
+            ,admin8_flag AS admin8Flag
+            ,admin9_flag AS admin9Flag
+            ,seller_flag AS sellerFlag
+            ,distributor_flag AS distributorFlag
+        FROM
+            sm_admin_permission
+        WHERE seq = #{seq}
+        ORDER BY seq DESC
+	</select>
+
+	<insert id="insertGradeController" parameterType="com.smpro.vo.MemberVo">
+		INSERT INTO sm_admin_permission (
+			controller_name
+			, controller_method
+			, controller_division
+			, controller_description
+			, admin0_flag
+			, admin1_flag
+			, admin2_flag
+			, admin3_flag
+			, admin4_flag
+			, admin5_flag
+			, admin6_flag
+			, admin7_flag
+			, admin8_flag
+			, admin9_flag
+			, seller_flag
+			, distributor_flag
+		) values (
+			#{controllerName}
+			, #{controllerMethod}
+			, #{controllerDivision}
+			, #{controllerDescription}
+			, #{admin0Flag}
+			, #{admin1Flag}
+			, #{admin2Flag}
+			, #{admin3Flag}
+			, #{admin4Flag}
+			, #{admin5Flag}
+			, #{admin6Flag}
+			, #{admin7Flag}
+			, #{admin8Flag}
+			, #{admin9Flag}
+			, #{sellerFlag}
+			, #{distributorFlag}
+		)
+	</insert>
+
+	<update id="updateGradeController" parameterType="com.smpro.vo.MemberVo">
+		UPDATE	sm_admin_permission SET
+			controller_name=#{controllerName}
+			, controller_method=#{controllerMethod}
+			, controller_division=#{controllerDivision}
+			, controller_description=#{controllerDescription}
+			, admin0_flag=#{admin0Flag}
+			, admin1_flag=#{admin1Flag}
+			, admin2_flag=#{admin2Flag}
+			, admin3_flag=#{admin3Flag}
+			, admin4_flag=#{admin4Flag}
+			, admin5_flag=#{admin5Flag}
+			, admin6_flag=#{admin6Flag}
+			, admin7_flag=#{admin7Flag}
+			, admin8_flag=#{admin8Flag}
+			, admin9_flag=#{admin9Flag}
+			, seller_flag=#{sellerFlag}
+			, distributor_flag=#{distributorFlag}
+		WHERE	seq=#{seq}
+	</update>
+
+	<delete id="deleteGradeController" parameterType="com.smpro.vo.MemberVo">
+		DELETE 	FROM sm_admin_permission
+		WHERE 	seq = #{seq}
+	</delete>
+
+	<select id="getControllerName" resultType="com.smpro.vo.MemberVo">
+		SELECT
+			DISTINCT controller_name AS controllerName
+		FROM
+			sm_admin_permission
+		ORDER BY controller_name ASC
+	</select>
+	<select id="getGroupName" resultType="com.smpro.vo.CommonVo">
+		SELECT
+			DISTINCT group_name AS groupName
+			, group_code AS groupCode
+		FROM
+			sm_common
+		ORDER BY group_name, group_code ASC
+	</select>
+	<select id="getCommonName" parameterType="com.smpro.vo.CommonVo" resultType="String">
+		SELECT name FROM sm_common WHERE group_code=#{groupCode} AND value=#{value}
+	</select>
+	
+	<select id="getPaymethodFeeList" parameterType="com.smpro.vo.PaymethodVo" resultType="com.smpro.vo.PaymethodVo">
+		SELECT
+			seq
+			, name
+			, value
+			, fee_rate1 AS feeRate1
+			, fee_rate2 AS feeRate2
+		FROM
+			sm_pay_method
+		ORDER BY seq ASC
+	</select>
+	
+	<insert id="insertPaymethodFee" parameterType="com.smpro.vo.PaymethodVo">
+		INSERT INTO sm_pay_method (
+			name
+			, value
+			, fee_rate1
+			, fee_rate2
+		) values (
+			#{name}
+			, #{value}
+			, #{feeRate1}
+			, #{feeRate2}
+		)
+	</insert>
+	
+	<update id="updatePaymethodFee" parameterType="com.smpro.vo.PaymethodVo">
+		UPDATE
+			sm_pay_method
+		SET
+			name=#{name}
+			, value=#{value}
+			, fee_rate1=#{feeRate1}
+			, fee_rate2=#{feeRate2}
+		WHERE
+			seq=#{seq}
+	</update>
+	
+	<delete id="deletePaymethodFee" parameterType="com.smpro.vo.PaymethodVo">
+		DELETE FROM sm_pay_method WHERE seq=#{seq}
+	</delete>
+</mapper>

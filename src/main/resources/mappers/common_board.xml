@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.CommonBoardDao">
+	<select id="getListCount" parameterType="com.smpro.vo.CommonBoardVo" resultType="int">
+		SELECT COUNT(*) AS cnt
+		FROM sm_common_board a
+		WHERE 1=1
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(a.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+			</if>
+	</select>
+	
+	<select id="getList" parameterType="com.smpro.vo.CommonBoardVo" resultType="com.smpro.vo.CommonBoardVo">
+		SELECT
+			a.seq
+			, a.name
+			, a.type_code AS typeCode
+			, a.comment_use_flag AS commentUseFlag
+			, a.reg_date AS regDate
+		FROM
+			sm_common_board a
+		WHERE 1=1
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(a.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+			</if>
+		ORDER BY a.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<select id="getDetailListCount" parameterType="com.smpro.vo.CommonBoardVo" resultType="int">
+		SELECT COUNT(*) AS cnt
+		FROM sm_common_board_detail a LEFT OUTER JOIN
+			 sm_user b ON(a.user_seq=b.seq)
+		WHERE 1=1
+			<if test="loginType == 'C'.toString()">
+				<if test="userSeq != null">
+					AND a.user_seq=#{userSeq}
+				</if>
+			</if>
+			
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(a.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+			</if>
+			
+			<if test="commonBoardSeq != null">
+				AND a.common_board_seq = #{commonBoardSeq}
+			</if>
+	</select>
+	
+	<select id="getDetailList" parameterType="com.smpro.vo.CommonBoardVo" resultType="com.smpro.vo.CommonBoardVo">
+		SELECT
+			@rownum := @rownum + 1 AS rowNumber
+			, a.seq
+			, a.common_board_seq AS commonBoardSeq
+			, a.user_seq AS userSeq
+			, a.user_name AS userName
+			, a.user_password AS userPassword
+			, b.name AS memberName
+			, (SELECT type_code FROM sm_user WHERE seq=a.user_seq) AS userTypeCode
+			, a.title
+			, a.content
+			, a.answer
+			, a.answer_seq AS answerSeq
+			, a.answer_flag AS answerFlag
+			, a.notice_flag AS noticeFlag
+			, a.secret_flag AS secretFlag
+			, a.view_cnt AS viewCnt
+			, a.recommend_cnt AS recommendCnt
+			, a.answer_date AS answerDate
+			, a.mod_date AS modDate
+			, a.reg_date AS regDate
+			, CASE
+			  WHEN
+			    (SELECT x.type_code FROM sm_common_board x WHERE x.seq=a.common_board_seq) = 'G'
+			    THEN
+			      (SELECT x.real_filename FROM sm_filename x WHERE x.parent_seq=a.seq ORDER BY num LIMIT 1)
+			  ELSE ''
+			END realFilename
+			, CASE
+       		  WHEN
+          	    (SELECT count(*) FROM sm_filename WHERE parent_code=#{fileCodeName} AND sm_filename.parent_seq=a.seq) > 0
+          	    THEN 'Y'
+        	  ELSE 'N'
+      	  	END isFile
+      	  	, (SELECT count(*) FROM sm_common_board_comment WHERE a.seq=sm_common_board_comment.board_seq) AS commentCnt
+		FROM
+			sm_common_board_detail a LEFT OUTER JOIN
+			sm_user b ON(a.user_seq=b.seq), (SELECT @rownum := 0) r
+		WHERE 1=1
+			<if test="loginType == 'C'.toString()">
+				<if test="userSeq != null">
+					AND a.user_seq=#{userSeq}
+				</if>
+			</if>
+			
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(a.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+			</if>
+			
+			<if test="commonBoardSeq != null">
+				AND a.common_board_seq = #{commonBoardSeq}
+			</if>
+		ORDER BY a.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<select id="getVo" parameterType="Integer" resultType="com.smpro.vo.CommonBoardVo">
+		SELECT
+			a.seq
+			, a.name
+			, a.type_code AS typeCode
+			, a.comment_use_flag AS commentUseFlag
+			, a.reg_date AS regDate
+		FROM
+			sm_common_board a
+		WHERE a.seq = #{value}
+	</select>
+	
+	<select id="getDetailVo" parameterType="Integer" resultType="com.smpro.vo.CommonBoardVo">
+		SELECT
+			a.seq
+			, a.common_board_seq AS commonBoardSeq
+			, a.user_seq AS userSeq
+			, a.user_name AS userName
+			, (SELECT name FROM sm_user WHERE seq=a.user_seq) AS memberName
+			, (SELECT type_code FROM sm_user WHERE seq=a.user_seq) AS userTypeCode
+			, a.user_password AS userPassword
+			, a.title
+			, a.content
+			, a.answer
+			, a.answer_seq AS answerSeq
+			, (SELECT name FROM sm_user WHERE seq=a.answer_seq) AS answerName
+			, a.answer_flag AS answerFlag
+			, a.notice_flag AS noticeFlag
+			, a.secret_flag AS secretFlag
+			, a.view_cnt AS viewCnt
+			, a.recommend_cnt AS recommendCnt
+			, a.answer_date AS answerDate
+			, a.mod_date AS modDate
+			, a.reg_date AS regDate
+			, b.name
+			, CASE
+       		  WHEN
+          	    (SELECT count(*) FROM sm_filename WHERE sm_filename.parent_seq=a.seq) > 0
+          	    THEN 'Y'
+        	  ELSE 'N'
+      	  	END isFile
+		FROM
+			sm_common_board_detail a LEFT OUTER JOIN
+			sm_common_board b ON(a.common_board_seq=b.seq)
+		WHERE a.seq = #{value}
+	</select>
+	
+	<update id="createSeq" parameterType="com.smpro.vo.CommonBoardVo">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT seq FROM sm_common_board_detail_seq
+		</selectKey>
+		UPDATE sm_common_board_detail_seq SET seq=seq+1
+	</update>
+	
+	<insert id="insertVo" parameterType="com.smpro.vo.CommonBoardVo">
+		INSERT INTO sm_common_board_detail (
+			seq
+			, common_board_seq
+			<if test="userSeq != null">
+				, user_seq
+			</if>
+			<if test="userName != ''">
+				, user_name
+			</if>
+			<if test="userPassword != ''">
+				, user_password
+			</if>
+			, title
+			, content
+			<if test="noticeFlag != ''">			
+				, notice_flag
+			</if>
+			<if test="answer != ''">
+				, answer
+				, answer_date
+				, answer_seq
+				, answer_flag
+			</if>
+			, secret_flag
+			, reg_date
+		) VALUES (
+			#{seq}
+			, #{commonBoardSeq}
+			<if test="userSeq != null">
+				, #{userSeq}
+			</if>
+			<if test="userName != ''">
+				, #{userName}
+			</if>
+			<if test="userPassword != ''">
+				, #{userPassword}
+			</if>
+			, #{title}
+			, #{content}
+			<if test="noticeFlag != ''">			
+				, #{noticeFlag}
+			</if>
+			<if test="answer != ''">
+				, #{answer}
+				, NOW()
+				, #{answerSeq}
+				, 'Y'
+			</if>
+			, #{secretFlag}
+			, NOW()
+		)
+	</insert>
+	
+	<update id="updateVo" parameterType="com.smpro.vo.CommonBoardVo">
+		UPDATE sm_common_board_detail SET
+			mod_date=NOW()
+			<if test="userPassword != ''">
+				, user_password=#{userPassword}
+			</if>
+			<if test="noticeFlag != ''">			
+				, notice_flag=#{noticeFlag}
+			</if>
+			<if test="secretFlag != ''">
+				, secret_flag=#{secretFlag}
+			</if>
+			<if test="title != ''">
+				, title=#{title}
+			</if>
+			<if test="content != ''">
+				, content=#{content}
+			</if>
+			<if test="answer != ''">
+				, answer = #{answer}
+				, answer_date=NOW()
+				, answer_seq=#{answerSeq}
+				, answer_flag='Y'
+			</if>
+		WHERE seq = #{seq}
+	</update>
+	
+	<update id="updateViewCnt" parameterType="com.smpro.vo.CommonBoardVo">
+		UPDATE	sm_common_board_detail SET
+				view_cnt=view_cnt+1
+		WHERE	seq = #{seq}
+	</update>
+	
+	<select id="getPasswordCnt" parameterType="com.smpro.vo.CommonBoardVo" resultType="int">
+		SELECT 
+			COUNT(*) AS cnt
+		FROM
+		<choose>
+			<when test="userSeq != null">
+				sm_user a LEFT OUTER JOIN
+				sm_common_board_detail b ON(a.seq=b.user_seq)
+			</when>
+			<otherwise>
+				sm_common_board_detail a
+			</otherwise>
+		</choose>
+		WHERE 1=1
+		<choose>
+			<when test="userSeq != null">
+				AND b.seq = #{seq}
+				AND a.password = #{userPassword}
+			</when>
+			<otherwise>
+				AND a.seq = #{seq}
+				AND a.user_password = #{userPassword}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<delete id="deleteContentVo" parameterType="com.smpro.vo.CommonBoardVo">
+		DELETE FROM sm_common_board_detail
+		WHERE seq = #{seq}
+		AND common_board_seq = #{commonBoardSeq}
+		<choose>
+			<when test="loginType eq 'C'.toString()">
+				<!-- 회원일 경우 -->
+				AND user_seq=#{loginSeq}
+			</when>
+		</choose>
+	</delete>
+	
+	<insert id="insertCommonVo" parameterType="com.smpro.vo.CommonBoardVo">
+		INSERT INTO sm_common_board (
+			name,
+			reg_date,
+			type_code,
+			comment_use_flag
+		) VALUES (
+			#{name},
+			now(),
+			#{typeCode},
+			#{commentUseFlag}
+		)
+	</insert>
+	
+	<update id="updateCommonVo" parameterType="com.smpro.vo.CommonBoardVo">
+		UPDATE sm_common_board SET
+			name=#{name},
+			type_code=#{typeCode},
+			comment_use_flag=#{commentUseFlag}
+		WHERE seq = #{seq}
+	</update>
+	
+	<delete id="deleteCommonVo" parameterType="int">
+		DELETE FROM sm_common_board WHERE seq=#{value}
+	</delete>
+	
+	<!-- 댓글 -->
+	<select id="getCommentList" parameterType="com.smpro.vo.CommonBoardVo" resultType="com.smpro.vo.CommonBoardVo">
+	SELECT
+		c.seq,
+		c.user_seq AS userSeq,
+		u.name AS userName,
+		c.content,
+		c.reg_date AS regDate
+	FROM
+		sm_common_board_comment c LEFT OUTER JOIN
+	sm_user u ON(u.seq=c.user_seq)
+	WHERE
+		c.board_seq=#{boardSeq}
+	ORDER BY c.seq DESC
+	LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getCommentListTotalCount" parameterType="com.smpro.vo.CommonBoardVo" resultType="int">
+	SELECT count(*)
+	FROM sm_common_board_comment
+	WHERE board_seq=#{boardSeq}
+	</select>
+	
+	<select id="getComment" parameterType="int" resultType="com.smpro.vo.CommonBoardVo">
+	SELECT
+		seq,
+		board_seq AS boardSeq,
+		user_seq AS userSeq,
+		content,
+		reg_date AS regDate
+	FROM sm_common_board_comment
+	WHERE seq=#{value}
+	</select>
+	
+	<insert id="insertComment" parameterType="com.smpro.vo.CommonBoardVo">
+	INSERT INTO sm_common_board_comment (
+		board_seq,
+		user_seq,
+		content,
+		reg_date
+	) VALUES (
+		#{boardSeq},
+		#{userSeq},
+		#{content},
+		now()
+	)
+	</insert>
+	
+	<update id="updateComment" parameterType="com.smpro.vo.CommonBoardVo">
+	UPDATE sm_common_board_comment SET
+		content=#{content}
+	WHERE seq=#{seq}
+	</update>
+	
+	<delete id="deleteComment" parameterType="int">
+	DELETE FROM sm_common_board_comment WHERE seq=#{seq}
+	</delete>
+
+</mapper>

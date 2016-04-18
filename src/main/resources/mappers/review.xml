@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.ReviewDao">
+	<select id="getListCount" parameterType="com.smpro.vo.ReviewVo" resultType="int">
+		SELECT	COUNT(*) AS cnt
+		FROM 	sm_item_review r LEFT OUTER JOIN
+				sm_user m ON(r.member_seq=m.seq) LEFT OUTER JOIN
+				sm_item i ON(r.item_seq = i.seq)
+		WHERE	1=1
+		<if test="loginType == 'C'.toString()">
+			<!-- 전단 회원로그인시 필수 -->
+			<if test="memberSeq != null">
+				AND r.member_seq=#{memberSeq}
+			</if>
+		</if>
+		
+		<if test="loginType eq 'S'.toString() || loginType eq 'D'.toString()">
+			<!-- 판매자 로그인 -->
+			AND i.seller_seq=#{memberSeq}
+		</if>
+
+		<if test="itemSeq != null">
+			AND	item_seq=#{itemSeq}
+		</if>
+
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND	DATE_FORMAT(r.reg_date,'%Y-%m-%d') BETWEEN  DATE_FORMAT(#{searchDate1},'%Y-%m-%d') AND DATE_FORMAT(#{searchDate2},'%Y-%m-%d')
+		</if>
+	</select>
+	
+	<select id="getList" parameterType="com.smpro.vo.ReviewVo" resultType="com.smpro.vo.ReviewVo">
+		SELECT
+			r.seq,
+			r.detail_seq AS detailSeq,
+			r.member_seq AS memberSeq,
+			r.item_seq AS itemSeq,
+			r.review,
+			r.good_grade AS goodGrade,
+			r.deli_grade AS deliGrade,
+			r.reg_date AS regDate,
+			m.name,
+			m.id,
+			m.nickname AS nickName,
+			i.name AS itemName,
+			i.img1 AS img1,
+			i.img2 AS img2,
+			i.img3 AS img3,
+			i.img4 AS img4,
+			H.valueName,
+			(SELECT order_seq FROM sm_order_detail WHERE seq=r.detail_seq) AS orderSeq,
+			r.good_grade AS reviewGrade,
+			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq = r.item_seq) AS reviewCount,
+			(SELECT name FROM sm_user WHERE type_code='M' AND seq=u.mall_seq) AS mallName
+		FROM
+			sm_item_review r LEFT OUTER JOIN
+			sm_user m ON(r.member_seq=m.seq) LEFT OUTER JOIN
+			sm_member u ON(u.seq=m.seq) LEFT OUTER JOIN
+			sm_item i ON(r.item_seq = i.seq) LEFT OUTER JOIN (
+				SELECT
+					A.item_seq, A.option_name AS optionName, A.seq AS optionSeq, SUM(stock_cnt) AS stockCount ,MIN(B.value_name) AS valueName
+				FROM
+					sm_item_option A INNER JOIN
+					sm_item_option_value B ON A.seq=B.option_seq
+				WHERE 1=1 AND show_flag='Y'
+				GROUP BY
+					item_seq, A.option_name, A.seq
+			) H ON H.item_seq=i.seq
+		WHERE 1=1
+			<if test="loginType == 'C'.toString() || loginType == 'A'.toString()">
+				<!-- 전단 회원로그인시 필수 -->
+				<if test="memberSeq != null">
+					AND r.member_seq=#{memberSeq}
+				</if>
+			</if>
+			
+			<if test="loginType eq 'S'.toString() || loginType eq 'D'.toString()">
+				<!-- 판매자 로그인 -->
+				AND i.seller_seq=#{memberSeq}
+			</if>
+
+			<if test="itemSeq != null">
+				AND r.item_seq=#{itemSeq}
+			</if>
+
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND	DATE_FORMAT(r.reg_date,'%Y-%m-%d') BETWEEN  DATE_FORMAT(#{searchDate1},'%Y-%m-%d') AND DATE_FORMAT(#{searchDate2},'%Y-%m-%d')
+			</if>
+		ORDER BY r.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<select id="getVo" parameterType="com.smpro.vo.ReviewVo" resultType="com.smpro.vo.ReviewVo">
+         SELECT
+			r.seq
+			, r.detail_seq AS detailSeq
+			, r.member_seq AS memberSeq
+			, r.item_seq AS itemSeq
+			, r.review
+			, r.good_grade AS goodGrade
+			, r.deli_grade AS deliGrade
+			, r.reg_date AS regDate
+			, m.name
+			, m.id
+			, m.nickname AS nickName
+			, i.name AS itemName
+			, img1 AS img1
+			, img2 AS img2
+			, img3 AS img3
+			, img4 AS img4
+			, (SELECT COUNT(*) FROM sm_item_review WHERE item_seq = r.item_seq) AS reviewCount
+			, (SELECT name FROM sm_user WHERE type_code='M' AND seq=u.mall_seq) AS mallName
+		FROM
+			sm_item_review r LEFT OUTER JOIN
+			sm_user m ON(r.member_seq=m.seq) LEFT OUTER JOIN
+			sm_member u ON(u.seq=m.seq) LEFT OUTER JOIN
+			sm_item i ON(r.item_seq = i.seq)
+		WHERE 1=1
+			<if test="seq != null">
+				AND r.seq=#{seq}
+			</if>
+			<if test="detailSeq != null">
+				AND r.detail_seq = #{detailSeq}
+			</if>
+			<if test="memberSeq != null">
+				AND r.member_seq=#{memberSeq}
+			</if>
+	</select>
+	<insert id="insertData" parameterType="com.smpro.vo.ReviewVo">
+		INSERT INTO sm_item_review (
+			member_seq
+			, item_seq
+			, review
+			, good_grade
+			, reg_date
+			<if test="detailSeq != null">
+			, detail_seq
+			</if>
+		) VALUES (
+			#{memberSeq}
+			, #{itemSeq}
+			, #{review}
+			, #{goodGrade}
+			, NOW()
+			<if test="detailSeq != null">
+			, #{detailSeq}
+			</if>
+		)
+	</insert>
+	<update id="updateData" parameterType="int">
+		UPDATE sm_item_review SET
+		review=#{review}
+		, good_grade=#{goodGrade}
+		, deli_grade=#{deliGrade}
+		WHERE seq = #{seq}
+	</update>
+	<delete id="deleteData" parameterType="int">
+		DELETE FROM sm_item_review
+		WHERE seq = #{seq}
+	</delete>
+
+	<select id="getReviewBoardRegCntForWeek" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+			COUNT(*) cnt
+		FROM
+			sm_item_review r LEFT OUTER JOIN
+			sm_item i ON (r.item_seq=i.seq)
+		WHERE 1=1
+		AND
+			DATE_FORMAT(r.reg_date, '%Y-%m-%d' ) > DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y-%m-%d' )
+			<if test="loginType == 'S'.toString() || loginType == 'D'.toString()">
+				<if test="seq != ''">
+					AND	i.seller_seq = #{seq}
+				</if>
+			</if>
+	</select>
+</mapper>

@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.PointDao">
+	<select id="getList" parameterType="com.smpro.vo.PointVo" resultType="com.smpro.vo.PointVo">
+		SELECT
+			t.member_seq AS memberSeq,
+			u.id,
+			u.name,
+			(SELECT NAME FROM sm_user WHERE seq=m.mall_seq) AS mallName,
+			t.point,
+			t.useable_point AS useablePoint
+		FROM (
+			SELECT
+				p.member_seq,
+				MAX(p.seq) AS seq,
+				SUM(CASE WHEN p.reserve_code = '1' THEN p.point ELSE 0 END) AS POINT,
+				SUM(p.useable_point) AS useable_point
+			FROM
+				sm_point p
+			WHERE 1=1
+			<if test="findword != ''">
+				<choose>
+					<when test="search=='id'">
+						AND p.member_seq IN (SELECT seq FROM sm_user WHERE type_code='C' AND id=#{findword})
+					</when>
+					<when test="search=='name'">
+						AND p.member_seq IN (SELECT seq FROM sm_user WHERE type_code='C' AND name=#{findword})
+					</when>
+				</choose>
+			</if>
+			<if test="mallSeq != null">
+				AND p.member_seq = (SELECT seq FROM sm_member WHERE seq=p.member_seq AND mall_seq = #{mallSeq})
+			</if>
+			GROUP BY p.member_seq
+			) t LEFT OUTER JOIN
+			sm_user u ON(t.member_seq=u.seq) LEFT OUTER JOIN
+			sm_member m ON(m.seq=u.seq)
+		ORDER BY t.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	<select id="getListCount" parameterType="com.smpro.vo.PointVo" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM (
+			SELECT
+				p.member_seq,
+				MAX(p.seq) AS seq,
+				SUM(CASE WHEN p.reserve_code = '1' THEN p.point ELSE 0 END) AS POINT,
+				SUM(p.useable_point) AS useable_point
+			FROM
+				sm_point p
+			WHERE 1=1
+			<if test="findword != ''">
+				<choose>
+					<when test="search=='id'">
+						AND p.member_seq IN (SELECT seq FROM sm_user WHERE type_code='C' AND id=#{findword})
+					</when>
+					<when test="search=='name'">
+						AND p.member_seq IN (SELECT seq FROM sm_user WHERE type_code='C' AND name=#{findword})
+					</when>
+				</choose>
+			</if>
+			<if test="mallSeq != null">
+				AND p.member_seq = (SELECT seq FROM sm_member WHERE seq=p.member_seq AND mall_seq = #{mallSeq})
+			</if>
+			GROUP BY p.member_seq
+		) t
+	</select>
+	<select id="getVo" parameterType="com.smpro.vo.PointVo" resultType="com.smpro.vo.PointVo">
+		SELECT
+		  t.memberSeq
+		  , t.id
+		  , t.name
+		  , MAX(t.mallName) AS mallName
+		  , SUM(t.useablePoint) AS useablePoint
+		FROM(
+			SELECT
+				p.member_seq AS memberSeq
+				, u.id
+				, u.name
+				, (SELECT mu.name FROM sm_user mu WHERE mu.seq=m.mall_seq AND mu.type_code='M') AS mallName
+				, p.useable_point AS useablePoint
+			FROM
+				sm_point p LEFT OUTER JOIN
+				sm_user u ON(p.member_seq=u.seq) LEFT OUTER JOIN
+				sm_member m ON(u.seq=m.seq)
+			WHERE 1=1
+				AND p.member_seq=#{memberSeq}
+		) t
+		GROUP BY
+			t.memberSeq, t.id, t.name
+	</select>
+	<select id="getDetailList" parameterType="com.smpro.vo.PointVo" resultType="com.smpro.vo.PointVo">
+		SELECT
+			p.seq AS seq,
+			p.reg_date AS regDate,
+			p.end_date AS endDate,
+			p.point AS point,
+			p.useable_point AS useablePoint,
+			p.valid_flag AS validFlag,
+			p.reserve_code AS reserveCode,
+			(SELECT name FROM sm_common WHERE group_code=16 AND value=p.reserve_code) AS reserveText,
+			p.reserve_comment AS reserveComment,
+			p.member_seq AS memberSeq,
+			(SELECT name FROM sm_user WHERE seq=p.admin_seq) AS adminName,
+			(SELECT c.name FROM sm_user u LEFT OUTER JOIN sm_common c ON(c.value=u.grade_code) WHERE u.seq=p.admin_seq AND c.group_code=15) AS gradeText,
+			p.admin_seq AS adminSeq,
+			u.id AS id,
+			u.name
+		FROM
+			sm_point p LEFT OUTER JOIN
+			sm_user u ON(p.member_seq=u.seq)
+		WHERE p.member_seq=#{memberSeq}
+		<if test="validFlag != ''">
+			AND p.valid_flag=#{validFlag}
+		</if>
+
+		<if test="reserveCode != ''">
+			AND p.reserve_code=#{reserveCode}
+		</if>
+
+		<if test="endDate != ''">
+			<![CDATA[
+				AND p.end_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d')
+			]]>
+		</if>
+		ORDER BY p.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	<select id="getDetailListCount" parameterType="com.smpro.vo.PointVo" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM
+			sm_point p LEFT OUTER JOIN
+			sm_user u ON(p.member_seq=u.seq)
+		WHERE
+			1=1
+			AND p.member_seq=#{memberSeq}
+			<if test="validFlag != ''">
+				AND p.valid_flag=#{validFlag}
+			</if>
+			<if test="reserveCode != ''">
+				AND p.reserve_code=#{reserveCode}
+			</if>
+
+			<if test="endDate != ''">
+				<![CDATA[
+					AND p.end_date < DATE_FORMAT(#{endDate}, '%Y-%m-%d')
+				]]>
+			</if>
+	</select>
+	<select id="getShopPointList" parameterType="com.smpro.vo.PointVo" resultType="com.smpro.vo.PointVo">
+		SELECT
+			h.seq AS seq,
+			h.point AS point,
+			h.status_code AS statusCode,
+			h.member_seq AS memberSeq,
+			(SELECT NAME FROM sm_user WHERE seq = m.mall_seq) AS mallName,
+			u.seq AS memberSeq,
+			u.id,
+			u.name,
+			h.reg_date AS regDate,
+			h.order_seq AS orderSeq,
+			h.order_detail_seq AS orderDetailSeq,
+			h.note,
+			(SELECT name FROM sm_common WHERE group_code=27 AND value=h.status_code) AS statusName
+		FROM
+			sm_point_history h LEFT OUTER JOIN
+			sm_user u ON (u.seq = h.member_seq) LEFT OUTER JOIN
+			sm_member m ON (m.seq = u.seq)
+		WHERE 1=1
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(h.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		<if test="mallSeq != null">
+			AND m.mall_seq = #{mallSeq}
+		</if>
+		<if test="memberSeq != null">
+			AND h.member_seq=#{memberSeq}
+		</if>
+		<if test="name != ''">
+			AND u.name = #{name}
+		</if>
+		<if test="statusCode != ''">
+			AND h.status_code = #{statusCode}
+		</if>
+		<if test="orderSeq != null">
+			AND h.order_seq=#{orderSeq}
+		</if>
+		<choose>
+			<when test="search eq 'save'">AND h.status_code IN ('S','C')</when>
+			<when test="search eq 'used'">AND h.status_code IN ('U','D')</when>
+		</choose>
+		ORDER BY h.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	<select id="getShopPointListForAllCancel" parameterType="com.smpro.vo.PointVo" resultType="com.smpro.vo.PointVo">
+		SELECT
+			seq AS seq
+			, point AS point
+			, status_code AS statusCode
+			, member_seq AS memberSeq
+			, reg_date AS regDate
+			, order_seq AS orderSeq
+			, order_detail_seq AS orderDetailSeq
+		FROM
+			sm_point_history
+		WHERE 1=1
+			<if test="loginType eq 'C'.toString()">
+				<if test="memberSeq != 0">
+					AND member_seq=#{memberSeq, jdbcType=INTEGER}
+				</if>
+			</if>
+			<if test="statusCode != ''">
+				AND status_code=#{statusCode, jdbcType=VARCHAR}
+			</if>
+			<if test="orderSeq != 0">
+				AND order_seq=#{orderSeq, jdbcType=INTEGER}
+			</if>
+		ORDER BY seq DESC
+	</select>
+	<select id="getShopPointCount" parameterType="com.smpro.vo.PointVo" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_point_history h LEFT OUTER JOIN
+			sm_user u ON (u.seq = h.member_seq) LEFT OUTER JOIN
+			sm_member m ON (m.seq = u.seq)
+		WHERE 1=1
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(h.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		<if test="mallSeq != null">
+			AND m.mall_seq = #{mallSeq}
+		</if>
+		<if test="memberSeq != null">
+			AND h.member_seq=#{memberSeq}
+		</if>
+		<if test="name != ''">
+			AND u.name = #{name}
+		</if>
+		<if test="statusCode != ''">
+			AND h.status_code = #{statusCode}
+		</if>
+		<if test="orderSeq != null">
+			AND h.order_seq=#{orderSeq}
+		</if>
+		<choose>
+			<when test="search eq 'save'">AND h.status_code IN ('S','C')</when>
+			<when test="search eq 'used'">AND h.status_code IN ('U','D')</when>
+		</choose>
+	</select>
+	<update id="updateData" parameterType="com.smpro.vo.PointVo">
+		UPDATE	sm_point
+			<trim prefix="SET" suffixOverrides=",">
+				<if test="useablePoint >= 0">
+					useable_point=#{useablePoint},
+				</if>
+				<if test="validFlag != ''">
+					valid_flag=#{validFlag},
+				</if>
+			</trim>
+		WHERE seq = #{pointSeq}
+	</update>
+	<insert id="insertData" parameterType="com.smpro.vo.PointVo" useGeneratedKeys="true" keyProperty="seq">
+		INSERT INTO sm_point (
+			reg_date,
+			end_date,
+			point,
+			useable_point,
+			valid_flag,
+			reserve_code,
+			reserve_comment,
+			member_seq
+			<if test="adminSeq != null">
+				, admin_seq
+			</if>
+		) VALUES (
+			NOW(),
+			#{endDate},
+			#{point},
+			#{useablePoint},
+			#{validFlag},
+			#{reserveCode},
+			#{reserveComment},
+			#{memberSeq}
+			<if test="adminSeq != null">
+				, #{adminSeq}
+			</if>
+		)
+	</insert>
+	<insert id="insertHistoryData" parameterType="com.smpro.vo.PointVo">
+		INSERT INTO sm_point_history (
+			point
+			, status_code
+			, member_seq
+			, note
+			<if test="orderSeq != null">
+				, order_seq
+			</if>
+			<if test="orderDetailSeq != null">
+				, order_detail_seq
+			</if>
+			, reg_date
+			<if test="adminSeq != null">
+				, admin_seq
+			</if>
+		) VALUES (
+			#{point}
+			, #{statusCode}
+			, #{memberSeq}
+			, #{note}
+			<if test="orderSeq != null">
+				, #{orderSeq}
+			</if>
+			<if test="orderDetailSeq != null">
+				, #{orderDetailSeq}
+			</if>
+			, NOW()
+			<if test="adminSeq != null">
+				, #{adminSeq}
+			</if>
+		)
+	</insert>
+	<insert id="insertLogData" parameterType="com.smpro.vo.PointVo">
+		INSERT INTO sm_point_log (
+			point_seq
+			, point
+			, status_code
+			, member_seq
+			, reg_date
+		) VALUES (
+			#{pointSeq}
+			, #{point}
+			, #{statusCode}
+			, #{memberSeq}
+			, NOW()
+		)
+	</insert>
+	<select id="getBatchPointForEndDate" resultType="com.smpro.vo.PointVo">
+		SELECT
+			p.seq
+			, p.useable_point AS useablePoint
+			, p.member_seq AS memberSeq
+		FROM
+			sm_point p
+		WHERE
+			p.valid_flag='Y'
+			<![CDATA[
+				AND REPLACE(end_date,'-','') < DATE_FORMAT(NOW(),'%Y%m%d')
+			]]>
+	</select>
+	<!-- 회원별 유효한 포인트 리스트 가져오기 -->
+	<select id="getPointList" parameterType="int" resultType="com.smpro.vo.PointVo">
+		SELECT
+			p.seq AS pointSeq
+			, p.useable_point AS useablePoint
+			, p.member_seq AS memberSeq
+		FROM
+			sm_point p
+		WHERE
+			valid_flag='Y'
+			AND p.member_seq=#{memberSeq}
+			AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(reg_date, '%Y-%m-%d') AND DATE_FORMAT(end_date, '%Y-%m-%d') <!-- 포인트 유효기간 체크 -->
+		ORDER BY seq ASC
+	</select>
+	<!-- 사용가능 포인트 가져오기 -->
+	<select id="getUseablePoint" parameterType="Integer" resultType="Integer">
+		SELECT SUM(useable_point) FROM sm_point
+		WHERE
+			valid_flag='Y'
+			AND member_seq=#{memberSeq} <!-- 회원시퀀스 -->
+			AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(reg_date, '%Y-%m-%d') AND DATE_FORMAT(end_date, '%Y-%m-%d') <!-- 포인트 유효기간 체크 -->
+	</select>
+	<!-- 포인트 취소적립 대상 건 가져오기 -->
+	<select id="getHistoryForCancel" parameterType="Integer" resultType="com.smpro.vo.PointVo">
+		SELECT
+			member_seq AS memberSeq,
+			order_seq AS orderSeq,
+			SUM(CASE WHEN status_code='U' THEN point ELSE -point END) AS curPoint
+		FROM
+			sm_point_history
+		WHERE
+			status_code IN ('U','C')  <!-- 포인트 사용/취소적립 건 -->
+			AND order_seq=#{orderSeq} <!-- 주문번호 -->
+		GROUP BY
+			member_seq, order_seq
+	</select>
+	<!-- 포인트 기 취소적립건 체크 -->
+	<select id="checkCancel" parameterType="com.smpro.vo.PointVo" resultType="int">
+		SELECT COUNT(*) FROM
+			sm_point_history
+		WHERE
+			status_code='C' <!--포인트 취소적립건-->
+		AND order_seq=#{orderSeq} <!--주문번호-->
+		<!--부분취소 대상일 경우 상품주문번호 추가 조회-->
+		<if test="orderDetailSeq != null">
+			AND order_detail_seq = #{orderDetailSeq}
+		</if>
+	</select>
+	<!-- 주문 번호별 포인트 사용 내역 조회 -->
+	<select id="getHistoryList" parameterType="Integer" resultType="com.smpro.vo.PointVo">
+		SELECT
+			p.order_seq AS orderSeq,
+			p.order_detail_seq AS orderDetailSeq,
+			p.point,
+			p.status_code AS statusCode,
+			(SELECT name FROM sm_common WHERE group_code=27 and value=p.status_code) AS statusName,
+			p.reg_date AS regDate
+		FROM
+			sm_point_history p
+		WHERE
+			order_seq=#{orderSeq}
+		ORDER BY seq DESC
+
+	</select>
+	<select id="getExcelDownList" parameterType="com.smpro.vo.PointVo" resultType="com.smpro.vo.PointVo">
+		SELECT
+			u.id,
+			u.name,
+			(SELECT mu.name FROM sm_user mu WHERE mu.seq=m.mall_seq AND mu.type_code='M') AS mallName,
+			p.point,
+			p.reg_date AS regDate,
+			p.reserve_comment AS reserveComment,
+			p.valid_flag AS validFlag
+		FROM
+			sm_point p LEFT OUTER JOIN
+			sm_user u ON(p.member_seq=u.seq) LEFT OUTER JOIN
+			sm_member m ON(m.seq=u.seq)
+		WHERE 1=1
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(p.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		ORDER BY p.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getExcelDownListCount" parameterType="com.smpro.vo.PointVo" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM
+			sm_point p LEFT OUTER JOIN
+			sm_user u ON(p.member_seq=u.seq) LEFT OUTER JOIN
+			sm_member m ON(m.seq=u.seq)
+		WHERE 1=1
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(p.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+	</select>
+</mapper>

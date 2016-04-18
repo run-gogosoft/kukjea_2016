@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.DisplayDao">
+	<select id="getVo" parameterType="com.smpro.vo.DisplayVo" resultType="com.smpro.vo.DisplayVo">
+		SELECT
+			seq,
+			location,
+			title,
+			content AS content,
+			order_no AS orderNo,
+			mod_date AS modDate,
+			cate_seq AS cateSeq,
+			member_type_code AS memberTypeCode
+		FROM
+			sm_display
+		WHERE
+			member_type_code = #{memberTypeCode}
+		<choose>
+			<when test="cateSeq != null and cateSeq > 0">
+				<!-- 대분류 -->
+				AND cate_seq=#{cateSeq}
+			</when>
+			<otherwise>
+				<!-- 메인 -->
+				AND cate_seq IS NULL
+			</otherwise>
+		</choose>
+		<if test="location != ''">
+			AND location = #{location}
+		</if>
+		<if test="title != ''">
+			AND title = #{title}
+		</if>
+	</select>
+
+	<update id="updateData" parameterType="com.smpro.vo.DisplayVo">
+		UPDATE sm_display SET
+			content=#{content}
+			, mod_date=NOW()
+	     WHERE member_type_code = #{memberTypeCode}
+		 <choose>
+			 <when test="cateSeq != null and cateSeq > 0">
+				<!-- 대분류 -->
+				 AND cate_seq=#{cateSeq}
+			 </when>
+			 <otherwise>
+				<!-- 메인 -->
+				 AND cate_seq IS NULL
+			 </otherwise>
+		 </choose>
+		 <if test="location != ''">
+			AND location = #{location}
+		 </if>
+		 <if test="title != ''">
+	   		AND title = #{title}
+	     </if>
+	</update>
+
+	<insert id="insertHtmlData" parameterType="com.smpro.vo.DisplayVo">
+		INSERT INTO sm_display (
+			location,
+			title,
+			content,
+			reg_date,
+			member_type_code
+		<if test="cateSeq != null and cateSeq > 0">
+			, cate_seq
+		</if>
+		) VALUES (
+			#{location},
+			#{title},
+			#{content},
+			NOW(),
+			#{memberTypeCode}
+			<if test="cateSeq != null and cateSeq > 0">
+				, #{cateSeq}
+			</if>
+		)
+	</insert>
+
+	<select id="getLvItemList" parameterType="com.smpro.vo.DisplayLvItemVo" resultType="com.smpro.vo.DisplayLvItemVo">
+		SELECT
+			i.sell_price AS sellPrice,
+			i.market_price AS marketPrice,
+			dl.seq,
+			i.seq AS itemSeq,
+			dl.order_no AS orderNo,
+			i.name AS itemName,
+			i.img1 AS img1,
+			i.type_code AS typeCode,
+			i.img2 AS img2,
+			dl.display_seq AS displaySeq,
+			i.origin_country AS originCountry,
+			i.brand,
+			CASE
+				WHEN i.status_code = 'H' THEN '가승인'
+				WHEN i.status_code = 'Y' THEN '판매중'
+				WHEN i.status_code = 'N' THEN '판매중지'
+			END AS statusFlag,
+			di.limit_cnt AS limitCnt
+		FROM
+			sm_display_item di LEFT OUTER JOIN
+			sm_display_item_list dl ON(di.seq = dl.display_seq) LEFT OUTER JOIN
+			sm_item i ON(dl.item_seq = i.seq)
+		WHERE di.member_type_code = #{memberTypeCode}
+		  <choose>
+			  <when test="cateSeq != null and cateSeq > 0">
+				<!-- 대분류 -->
+				AND di.cate_seq=#{cateSeq}
+			  </when>
+			  <otherwise>
+				<!-- 메인 -->
+				AND di.cate_seq IS NULL
+			  </otherwise>
+		  </choose>
+		  <if test="displaySeq != null">
+	      	AND dl.display_seq=#{displaySeq}
+		  </if>
+             <if test="statusFlag != ''">
+               AND i.status_code = #{statusFlag}
+             </if>
+		  AND di.style_code=#{styleCode}
+		ORDER BY dl.order_no ASC
+	</select>
+
+	<select id="getLvTitle" parameterType="com.smpro.vo.DisplayLvItemVo" resultType="com.smpro.vo.DisplayLvItemVo">
+		 SELECT
+				seq
+				, title AS listTitle
+				, style_code AS styleCode
+				, cate_seq AS cateSeq
+				, member_type_code AS memberTypeCode
+				, seq AS displaySeq
+		   FROM sm_display_item
+		  WHERE member_type_code = #{memberTypeCode}
+		  <choose>
+			  <when test="cateSeq != null and cateSeq > 0">
+				<!-- 대분류 -->
+				AND cate_seq=#{cateSeq}
+			  </when>
+			  <otherwise>
+				<!-- 메인 -->
+				AND cate_seq IS NULL
+			  </otherwise>
+		  </choose>
+		  <if test="styleCode != null">
+			  AND style_code = #{styleCode}
+		  </if>
+	</select>
+
+	<delete id="deleteData" parameterType="int">
+		DELETE FROM sm_display_item_list
+		WHERE seq = #{seq}
+	</delete>
+
+	<update id="updateItemListTitleData" parameterType="com.smpro.vo.DisplayLvItemVo">
+		UPDATE sm_display_item SET
+			title=#{title}
+	     WHERE member_type_code = #{memberTypeCode}
+		<choose>
+			<when test="cateSeq != null and cateSeq > 0">
+				<!-- 대분류 -->
+				AND cate_seq=#{cateSeq}
+			</when>
+			<otherwise>
+				<!-- 메인 -->
+				AND cate_seq IS NULL
+			</otherwise>
+		</choose>
+		<if test="styleCode != null">
+		    AND style_code = #{styleCode}
+		</if>
+	</update>
+
+	<select id="getItemConfirm" parameterType="com.smpro.vo.DisplayLvItemVo" resultType="String">
+		SELECT name AS itemName
+          FROM sm_item
+         WHERE seq = #{itemSeq}
+	</select>
+
+	<select id="getItemListConfirm" parameterType="com.smpro.vo.DisplayLvItemVo" resultType="String">
+		SELECT item_seq AS itemSeq
+          FROM sm_display_item_list
+         <if test="displaySeq != null">
+         WHERE display_seq = #{displaySeq}
+         </if>
+         <if test="itemSeq != null">
+           AND item_seq = #{itemSeq}
+         </if>
+	</select>
+
+	<select id="getOrderNoData" parameterType="com.smpro.vo.DisplayLvItemVo" resultType="String">
+		SELECT MAX(dl.order_no)
+		  FROM sm_display_item_list dl LEFT OUTER JOIN
+		       sm_display_item di ON (di.seq = dl.display_seq)
+		 WHERE di.member_type_code = #{memberTypeCode}
+		 <choose>
+			 <when test="cateSeq != null and cateSeq > 0">
+				 <!-- 대분류 -->
+				 AND di.cate_seq=#{cateSeq}
+			 </when>
+			 <otherwise>
+				 <!-- 메인 -->
+				 AND di.cate_seq IS NULL
+			 </otherwise>
+		 </choose>
+		 <if test="displaySeq != null">
+		  	 AND dl.display_seq = #{displaySeq}
+		 </if>
+	</select>
+
+	<insert id="insertData" parameterType="com.smpro.vo.DisplayLvItemVo">
+		INSERT INTO sm_display_item_list (
+			display_seq,
+			item_seq,
+			order_no
+		) VALUES (
+			#{displaySeq},
+			#{itemSeq},
+			#{orderNo}
+		)
+	</insert>
+
+	<update id="updateItemListOrderData" parameterType="com.smpro.vo.DisplayLvItemVo">
+		UPDATE sm_display_item_list SET
+			order_no= #{orderNo}
+	     WHERE 1=1
+		<if test="displaySeq != null">
+		    AND display_seq = #{displaySeq}
+		</if>
+		<if test="itemSeq != null">
+	   		AND item_seq = #{itemSeq}
+	    </if>
+	</update>
+
+	<insert id="insertDisplayData" parameterType="com.smpro.vo.DisplayVo">
+		INSERT INTO sm_display (
+			location
+			, title
+			, content
+			, order_no
+			<if test="cateSeq != null and cateSeq > 0">
+				, cate_seq
+			</if>
+			, member_type_code
+			, reg_date
+		) VALUES (
+			#{location}
+			, #{title}
+			, #{content}
+			, #{orderNo}
+			<if test="cateSeq != null and cateSeq > 0">
+				, #{cateSeq}
+			</if>
+			, #{memberTypeCode}
+			, NOW()
+		)
+	</insert>
+	<insert id="insertDisplayItemData" parameterType="com.smpro.vo.DisplayLvItemVo">
+		INSERT INTO sm_display_item (
+			member_type_code,
+			style_code,
+			order_no,
+			title,
+			limit_cnt
+		<if test="cateSeq != null and cateSeq > 0">
+			, cate_seq
+		</if>
+		) VALUES (
+			#{memberTypeCode},
+			#{styleCode},
+			#{orderNo},
+			#{title},
+			#{limitCnt}
+			<if test="cateSeq != null and cateSeq > 0">
+				, #{cateSeq}
+			</if>
+		)
+	</insert>
+</mapper>

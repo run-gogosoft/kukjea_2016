@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.EventDao">
+	<select id="getListCount" parameterType="com.smpro.vo.EventVo" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM
+			sm_event
+		WHERE 1=1
+		<if test="mallSeq != null">
+			AND mall_seq = #{mallSeq}
+		</if>
+		<if test="findword != ''">
+			AND title LIKE CONCAT('%',#{findword},'%')
+		</if>
+
+		<if test="statusCode != ''">
+			AND status_code = #{statusCode}
+		</if>
+
+		<if test="typeCode != ''">
+			AND type_code = #{typeCode}
+		</if>
+		<if test="lv1Seq != null">
+			AND lv1_seq = #{lv1Seq}
+		</if>
+		<if test="eventSeq != null">
+			AND seq = #{eventSeq}
+		</if>
+		<if test="mainSection != ''">
+			AND main_section = #{mainSection}
+		</if>
+		<if test="curDate != ''">
+			AND e.end_date >= #{curDate}
+		</if>
+	</select>
+
+	<select id="getList" parameterType="com.smpro.vo.EventVo" resultType="com.smpro.vo.EventVo">
+		SELECT
+			e.seq,
+			e.mall_seq AS mallSeq,
+			(SELECT name FROM sm_user u WHERE e.mall_seq=u.seq) AS mallName,
+			e.type_code AS typeCode,
+			e.title,
+			e.html,
+			e.thumb_img AS thumbImg,
+			e.end_date AS endDate,
+			ic.cate_name AS cateName,
+			e.coupon_seq AS couponSeq,
+			e.show_flag AS showFlag,
+			e.main_section AS mainSection,
+			CASE
+				WHEN e.status_code = 'H' THEN '대기중'
+				WHEN e.status_code = 'Y' THEN '진행중'
+				WHEN e.status_code = 'N' THEN '종료'
+			END AS statusCode
+		FROM
+			sm_event e LEFT OUTER JOIN
+			sm_item_category ic ON(e.lv1_seq = ic.seq)
+		WHERE 1 = 1
+		<if test="mallSeq != null">
+			AND e.mall_seq = #{mallSeq}
+		</if>
+		<if test="findword != ''">
+			AND e.title LIKE CONCAT('%',#{findword},'%')
+		</if>
+
+		<if test="statusCode != ''">
+			AND e.status_code = #{statusCode}
+		</if>
+
+		<if test="typeCode != ''">
+			AND e.type_code = #{typeCode}
+		</if>
+		<if test="lv1Seq != null">
+			AND e.lv1_seq = #{lv1Seq}
+		</if>
+		<if test="eventSeq != null">
+			AND e.seq = #{eventSeq}
+		</if>
+		<if test="mainSection != ''">
+			AND e.main_section = #{mainSection}
+		</if>
+		<if test="curDate != ''">
+			AND e.end_date >= #{curDate}
+		</if>
+		ORDER BY e.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<update id="createSeq" parameterType="com.smpro.vo.EventVo">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT seq FROM sm_event_seq
+		</selectKey>
+		UPDATE sm_event_seq SET seq=seq+1
+	</update>
+	
+	<insert id="insertData" parameterType="com.smpro.vo.EventVo">
+		INSERT INTO sm_event (
+			seq
+			, mall_seq
+			, type_code
+			, status_code
+			, title
+			, html
+			, thumb_img
+			, end_date
+			, reg_date
+		<if test="lv1Seq != null and lv1Seq != 0">
+			, lv1_seq
+		</if>
+		<if test="showFlag != ''">
+			, show_flag
+		</if>
+			, main_section
+		) VALUES (
+			#{seq}
+			, #{mallSeq}
+			, #{typeCode}
+			, #{statusCode}
+			, #{title}
+			, #{html}
+			, #{thumbImg}
+			, #{endDate, jdbcType=VARCHAR}
+			, NOW()
+		<if test="lv1Seq != null and lv1Seq != 0">
+			, #{lv1Seq}
+		</if>
+		<if test="showFlag != ''">
+			, #{showFlag}
+		</if>
+			, #{mainSection}
+		)
+	</insert>
+
+	<delete id="deleteData" parameterType="int">
+		DELETE FROM sm_event
+		WHERE seq = #{seq}
+	</delete>
+
+	<delete id="deleteItemData" parameterType="int">
+		DELETE FROM sm_event_item
+		WHERE seq = #{seq}
+	</delete>
+
+	<delete id="deleteItemTitleData" parameterType="int">
+		DELETE FROM sm_event_group
+		WHERE seq = #{eventGroupSeq}
+	</delete>
+
+	<select id="getVo" parameterType="com.smpro.vo.EventVo" resultType="com.smpro.vo.EventVo">
+		SELECT
+			seq
+			, mall_seq AS mallSeq
+			, type_code AS typeCode
+			, status_code AS statusCode
+			, title
+			, html
+			, thumb_img AS thumbImg
+			, end_date AS endDate
+			, reg_date AS regDate
+			, lv1_seq AS lv1Seq
+			, coupon_seq AS couponSeq
+			, show_flag AS showFlag
+			, main_section AS mainSection
+		FROM sm_event
+		WHERE 1=1
+		    AND seq = #{seq}
+	</select>
+
+	<update id="updateData" parameterType="com.smpro.vo.EventVo">
+		UPDATE sm_event SET
+			title = #{title}
+			, mall_seq = #{mallSeq}
+			, html = #{html}
+			<if test="thumbImg != ''">
+				, thumb_img = #{thumbImg}
+			</if>
+			, end_date = #{endDate}
+			, status_code = #{statusCode}
+			, type_code = #{typeCode}
+		<if test="typeCode == 1">
+			, lv1_seq = #{lv1Seq}
+		</if>
+		<if test="couponSeq != null and couponSeq != ''">
+			, coupon_seq = #{couponSeq}
+		</if>
+		<if test="showFlag != ''">
+			, show_flag = #{showFlag}
+		</if>
+			, main_section = #{mainSection}
+		WHERE seq = #{seq}
+	</update>
+	<select id="getTitle" parameterType="com.smpro.vo.EventVo" resultType="String">
+		SELECT group_name AS groupName
+		  FROM sm_event_group
+		 WHERE seq = #{eventGroupSeq}
+	</select>
+	<select id="getTitleList" parameterType="com.smpro.vo.EventVo" resultType="com.smpro.vo.EventVo">
+		 SELECT
+		    eg.group_name AS groupName
+		    , eg.seq AS eventGroupSeq
+		    , eg.event_seq AS eventSeq
+		    , eg.order_no AS orderNo
+		  FROM sm_event_group eg
+		  WHERE eg.event_seq = #{seq}
+		  ORDER BY eg.order_no ASC
+	</select>
+	<select id="getItemList" parameterType="com.smpro.vo.EventVo" resultType="com.smpro.vo.EventVo">
+			SELECT
+		          eg.seq AS eventGroupSeq
+		          , eg.event_seq AS eventSeq
+		          , eg.group_name AS groupName
+			 	  , eg.order_no AS orderNo
+		          , ei.order_no AS itemOrderNo
+		          , ei.group_seq AS groupSeq
+		          , ei.seq AS eventItemSeq
+		          , i.type_code AS itemTypeCode
+		          , i.seq AS itemSeq
+			      , i.name AS itemName
+			      , i.img1 AS img1
+				  , i.img2 AS img2
+				  , i.img3 AS img3
+				  , i.img4 AS img4
+			      , i.sell_price AS sellPrice
+			      , (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = ei.item_seq) AS reviewGrade
+			      , CASE WHEN i.status_code = 'H' THEN '가승인'
+				         WHEN i.status_code = 'Y' THEN '판매중'
+				         WHEN i.status_code = 'N' THEN '판매중지'
+				    END AS statusFlag
+			   FROM
+			   		sm_event_group eg LEFT OUTER JOIN
+			   		sm_event_item ei ON (eg.seq = ei.group_seq) LEFT OUTER JOIN
+			   		sm_item i ON (ei.item_seq = i.seq)
+			  WHERE 1=1
+				<if test="statusCode != ''">
+			 		AND i.status_code=#{statusCode}
+				</if>
+			    AND eg.event_seq = #{seq}
+			ORDER BY ei.order_no ASC
+	</select>
+
+	<insert id="insertItemListTitleData" parameterType="com.smpro.vo.EventVo">
+		INSERT INTO sm_event_group (
+			event_seq
+			, group_name
+			, order_no
+			, mall_seq
+		) VALUES (
+			#{eventSeq}
+			, #{groupName}
+			, #{orderNo}
+			, #{mallSeq}
+		)
+	</insert>
+
+	<update id="updateItemListTitleData" parameterType="com.smpro.vo.EventVo">
+		UPDATE sm_event_group SET
+			group_name = #{groupName}
+			, order_no = #{orderNo}
+		WHERE seq = #{eventGroupSeq}
+		  AND  event_seq = #{eventSeq}
+	</update>
+
+	<!-- 정렬번호 최대값 -->
+	<select id="getMaxOrderNo" parameterType="com.smpro.vo.EventVo" resultType="String">
+		SELECT MAX(order_no)
+		FROM sm_event_item
+		WHERE 1=1
+		<if test="eventGroupSeq != ''">
+			AND group_seq = #{eventGroupSeq}
+		</if>
+	</select>
+
+	<select id="getTitleOrderNo" parameterType="com.smpro.vo.EventVo" resultType="String">
+		SELECT MAX(order_no)
+		FROM
+			sm_event_group
+		WHERE 1=1
+		<if test="seq != ''">
+			AND event_seq = #{seq}
+		</if>
+	</select>
+
+	<select id="getEventItemCnt" parameterType="com.smpro.vo.EventVo" resultType="int">
+		SELECT COUNT(*) cnt
+		FROM sm_event_item
+		<if test="eventGroupSeq != ''">
+		WHERE group_seq = #{eventGroupSeq}
+		</if>
+		<if test="itemSeq != ''">
+			AND item_seq = #{itemSeq}
+		</if>
+	</select>
+
+	<insert id="insertItemData" parameterType="com.smpro.vo.EventVo">
+		INSERT INTO sm_event_item (
+			group_seq
+			, item_seq
+			, order_no
+		) VALUES (
+			#{eventGroupSeq}
+			, #{itemSeq}
+			, #{orderNo}
+		)
+	</insert>
+
+	<update id="updateItemListOrderData" parameterType="com.smpro.vo.EventVo">
+		UPDATE sm_event_item SET
+			order_no= #{orderNo}
+	     WHERE 1=1
+		<if test="groupSeq != ''">
+		    AND group_seq = #{groupSeq}
+		</if>
+		<if test="itemSeq != ''">
+	   		AND item_seq = #{itemSeq}
+	    </if>
+	</update>
+
+	<select id="getLv1List" resultType="com.smpro.vo.EventVo">
+		  SELECT seq AS lv1Seq
+		         , cate_name AS cateName
+    		FROM sm_item_category
+    	   WHERE depth = 1
+    	   ORDER BY seq ASC
+	</select>
+	
+	<insert id="insertComment" parameterType="com.smpro.vo.BoardVo">
+		INSERT INTO sm_event_comment (
+			user_seq
+			, event_seq
+			, content
+			, reg_date
+		) VALUES (
+			#{userSeq}
+			, #{integrationSeq}
+			, #{content}
+			, NOW()
+		)
+	</insert>
+	
+	<select id="getCommentListCount" parameterType="com.smpro.vo.BoardVo" resultType="int">
+		SELECT 
+			COUNT(*) AS cnt
+		FROM    
+			sm_event_comment
+		WHERE 1=1
+			AND event_seq = #{integrationSeq}
+	</select>
+	
+	<select id="getCommentList" parameterType="com.smpro.vo.BoardVo" resultType="com.smpro.vo.BoardVo">
+		SELECT
+			a.seq
+			, a.content
+			, a.reg_date AS regDate
+			, b.seq AS userSeq
+			, b.id
+			, b.name
+			, b.nickname AS nickName
+		FROM 	
+			sm_event_comment a LEFT OUTER JOIN
+			sm_user b ON(a.user_seq=b.seq) 
+		WHERE 	1=1
+			AND a.event_seq = #{integrationSeq}
+		ORDER BY a.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<delete id="deleteCommentVo" parameterType="java.lang.Integer">
+		DELETE FROM sm_event_comment WHERE seq = #{value}
+	</delete>
+</mapper>

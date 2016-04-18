@@ -1,0 +1,157 @@
+$default_size: 1080px;
+
+@charset "UTF-8";
+
+.sign-info-wrap {
+  height:301;
+
+  .inner {
+    margin:0 auto;
+    width:871px;
+
+    .sign-info-text {
+      float:left;
+      margin:0;
+      padding:0;
+      width:217px;
+
+      a {
+        text-decoration:none;
+      }
+
+      .title {
+        padding-top:35px;
+        width:217px;
+        height:141px;
+        background-color:#4db7c9;
+        text-align:center;
+
+        .text {
+          font-family: NanumGothic;
+          font-size:24px;
+          font-weight:bold;
+          color:#fff;
+
+          a {
+            font-family: NanumGothic;
+            font-size:24px;
+            font-weight:bold;
+            color:#fff;
+          }
+        }
+
+        span {
+          font-size:22px;
+          font-weight:normal;
+        }
+      }
+
+      .title2 {
+        padding-top:13px;
+        width:217px;
+        height:53px;
+        background-color:#4db7c9;
+        text-align:center;
+
+        .text {
+          font-family: NanumGothic;
+          font-size:18px;
+          font-weight:bold;
+          color:#fff;
+
+          i {
+            position:absolute;
+            margin:-4px 0 0 15px;
+            color:#fbac18;
+          }
+        }
+
+        a {
+          color:#fff;
+          text-decoration:none;
+        }
+      }
+
+      .back-img1 {
+        background-image: url("/front-assets/images/member/grouop_back_01.png");
+        background-repeat: no_repeat;
+      }
+
+      .back-img2 {
+        background-image: url("/front-assets/images/member/grouop_back_02.png");
+        background-repeat: no_repeat;
+      }
+
+      .back-img3 {
+        background-image: url("/front-assets/images/member/grouop_back_03.png");
+        background-repeat: no_repeat;
+      }
+
+      .description {
+        width:217px;
+        height:107px;
+        background-color:#f6f6f6;
+
+        .inner {
+          margin:0;
+          padding:15px 0 0 20px;
+
+          div {
+            list-style:none;
+            width:150px;
+            font-size:12px;
+            color:#888888;
+
+            &:before {
+              content:"- ";
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.organ-description {
+  margin:65px auto 60px auto;
+  width:$default_size;
+  height:188px;
+  border-top:1px solid #e3e3e3;
+  border-bottom:1px solid #e3e3e3;
+
+  div {
+    margin:17px auto 0 auto;
+    padding:0;
+    width:885px;
+    height:135px;
+
+    .title {
+      float:left;
+      width:220px;
+      font-family: NanumGothic;
+      font-size:24px;
+      font-weight:bold;
+      color:#fbac18;
+      line-height:110px;
+    }
+
+    .description {
+      float:left;
+      width:665px;
+      font-size:12px;
+      color:#888888;
+
+      ul {
+
+        li {
+          list-style:none;
+          text-indent:-8px;
+
+          &:before {
+            content:"- ";
+          }
+        }
+      }
+    }
+  }
+}

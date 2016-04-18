@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.MallDao">
+	<select id="getList" parameterType="com.smpro.vo.MallVo" resultType="com.smpro.vo.MallVo">
+		SELECT
+			u.seq,
+			u.id,
+			u.name,
+			c1.name AS statusText,
+			m.open_date AS openDate,
+			u.reg_date AS regDate
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_mall m ON (u.seq=m.seq) LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=18 AND u.status_code=c1.value)
+		WHERE u.type_code='M'
+			<if test="statusCode != ''">
+			AND u.status_code=#{statusCode}
+			</if>
+		ORDER BY u.seq DESC
+	</select>
+
+	<select id="getListSimple" resultType="com.smpro.vo.MallVo">
+	  SELECT
+	    u.seq, u.name
+	  FROM
+	    sm_user u LEFT OUTER JOIN
+	    sm_mall m ON(u.seq=m.seq)
+	  WHERE u.type_code='M'
+	  ORDER BY u.name ASC, u.seq DESC
+	</select>
+
+	<select id="getVo" parameterType="int" resultType="com.smpro.vo.MallVo">
+		SELECT
+			u.seq,
+			u.id,
+			u.name,
+			u.status_code AS statusCode,
+			m.url,
+			m.pay_method AS payMethod,
+			m.pg_code AS pgCode,
+			m.pg_id AS pgId,
+			m.pg_key AS pgKey,
+			m.open_date AS openDate,
+			m.close_date AS closeDate,
+			u.mod_date AS modDate,
+			u.reg_date AS regDate
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_mall m ON (u.seq=m.seq)
+		WHERE u.seq=#{value}
+	</select>
+
+	<insert id="regVo" parameterType="com.smpro.vo.MallVo">
+		INSERT INTO sm_mall (
+			seq, url, pay_method, pg_code, pg_id, pg_key
+		) VALUES (
+			#{seq}, #{url}, #{payMethod}, #{pgCode}, #{pgId}, #{pgKey}
+		)
+	</insert>
+
+	<update id="modVo" parameterType="com.smpro.vo.MallVo">
+	  UPDATE sm_mall SET
+	    url=#{url}, pay_method=#{payMethod}, pg_code=#{pgCode}, pg_id=#{pgId}, pg_key=#{pgKey} 
+	   <if test="statusCode eq 'Y'.toString()">
+	    , open_date = NOW()
+	  </if>
+	  <if test="statusCode eq 'X'.toString()">
+	    , close_date = NOW()
+	  </if>
+	  WHERE seq=#{seq}
+	</update>
+
+	
+  <select id="getLoginTmpl" parameterType="String" resultType="com.smpro.vo.MallVo">
+    SELECT
+      u.id,
+      m.login_banner1 AS loginbanner1,
+      m.login_info1   AS logininfo1,
+      m.login_info2   AS logininfo2,
+      m.join_flag     AS joinflag,
+      m.mobile_flag   AS mobileFlag
+    FROM
+      sm_mall m LEFT OUTER JOIN
+      sm_user u ON (m.seq = u.seq)
+    WHERE u.id = #{value}
+          AND u.type_code = 'M'
+  </select>
+
+	<select id="getMainInfo" parameterType="String" resultType="com.smpro.vo.MallVo">
+		SELECT
+			m.seq,
+			u.id,
+			u.name,
+			u.status_code AS statusCode,
+			m.pg_code AS pgCode,
+			m.pg_id AS pgId,
+			m.pg_key AS pgkey,
+	     		m.pay_method AS payMethod
+		FROM
+			sm_mall m LEFT OUTER JOIN
+			sm_user u ON (m.seq=u.seq)
+		WHERE u.id=#{value}
+		  AND u.type_code='M'
+	</select>
+</mapper>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.AdjustDao">
+  <!--정산 대상 상품 주문 리스트 가져오기-->
+  <select id="getListForAdjust" resultType="com.smpro.vo.AdjustVo">
+    SELECT
+      d.seq AS orderDetailSeq,
+      o.mall_seq AS mallSeq,
+      'N' AS cancelFlag,
+      (d.sell_price + IFNULL(d.option_price,0)) AS sellPrice,
+      d.supply_price AS supplyPrice,
+      d.order_cnt AS orderCnt,
+      CASE
+        WHEN d.deli_prepaid_flag='Y' THEN d.deli_cost
+        ELSE 0
+      END AS deliCost,
+      d.tax_code AS taxCode,
+      d.seller_seq AS sellerSeq,
+      DATE_FORMAT(d.c10_date, '%Y%m') AS orderYm,
+      DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -1 DAY ), '%Y%m') AS adjustDate
+    FROM
+      sm_order_detail d LEFT OUTER JOIN
+      sm_order o ON (d.order_seq=o.seq)
+    WHERE
+      <!-- 결제년월 기준 -->
+      <![CDATA[
+      DATE_FORMAT(d.c10_date,'%Y%m') <= DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -1 DAY ), '%Y%m') AND
+      ]]>
+      d.adjust_flag='N' AND <!-- 미정산 건 -->
+      d.status_code BETWEEN '10' AND '90' <!-- 미취소건 -->
+    ORDER BY o.seq ASC, d.seq ASC
+  </select>
+  <!--취소정산 대상 리스트 가져오기-->
+  <select id="getListForAdjustCancel" resultType="com.smpro.vo.AdjustVo">
+    SELECT
+      a.order_detail_seq AS orderDetailSeq,
+      a.mall_seq AS mallSeq,
+      'Y' AS cancelFlag,
+      a.sell_price AS sellPrice,
+      a.supply_price AS supplyPrice,
+      a.order_cnt AS orderCnt,
+      a.deli_cost AS deliCost,
+      a.tax_code AS taxCode,
+      a.seller_seq AS sellerSeq,
+      a.order_ym AS orderYm,
+      DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -1 DAY ), '%Y%m') AS adjustDate
+    FROM
+      sm_adjust a LEFT OUTER JOIN
+      sm_order_detail d ON (a.order_detail_seq=d.seq)
+    WHERE
+      (SELECT seq FROM sm_adjust WHERE cancel_flag='Y' AND order_detail_seq=d.seq) IS NULL AND <!-- 미 취소 정산 건 -->
+      <!-- 취소년월 기준 -->
+      <![CDATA[
+      DATE_FORMAT(d.c99_date,'%Y%m') <= DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -1 DAY ), '%Y%m') AND 
+      ]]>
+      d.adjust_flag = 'Y' AND  <!-- 기정산 건 -->
+      d.status_code = '99' <!-- 취소완료 -->
+    ORDER BY a.order_detail_seq ASC
+  </select>
+  <!--정산 확정 데이터 등록-->
+  <insert id="regVo" parameterType="com.smpro.vo.AdjustVo">
+    INSERT INTO sm_adjust (
+      order_detail_seq, mall_seq, adjust_grade_code, cancel_flag,
+      sell_price, supply_price, order_cnt, deli_cost,
+      tax_code, seller_seq,
+      order_ym, adjust_date, reg_date, reason
+    ) VALUES (
+      #{orderDetailSeq}, #{mallSeq}, 'C', #{cancelFlag},
+      #{sellPrice}, #{supplyPrice}, #{orderCnt}, #{deliCost},
+      #{taxCode}, #{sellerSeq},
+      #{orderYm}, #{adjustDate}, NOW(), #{reason}
+    )
+  </insert>
+  <!-- 주문 정산 여부 업데이트 -->
+  <update id="updateAdjustFlag" parameterType="Integer">
+    UPDATE sm_order_detail d SET
+      d.adjust_flag = 'Y'
+    WHERE
+      d.adjust_flag = 'N' AND <!-- 미정산 건 -->
+      d.seq = #{value}
+  </update>
+	<!--정산 리스트-->
+	<select id="getList" parameterType="com.smpro.vo.AdjustVo" resultType="com.smpro.vo.AdjustVo">
+		SELECT
+			t.*,
+			u.name AS sellerName
+		FROM (
+			SELECT
+				a.adjust_date AS adjustDate,
+				a.seller_seq AS sellerSeq,
+				a.complete_flag AS completeFlag,
+				SUM( CASE WHEN a.cancel_flag = 'Y' THEN -a.sell_price   ELSE a.sell_price END  * a.order_cnt)   sellPrice,
+				SUM( CASE WHEN a.cancel_flag = 'Y' THEN -a.supply_price ELSE a.supply_price END * a.order_cnt ) supplyPrice,
+				SUM( CASE WHEN a.cancel_flag = 'Y' THEN -a.deli_cost   ELSE a.deli_cost END ) deliCost
+			FROM
+				sm_adjust a
+			WHERE a.adjust_date=#{adjustDate}
+		<choose>
+			<when test="loginType eq 'S'.toString()">
+				AND a.seller_seq=#{loginSeq}
+			</when>
+		</choose>
+		<if test="completeFlag != ''">
+				AND a.complete_flag = #{completeFlag}
+		</if>
+		<choose>
+			<when test="search eq 'seller_id'">AND a.seller_seq = (SELECT seq FROM sm_user WHERE id=#{findword})</when>
+			<when test="search eq 'seller_name'">AND a.seller_seq IN (SELECT seq FROM sm_user WHERE name LIKE CONCAT('%',#{findword},'%'))</when>
+		</choose>
+			GROUP BY
+				a.adjust_date, a.seller_seq, a.complete_flag
+		) t LEFT OUTER JOIN sm_user u ON (t.sellerSeq=u.seq)
+		ORDER BY u.name ASC, t.completeFlag ASC
+	</select>
+	
+	<!-- 정산 완료 업데이트 -->
+	<update id="updateStatus" parameterType="com.smpro.vo.AdjustVo">
+		UPDATE sm_adjust SET
+			complete_flag='Y', complete_date=NOW()
+		WHERE
+			adjust_date=#{adjustDate} AND
+			seller_seq=#{sellerSeq} AND
+			complete_flag='N'
+	</update>
+	
+	<!-- 정산 주문 리스트 -->
+	<select id="getOrderList" parameterType="com.smpro.vo.AdjustVo" resultType="com.smpro.vo.AdjustVo">
+		SELECT
+			a.seq,
+			a.order_ym AS orderYm,
+			a.complete_date AS completeDate,
+			a.order_detail_seq AS orderDetailSeq,
+			a.cancel_flag AS cancelFlag,
+			d.order_seq AS orderSeq,
+			d.tax_code AS taxCode,
+			d.item_name AS itemName,
+			d.option_value AS optionValue,
+			a.adjust_date AS adjustDate,
+			a.seller_seq AS sellerSeq,
+			a.sell_price AS sellPrice,
+			a.supply_price AS supplyPrice,
+			a.order_cnt AS orderCnt,
+			a.deli_cost AS deliCost,
+			u.name AS sellerName,
+			o.member_name AS memberName,
+			o.receiver_name AS receiverName,
+			(SELECT NAME FROM sm_user WHERE seq=a.mall_seq) AS mallName,
+			c1.name AS payMethodName,
+			a.reason
+		FROM
+			sm_adjust a LEFT OUTER JOIN
+			sm_order_detail d ON (a.order_detail_seq=d.seq) LEFT OUTER JOIN
+			sm_order o ON (o.seq=d.order_seq) LEFT OUTER JOIN
+			sm_user u ON (a.seller_seq=u.seq) LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=21 AND o.pay_method=c1.value)
+		WHERE a.adjust_date=#{adjustDate}
+		<if test="sellerSeq != null">
+			AND a.seller_seq=#{sellerSeq}
+		</if>
+		<if test="mallSeq != null">
+			AND a.mall_seq=#{mallSeq}
+		</if>
+	  	<if test="completeFlag != ''">
+		  	AND a.complete_flag = #{completeFlag}
+	  	</if>
+	  	<if test="payMethod != ''">
+		  	AND o.pay_method = #{payMethod}
+	  	</if>
+	  	<!-- 수동 추가 건 구분 -->
+	  	<choose>
+	  		<when test="manualFlag == 'Y'.toString()">
+  			AND a.order_detail_seq IS NULL
+	  		</when>
+	  		<otherwise>
+	  		AND a.order_detail_seq IS NOT NULL	
+	  		</otherwise>
+	  	</choose>
+	  	<choose>
+			<when test="search eq 'seller_id'">AND a.seller_seq = (SELECT seq FROM sm_user WHERE id=#{findword})</when>
+			<when test="search eq 'seller_name'">AND a.seller_seq IN (SELECT seq FROM sm_user WHERE name LIKE CONCAT('%',#{findword},'%'))</when>
+		</choose>
+		ORDER BY a.seq ASC
+	</select>
+	
+	<!-- 정산 삭제 -->
+	<delete id="delVo">
+		DELETE FROM sm_adjust
+		WHERE
+			order_detail_seq IS NULL <!-- 수동 추가 내역만 지운다.-->
+			AND seq=#{seq}
+	</delete>
+</mapper>

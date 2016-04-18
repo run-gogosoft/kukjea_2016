@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.WishDao">
+	<!-- 리스트 -->
+	<select id="getList" parameterType="int" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			w.seq AS wishSeq,
+			w.member_seq AS memberSeq,
+			w.item_seq AS itemSeq,
+			w.option_value_seq AS optionValueSeq,
+			w.deli_prepaid_flag AS deliPrepaidFlag,
+			(SELECT value_name FROM sm_item_option_value WHERE seq=w.option_value_seq) AS optionName,
+			(SELECT stock_cnt FROM sm_item_option_value WHERE seq=w.option_value_seq) AS stockCount,
+			w.reg_date AS regDate,
+			i.seq AS itemSeq,
+			i.name,
+			i.sell_price AS sellPrice,
+			i.deli_cost AS deliCost,
+			i.deli_type_code AS deliTypeCode,
+			i.deli_free_amount AS deliFreeAmount,
+			i.deli_package_flag AS deliPackageFlag,
+			i.img1,
+			u.name AS sellerName
+		FROM
+			sm_wish w LEFT OUTER JOIN
+			sm_item i ON (w.item_seq=i.seq) LEFT OUTER JOIN
+			sm_user u ON (i.seller_seq=u.seq)
+		WHERE w.member_seq=#{memberSeq}
+		ORDER BY w.seq DESC 
+	</select>
+	<!-- 등록 -->
+	<insert id="regData" parameterType="com.smpro.vo.ItemVo">
+		INSERT INTO sm_wish (
+			member_seq, item_seq, option_value_seq, deli_prepaid_flag, reg_date
+		) VALUES (
+			#{memberSeq}, #{itemSeq}, #{optionValueSeq}, #{deliPrepaidFlag}, NOW()
+		)
+	</insert>
+	<!-- 삭제 -->
+	<delete id="delData" parameterType="com.smpro.vo.ItemVo">
+		DELETE FROM sm_wish WHERE member_seq=#{memberSeq} AND seq=#{wishSeq}
+	</delete>
+	<!-- 중복 체크 -->
+
+	<select id="getCnt" parameterType="com.smpro.vo.ItemVo" resultType="int">
+		SELECT COUNT(*) cnt FROM sm_wish WHERE member_seq=#{memberSeq} AND item_seq=#{itemSeq} AND option_value_seq=#{optionValueSeq}
+	</select>
+
+	<select id="getWishListCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) cnt FROM sm_wish WHERE member_seq=#{memberSeq}
+	</select>
+	
+	<select id="getData" parameterType="Integer" resultType="com.smpro.vo.ItemVo">
+		SELECT
+			member_seq AS memberSeq,
+			item_seq AS itemSeq,
+			option_value_seq AS optionValueSeq,
+			deli_prepaid_flag AS deliPrepaidFlag
+		FROM
+			sm_wish
+		WHERE seq = #{value}
+	</select>
+</mapper>

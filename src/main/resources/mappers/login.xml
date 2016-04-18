@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.LoginDao">
+	<!--  회원 로그인 -->
+	<select id="getData" resultType="com.smpro.vo.UserVo" parameterType="com.smpro.vo.UserVo">
+		SELECT
+			u.seq AS loginSeq,
+			u.id,
+			u.name,
+			u.nickname,
+			u.type_code AS loginType,
+			u.grade_code AS gradeCode,
+			u.last_date AS lastDate,
+			m.member_type_code AS memberTypeCode,
+			(SELECT id FROM sm_user WHERE seq=m.mall_seq) AS mallId,
+			CASE
+				WHEN  
+					DATE_ADD(NOW(), INTERVAL -365 DAY) > u.last_date OR <!-- 1년이상 미접속자 이거나 -->
+					DATE_ADD(NOW(), INTERVAL -180 DAY) > u.mod_password_date <!-- 6개월이상 비밀번호 미변경자 -->
+					THEN 'Y'
+				ELSE 'N'
+			END notiPasswordFlag
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_member m ON (u.seq=m.seq)
+		WHERE
+			<choose>
+				<when test="loginType eq 'C'.toString()">
+					u.type_code='C'
+				</when>
+				<otherwise>
+					u.type_code != 'C'
+				</otherwise>
+			</choose>
+			AND u.id=#{id}
+			AND u.password=#{password}
+			AND u.status_code='Y'
+			<if test="mallSeq != null">
+				AND m.mall_seq=#{mallSeq}
+			</if>
+	</select>
+	<select id="getDataForToken" parameterType="com.smpro.vo.UserVo" resultType="com.smpro.vo.UserVo">
+		<![CDATA[
+		SELECT
+		  seq AS loginSeq
+		  , id
+		  , name
+		  , nickname
+		  , type_code AS loginType
+		  , grade_code AS gradeCode
+		FROM
+		  sm_user
+		WHERE
+		  login_token=#{loginToken}
+		  AND login_token IS NOT NULL
+		  AND last_date BETWEEN DATE_ADD( NOW(), INTERVAL -1 DAY ) AND NOW()
+		  AND last_ip=#{lastIp}
+		  AND last_ip IS NOT NULL
+		  AND status_code='Y'
+		]]>
+	</select>
+	<update id="updateData" parameterType="com.smpro.vo.UserVo">		  
+		UPDATE sm_user SET
+			last_date=NOW(),
+			last_ip=#{lastIp}, 
+			login_token=#{loginToken}
+		WHERE
+			seq=#{loginSeq}
+	</update>
+
+	<select id="getDataByTempPassword" parameterType="String" resultType="com.smpro.vo.UserVo">
+		SELECT
+			  seq AS loginSeq
+			, id
+			, name
+			, nickname
+			, type_code AS loginType
+			, grade_code AS gradeCode
+		FROM sm_user
+		WHERE 1=1
+		AND temp_password=#{value}
+		AND temp_password_date BETWEEN (DATE_ADD( NOW(), INTERVAL -(1/24) DAY )) AND NOW()
+	</select>
+
+	<insert id="insertAdminAccessLog" parameterType="com.smpro.vo.UserVo">
+		INSERT INTO sm_admin_access_log (
+			admin_seq,
+			ip_addr,
+			reg_date
+		) VALUES (
+			#{loginSeq},
+			#{ipAddr},
+			NOW()
+		)
+	</insert>
+	
+	<!--  비회원 로그인(기 주문 여부 확인) -->
+	<select id="checkCntInOrder" parameterType="com.smpro.vo.UserVo" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_order o
+		WHERE
+			o.member_name=#{name}
+			AND o.member_email=#{email}
+			<if test="mallSeq != null">
+				AND o.mall_seq=#{mallSeq}
+			</if>
+	</select>
+</mapper>

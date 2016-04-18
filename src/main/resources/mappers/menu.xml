@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.MenuDao">
+  <select id="getMainList" resultType="com.smpro.vo.MenuVo">
+    SELECT
+      seq,
+      sort,
+      name
+    FROM sm_menu
+    ORDER BY sort DESC, seq ASC
+  </select>
+
+  <select id="getSubList" parameterType="int" resultType="com.smpro.vo.MenuVo">
+    SELECT
+      seq,
+      main_seq AS mainSeq,
+      sort,
+      name,
+      link_url AS linkUrl
+    FROM sm_menu_sub
+    WHERE main_seq=#{value}
+    ORDER BY sort DESC, seq ASC
+  </select>
+  
+  <select id="getSubSeq" parameterType="String" resultType="String">
+    SELECT
+      seq
+    FROM sm_menu_sub
+    WHERE name=#{name}
+  </select>
+
+	<select id="getAllSubList" parameterType="int" resultType="com.smpro.vo.MenuVo">
+    SELECT
+      seq,
+      main_seq AS mainSeq,
+      sort,
+      name,
+      link_url AS linkUrl
+    FROM sm_menu_sub
+    ORDER BY sort DESC, seq ASC
+  </select>
+  
+  <select id="getMainVo" parameterType="int" resultType="com.smpro.vo.MenuVo">
+    SELECT
+      seq,
+      sort,
+      name
+    FROM sm_menu
+    WHERE seq=#{value}
+  </select>
+
+  <select id="getSubVo" parameterType="int" resultType="com.smpro.vo.MenuVo">
+    SELECT
+      seq,
+      main_seq AS mainSeq,
+      sort,
+      name,
+      link_url AS linkUrl
+    FROM sm_menu_sub
+    WHERE seq=#{value}
+  </select>
+
+  <insert id="insertMainVo" parameterType="com.smpro.vo.MenuVo">
+    INSERT INTO sm_menu (
+      sort, name
+    ) VALUES (
+      0, #{name}
+    )
+  </insert>
+
+  <update id="updateMainVo" parameterType="com.smpro.vo.MenuVo">
+    UPDATE sm_menu SET
+      name=#{name}
+    WHERE seq=#{seq}
+  </update>
+
+  <delete id="deleteMainVo" parameterType="int">
+    DELETE FROM sm_menu
+    WHERE seq=#{value}
+  </delete>
+
+  <update id="modifyMainOrdering" parameterType="com.smpro.vo.MenuVo">
+    UPDATE sm_menu SET
+      sort=#{sort}
+    WHERE seq=#{seq}
+  </update>
+
+  <insert id="insertSubVo" parameterType="com.smpro.vo.MenuVo">
+    INSERT INTO sm_menu_sub (
+      sort, main_seq, name, link_url
+    ) VALUES (
+      0, #{mainSeq}, #{name}, #{linkUrl}
+    )
+  </insert>
+
+  <update id="updateSubVo" parameterType="com.smpro.vo.MenuVo">
+    UPDATE sm_menu_sub SET
+      name=#{name},
+      link_url=#{linkUrl}
+    WHERE seq=#{seq}
+  </update>
+
+  <delete id="deleteSubVo" parameterType="int">
+    DELETE FROM sm_menu_sub
+    WHERE seq=#{value}
+  </delete>
+
+  <update id="modifySubOrdering" parameterType="com.smpro.vo.MenuVo">
+    UPDATE sm_menu_sub SET
+    sort=#{sort}
+    WHERE seq=#{seq}
+  </update>
+
+</mapper>

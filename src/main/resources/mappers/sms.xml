@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.SmsDao">
+	<select id="getList" resultType="com.smpro.vo.SmsVo">
+		SELECT
+			seq
+			, title
+			, type_code AS typeCode
+			, status_type AS statusType
+			, status_code AS statusCode
+			, (SELECT name FROM sm_common WHERE group_code=1 AND value=status_code) AS memberStatusText
+			, (SELECT name FROM sm_common WHERE group_code=6 AND value=status_code) AS orderStatusText
+			, content AS content
+			, reg_date AS regDate
+			, (SELECT name FROM sm_user WHERE seq = mall_seq) AS mallName
+		FROM sm_sms
+		ORDER BY seq DESC
+	</select>
+
+	<select id="getLogList" parameterType="com.smpro.vo.SmsVo" resultType="com.smpro.vo.SmsVo">
+		SELECT
+			tr_num AS seq
+			, tr_senddate AS trSendDate
+			, tr_id AS trId
+			, tr_sendstat AS trSendStat
+			, tr_rsltstat AS trRsltStat
+			, tr_msgtype AS trMsgType
+			, tr_phone AS trPhone
+			, tr_callback AS trCallBack
+			, tr_rsltdate AS trRsltDate
+			, tr_modified AS trModified
+			, tr_msg AS trMsg
+			, tr_net AS trNet
+			, tr_etc1 AS trEtc1
+			, tr_etc2 AS trEtc2
+			, tr_etc3 AS trEtc3
+			, tr_etc4 AS trEtc4
+			, tr_etc5 AS trEtc5
+			, tr_etc6 AS trEtc6
+			, tr_realsenddate AS trRealSendDate
+			, tr_routeid AS trRouteid
+		FROM SC_LOG_${logDate}
+		WHERE 1=1
+			<if test="search != '' and findword != ''">
+				AND ${search} LIKE CONCAT('%',#{findword},'%')
+			</if>
+		ORDER BY tr_num DESC
+	</select>
+
+	<select id="getLogListCount" parameterType="com.smpro.vo.SmsVo" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM SC_LOG_${logDate}
+		WHERE 1=1
+			<if test="search != '' and findword != ''">
+				AND ${search} LIKE CONCAT('%',#{findword},'%')
+			</if>
+		ORDER BY tr_num DESC
+	</select>
+
+	<select id="getVo" parameterType="int" resultType="com.smpro.vo.SmsVo">
+		SELECT
+			seq
+			, title
+			, type_code AS typeCode
+			, status_type AS statusType
+			, status_code AS statusCode
+			, (SELECT name FROM sm_common WHERE group_code=1 AND value=status_code) AS memberStatusText
+			, (SELECT name FROM sm_common WHERE group_code=6 AND value=status_code) AS orderStatusText
+			, content AS content
+			, reg_date AS regDate
+			, mall_seq AS mallSeq
+		FROM sm_sms
+		WHERE seq=#{value}
+	</select>
+
+	<select id="getContent" parameterType="com.smpro.vo.SmsVo" resultType="java.lang.String">
+		SELECT
+			content
+		FROM sm_sms
+		WHERE status_code=#{statusCode}
+		AND status_type=#{statusType}
+		<if test="mallSeq != null">
+			AND mall_seq=#{mallSeq}
+		</if>
+	</select>
+
+	<insert id="insertVo" parameterType="com.smpro.vo.SmsVo">
+		INSERT INTO sm_sms (
+			title
+			, type_code
+			, status_type
+			, status_code
+			, content
+			, reg_date
+			, mall_seq
+		) VALUES (
+			#{title}
+			, #{typeCode}
+			, #{statusType}
+			, #{statusCode}
+			, #{content}
+			, NOW()
+			, #{mallSeq}
+		)
+	</insert>
+
+	<insert id="insertSmsSendVo" parameterType="com.smpro.vo.SmsVo">
+		INSERT INTO SC_TRAN (
+			tr_senddate
+			, tr_sendstat
+			, tr_msgtype
+			, tr_phone
+			, tr_callback
+			, tr_msg
+		) VALUES (
+			NOW()
+			, #{trSendStat}
+			, #{trMsgType}
+			, #{trPhone}
+			, '02-2222-3896'
+			, #{trMsg}
+		)
+	</insert>
+
+	<update id="updateVo" parameterType="com.smpro.vo.SmsVo">
+		UPDATE sm_sms SET
+			title = #{title}
+			, type_code = #{typeCode}
+			, status_type = #{statusType}
+			, status_code = #{statusCode}
+			, content = #{content}
+			, mall_seq = #{mallSeq}
+		WHERE seq = #{seq}
+	</update>
+
+	<delete id="deleteData" parameterType="int">
+		DELETE FROM sm_sms WHERE seq=#{value}
+	</delete>
+</mapper>

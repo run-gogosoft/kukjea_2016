@@ -1,0 +1,29 @@
+package com.smpro.service;
+
+import com.smpro.vo.BoardVo;
+import com.smpro.vo.MemberVo;
+
+import java.util.List;
+
+public interface BoardService {
+	public List<BoardVo> getList(BoardVo vo);
+
+	public int getListCount(BoardVo vo);
+
+	public int createSeq(BoardVo vo);
+	
+	public boolean insertData(BoardVo vo);
+
+	public boolean updateData(BoardVo vo);
+
+	public boolean deleteData(BoardVo vo);
+
+	public BoardVo getVo(BoardVo vo);
+
+	public int updateViewCnt(BoardVo vo);
+
+	public Integer getDirectBoardRegCntForWeek(MemberVo vo);
+
+	public Integer getItemQnaBoardRegCntForWeek(MemberVo vo);
+
+}

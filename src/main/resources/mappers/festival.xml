@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.FestivalDao">
+	<!-- 행사 리스트 -->
+	<select id="getList" resultType="com.smpro.vo.FestivalVo">
+		SELECT
+			seq,
+			title,
+			start_date AS startDate,
+			end_date AS endDate,
+			mod_date AS modDate,
+			reg_date AS regDate
+		FROM
+			sm_festival
+		WHERE 1=1
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			</if>
+		ORDER BY seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	
+	<!-- 행사 리스트 -->
+	<select id="getListCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			sm_festival
+		WHERE 1=1
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			</if>	
+	</select>
+	
+	<!-- 행사 상세 -->
+	<select id="getVo" resultType="com.smpro.vo.FestivalVo">
+		SELECT
+			seq,
+			title,
+			content,
+			start_date AS startDate,
+			end_date AS endDate,
+			mod_date AS modDate,
+			reg_date AS regDate
+		FROM
+			sm_festival
+		WHERE
+			seq = #{seq}	
+	</select>
+  
+	<update id="createSeq" parameterType="com.smpro.vo.ItemVo">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT seq FROM sm_festival_seq
+		</selectKey>
+		UPDATE sm_festival_seq SET seq=seq+1
+	</update>
+	
+	<!-- 행사 등록 -->
+	<insert id="regVo" parameterType="com.smpro.vo.FestivalVo">
+		INSERT INTO sm_festival (
+			seq, title, content, start_date, end_date, reg_date
+		) VALUES (
+			#{seq}, #{title}, #{content}, #{startDate}, #{endDate}, NOW()
+		)
+	</insert>
+	
+	<!-- 행사 수정 -->
+	<update id="modVo" parameterType="com.smpro.vo.FestivalVo">
+		UPDATE sm_festival SET
+			title = #{title}, content = #{content}, start_date = #{startDate}, end_date = #{endDate}, mod_date = NOW()
+		WHERE seq = #{seq}
+	</update>
+	
+	<!-- 행사 삭제 -->
+	<delete id="delVo" parameterType="Integer">
+		DELETE FROM sm_festival WHERE seq = #{seq} 
+	</delete>
+	
+	<!-- 행사 참여 리스트 -->
+	<select id="getSellerList" parameterType="com.smpro.vo.FestivalVo" resultType="com.smpro.vo.FestivalVo">
+		SELECT
+			f.seq,
+			u.id AS sellerId,
+			u.name AS sellerName,
+			s.biz_no AS bizNo,
+			s.ceo_name AS ceoName,
+			s.biz_type AS bizType,
+			s.biz_kind AS bizKind,
+			s.tel,
+			s.fax,
+			f.mod_date AS modDate,
+			f.reg_date AS regDate
+		FROM
+			sm_festival_seller f LEFT OUTER JOIN
+			sm_user u ON (f.seller_seq=u.seq) LEFT OUTER JOIN
+			sm_seller s ON (u.seq=s.seq)
+		WHERE f.festival_seq = #{festivalSeq}
+	</select>
+	
+	<!-- 행사 참여 상세 -->
+	<select id="getSellerVo" parameterType="com.smpro.vo.FestivalVo" resultType="com.smpro.vo.FestivalVo">
+		SELECT
+			f.seq,
+			f.content,
+			f.seller_seq AS sellerSeq,
+			u.id AS sellerId,
+			u.name AS sellerName,
+			s.biz_no AS bizNo,
+			s.ceo_name AS ceoName,
+			s.biz_type AS bizType,
+			s.biz_kind AS bizKind,
+			s.total_sales AS totalSales,
+			s.amount_of_worker AS amountOfWorker,
+			s.tel,
+			s.fax,
+			c1.name AS jachiguName,
+			s.auth_category AS authCategory,
+			f.mod_date AS modDate,
+			f.reg_date AS regDate
+		FROM
+			sm_festival_seller f LEFT OUTER JOIN
+			sm_user u ON (f.seller_seq=u.seq) LEFT OUTER JOIN
+			sm_seller s ON (u.seq=s.seq) LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=29 AND c1.value=s.jachigu_code)
+		WHERE 
+			<if test="seq != null">
+				<!-- 관리자 조회시 -->
+				f.seq = #{seq}
+			</if>
+			<if test="festivalSeq != null and sellerSeq != null">
+				<!-- 판매자 조회시 -->
+				f.festival_seq = #{festivalSeq} AND f.seller_seq = #{sellerSeq}
+			</if>
+			
+	</select>
+  
+	<!-- 행사 참여 등록 -->
+	<insert id="regSellerVo" parameterType="com.smpro.vo.FestivalVo" useGeneratedKeys="true" keyProperty="seq">
+		INSERT INTO sm_festival_seller (
+			seq, festival_seq, seller_seq, content, reg_date
+		) VALUES (
+			#{seq}, #{festivalSeq}, #{sellerSeq}, #{content}, NOW()
+		)
+	</insert>
+	
+	<!-- 행사 참여 수정 -->
+	<update id="modSellerVo" parameterType="com.smpro.vo.FestivalVo">
+		UPDATE sm_festival_seller SET
+			content = #{content}, mod_date = NOW()
+		WHERE
+			seq = #{seq}
+			<if test="sellerSeq != null">
+				<!-- 판매자는 오로지 자신의 것만 수정할 수 있다 -->
+				AND seller_seq = #{sellerSeq}
+			</if>
+	</update>
+	
+	<!-- 행사 참여 삭제 -->
+	<delete id="delSellerVo" parameterType="java.lang.Integer">
+		DELETE FROM sm_festival_seller WHERE seq = #{seq} 
+	</delete>
+</mapper>

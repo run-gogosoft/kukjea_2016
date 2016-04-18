@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.UserDao">
+	<!--회원이나 판매자/총판은 등급기능을 현재는 사용하지 않고 관리자는 사용하고 있으므로 typeCode가 A(관리자)일경우만 gradeCode를 insert해준다.-->
+	<!--쇼핑몰 회원은 닉네임을 사용하지 않으므로 인서트하지 않는다-->
+    <insert id="insertData" parameterType="com.smpro.vo.UserVo" useGeneratedKeys="true" keyProperty="seq">
+			INSERT INTO sm_user (
+				seq, id, password, name, <if test="typeCode != 'C'.toString()">nickname,</if> type_code, <if test="typeCode == 'A'.toString()">grade_code,</if> status_code, reg_date
+			) VALUES (
+				#{seq}, #{id}, #{password}, #{name}, <if test="typeCode != 'C'.toString()">#{nickname},</if> #{typeCode}, <if test="typeCode == 'A'.toString()">#{gradeCode},</if> #{statusCode}, NOW()
+			)
+    </insert>
+
+    <update id="updateData" parameterType="com.smpro.vo.UserVo">
+        UPDATE sm_user SET
+          name=#{name}, status_code=#{statusCode}, mod_date=NOW()
+        <if test="password != ''">
+            <!-- 패스워드 값이 넘어올 경우만 수정 -->
+            , password=#{password}
+        </if>
+        <if test="nickname != ''">
+            <!-- 닉네임 값이 넘어올 경우만 수정 -->
+            , nickname=#{nickname}
+        </if>
+        WHERE seq=#{seq}
+    </update>
+
+	<!--아이디 중복 검사-->
+	<select id="getIdCnt" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+		  COUNT(*) cnt
+		FROM
+		  sm_user su
+		<if test="mallSeq != null">
+			LEFT OUTER JOIN
+			sm_member sm ON(su.seq = sm.seq)
+		</if>
+		WHERE
+			<choose>
+				<when test="typeCode eq 'C'.toString()">
+					su.type_code='C'
+				</when>
+				<otherwise>
+					su.type_code != 'C'
+				</otherwise>
+			</choose>
+			AND su.id=#{id}
+			<if test="mallSeq != null">
+				AND sm.mall_seq=#{mallSeq}
+			</if>
+	</select>
+	
+	<!--이메일 중복 검사-->
+	<select id="getEmailCnt" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+		  COUNT(*) cnt
+		FROM
+		  sm_user su
+		<if test="mallSeq != null">
+			LEFT OUTER JOIN
+			sm_member sm ON(su.seq = sm.seq)
+		</if>
+		WHERE
+			<choose>
+				<when test="typeCode eq 'C'.toString()">
+					su.type_code='C'
+				</when>
+				<otherwise>
+					su.type_code != 'C'
+				</otherwise>
+			</choose>
+			AND sm.email=#{email}
+			<if test="mallSeq != null">
+				AND sm.mall_seq=#{mallSeq}
+			</if>
+	</select>
+	
+	<!-- 닉네임 중복 검사-->
+	<select id="getNickNameCnt" parameterType="java.lang.String" resultType="int">
+		SELECT
+		  COUNT(*)
+		FROM
+		  sm_user
+		WHERE
+		  nickname=#{nickname}
+	</select>
+
+	<!--임시 비밀 번호 발급 -->
+	<update id="updateTempPassword" parameterType="com.smpro.vo.UserVo">
+		UPDATE sm_user SET
+			password=#{password}
+			, temp_password_date=NOW()
+		WHERE
+			type_code = 'C'
+			AND id=#{id}
+			AND name=#{name}
+			AND seq=(SELECT seq FROM sm_member WHERE email=#{email} AND mall_seq=#{mallSeq} LIMIT 1)
+	</update>
+	
+	<update id="updateTempPasswordForSeller" parameterType="com.smpro.vo.UserVo">
+		UPDATE sm_user SET
+			password=#{password}
+			, temp_password_date=NOW()
+		WHERE
+			type_code = 'S'
+			AND id=#{id}
+			AND name=#{name}
+			AND seq=(SELECT seq FROM sm_seller WHERE sales_email=#{email} LIMIT 1)
+	</update>
+	
+	<update id="updateTempPasswordForAdmin" parameterType="com.smpro.vo.UserVo">
+		UPDATE sm_user SET
+			password=#{password}
+			, temp_password_date=NOW()
+		WHERE
+			type_code = 'A'
+			AND id=#{id}
+			AND name=#{name}
+			AND seq=(SELECT seq FROM sm_admin WHERE email=#{email} LIMIT 1)
+	</update>
+	
+	<!-- 아이디 찾기 -->
+	<select id="getFindId" parameterType="com.smpro.vo.UserVo" resultType="String">
+		SELECT
+			id
+		FROM
+			sm_user u INNER JOIN
+			sm_member m ON(u.seq = m.seq)
+		WHERE
+			u.name=#{name}
+			AND m.email=#{email}
+			AND u.type_code='C'
+			AND m.mall_seq=#{mallSeq}
+		LIMIT 1
+	</select>
+	
+	<select id="getFindIdForSeller" parameterType="com.smpro.vo.UserVo" resultType="String">
+		SELECT
+			id
+		FROM
+			sm_user u INNER JOIN
+			sm_seller s ON (u.seq=s.seq)
+		WHERE
+			u.name=#{name}
+			AND u.type_code='S'
+			AND s.sales_email=#{email}
+		LIMIT 1
+	</select>
+	
+	<select id="getFindIdForAdmin" parameterType="com.smpro.vo.UserVo" resultType="String">
+		SELECT
+			id
+		FROM
+			sm_user u INNER JOIN
+			sm_admin a ON (u.seq=a.seq)
+		WHERE
+			u.name=#{name}
+			AND u.type_code='A'
+			AND a.email=#{email}
+		LIMIT 1
+	</select>
+	
+	<!--비밀번호 갱신 -->
+	<update id="updatePassword" parameterType="com.smpro.vo.UserVo">
+		UPDATE
+		  sm_user
+		SET
+		  password=#{newPassword}
+		  , mod_password_date=NOW()
+		WHERE
+		  seq=#{seq}
+		  AND password=#{password}
+	</update>
+	
+	<!--비밀번호 갱신 1달 유예(6개월(180일) 기준)-->
+	<update id="updatePasswordDelay" parameterType="java.lang.Integer">
+		UPDATE sm_user SET
+		  mod_password_date=DATE_ADD( NOW(), INTERVAL -150 DAY )
+		WHERE
+		  seq=#{value}
+	</update>
+	
+	<delete id="deleteMall" parameterType="int">
+		DELETE FROM sm_user WHERE seq=(SELECT seq FROM sm_mall WHERE seq=#{seq} AND open_date IS NULL)
+	</delete>
+	
+	<!--함께누리몰 기회원 패스워드 암호화 대상 리스트-->
+	<select id="getListForEncrypt" parameterType="java.lang.String" resultType="com.smpro.vo.MemberVo">
+		SELECT
+			u.seq,
+			u.password
+		FROM
+			sm_user u 
+		WHERE 
+			u.old_seq IS NOT NULL AND
+			u.encrypt_flag='N' AND
+			u.type_code=#{value}
+	</select>
+	
+	<!-- 함께누리몰 기회원 패스워드 암호화 업데이트-->
+	<update id="updateForEncrypt" parameterType="com.smpro.vo.UserVo">
+		UPDATE sm_user SET
+			password=#{password},
+			encrypt_flag='Y'
+		WHERE seq=#{seq}
+	</update>
+</mapper>

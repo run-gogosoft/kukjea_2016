@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.FilenameDao">
+  <select id="getVo" parameterType="Map" resultType="com.smpro.vo.FilenameVo">
+    SELECT
+      seq,
+      parent_code AS parentCode,
+      parent_seq AS parentSeq,
+      num,
+      filename,
+      real_filename AS realFilename,
+      reg_date AS regDate
+    FROM sm_filename
+    WHERE parent_code=#{parentCode}
+      AND parent_seq=#{parentSeq}
+      AND num=#{num}
+  </select>
+  
+  <select id="getVoBySeq" parameterType="Integer" resultType="com.smpro.vo.FilenameVo">
+    SELECT
+      seq,
+      parent_code AS parentCode,
+      parent_seq AS parentSeq,
+      num,
+      filename,
+      real_filename AS realFilename,
+      reg_date AS regDate
+    FROM sm_filename
+    WHERE seq = #{seq}
+  </select>
+
+  <select id="getList" parameterType="Map" resultType="com.smpro.vo.FilenameVo">
+    SELECT
+      seq,
+      parent_code AS parentCode,
+      parent_seq AS parentSeq,
+      num,
+      filename,
+      real_filename AS realFilename,
+      reg_date AS regDate
+    FROM sm_filename
+    WHERE parent_code=#{parentCode}
+      AND parent_seq=#{parentSeq}
+    ORDER BY num
+  </select>
+
+  <insert id="replaceFilename" parameterType="com.smpro.vo.FilenameVo">
+    REPLACE INTO sm_filename (
+      parent_code, parent_seq, num, filename, real_filename, reg_date
+    ) VALUES (
+      #{parentCode}, #{parentSeq}, #{num}, #{filename}, #{realFilename}, now()
+    )
+  </insert>
+
+  <delete id="deleteVo" parameterType="com.smpro.vo.FilenameVo">
+    DELETE FROM sm_filename
+    WHERE parent_code=#{parentCode}
+      AND parent_seq=#{parentSeq}
+      AND num=#{num}
+  </delete>
+  
+  <delete id="deleteVoBySeq" parameterType="Integer">
+    DELETE FROM sm_filename WHERE seq=#{seq}
+  </delete>
+</mapper>

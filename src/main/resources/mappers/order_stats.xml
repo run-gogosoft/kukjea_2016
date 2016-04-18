@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.OrderStatsDao">
+	<!-- 상품 카테고리별 매출 통계 -->
+	<select id="getListByCategory" parameterType="com.smpro.vo.OrderVo" resultType="java.util.HashMap">
+		SELECT 
+			t.pay_date AS payDate,
+			<foreach collection="categoryList" item="item" index="index">
+			SUM(CASE WHEN t.cate_lv1_seq = #{item.seq} THEN t.sell_price ELSE 0 END) sumPrice${index+1},
+			</foreach>
+			SUM(CASE WHEN t.cate_lv1_seq IS NULL THEN t.sell_price ELSE 0 END) sumNull
+		FROM (
+			<!-- 정상 주문건 -->
+			SELECT
+		<choose>
+			<when test="searchDateType eq 'month'">
+				DATE_FORMAT(d.c10_date,'%Y-%m') pay_date,
+			</when>
+			<otherwise>
+				DATE_FORMAT(d.c10_date,'%Y-%m-%d') pay_date,
+			</otherwise>
+		</choose>
+				i.cate_lv1_seq,
+				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			<!-- /정상 주문건 -->
+			
+			UNION ALL
+			
+			<!-- 취소 주문건  -->
+			SELECT
+		<choose>
+			<when test="searchDateType eq 'month'">
+				DATE_FORMAT(d.c99_date,'%Y-%m') pay_date,
+			</when>
+			<otherwise>
+				DATE_FORMAT(d.c99_date,'%Y-%m-%d') pay_date,
+			</otherwise>
+		</choose>
+				i.cate_lv1_seq,
+				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				AND d.status_code = '99'
+			<!-- /취소 주문건 -->
+			) t
+		GROUP BY t.pay_date
+		ORDER BY t.pay_date DESC
+	</select>
+	
+	<!-- 상품 카테고리별 매출 통계 합계 -->
+	<select id="getSumByCategory" parameterType="com.smpro.vo.OrderVo" resultType="java.util.HashMap">
+		SELECT 
+			<foreach collection="categoryList" item="item" index="index">
+			SUM(CASE WHEN t.cate_lv1_seq = #{item.seq} THEN t.sell_price ELSE 0 END) sumPrice${index+1},
+			</foreach>
+			SUM(CASE WHEN t.cate_lv1_seq IS NULL THEN t.sell_price ELSE 0 END) sumNull
+		FROM (
+			<!-- 정상 주문건 -->
+			SELECT
+				i.cate_lv1_seq,
+				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			
+			UNION ALL
+			
+			<!-- 취소 주문건 -->
+			SELECT
+				i.cate_lv1_seq,
+				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				AND d.status_code = '99'
+			) t
+	</select>
+	
+	<!-- 상품 카테고리별 매출 통계 상세 -->
+	<select id="getListByCategoryDetail" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+		SELECT t.* FROM (
+			<!-- 정상 주문건 -->
+			SELECT
+				d.c10_date AS c10Date,
+				'' AS c99Date,
+				g.invest_flag AS investFlag,
+				g.name AS groupName,
+				m.dept_name AS deptName,
+				m.pos_name AS posName,
+				o.member_name AS memberName,
+				d.order_seq AS orderSeq,
+				d.seq,
+				d.status_code AS statusCode,
+				d.item_name AS itemName,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv1_seq) AS cateLv1Name,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv2_seq) AS cateLv2Name,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv3_seq) AS cateLv3Name,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv4_seq) AS cateLv4Name,
+				d.option_value AS optionValue,
+				c1.name AS taxName,
+				d.order_cnt AS orderCnt,
+				((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				(d.supply_price * d.order_cnt) AS supplyPrice,
+				d.deli_cost AS deliCost
+			FROM
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+				sm_member_group g ON (m.group_seq = g.seq) LEFT OUTER JOIN
+				sm_common c1 ON (c1.group_code=5 AND d.tax_code=c1.value) LEFT OUTER JOIN
+				sm_item i on (d.item_seq = i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') = #{payDate}
+			
+			UNION ALL
+			
+			<!-- 취소 주문건 -->
+			SELECT
+				d.c10_date AS c10Date,
+				d.c99_date AS c99Date,
+				g.invest_flag AS investFlag,
+				g.name AS groupName,
+				m.dept_name AS deptName,
+				m.pos_name AS posName,
+				o.member_name AS memberName,
+				d.order_seq AS orderSeq,
+				d.seq,
+				d.status_code AS statusCode,
+				d.item_name AS itemName,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv1_seq) AS cateLv1Name,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv2_seq) AS cateLv2Name,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv3_seq) AS cateLv3Name,
+				(SELECT x.cate_name FROM sm_item_category x WHERE x.seq=i.cate_lv4_seq) AS cateLv4Name,
+				d.option_value AS optionValue,
+				c1.name AS taxName,
+				d.order_cnt AS orderCnt,
+				-((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				-(d.supply_price * d.order_cnt) AS supplyPrice,
+				d.deli_cost AS deliCost
+			FROM
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+				sm_member_group g ON (m.group_seq = g.seq) LEFT OUTER JOIN
+				sm_common c1 ON (c1.group_code=5 AND d.tax_code=c1.value) LEFT OUTER JOIN
+				sm_item i on (d.item_seq = i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') = #{payDate}
+				AND d.status_code = '99'
+		) t
+		ORDER BY t.seq ASC
+	</select>
+	
+	<!--  상품 카테고리별 매출 현황 상세 - 정상주문 합 -->
+	<select id="getListByCategoryDetailSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+		SELECT
+			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
+			SUM(d.deli_cost) AS deliCost
+		FROM
+			sm_order_detail d LEFT OUTER JOIN
+			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+			sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+			sm_member_group g ON (m.group_seq = g.seq) LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=5 AND d.tax_code=c1.value) LEFT OUTER JOIN
+			sm_item i on (d.item_seq = i.seq)
+		WHERE
+			d.c10_date IS NOT NULL
+			AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') = #{payDate}
+	</select>
+	
+	<!--  상품 카테고리별 매출 현황 상세 - 취소주문 합 -->
+	<select id="getListByCategoryDetailCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+		SELECT
+			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
+			SUM(d.deli_cost) AS deliCost
+		FROM
+			sm_order_detail d LEFT OUTER JOIN
+			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+			sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+			sm_member_group g ON (m.group_seq = g.seq) LEFT OUTER JOIN
+			sm_common c1 ON (c1.group_code=5 AND d.tax_code=c1.value) LEFT OUTER JOIN
+			sm_item i on (d.item_seq = i.seq)
+		WHERE
+			d.c10_date IS NOT NULL
+			AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') = #{payDate}
+			AND d.status_code = '99'
+	</select>
+
+	<!-- 인증 구분별 매출 통계 -->
+	<select id="getListByAuthCategory" parameterType="com.smpro.vo.OrderVo" resultType="java.util.HashMap">
+		SELECT 
+			t.pay_date AS payDate,
+			<foreach collection="authCategoryList" item="item" index="index" separator=",">
+			SUM(CASE WHEN t.auth_category LIKE CONCAT('%',#{item.value},'%') THEN t.sell_price ELSE 0 END) sumPrice${index+1}
+			</foreach>
+		FROM (
+			SELECT
+		<choose>
+			<when test="searchDateType eq 'month'">
+				DATE_FORMAT(d.c10_date,'%Y-%m') pay_date,
+			</when>
+			<otherwise>
+				DATE_FORMAT(d.c10_date,'%Y-%m-%d') pay_date,
+			</otherwise>
+		</choose>
+				i.auth_category,
+				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				
+			UNION ALL
+			
+			<!-- 취소 주문건 -->
+			SELECT
+		<choose>
+			<when test="searchDateType eq 'month'">
+				DATE_FORMAT(d.c99_date,'%Y-%m') pay_date,
+			</when>
+			<otherwise>
+				DATE_FORMAT(d.c99_date,'%Y-%m-%d') pay_date,
+			</otherwise>
+		</choose>
+				i.auth_category,
+				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			) t
+		GROUP BY t.pay_date
+		ORDER BY t.pay_date DESC
+	</select>
+	
+	<!-- 인증 구별 매출 통계 합계 -->
+	<select id="getSumByAuthCategory" parameterType="com.smpro.vo.OrderVo" resultType="java.util.HashMap">
+		SELECT 
+			<foreach collection="authCategoryList" item="item" index="index" separator=",">
+			SUM(CASE WHEN t.auth_category LIKE CONCAT('%',#{item.value},'%') THEN t.sell_price ELSE 0 END) sumPrice${index+1}
+			</foreach>
+		FROM (
+			SELECT
+				i.auth_category,
+				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				
+			UNION ALL
+			
+			SELECT
+				i.auth_category,
+				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			) t
+	</select>
+		
+	<!-- 회원 구분별 매출 통계 -->
+	<select id="getListByMember" parameterType="com.smpro.vo.OrderVo" resultType="java.util.HashMap">
+		SELECT 
+			t.pay_date AS payDate,
+			SUM(CASE WHEN t.member_type_code = 'P' THEN t.sell_price ELSE 0 END) sumPrice1,
+			SUM(CASE WHEN t.member_type_code = 'O' THEN t.sell_price ELSE 0 END) sumPrice2,
+			SUM(CASE WHEN t.member_type_code = 'C' THEN t.sell_price ELSE 0 END) sumPrice3,
+			SUM(CASE WHEN t.member_type_code IS NULL THEN t.sell_price ELSE 0 END) sumPrice4
+		FROM (
+			SELECT
+		<choose>
+			<when test="searchDateType eq 'month'">
+				DATE_FORMAT(d.c10_date,'%Y-%m') pay_date,
+			</when>
+			<otherwise>
+				DATE_FORMAT(d.c10_date,'%Y-%m-%d') pay_date,
+			</otherwise>
+		</choose>
+				m.member_type_code,
+				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			
+			UNION ALL
+			
+			<!-- 취소 주문건 -->
+			SELECT
+		<choose>
+			<when test="searchDateType eq 'month'">
+				DATE_FORMAT(d.c99_date,'%Y-%m') pay_date,
+			</when>
+			<otherwise>
+				DATE_FORMAT(d.c99_date,'%Y-%m-%d') pay_date,
+			</otherwise>
+		</choose>
+				m.member_type_code,
+				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			) t
+		GROUP BY t.pay_date
+		ORDER BY t.pay_date DESC
+	</select>
+	
+	<!-- 회원 구분별 매출 통계 합계 -->
+	<select id="getSumByMember" parameterType="com.smpro.vo.OrderVo" resultType="java.util.HashMap">
+		SELECT 
+			SUM(CASE WHEN t.member_type_code = 'P' THEN t.sell_price ELSE 0 END) sumPrice1,
+			SUM(CASE WHEN t.member_type_code = 'O' THEN t.sell_price ELSE 0 END) sumPrice2,
+			SUM(CASE WHEN t.member_type_code = 'C' THEN t.sell_price ELSE 0 END) sumPrice3,
+			SUM(CASE WHEN t.member_type_code IS NULL THEN t.sell_price ELSE 0 END) sumPrice4
+		FROM (
+			SELECT
+				m.member_type_code,
+				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			
+			UNION ALL
+			
+			SELECT
+				m.member_type_code,
+				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+			) t
+	</select>
+	
+	<!-- 상품 누적 판매 통계 -->
+	<select id="getListByItem" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+		SELECT tt.* FROM (
+			SELECT 
+				t.item_name AS itemName,
+				SUM(t.order_cnt) AS orderCnt,
+				SUM(t.sell_price) AS sumPrice
+			FROM (
+				SELECT
+					d.item_name,
+					d.order_cnt,
+					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d
+				WHERE
+					d.c10_date IS NOT NULL
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+				
+				UNION ALL
+				
+				SELECT
+					d.item_name,
+					-d.order_cnt,
+					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d
+				WHERE
+					d.c10_date IS NOT NULL
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+			) t
+			GROUP BY t.item_name
+		) tt
+		WHERE tt.orderCnt > 0
+		ORDER BY tt.orderCnt DESC
+		LIMIT 100
+	</select>
+	
+	<!-- 상품 누적 판매 통계 기간별 정상주문 매출액 합계 -->
+	<select id="getListByItemSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+		SELECT
+			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
+			SUM(d.deli_cost) AS deliCost
+		FROM 
+			sm_order_detail d
+		WHERE
+			d.c10_date IS NOT NULL
+			<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			</if>
+	</select>
+	
+	<!-- 상품 누적 판매 통계 기간별 취소주문 매출액 합계 -->
+	<select id="getListByItemCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+		SELECT
+			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
+			SUM(d.deli_cost) AS deliCost
+		FROM 
+			sm_order_detail d
+		WHERE
+			d.c10_date IS NOT NULL
+			<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			</if>
+			AND d.status_code='99'
+	</select>
+	
+	<!-- 자치구별 상품 판매수 통계(판매자) -->
+	<select id="getListByItemForSellerJachigu" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.OrderVo">
+		SELECT tt.* FROM (	
+			SELECT 
+				t.item_name AS itemName,
+				SUM(t.order_cnt) AS orderCnt,
+				SUM(t.sell_price) AS sumPrice
+			FROM (
+				<!-- 정상주문 -->
+				SELECT
+					d.item_name,
+					d.order_cnt,
+					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d LEFT OUTER JOIN
+					sm_seller s ON (d.seller_seq=s.seq)
+				WHERE 
+					d.c10_date IS NOT NULL
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+					<if test="jachiguCode != ''">
+					AND s.jachigu_code=#{jachiguCode}
+					</if>
+				UNION ALL
+				
+				<!-- 취소주문 -->
+				SELECT
+					d.item_name,
+					-d.order_cnt,
+					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d LEFT OUTER JOIN
+					sm_seller s ON (d.seller_seq=s.seq)
+				WHERE
+					d.c10_date IS NOT NULL
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+					<if test="jachiguCode != ''">
+					AND s.jachigu_code=#{jachiguCode}
+					</if>
+					AND d.status_code='99'
+				) t
+			GROUP BY t.item_name
+		) tt
+		WHERE tt.orderCnt > 0
+		ORDER BY tt.orderCnt DESC
+		LIMIT 10
+	</select>
+	
+	<!-- 자치구별 상품 판매수 통계(판매자) 매출 합계 -->
+	<select id="getListByItemForSellerJachiguSum" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.OrderVo">
+		SELECT
+			IFNULL(SUM(sellPrice), 0) AS sumPrice
+		FROM (
+			<!-- 정상주문 -->
+			SELECT
+				SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_seller s ON (d.seller_seq=s.seq)
+			WHERE 
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				<if test="jachiguCode != ''">
+				AND s.jachigu_code=#{jachiguCode}
+				</if>
+			
+			UNION ALL
+			
+			<!-- 취소주문 -->
+			SELECT
+				-SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_seller s ON (d.seller_seq=s.seq)
+			WHERE
+				d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				<if test="jachiguCode != ''">
+				AND s.jachigu_code=#{jachiguCode}
+				</if>
+				AND d.status_code='99'
+		) t
+	</select>
+
+	<!-- 자치구별 상품 판매수 통계(공공기관) -->
+	<select id="getListByItemForMemberJachigu" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.OrderVo">
+		SELECT tt.* FROM (	
+			SELECT 
+				t.item_name AS itemName,
+				SUM(t.order_cnt) AS orderCnt,
+				SUM(t.sell_price) AS sumPrice
+			FROM (
+				<!-- 정상주문 -->
+				SELECT
+					d.item_name,
+					d.order_cnt,
+					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d LEFT OUTER JOIN
+					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+					sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+					sm_member_group g ON (m.group_seq = g.seq)
+				WHERE 
+					m.member_type_code='P'
+					AND d.c10_date IS NOT NULL
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+					<if test="jachiguCode != ''">
+					AND g.jachigu_code=#{jachiguCode}
+					</if>
+				
+				UNION ALL
+				
+				<!-- 취소주문 -->
+				SELECT
+					d.item_name,
+					-d.order_cnt,
+					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d LEFT OUTER JOIN
+					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+					sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+					sm_member_group g ON (m.group_seq = g.seq)
+				WHERE
+					m.member_type_code='P'
+					AND d.c10_date IS NOT NULL 
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+					<if test="jachiguCode != ''">
+					AND g.jachigu_code=#{jachiguCode}
+					</if>
+					AND d.status_code='99'
+				) t
+			GROUP BY t.item_name
+		) tt
+		WHERE tt.orderCnt > 0
+		ORDER BY tt.orderCnt DESC
+		LIMIT 10
+	</select>
+	
+	<!-- 자치구별 상품 판매수 통계(공공기관) 매출 합계 -->
+	<select id="getListByItemForMemberJachiguSum" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.OrderVo">
+		SELECT
+			IFNULL(SUM(sellPrice), 0) AS sumPrice
+		FROM (
+			<!-- 정상주문 -->
+			SELECT
+				SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+			FROM
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+				sm_member_group g ON (m.group_seq = g.seq)
+			WHERE
+				m.member_type_code='P'
+				AND d.c10_date IS NOT NULL
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				<if test="jachiguCode != ''">
+				AND g.jachigu_code=#{jachiguCode}
+				</if>
+			
+			UNION ALL
+			
+			<!-- 취소주문 -->
+			SELECT
+				-SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+			FROM 
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+				sm_member_group g ON (m.group_seq = g.seq)
+			WHERE
+				m.member_type_code='P'
+				AND d.c10_date IS NOT NULL 
+				<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				<if test="jachiguCode != ''">
+				AND g.jachigu_code=#{jachiguCode}
+				</if>
+				AND d.status_code='99'
+		) t
+	</select>
+	
+	<!-- 회원 구분별 매출 통계(공공기관) -->
+	<select id="getListByMemberPublic" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+		SELECT c1.name AS jachiguName, tt.* FROM (
+			SELECT 
+				t.jachigu_code AS jachiguCode,
+				SUM(CASE WHEN t.invest_flag = 'Y' THEN t.sell_price ELSE 0 END) AS investSumPrice,
+				SUM(CASE WHEN t.invest_flag = 'N' THEN t.sell_price ELSE 0 END) AS sumPrice
+			FROM (
+				SELECT
+					g.jachigu_code,
+					g.invest_flag,
+					d.order_cnt,
+					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d LEFT OUTER JOIN
+					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+					sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+					sm_member_group g ON (m.group_seq = g.seq)
+				WHERE 
+					m.member_type_code='P' AND IFNULL(g.jachigu_code,'') != ''
+					AND d.c10_date IS NOT NULL
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+				UNION ALL
+				
+				SELECT
+					g.jachigu_code,
+					g.invest_flag,
+					-d.order_cnt,
+					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				FROM 
+					sm_order_detail d LEFT OUTER JOIN
+					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+					sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+					sm_member_group g ON (m.group_seq = g.seq)
+				WHERE
+					m.member_type_code='P' AND IFNULL(g.jachigu_code,'') != ''
+					AND d.c10_date IS NOT NULL 
+					<if test="searchDate1 != '' and searchDate2 != ''">
+					AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+				) t 
+			GROUP BY t.jachigu_code
+		) tt LEFT OUTER JOIN sm_common c1 ON (c1.group_code=29 AND tt.jachiguCode=c1.value)
+		ORDER BY tt.jachiguCode ASC
+	</select>
+	
+	<!-- 회원 구분별 매출 통계(공공기관) 상세 -->
+	<select id="getListByMemberPublicDetail" parameterType="com.smpro.vo.MemberGroupVo" resultType="com.smpro.vo.OrderVo">
+		SELECT t.* FROM (
+			SELECT
+				d.c10_date AS c10Date,
+				'' AS c99Date,
+				g.invest_flag AS investFlag,
+				g.name AS groupName,
+				m.dept_name AS deptName,
+				m.pos_name AS posName,
+				o.member_name AS memberName,
+				d.order_seq AS orderSeq,
+				d.seq,
+				d.status_code AS statusCode,
+				d.item_name AS itemName,
+				d.option_value AS optionValue,
+				c1.name AS taxName,
+				d.order_cnt AS orderCnt,
+				((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				(d.supply_price * d.order_cnt) AS supplyPrice,
+				d.deli_cost AS deliCost,
+				u.name AS sellerName,
+				i.auth_category AS authCategory,
+				s.biz_no AS bizNo
+			FROM
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_user u ON (d.seller_seq=u.seq) LEFT OUTER JOIN
+				sm_seller s ON (u.seq=s.seq) LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+				sm_member_group g ON (m.group_seq = g.seq) LEFT OUTER JOIN
+				sm_common c1 ON (c1.group_code=5 AND d.tax_code=c1.value)
+			WHERE
+				d.c10_date IS NOT NULL AND
+				<if test="jachiguCode != ''">
+				g.jachigu_code = #{jachiguCode}
+				</if>
+				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			
+			UNION ALL
+			
+			SELECT
+				d.c10_date AS c10Date,
+				d.c99_date AS c99Date,
+				g.invest_flag AS investFlag,
+				g.name AS groupName,
+				m.dept_name AS deptName,
+				m.pos_name AS posName,
+				o.member_name AS memberName,
+				d.order_seq AS orderSeq,
+				d.seq,
+				d.status_code AS statusCode,
+				d.item_name AS itemName,
+				d.option_value AS optionValue,
+				c1.name AS taxName,
+				d.order_cnt AS orderCnt,
+				-((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				-(d.supply_price * d.order_cnt) AS supplyPrice,
+				d.deli_cost AS deliCost,
+				u.name AS sellerName,
+				i.auth_category AS authCategory,
+				s.biz_no AS bizNo
+			FROM
+				sm_order_detail d LEFT OUTER JOIN
+				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+				sm_user u ON (d.seller_seq=u.seq) LEFT OUTER JOIN
+				sm_seller s ON (u.seq=s.seq) LEFT OUTER JOIN
+				sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
+				sm_member m ON (o.member_seq=m.seq) LEFT OUTER JOIN
+				sm_member_group g ON (m.group_seq = g.seq) LEFT OUTER JOIN
+				sm_common c1 ON (c1.group_code=5 AND d.tax_code=c1.value)
+			WHERE
+				d.c10_date IS NOT NULL AND
+				<if test="jachiguCode != ''">
+				g.jachigu_code = #{jachiguCode}
+				</if>
+				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				AND d.status_code = '99'
+		) t
+		ORDER BY t.seq ASC
+	</select>
+</mapper>

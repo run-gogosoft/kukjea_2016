@@ -1,0 +1,36 @@
+$default_size: 1080px;
+
+@charset "UTF-8";
+
+.finish-wrap {
+	margin:0 auto;
+	width:$default_size;
+	height:500px;
+
+	.back-image {
+		margin:0 auto;
+		padding-top:170px;
+		width:491px;
+		height:400px;
+		background-image:url('/front-assets/images/member/finish_back.png');
+		background-repeat:no-repeat;
+
+		.finish-text-wrap {
+			margin:0 auto;
+			width:500px;
+			height:90px;
+			text-align:center;
+
+			.text1 {
+				font-family: NanumGothic;
+				font-weight:bold;
+				font-size:30px;
+			}
+
+			.text2 {
+				font-family: NanumGothic;
+				font-size:14px;
+			}
+		}
+	}
+}

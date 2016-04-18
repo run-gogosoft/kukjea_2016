@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /shop/member/
+Disallow: /shop/mypage/
+Disallow: /admin/

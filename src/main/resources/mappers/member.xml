@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smpro.dao.MemberDao">
+	<!--회원가입-->
+	<insert id="regData" parameterType="com.smpro.vo.MemberVo">
+		INSERT INTO sm_member (
+		  seq
+		  , member_type_code
+		  , sex_code
+		  , birthdate
+		  , tel
+		  , cell
+		  , email
+		  , email_flag
+		  , sms_flag
+		  , postcode
+		  , addr1
+		  , addr2
+		  , mall_seq
+		  , join_path_code
+		  , cert_key
+		  , dept_name
+		  , pos_name
+		  , group_seq
+		) VALUES (
+			 #{seq}
+			 , #{memberTypeCode}
+			 , #{sexCode}
+			 , #{birthdate}
+			 , #{tel}
+			 , #{cell}
+			 , #{email}
+			 , #{emailFlag}
+			 , #{smsFlag}
+			 , #{postcode}
+			 , #{addr1}
+			 , #{addr2}
+			 , #{mallSeq}
+			 , #{joinPathCode}
+			 , #{certKey}
+			 , #{deptName}
+			 , #{posName}
+			 , #{groupSeq}
+		)
+	</insert>
+
+	<!--회원정보수정-->
+	<!--todo 회원정보수정 페이지 구현-->
+	<update id="modDataUser" parameterType="com.smpro.vo.MemberVo">
+		UPDATE sm_user SET
+			mod_date=NOW()
+		<if test="id != ''">
+			, id=#{id}
+		</if>
+		<if test="nickname != ''">
+			, nickname=#{nickname}
+		</if>
+		<if test="name != ''">
+			, name=#{name}
+		</if>
+		<if test="statusCode == 'X'.toString()">
+			, status_code=#{statusCode}
+		</if>
+		WHERE seq=#{seq}
+	</update>
+	<update id="modDataMember" parameterType="com.smpro.vo.MemberVo">
+		UPDATE sm_member SET
+		seq=seq
+		<if test="sexCode != ''">
+			, sex_code=#{sexCode}
+		</if>
+		<if test="birthdate != ''">
+			, birthdate=#{birthdate}
+		</if>
+		<if test="tel != ''">
+			, tel=#{tel}
+		</if>
+		<if test="cell != ''">
+			, cell=#{cell}
+		</if>
+		<if test="postcode != ''">
+			, postcode=#{postcode}
+		</if>
+		<if test="addr1 != ''">
+			, addr1=#{addr1}
+		</if>
+		<if test="addr2 != ''">
+			, addr2=#{addr2}
+		</if>
+		<if test="emailFlag != ''">
+			, email_flag=#{emailFlag}
+			, email_flag_date = NOW()
+		</if>
+		<if test="smsFlag != ''">
+			, sms_flag=#{smsFlag}
+			, sms_flag_date = NOW()
+		</if>
+		<if test="email != ''">
+			, email=#{email}
+		</if>
+		<if test="closeCode != ''">
+			, close_code=#{closeCode}
+		</if>
+		<if test="closeText != ''">
+			, close_text=#{closeText}
+		</if>
+		<if test="deptName != ''">
+			, dept_name=#{deptName}
+		</if>
+		<if test="posName != ''">
+			, pos_name=#{posName}
+		</if>
+		WHERE seq=#{seq}
+	</update>
+
+	<update id="leaveMember" parameterType="int">
+		UPDATE sm_member SET
+			tel=''
+			, cell=''
+			, email=''
+			, addr2=''
+			, cert_key=''
+		WHERE seq=#{seq}
+	</update>
+
+	<!--회원리스트-->
+	<select id="getList" parameterType="com.smpro.vo.MemberVo" resultType="com.smpro.vo.MemberVo">
+		SELECT
+			u.seq,
+			u.id,
+			u.password,
+			u.name,
+			u.nickname,
+			u.status_code AS statusCode,
+			(SELECT name FROM sm_common WHERE group_code=1 AND value=u.status_code) AS statusText,
+			u.grade_code AS gradeCode,
+			(SELECT name FROM sm_common WHERE group_code=8 AND value=u.grade_code) AS gradeText,
+			(SELECT name FROM sm_user WHERE type_code='M' AND seq=m.mall_seq) AS mallName,
+			m.sex_code AS sexCode,
+			m.birthdate,
+			m.tel,
+			m.cell,
+			m.postcode,
+			m.addr1,
+			m.addr2,
+			m.dept_name AS deptName,
+			m.pos_name AS posName,
+			u.last_date AS lastDate,
+			u.mod_date AS modDate,
+			u.reg_date AS regDate,
+			(SELECT name FROM sm_common WHERE group_code=30 AND value=m.member_type_code) AS memberTypeName,
+			g.name AS groupName,
+			m.email,
+			g.invest_flag AS investFlag
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_member m ON (m.seq=u.seq) LEFT OUTER JOIN
+			sm_member_group g ON (m.group_seq=g.seq) 
+		WHERE u.type_code='C'
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(u.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="statusCode != ''">
+			AND u.status_code = #{statusCode}
+		</if>
+		<if test="gradeCode != null">
+			AND u.grade_code = #{gradeCode}
+		</if>
+		<if test="mallSeq != null">
+			AND m.mall_seq = #{mallSeq}
+		</if>
+		<if test="memberTypeCode != ''">
+			AND m.member_type_code = #{memberTypeCode}
+		</if>
+		<if test="emailFlag != ''">
+			AND m.email_flag = #{emailFlag}
+		</if>
+		<if test="smsFlag != ''">
+			AND m.sms_flag = #{smsFlag}
+		</if>
+		<if test="findword != ''">
+			<choose>
+				<when test="search eq 'id'">AND u.id LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'name'">AND u.name LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'groupName'">AND g.name LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'nickname'">AND u.nickname LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'email'">AND m.email LIKE CONCAT('%',#{findword},'%')</when>
+			</choose>
+		</if>
+		<!-- 1년이상 장기 미접속자와 조회 분리 -->
+		<choose>
+			<when test="longTermNotLoginFlag eq 'Y'.toString()">
+				<!-- 현재 시점에서 마지막 접속일이 1년이상 지난 건 -->
+				AND DATE_ADD(now(), INTERVAL -365 DAY) > u.last_date
+			</when>
+			<otherwise>
+				AND (u.last_date IS NULL OR u.last_date >= DATE_ADD(now(), INTERVAL -365 DAY)) 
+			</otherwise>
+		</choose>
+		ORDER BY u.seq DESC
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+	<select id="getListCount" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+		  	COUNT(*) cnt
+		FROM
+		  	sm_user u LEFT OUTER JOIN
+		  	sm_member m ON(m.seq=u.seq) LEFT OUTER JOIN
+			sm_member_group g ON(m.group_seq=g.seq) 
+		WHERE u.type_code='C'
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(u.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
+		</if>
+		<if test="statusCode != ''">
+			AND u.status_code = #{statusCode}
+		</if>
+		<if test="gradeCode != null">
+			AND u.grade_code = #{gradeCode}
+		</if>
+		<if test="mallSeq != null">
+			AND m.mall_seq = #{mallSeq}
+		</if>
+		<if test="memberTypeCode != ''">
+			AND m.member_type_code = #{memberTypeCode}
+		</if>
+		<if test="emailFlag != ''">
+			AND m.email_flag = #{emailFlag}
+		</if>
+		<if test="smsFlag != ''">
+			AND m.sms_flag = #{smsFlag}
+		</if>
+		<if test="findword != ''">
+			<choose>
+				<when test="search eq 'id'">AND u.id LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'name'">AND u.name LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'groupName'">AND g.name LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'nickname'">AND u.nickname LIKE CONCAT('%',#{findword},'%')</when>
+				<when test="search eq 'email'">AND m.email LIKE CONCAT('%',#{findword},'%')</when>
+			</choose>
+		</if>
+		<!-- 1년이상 장기 미접속자와 조회 분리 -->
+		<choose>
+			<when test="longTermNotLoginFlag eq 'Y'.toString()">
+				<!-- 현재 시점에서 마지막 접속일이 1년이상 지난 건 -->
+				AND DATE_ADD(now(), INTERVAL -365 DAY) > u.last_date
+			</when>
+			<otherwise>
+				AND (u.last_date IS NULL OR u.last_date >= DATE_ADD(now(), INTERVAL -365 DAY)) 
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--비밀변경 안내 메일 발송 대상자 리스트-->
+	<select id="getListForPasswordNotice" resultType="com.smpro.vo.MemberVo">
+		SELECT
+			u.name,	
+			(SELECT name FROM sm_user WHERE type_code='M' AND seq=m.mall_seq) AS mallName,
+			m.email
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_member m ON (u.seq=m.seq)
+		WHERE 
+			IFNULL(m.email,'') != ''
+			AND u.type_code='C'
+			AND u.status_code='Y'
+			AND (
+				DATE_ADD(NOW(), INTERVAL -365 DAY) > u.last_date <!-- 1년이상 미접속자 이거나 -->
+				OR DATE_ADD(NOW(), INTERVAL -180 DAY) > u.mod_password_date <!-- 6개월이상 비밀번호 미변경자 -->
+			)
+	</select>
+	
+	<!--회원상세정보 - SEQ-->
+	<select id="getData" parameterType="int" resultType="com.smpro.vo.MemberVo">
+		SELECT
+		  u.seq
+		  , u.id AS id
+		  , u.password
+		  , u.name
+		  , u.nickname
+		  , u.status_code AS statusCode
+		  , (SELECT name FROM sm_common WHERE group_code=1 AND value=u.status_code) statusText
+		  , u.grade_code AS gradeCode
+		  , (SELECT name FROM sm_common WHERE group_code=8 AND value=u.grade_code) gradeText
+		  , (SELECT name FROM sm_user WHERE type_code='M' AND seq=m.mall_seq) AS mallName
+		  , m.sex_code AS sexCode
+		  , m.birthdate
+		  , m.tel
+		  , m.cell
+		  , m.postcode
+		  , m.email
+		  , m.email_flag AS emailFlag
+		  , m.email_flag_date AS emailFlagDate
+		  , m.sms_flag AS smsFlag
+		  , m.sms_flag_date AS smsFlagDate
+		  , m.addr1
+		  , m.addr2
+		  , u.last_date AS lastDate
+		  , u.mod_date AS modDate
+		  , u.reg_date AS regDate
+		  , (SELECT SUM(p.useable_point) FROM sm_point p WHERE p.member_seq=u.seq) AS point
+		  , (SELECT name FROM sm_common WHERE group_code=30 AND value=m.member_type_code) AS memberTypeName
+		  , (SELECT name FROM sm_common WHERE group_code=31 AND value=m.join_path_code) AS joinPathName
+		  , m.group_seq AS groupSeq
+		  , m.dept_name AS deptName
+		  , m.pos_name AS posName
+		  , (SELECT GROUP_CONCAT(cate_name SEPARATOR ',') FROM sm_item_category WHERE LOCATE(seq, m.interest_category_code) > 0) AS interestCategoryName
+		FROM
+		  sm_user u LEFT OUTER JOIN
+		  sm_member m ON(m.seq=u.seq)
+		WHERE
+		  u.seq=#{seq}
+	</select>
+	<!--회원 시퀀스 검색-->
+	<select id="getMemberSeq" parameterType="com.smpro.vo.MemberVo" resultType="Integer">
+		SELECT
+			u.seq
+		FROM
+			sm_member m LEFT OUTER JOIN
+			sm_user u ON(m.seq = u.seq)
+		WHERE u.type_code='C'
+			AND u.id=#{id}
+			AND m.mall_seq=#{mallSeq}
+	</select>
+	<!--회원 상세 정보 검색-->
+	<select id="getSearchMemberVo" parameterType="com.smpro.vo.MemberVo" resultType="com.smpro.vo.MemberVo">
+		SELECT
+			u.seq
+			, u.id AS id
+			, u.name
+			, u.nickname
+			, u.status_code AS statusCode
+			, (SELECT name FROM sm_common WHERE group_code=1 AND value=u.status_code) AS statusText
+			, u.grade_code AS gradeCode
+			, (SELECT name FROM sm_common WHERE group_code=8 AND value=u.grade_code) AS gradeText
+			, u.reg_date AS regDate
+			, u.last_date AS lastDate
+		FROM
+			sm_user u
+		WHERE u.type_code='C'
+		<if test="findword != ''">
+			<choose>
+				<when test="search=='id'">
+					AND u.id=#{findword}
+				</when>
+				<when test="search=='nickname'">
+					AND u.nickname=#{findword}
+				</when>
+				<when test="search=='name'">
+					AND u.name=#{findword}
+				</when>
+			</choose>
+		</if>
+	</select>
+	<!--회원 상세 정보 검색-->
+	<select id="getSearchMemberList" parameterType="com.smpro.vo.MemberVo" resultType="com.smpro.vo.MemberVo">
+		SELECT
+			u.seq
+			, u.id AS id
+			, u.name
+			, u.nickname
+			, u.status_code AS statusCode
+			, (SELECT name FROM sm_common WHERE group_code=1 AND value=u.status_code) AS statusText
+			, u.grade_code AS gradeCode
+			, (SELECT name FROM sm_common WHERE group_code=8 AND value=u.grade_code) AS gradeText
+			, (SELECT mu.name FROM sm_user mu WHERE m.mall_seq=mu.seq AND mu.type_code='M' ) AS mallName
+			, u.reg_date AS regDate
+			, u.last_date AS lastDate
+			, m.cell
+		FROM
+			sm_user u LEFT OUTER JOIN
+			sm_member m ON(u.seq=m.seq)
+		WHERE u.type_code='C'
+			<if test="findword != ''">
+				<choose>
+					<when test="search=='id'">
+						AND u.id=#{findword}
+					</when>
+					<when test="search=='nickname'">
+						AND u.nickname=#{findword}
+					</when>
+					<when test="search=='name'">
+						AND u.name=#{findword}
+					</when>
+				</choose>
+			</if>
+			<if test="mallSeq != null">
+				AND m.mall_seq=#{mallSeq}
+			</if>
+	</select>
+	<!--회원상세정보 - id-->
+	<select id="getDataByLoginId" parameterType="String" resultType="com.smpro.vo.MemberVo">
+		SELECT
+		  u.seq
+		  , u.id
+		  , u.password
+		  , u.name
+		  , u.nickname
+		  , u.status_code AS statusCode
+		  , u.grade_code AS gradeCode
+		  , m.sex_code AS sexCode
+		  , m.birthdate
+		  , m.tel
+		  , m.cell
+		  , m.postcode
+		  , m.addr1
+		  , m.addr2
+		  , u.last_date AS lastDate
+		  , u.mod_date AS modDate
+		  , u.reg_date AS regDate
+		FROM
+		  sm_user u LEFT OUTER JOIN
+		  sm_member m ON(m.seq=u.seq)
+		WHERE
+		  u.id=#{id}
+		AND u.type_code = 'C'
+	</select>
+
+	<!--회원현황-->
+	<select id="getStats" resultType="com.smpro.vo.MemberStatsVo">
+			SELECT
+				(SELECT COUNT(*) FROM sm_user WHERE type_code='C') AS totalCnt,
+				(SELECT COUNT(*) FROM sm_user WHERE type_code='C' AND DATE_FORMAT(reg_date,'%Y%m%d')=DATE_FORMAT(NOW(),'%Y%m%d')) AS todayJoinCnt,
+				(SELECT COUNT(*) FROM sm_user WHERE type_code='C' AND DATE_FORMAT(reg_date,'W')=DATE_FORMAT(NOW(),'W') AND DATE_FORMAT(reg_date,'%Y%m')=DATE_FORMAT(NOW(),'%Y%m')) AS weekJoinCnt,
+				(SELECT COUNT(*) FROM sm_user WHERE type_code='C' AND DATE_FORMAT(reg_date,'%Y%m')=DATE_FORMAT(NOW(),'%Y%m')) AS monthJoinCnt,
+				(SELECT COUNT(*) FROM sm_user WHERE type_code='C' AND status_code='X') AS quitCnt
+			FROM DUAL
+	</select>
+	<!-- 한달간 전체 회원 현황 -->
+	<select id="getMonthMemberStats" resultType="com.smpro.vo.MemberStatsVo" parameterType="int">
+		SELECT
+			DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -#{periodCount} DAY ), '%Y%m%d') AS period,
+			t.memberCount
+		FROM(
+			SELECT
+				COUNT(*) AS memberCount
+			FROM
+				sm_user u
+			WHERE
+				u.type_code='C' AND
+				DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -#{periodCount} DAY ), '%Y%m%d') >= DATE_FORMAT(u.reg_date, '%Y%m%d')
+		) t
+	</select>
+	<!-- 일주일간 전체 회원 현황 -->
+	<select id="getWeekMemberStats" resultType="com.smpro.vo.MemberStatsVo" parameterType="int">
+		SELECT
+			DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -#{periodCount} DAY ),'%Y%m%d') AS period,
+			SUM(t.memberCount) AS memberCount
+		FROM(
+			SELECT
+				COUNT(*) AS memberCount
+			FROM
+				sm_user u
+			WHERE
+				u.type_code='C' AND
+				DATE_FORMAT(u.reg_date,'%Y%m%d') = DATE_FORMAT(DATE_ADD( NOW(), INTERVAL -#{periodCount} DAY ),'%Y%m%d')
+		) t
+	</select>
+	<!-- 업체관리, 회원관리 -->
+	<select id="getCompanyAndMemberRegCntForWeek" resultType="com.smpro.vo.UserVo">
+		SELECT
+			t.typeCode AS typeCode
+			, t.userCount AS userCount
+		FROM(
+			<!-- 업체관리 -->
+			SELECT
+				u.type_code AS typeCode
+				, COUNT(*) AS userCount
+			FROM sm_user u
+			WHERE u.status_code = 'H'
+			AND u.type_code = 'S'
+			AND DATE_FORMAT( reg_date, '%Y-%m-%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y-%m-%d' )
+			GROUP BY u.type_code
+
+			UNION ALL
+			
+			SELECT
+				m.member_type_code AS typeCode
+				, COUNT(*) AS userCount
+			FROM
+				sm_user u LEFT OUTER JOIN
+   				sm_member m ON(u.seq=m.seq) 
+			WHERE u.type_code='C'
+			AND m.member_type_code='C'
+			AND DATE_FORMAT( reg_date, '%Y-%m-%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y-%m-%d' )
+			GROUP BY u.type_code, m.member_type_code
+	
+			UNION ALL
+
+			SELECT
+				m.member_type_code AS typeCode
+				, COUNT(*) AS userCount
+			FROM
+				sm_user u LEFT OUTER JOIN
+     				sm_member m ON(u.seq=m.seq) 
+			WHERE u.type_code='C'
+			AND m.member_type_code='O'
+			AND DATE_FORMAT( reg_date, '%Y-%m-%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y-%m-%d' )
+			GROUP BY u.type_code, m.member_type_code
+
+			UNION ALL
+
+			SELECT
+				m.member_type_code AS typeCode
+				, COUNT(*) AS userCount
+			FROM
+				sm_user u LEFT OUTER JOIN
+     				sm_member m ON(u.seq=m.seq) 
+			WHERE u.type_code='C'
+			AND m.member_type_code='P'
+			AND DATE_FORMAT( reg_date, '%Y-%m-%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y-%m-%d' )
+			GROUP BY u.type_code, m.member_type_code
+		) t
+	</select>
+
+	<update id="updateMemberPassword" parameterType="com.smpro.vo.MemberVo">
+		UPDATE
+			sm_user
+		SET
+			password = #{newPassword}
+		WHERE
+			seq = #{seq}
+	</update>
+	<!-- 패스워드 초기화 -->
+	<update id="initPassword" parameterType="com.smpro.vo.MemberVo">
+		UPDATE sm_user SET password=#{password} 
+		WHERE 
+			seq = (
+				SELECT a.seq FROM 
+					sm_user a LEFT OUTER JOIN 
+					sm_member b ON(a.seq=b.seq) 
+				WHERE b.mall_seq=#{mallSeq} AND a.id=#{id}
+			)
+	</update>
+	<!-- 이메일,SMS 수신동의 -->
+	<update id="updateReceiverAgree" parameterType="com.smpro.vo.MemberVo">
+		UPDATE sm_member SET
+			email_receive_flag=#{emailReceiveFlag}
+			, sms_receive_flag=#{smsReceiveFlag}
+			, receive_approval_date=SYSDATE
+		WHERE seq=#{seq}
+	</update>
+	
+	<!-- 본인인증(아이핀/휴대폰) 키값으로 회원 존재 여부 체크 -->
+	<select id="checkCnt" parameterType="java.lang.String" resultType="int">
+		SELECT COUNT(*) FROM sm_member WHERE cert_key=#{value}
+	</select>
+	
+	<!-- 함께누리몰 개인정보 암호화 대상 리스트-->
+	<select id="getListForEncrypt" resultType="com.smpro.vo.MemberVo">
+		SELECT
+			m.seq,
+			m.tel,
+			m.cell,
+			m.addr2,
+			m.email
+		FROM
+			sm_member m 
+		WHERE 
+			m.old_seq IS NOT NULL
+			AND m.encrypt_flag='N'
+	</select>
+	<!-- 함께누리몰 개인정보 암호화 업데이트 -->
+	<update id="updateForEncrypt" parameterType="com.smpro.vo.MemberVo">
+		UPDATE sm_member SET
+			tel=#{tel},
+			cell=#{cell},
+			addr2=#{addr2},
+			email=#{email},
+			encrypt_flag='Y'
+		WHERE seq=#{seq}
+	</update>
+</mapper>
