@@ -1,43 +1,40 @@
 package com.smpro.controller.admin;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.ItemService;
 import com.smpro.service.MemberService;
+import com.smpro.service.ReviewService;
 import com.smpro.service.SystemService;
+import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.MemberVo;
 import com.smpro.vo.ReviewVo;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.smpro.service.ReviewService;
-import com.smpro.util.Const;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ReviewController {
-	@Resource(name = "reviewService")
+	@Autowired
 	private ReviewService reviewService;
 
-	@Resource(name = "memberService")
+	@Autowired
 	private MemberService memberService;
 
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
 
 	@CheckGrade(controllerName = "reviewController", controllerMethod = "reviewList")
 	@RequestMapping("/board/review/list")
-	public String reviewList(HttpServletRequest request, ReviewVo vo,
-			Model model) {
+	public String reviewList(HttpServletRequest request, ReviewVo vo, Model model) {
 		HttpSession session = request.getSession(false);
 		/* 로그인 세션 체크 */
 		if (request.getSession().getAttribute("loginSeq") == null) {
@@ -57,92 +54,16 @@ public class ReviewController {
 		return "/board/review_list.jsp";
 	}
 
-	@CheckGrade(controllerName = "reviewController", controllerMethod = "form")
-	@RequestMapping("/board/review/form")
-	public static String form(HttpServletRequest request, Model model) {
-		HttpSession session = request.getSession(false);
-		if (session.getAttribute("loginSeq") == null) {
-			model.addAttribute("message", "로그인 후 이용하세요.");
-			model.addAttribute("returnUrl",	"/admin/login?goUrl=/admin/board/review/form");
-			return Const.REDIRECT_PAGE;
-		}
-
-		String loginSeq = String.valueOf(request.getSession().getAttribute(
-				"loginSeq"));
-		model.addAttribute("loginSeq", loginSeq);
-		String loginId = String.valueOf(request.getSession().getAttribute(
-				"loginId"));
-		model.addAttribute("loginId", loginId);
-
-		model.addAttribute("title", "구매평 등록");
-		return "/board/review_form.jsp";
-	}
-
-	@RequestMapping("/board/review/write/proc")
-	public String writeProc(ReviewVo vo, Model model) {
-		/* 입력값 검증 */
-		if (StringUtil.isBlank(vo.getId())) {
-			model.addAttribute("message", "회원아이디를 추가해주세요.");
-			return Const.ALERT_PAGE;
-		}
-
-		MemberVo mvo = new MemberVo();
-		mvo.setId(vo.getId());
-		mvo.setTypeCode("C");
-		if (systemService.getIdCnt(mvo) == 0) {
-			model.addAttribute("message", "아이디가 존재하지 않습니다.");
-			return Const.ALERT_PAGE;
-		}
-
-		// 입력값 검증
-		if (vo.getItemSeq() == null) {
-			model.addAttribute("message", "상품번호를 입력해주세요");
-			return Const.ALERT_PAGE;
-		}
-
-		if (itemService.getItemCnt(vo.getItemSeq()) < 1) {
-			model.addAttribute("message", "상품번호가 존재하지 않습니다.");
-			return Const.ALERT_PAGE;
-		}
-
-		if (vo.getReview().length() == 0 && "".equals(vo.getReview())) {
-			model.addAttribute("message", "구매평이 입력되지 않았습니다.");
-			return Const.ALERT_PAGE;
-		}
-
-		if (StringUtil.isBlank("" + vo.getGoodGrade())) {
-			model.addAttribute("message", "상품평가가 선택되지 않았습니다.");
-			return Const.ALERT_PAGE;
-		}
-
-		if (StringUtil.isBlank("" + vo.getDeliGrade())) {
-			model.addAttribute("message", "배송평가가 선택되지 않았습니다.");
-			return Const.ALERT_PAGE;
-		}
-
-		if (!reviewService.insertData(vo)) {
-			model.addAttribute("message", "게시물을 등록할 수 없었습니다");
-			return Const.ALERT_PAGE;
-		}
-
-		model.addAttribute("message", "게시물이 등록 되었습니다.");
-		model.addAttribute("returnUrl", "/admin/board/review/list");
-
-		return Const.REDIRECT_PAGE;
-	}
-
 	@CheckGrade(controllerName = "reviewController", controllerMethod = "view")
 	@RequestMapping("/board/review/view/{seq}")
-	public String view(HttpServletRequest request, @PathVariable Integer seq,
-			ReviewVo paramVo, Model model) {
+	public String view(HttpServletRequest request, @PathVariable Integer seq, ReviewVo paramVo, Model model) {
 		if (request.getSession().getAttribute("loginSeq") == null) {
 			model.addAttribute("message", "로그인 후 이용하세요.");
 			model.addAttribute("returnUrl",	"/admin/login?goUrl=/admin/board/review/view/" + seq);
 			return Const.REDIRECT_PAGE;
 		}
 
-		String loginSeq = String.valueOf(request.getSession().getAttribute(
-				"loginSeq"));
+		String loginSeq = String.valueOf(request.getSession().getAttribute("loginSeq"));
 		model.addAttribute("loginSeq", loginSeq);
 		model.addAttribute("title", "상품평");
 		paramVo.setSeq(seq);
@@ -153,8 +74,7 @@ public class ReviewController {
 
 	@CheckGrade(controllerName = "reviewController", controllerMethod = "edit")
 	@RequestMapping("/board/review/edit/{seq}")
-	public String edit(HttpServletRequest request, @PathVariable Integer seq,
-			ReviewVo paramVo, Model model) {
+	public String edit(HttpServletRequest request, @PathVariable Integer seq, ReviewVo paramVo, Model model) {
 		/* 로그인 세션 체크 */
 		if (request.getSession().getAttribute("loginSeq") == null) {
 			model.addAttribute("message", "로그인 후 이용하세요.");

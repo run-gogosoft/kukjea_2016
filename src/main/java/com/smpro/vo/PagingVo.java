@@ -200,41 +200,39 @@ public abstract class PagingVo {
 			endPageNum = startPageNum + pageCount;
 		}
 		
-		_sb.append("<ul class='pagination'>");
+		_sb.append("<div class='paging'>");
 		if (startPageNum >= pageCount) {
-			_sb.append("<li class='paginate_button previous'><a href='#' onclick='");
+			_sb.append("<a href='#' class='prev' onclick='");
 			_sb.append(jsFunctionName);
 			_sb.append("(");
 			_sb.append(startPageNum - 1);
-			_sb.append(");return false;'><i class='fa fa-angle-double-left'></i></a></li>");
-		} else {
-			_sb.append("<li class='paginate_button previous disabled'><a href='#' onclick='return false;'><i class='fa fa-angle-double-left'></i></a></li>");
+			_sb.append(");return false;'>이전</a>");
 		}
+		_sb.append("<span class='num'>");
 		for (int i = startPageNum; i < endPageNum; i++) {
 			if (i == pageNum) {
-				_sb.append("<li class='aginate_button active'><a href='#' onclick='return false;'>");
+				_sb.append("<em>");
 				_sb.append(i + 1);
-				_sb.append("</a></li>");
+				_sb.append("</em>");
 			} else {
-				_sb.append("<li class='paginate_button'><a href='#' onclick='");
+				_sb.append("<a href='#' onclick='");
 				_sb.append(jsFunctionName);
 				_sb.append("(");
 				_sb.append(i);
 				_sb.append(");return false;'>");
 				_sb.append(i + 1);
-				_sb.append("</a></li>");
+				_sb.append("</a>");
 			}
 		}
+		_sb.append("</span>");
 		if (endPageNum < totalPageCnt) {
-			_sb.append("<li class='paginate_button next'><a href='#' onclick='");
+			_sb.append("<a href='#' class='next' onclick='");
 			_sb.append(jsFunctionName);
 			_sb.append("(");
 			_sb.append(endPageNum);
-			_sb.append(");return false;'><i class='fa fa-angle-double-right'></i></a></li>");
-		} else {
-			_sb.append("<li class='paginate_button next disabled'><a href='#' onclick='return false;'><i class='fa fa-angle-double-right'></i></a></li>");
+			_sb.append(");return false;'>다음</a>");
 		}
-		_sb.append("</ul>");
+		_sb.append("</div>");
 		return _sb.toString();
 	}
 

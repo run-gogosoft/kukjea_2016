@@ -179,9 +179,12 @@
 										<div style="margin-top:5px;">
 											<button type="button" onclick="doUpdate(${item.seq},'cancel');" class="btn btn-xs btn-warning" ${item.statusCode > 2 ? "disabled":""}>견적 취소</button>
 										</div>
+										<c:if test="${sessionScope.loginType eq 'A'}">
+										<!-- 관리자만 삭제할 수 있다 -->
 										<div style="margin-top:5px;">
 											<button type="button" onclick="doUpdate(${item.seq},'delete');" class="btn btn-xs btn-danger" ${item.statusCode eq 3 ? "disabled":""}>견적 삭제</button>
 										</div>
+										</c:if>
 									</td>
 								</tr>
 							</c:forEach>

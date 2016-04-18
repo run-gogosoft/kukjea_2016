@@ -1,20 +1,18 @@
 package com.smpro.controller.admin;
 
-import javax.annotation.Resource;
-
+import com.smpro.service.MenuService;
+import com.smpro.util.Const;
+import com.smpro.util.MenuUtil;
+import com.smpro.vo.MenuVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.smpro.vo.MenuVo;
-import com.smpro.service.MenuService;
-import com.smpro.util.Const;
-import com.smpro.util.MenuUtil;
-
 @Controller
 public class AboutController {
-	@Resource(name = "menuService")
+	@Autowired
 	private MenuService menuService;
 
 	@RequestMapping(value = "/about/menu/list")

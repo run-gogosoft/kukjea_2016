@@ -1,8 +1,5 @@
 package com.smpro.controller.admin;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.DisplayService;
 import com.smpro.service.ItemService;
@@ -14,28 +11,27 @@ import com.smpro.vo.CommonVo;
 import com.smpro.vo.DisplayLvItemVo;
 import com.smpro.vo.DisplayVo;
 import com.smpro.vo.ItemVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @Controller
 public class MainController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-	
-	@Resource(name = "displayService")
+
+	@Autowired
 	private DisplayService displayService;
 
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
 	
 	@CheckGrade(controllerName = "mainController", controllerMethod = "tmpl")
@@ -138,25 +134,6 @@ public class MainController {
 		model.addAttribute("callback", vo.getLocation() + ":" + vo.getTitle()
 				+ ":" + vo.getMemberTypeCode());
 		return Const.REDIRECT_PAGE;
-	}
-
-	@RequestMapping("/system/tmpl/main/item/list")
-	public String getItemListForAjax(ItemVo vo, HttpSession session, Model model) {
-		/** 상품목록을 불러옴 */
-		vo.setStatusCode("Y");
-		vo.setLoginType((String) session.getAttribute("loginType"));
-		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
-		model.addAttribute("list", itemService.getListSimple(vo));
-		return "/ajax/get-lv1DisplayItem-list.jsp";
-	}
-
-	@RequestMapping("/system/tmpl/main/item/list/paging")
-	public String getItemListPagingForAjax(ItemVo vo, HttpSession session, Model model) {
-		vo.setStatusCode("Y");
-		vo.setLoginType((String) session.getAttribute("loginType"));
-		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
-		model.addAttribute("message", vo.drawPagingNavigation("goPage"));
-		return Const.AJAX_PAGE;
 	}
 
 	/** 초기 스타일 등록 */
@@ -293,9 +270,9 @@ public class MainController {
 	public String delProc(DisplayLvItemVo vo, Model model) {
 		// 원래는 seq에 따라 삭제할 수 있는 유저를 판별해야 하지만 어차피 최고 관리자 밖에 쓸 수 없기 때문에 굳이 판별하지 않고
 		// 바로 seq를 매칭한다
-		LOGGER.info(
+		log.info(
 				"vo.getStyleCode() --> " + vo.getStyleCode());
-		LOGGER.info(
+		log.info(
 				"vo.getCateSeq() --> " + vo.getCateSeq());
 
 		if (!displayService.deleteData(vo.getSeq())) {

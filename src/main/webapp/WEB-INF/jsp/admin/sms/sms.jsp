@@ -52,6 +52,9 @@
 													<div style="margin-bottom:20px;font-weight:bold;">
 														<i class="fa fa-exclamation-circle"></i> 각각의 휴대폰 번호는 숫자('-' 기호 포함)로만 이루어져야 합니다.
 													</div>
+													<div style="margin-bottom:20px;font-weight:bold;">
+														<i class="fa fa-exclamation-circle"></i> 메세지는 최대 129byte까지 입력 가능합니다.
+													</div>
 												</div>
 											</div>
 										</div>

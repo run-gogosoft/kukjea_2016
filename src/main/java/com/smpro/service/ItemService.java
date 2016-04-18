@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public interface ItemService {
 
 	public List<ItemVo> getList(ItemVo vo);

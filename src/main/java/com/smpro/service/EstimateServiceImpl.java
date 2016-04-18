@@ -6,18 +6,18 @@ import com.smpro.util.StringUtil;
 import com.smpro.vo.EstimateVo;
 import com.smpro.vo.ItemVo;
 import com.smpro.vo.SmsVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("estimateService")
+@Service
 public class EstimateServiceImpl implements EstimateService {
 
-	@Resource(name = "estimateDao")
+	@Autowired
 	private EstimateDao estimateDao;
-	
-	@Resource(name = "smsDao")
+
+	@Autowired
 	private SmsDao smsDao;
 
 	public List<EstimateVo> getList(EstimateVo vo) {

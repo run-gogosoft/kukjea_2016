@@ -13,6 +13,7 @@
 		<h1>${title}<small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
+			<li>게시판 관리</li>
 			<li class="active">${title}</li>
 		</ol>
 	</section>
@@ -64,7 +65,7 @@
 										${ item.itemSeq }
 									</td>
 									<td class="text-center">
-										<img src="${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's206')}" style="width:70px;" alt=""/>
+										<img src="/upload${fn:replace(item.img1, 'origin', 's206')}" style="width:70px;" alt=""/>
 									</td>
 									<td class="text-center">
 										${ item.itemName }

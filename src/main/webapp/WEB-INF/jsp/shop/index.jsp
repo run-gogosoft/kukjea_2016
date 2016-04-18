@@ -1,590 +1,389 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<!--[if IE 7]><html class="ie ie7" lang="ko"><![endif]-->
+<!--[if IE 8]><html class="ie ie8" lang="ko"><![endif]-->
+<!--[if !(IE 7) | !(IE 8) ]><!--><html lang="ko"><!--<![endif]-->
 <head>
-	<%@ include file="/WEB-INF/jsp/shop/include/header.jsp" %>
-	<link href="/front-assets/css/main/main.css" type="text/css" rel="stylesheet">
-	<link href="/front-assets/css/plugin/mediaelementplayer.css" type="text/css" rel="stylesheet">
-	<style type="text/css">
-		#popup_notice_password table {
-			border:0;
-			border-spacing:0;
-		}
-		#popup_notice_password table td {
-			padding:5px;
-		}
-		#popup_notice_password table td input {
-			width:200px;
-			height:25px;
-			border:1px solid #ccc;
-		}
-	</style>
-	<!--[if lt IE 9]>
-		<style type="text/css">
-			.ch-hero-list li .circle {
-				width:10px;
-			}
-
-			.ch-long-list li .circle {
-				width:6px;
-			}
-		</style>
-	<![endif]-->
+<%@ include file="/WEB-INF/jsp/shop/include/head.jsp" %>
 </head>
 <body>
-	<a class="sr-only" href="#content">Skip navigation</a>
-	<%@ include file="/WEB-INF/jsp/shop/include/navigation.jsp" %>
 
-	<div class="ch-hero ch-hero-detail">
-		<div class="nav-wrap">
-			<div class="side-nav" style="border-top: none;">
-				<%--메인 좌단메뉴--%>
-				<%--함께누리 측의 요청으로 공공기관에만 특별주문 카테고리를 노출한다.--%>
-				<script type="text/html" id="mainSubCategoryTemplate">
-					{{each menu}}
-						<c:choose>
-							<c:when test="${sessionScope.loginMemberTypeCode eq 'P'}">
-								<li data-seq="<%="${seq}"%>"><a href="/shop/lv1/<%="${seq}"%>"><%="${categoryName}"%></a></li>
-							</c:when>
-							<c:otherwise>
-								{{if seq !== "53"}}
-									<li data-seq="<%="${seq}"%>"><a href="/shop/lv1/<%="${seq}"%>"><%="${categoryName}"%></a></li>
-								{{/if}}
-							</c:otherwise>
-						</c:choose>
-					{{/each}}
-				</script>
-
-				<%--메인 중분류--%>
-				<script type="text/html" id="mainLv2Template">
-					{{each menu}}
-						<li data-seq="<%="${seq}"%>"><a href="/shop/lv2/<%="${seq}"%>"><%="${categoryName}"%></a></li>
-					{{/each}}
-				</script>
-
-				<%--메인 소분류--%>
-				<script type="text/html" id="mainLv3Template">
-					<li data-seq="<%="${seq}"%>"><a href="/shop/lv3/<%="${seq}"%>"><%="${categoryName}"%></a></li>
-				</script>
-
-				<ul id="mainSubCategoryList">
-					<li><img src="${const.ASSETS_PATH}/front-assets/images/common/ajaxloader.gif" style="margin:140px 0 0 45px;" alt="로딩중.." /></li>
-				</ul>
-			</div>
-			<div class="side-nav-category-lv2-div">
-				<ul id="side-nav-category-lv2" style="text-align:center;"></ul>
-			</div>
-
-			<%--<ul id="side-nav-category-lv3" style="text-align:center;"></ul>소분류 카테고리--%>
-
-			<div class="clearfix"></div>
-			<%-- 히어로배너 영역 --%>
-			${fn:replace(mainHeroBanner,"${const.ASSETS_PATH}",const.ASSETS_PATH)}
-	</div>
+<div id="skip_navi">
+	<p><a href="#contents">본문바로가기</a></p>
 </div>
 
-<%@ include file="/WEB-INF/jsp/shop/include/popup.jsp" %>
+<div id="wrap" class="main">
+	<%@ include file="/WEB-INF/jsp/shop/include/header.jsp" %>
 
-<div class="ch-nuri-back">
-	<div class="ch-nuri-wrap">
-		<div class="side-nav-wrap">
-			<ul class="side-nav nuri-side-nav">
-				<li id="nuriList1" class="current" onclick="HknuriUtil.toggle(this)">사회적 기업상품<img src="${const.ASSETS_PATH}/front-assets/images/main/nuri_menu_on.png" alt="사회적 기업상품"/></li>
-				<li id="nuriList2" onclick="HknuriUtil.toggle(this)">협동조합상품<img src="${const.ASSETS_PATH}/front-assets/images/main/nuri_menu_off.png" alt="협동조합상품"/></li>
-				<li id="nuriList3" onclick="HknuriUtil.toggle(this)">장애인 기업상품<img src="${const.ASSETS_PATH}/front-assets/images/main/nuri_menu_off.png" alt="장애인기업상품"/></li>
-				<li id="nuriList4" onclick="HknuriUtil.toggle(this)">공정무역상품<img src="${const.ASSETS_PATH}/front-assets/images/main/nuri_menu_off.png" alt="공정무역상품"/></li>
-				<li id="nuriList5" onclick="HknuriUtil.toggle(this)">마을기업상품<img src="${const.ASSETS_PATH}/front-assets/images/main/nuri_menu_off.png" alt="마을기업상품"/></li>
-			</ul>
-		</div>
-
-		<div class="center-wrap">
-			<div class="item-list">
-				<%--사회적 기업상품--%>
-				<ul class="ch-big-list nuriList1">
-					<c:forEach var="item" items="${gallery1}" varStatus="status" begin="0" step="1">
-						<c:if test="${status.index < item.limitCnt}">
-							<li>
-								<div class="thumb">
-									<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}"/></a>
-								</div>
-								<div class="price-info">
-									<c:choose>
-										<c:when test="${item.typeCode eq 'N'}">
-											<span class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /></span><span style="font-size: 12px;">원</span>
-										</c:when>
-										<c:when test="${item.typeCode eq 'E'}">
-											<span class="price" style="font-size:20px;">견적요청</span>
-										</c:when>
-									</c:choose>
-								</div>
-								<div class="description">
-									<a href="/shop/detail/${item.itemSeq}">${item.itemName}</a>
-								</div>
-							</li>
-						</c:if>
-					</c:forEach>
-				</ul>
-
-				<%--장애인 기업상품--%>
-				<ul class="ch-big-list nuriList2">
-					<c:forEach var="item" items="${gallery2}" varStatus="status" begin="0" step="1">
-						<c:if test="${status.index < item.limitCnt}">
-							<li>
-								<div class="thumb">
-									<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a>
-								</div>
-								<div class="price-info">
-									<c:choose>
-										<c:when test="${item.typeCode eq 'N'}">
-											<span class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /></span><span style="font-size: 12px;">원</span>
-										</c:when>
-										<c:when test="${item.typeCode eq 'E'}">
-											<span class="price" style="font-size:20px;">견적요청</span>
-										</c:when>
-									</c:choose>
-								</div>
-								<div class="description">
-									<a href="/shop/detail/${item.itemSeq}">${item.itemName}</a>
-								</div>
-							</li>
-						</c:if>
-					</c:forEach>
-				</ul>
-
-				<%--MD 추천상품--%>
-				<ul class="ch-big-list nuriList3">
-					<c:forEach var="item" items="${gallery3}" varStatus="status" begin="0" step="1">
-						<c:if test="${status.index < item.limitCnt}">
-							<li>
-								<div class="thumb">
-									<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a>
-								</div>
-								<div class="price-info">
-									<c:choose>
-										<c:when test="${item.typeCode eq 'N'}">
-											<span class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /></span><span style="font-size: 12px;">원</span>
-										</c:when>
-										<c:when test="${item.typeCode eq 'E'}">
-											<span class="price" style="font-size:20px;">견적요청</span>
-										</c:when>
-									</c:choose>
-								</div>
-								<div class="description">
-									<a href="/shop/detail/${item.itemSeq}">${item.itemName}</a>
-								</div>
-							</li>
-						</c:if>
-					</c:forEach>
-				</ul>
-
-				<ul class="ch-big-list nuriList4">
-					<c:forEach var="item" items="${gallery9}" varStatus="status" begin="0" step="1">
-						<c:if test="${status.index < item.limitCnt}">
-							<li>
-								<div class="thumb">
-									<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a>
-								</div>
-								<div class="price-info">
-									<c:choose>
-										<c:when test="${item.typeCode eq 'N'}">
-											<span class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /></span><span style="font-size: 12px;">원</span>
-										</c:when>
-										<c:when test="${item.typeCode eq 'E'}">
-											<span class="price" style="font-size:20px;">견적요청</span>
-										</c:when>
-									</c:choose>
-								</div>
-								<div class="description">
-									<a href="/shop/detail/${item.itemSeq}">${item.itemName}</a>
-								</div>
-							</li>
-						</c:if>
-					</c:forEach>
-				</ul>
-
-				<ul class="ch-big-list nuriList5">
-					<c:forEach var="item" items="${gallery10}" varStatus="status" begin="0" step="1">
-						<c:if test="${status.index < item.limitCnt}">
-							<li>
-								<div class="thumb">
-									<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a>
-								</div>
-								<div class="price-info">
-									<c:choose>
-										<c:when test="${item.typeCode eq 'N'}">
-											<span class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /></span><span style="font-size: 12px;">원</span>
-										</c:when>
-										<c:when test="${item.typeCode eq 'E'}">
-											<span class="price" style="font-size:20px;">견적요청</span>
-										</c:when>
-									</c:choose>
-								</div>
-								<div class="description">
-									<a href="/shop/detail/${item.itemSeq}">${item.itemName}</a>
-								</div>
-							</li>
-						</c:if>
-					</c:forEach>
-				</ul>
-			</div>
-
-			<ul class="user-menu">
-				<li>
-					<a href="/shop/mypage/order/list">
-						<div class="img">
-							<img src="${const.ASSETS_PATH}/front-assets/images/main/user_order.png" alt="주문배송조회"/>
+	<div id="container">
+		<div class="main_visual">
+			<div class="login_area">
+				<c:choose>
+				<c:when test="${sessionScope.loginSeq > 0}">
+					<div class="my_area">
+						<div class="user_icon"><img src="/images/common/icon_grade_sm.png" alt="" /></div>
+						<div class="private">
+							<span class="username"><em>${sessionScope.loginName}</em> 님</span>
+							<%--<span class="user_message">새쪽지<span class="badge">3</span></span>--%>
 						</div>
-						<div class="title">
-							주문배송조회
+						<div class="user_point">
+							포인트 (<em data-access="point">---</em>)
 						</div>
-					</a>
-				</li>
-				<li>
-					<a href="/shop/wish/list">
-						<div class="img">
-							<img src="${const.ASSETS_PATH}/front-assets/images/main/user_wish.png" alt="관심상품" />
+						<div class="user_links btn_grp">
+							<a href="/shop/cart" class="btn btn_default">장바구니</a>
+							<a href="/shop/mypage/main" class="btn btn_default">마이페이지</a>
 						</div>
-						<div class="title">
-							관심상품
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="/shop/mypage/direct/list">
-						<div class="img">
-							<img src="${const.ASSETS_PATH}/front-assets/images/main/user_direct.png" alt="1:1문의" />
-						</div>
-						<div class="title">
-							1:1문의
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="/shop/about/board/detail/list/1">
-						<div class="img">
-							<img src="${const.ASSETS_PATH}/front-assets/images/main/user_item_reg.png" alt="상품등록요청" />
-						</div>
-						<div class="title">
-							상품등록요청
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="/shop/cscenter/list/faq?categoryCode=10">
-						<div class="img">
-							<img src="${const.ASSETS_PATH}/front-assets/images/main/user_faq.png" alt="자주묻는질문"/>
-						</div>
-						<div class="title">
-							자주묻는질문
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="/shop/about/board/detail/list/2">
-						<div class="img">
-							<img src="${const.ASSETS_PATH}/front-assets/images/main/user_store_reg.png" alt="입점문의" />
-						</div>
-						<div class="title">
-							입점문의
-						</div>
-					</a>
-				</li>
-			</ul>
-		</div>
-
-		<div class="news-board">
-			<div class="board-wrap">
-				<div class="board-title"><span class="title">공지사항</span><span class="etc"><a href="/shop/cscenter/list/notice">more ></a></span></div>
-				<ul class="board-content">
-					<c:forEach var="item" items="${noticeList}">
-						<li><div class="point"></div><a href="/shop/cscenter/view/notice/${item.seq}">${item.title}</a></li>
-					</c:forEach>
-					<c:if test="${fn:length(noticeList) eq 0}">
-						<li class="text-center" style="font-size:12px;">등록된 내용이 없습니다.</li>
-					</c:if>
-				</ul>
-
-				<div class="board-title" style="margin-top:20px;border-bottom:1px solid #4cb7c9;"><span class="title">사회적 경제 소식</span><span class="etc"><a href="/shop/about/board/detail/list/3">more ></a></span></div>
-				<ul class="board-content">
-					<c:forEach var="item" items="${socialList}">
-						<li><div class="point"></div><a href="/shop/about/board/detail/view/${item.seq}?commonBoardSeq=3">${item.title}</a></li>
-					</c:forEach>
-					<c:if test="${fn:length(socialList) eq 0}">
-						<li class="text-center" style="font-size:12px;">등록된 내용이 없습니다.</li>
-					</c:if>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="clearfix"></div>
-<%-- A banner --%>
-<c:if test="${(mainBannerA ne '') and (mainBannerA ne null)}">
-	${fn:replace(mainBannerA,"${const.ASSETS_PATH}",const.ASSETS_PATH)}
-</c:if>
-
-<%-- B banner & B itemList --%>
-<c:if test="${(mainBannerB ne '') and (mainBannerB ne null) and fn:length(gallery4) > 0}">
-	<div class="ch-container">
-		<div class="banner-title">
-			<img src="/upload/banner/main/bbanner/b_title.png" alt="BEST 최대구매" />
-		</div>
-
-		${fn:replace(mainBannerB,"${const.ASSETS_PATH}",const.ASSETS_PATH)}
-
-	    <ul class="ch-3col banner-content middle-banner">
-	    	<c:forEach var="item" items="${gallery4}" varStatus="status" begin="0" step="1">
-	    		<c:if test="${status.index < item.limitCnt}">
-		        <li>
-		        	<div class="img"><a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a></div>
-		        	<div class="info">
-		        		<div class="name"><a href="/shop/detail/${item.itemSeq}">${item.itemName}</a></div>
-		        		<c:choose>
-							<c:when test="${item.typeCode eq 'N'}">
-								<div class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원</span></div>
-							</c:when>
-							<c:when test="${item.typeCode eq 'E'}">
-								<div class="price" style="font-size:20px;">견적요청</div>
-							</c:when>
-						</c:choose>
-		        	</div>
-		        </li>
-			    </c:if>
-			</c:forEach>
-	    </ul>
-	</div>
-</c:if>
-<div class="clearfix"></div>
-
-<%-- C banner & C itemList --%>
-<c:if test="${(mainBannerC ne '') and (mainBannerC ne null) and fn:length(gallery5) > 0}">
-	<div class="ch-container">
-		<div class="banner-title">
-			<img src="/upload/banner/main/cbanner/c_title.png" alt="NEW 신규상품" />
-		</div>
-		${fn:replace(mainBannerC,"${const.ASSETS_PATH}",const.ASSETS_PATH)}
-
-		<!-- 배너 이미지 -->
-		<div class="banner-content" style="margin-top:0;">
-		    <ul class="ch-3col banner-content middle-banner">
-	    	<c:forEach var="item" items="${gallery5}" varStatus="status" begin="0" step="1">
-	    		<c:if test="${status.index < item.limitCnt}">
-		        <li>
-		        	<div class="img"><a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a></div>
-		        	<div class="info">
-		        		<div class="name"><a href="/shop/detail/${item.itemSeq}">${item.itemName}</a></div>
-		        		<c:choose>
-									<c:when test="${item.typeCode eq 'N'}">
-										<div class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원</span></div>
-									</c:when>
-									<c:when test="${item.typeCode eq 'E'}">
-										<div class="price" style="font-size:20px;">견적요청</div>
-									</c:when>
-								</c:choose>
-		        	</div>
-		        </li>
-			    </c:if>
-				</c:forEach>
-	    </ul>
-		</div>
-	</div>
-</c:if>
-<div class="clearfix"></div>
-
-<div class="ch-container" <c:if test="${(fn:length(gallery6) eq 0) and (fn:length(gallery7) eq 0)}">style="margin:0;"</c:if>>
-		<%-- D banner --%>
-		<div class="ch-half-container" style="float:left">
-			<div class="banner-title">
-			   <img src="/upload/banner/main/dbanner/d_title.png" alt="TREND 대세상품" />
-			</div>
-
-			<div class="banner-half-content">
-			    <ul class="ch-4col">
-			    	<c:forEach var="item" items="${gallery6}" varStatus="status" begin="0" step="1">
-		    			<c:if test="${status.index < item.limitCnt}">
-				        <li class="col-${status.count}">
-				        	<div class="item">
-					        	<div class="img">
-					        		<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a>
-					        	</div>
-					        	<div class="info">
-					        		<div class="name"><a href="/shop/detail/${item.itemSeq}"><smp:cutString value="${item.itemName}" length="40"/></a></div>
-					        		<c:choose>
-										<c:when test="${item.typeCode eq 'N'}">
-											<div class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원</span></div>
-										</c:when>
-										<c:when test="${item.typeCode eq 'E'}">
-											<div class="price" style="font-size:20px;">견적요청</div>
-										</c:when>
-									</c:choose>
-					        	</div>
-				        	</div>
-				        </li>
-				      </c:if>
-						</c:forEach>
-			    </ul>
-			</div>
-		</div>
-
-		<div class="ch-half-container" style="float:left;margin-left:14px;">
-			<%-- education banner --%>
-			<div class="banner-title">
-			   <img src="/upload/banner/main/ebanner/e_title.png" alt="FOOD 먹거리존" />
-			</div>
-
-			<!-- 배너 이미지 -->
-			<div class="banner-half-content">
-			    <ul class="ch-4col">
-			    	<c:forEach var="item" items="${gallery7}" varStatus="status" begin="0" step="1">
-			    		<c:if test="${status.index < item.limitCnt}">
-				        <li class="col-${status.count}">
-				        	<div class="item">
-					        	<div class="img">
-					        		<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" alt="${item.itemName}" /></a>
-					        	</div>
-					        	<div class="info">
-					        		<div class="name"><a href="/shop/detail/${item.itemSeq}"><smp:cutString value="${item.itemName}" length="40"/></a></div>
-					        		<c:choose>
-										<c:when test="${item.typeCode eq 'N'}">
-											<div class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원</span></div>
-										</c:when>
-										<c:when test="${item.typeCode eq 'E'}">
-											<div class="price" style="font-size:20px;">견적요청</div>
-										</c:when>
-									</c:choose>
-					        	</div>
-				        	</div>
-				        </li>
-				      </c:if>
-						</c:forEach>
-			    </ul>
-			</div>
-		</div>
-</div>
-<div class="clearfix"></div>
-
-<%--나중에 비디오 배너부분이 어떻게 바뀔지 모르나 현재는 AJAX로 상품을 호출한다.--%>
-<c:if test="${(mainBannerF ne '') and (mainBannerF ne null)}">
-	<script id="trTemplate" type="text/html">
-		{{if itemCount < limitCnt}}
-			<li>
-				<div class="item-detail item-index<%="${itemCount}"%>">
-					<div class="image">
-						<a href="/shop/detail/<%="${itemSeq}"%>"><img src="<%="${img1}"%>" alt="상품이미지"/></a>
 					</div>
-					<div class="description">
-						<div class="title"><a href="/shop/detail/<%="${itemSeq}"%>"><%="${itemName}"%></a></div>
-						{{if typeCode === "N"}}
-							<div class="price"><%="${sellPrice}"%><span>원</span></div>
-						{{else typeCode === "E"}}
-							<div class="price" style="font-size:16px;">견적요청</div>
-						{{/if}}
+				</c:when>
+				<c:otherwise>
+					<form action="/shop/login/proc" method="post" target="zeroframe" onsubmit="return submitProc(this);">
+						<fieldset>
+							<legend>로그인</legend>
+							<div class="login_info">
+								<input type="text" id="loginId" name="id" class="intxt" maxlength="16" title="아이디 입력" placeholder="Id" />
+								<input type="password" class="intxt" title="패스워드 입력" name="password" maxlength="16" placeholder="Password" />
+							</div>
+							<div class="save_id">
+								<input type="checkbox" id="rememberLoginId" name="rememberLoginId" />
+								<label>아이디 저장</label>
+							</div>
+							<button type="submit" class="btn_login">로그인</button>
+						</fieldset>
+						<div class="login_links">
+							<a href="/shop/cscenter/search/id" class="btn_find_idpw">ID / PW 찾기</a>
+							<a href="/shop/cscenter/member/start" class="btn_join">회원가입</a>
+						</div>
+					</form>
+				</c:otherwise>
+				</c:choose>
+				<ul class="bann_list">
+					<li><a href="#"><img src="/images/contents/btn_popular_product.png" alt="인기구매 상품 100" /></a></li>
+					<li><a href="/shop/wish/list"><img src="/images/contents/btn_my_product.png" alt="나의 관심상품" /></a></li>
+				</ul>
+			</div>
+			${mainHeroBanner}
+		</div>
+
+		<div id="contents" class="main_contents">
+			<!-- 국제 TOP10 -->
+			<div class="best_ranking">
+				<h2>국제 <strong>TOP10</strong></h2>
+				<ul>
+					<li class="latest"><a href="#">최신 판매 랭킹</a></li>
+					<li class="month"><a href="#">월간 상품별 판매 랭킹</a></li>
+					<li class="member_best"><a href="#">회원이 뽑은 관심상품 Best</a></li>
+				</ul>
+			</div>
+			<!-- //국제 TOP10 -->
+			<!-- 메인 상품목록 -->
+			<div class="tab_wrap product_tab">
+				<ul class="tab">
+					<li class="tab1"><a href="#today_product">오늘만 이가격<span></span></a></li>
+					<li class="tab2"><a href="#new_product">신규상품<span></span></a></li>
+					<li class="tab3"><a href="#offer_price">가격제안<span></span></a></li>
+				</ul>
+				<div class="tab_list">
+					<div id="today_product" class="img_list_type01">
+						<ul>
+							<c:forEach var="itemList" items="${eventItemList}" varStatus="status" end="19">
+							<li>
+								<a href="/shop/search?seq=${itemList.itemSeq}">
+									<span class="thumb">
+										<img src="/upload${fn:replace(itemList.img1, 'origin', 's270')}" onerror="noImage(this)" alt="" />
+										<%-- span class="icons">
+											<span class="icon icon_txt icon_txt_gray">무료배송</span>
+											<span class="icon icon_txt icon_txt_yellow">10+1</span>
+											<span class="icon icon_discount"><em>50 </em>%</span>
+										</span --%>
+									</span>
+									<span class="tit">${itemList.itemName}</span>
+									<span class="price">
+										<%-- del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del --%>
+										<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+									</span>
+								</a>
+							</li>
+						</c:forEach>
+						</ul>
+						<a href="/shop/event/plan/plansub/1" class="btn_more_full"><span>오늘만 이가격 상품 전체보기</span></a>
+					</div>
+					<div id="new_product" class="img_list_type01">
+						<ul>
+							<c:forEach var="itemList" items="${newItemList}" varStatus="status" end="19">
+							<li>
+								<a href="/shop/search?seq=${itemList.seq}">
+									<span class="thumb">
+										<img src="/upload${fn:replace(itemList.img1, 'origin', 's270')}" onerror="noImage(this)" alt="" />
+										<%-- span class="icons">
+											<span class="icon icon_txt icon_txt_gray">무료배송</span>
+											<span class="icon icon_txt icon_txt_yellow">10+1</span>
+											<span class="icon icon_discount"><em>50 </em>%</span>
+										</span --%>
+									</span>
+									<span class="tit">${itemList.name}</span>
+									<span class="price">
+										<%-- del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del --%>
+										<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+									</span>
+								</a>
+							</li>
+							</c:forEach>
+						</ul>
+					</div>
+					<div id="offer_price">
+						<div class="tit_box">
+							<dl class="offer_price">
+								<dt>가격제안이란?</dt>
+								<dd>국제실업쇼핑몰의 회원님께 최저가 정책을 실현하기 위해 회원님과 소통을 통해 이뤄지는 상호운영서비스 입니다.<br />
+									국제실업쇼핑몰의 상품을 다른 몰에서 더 싸게 제공 할 경우 참고자료(해당 URL 또는 캡쳐 화면)를 보내주세요.<br />
+									국제실업에서 확인 후 가격 조정 및 상응하는 조치를 하여 회원님께 보다 양질의 서비스를 제공하도록 노력하겠습니다.<br />
+									아울러 자료를 제공해주신 회원님께는 감사의 의미로 국제실업쇼핑몰에서 현금처럼 사용할 수 있는 포인트를 지급하여 드립니다.
+								</dd>
+							</dl>
+						</div>
+
+						<div class="order_list mt30">
+							<h4>제안방법</h4>
+							<ol>
+								<li>
+									1. 우리 사이트의 <em>상품설명에 우측</em>에 있는  <em>“가격제안” 버튼</em>을 누르세요.
+									<p class="img ct"><img src="/images/contents/img_offer_price01.png" alt=""></p>
+								</li>
+								<li>
+									2. 작성을 위한 안내 창이 뜨면 작성을 해주세요.
+									<p class="img ct"><img src="/images/contents/img_offer_price02.png" alt=""></p>
+								</li>
+							</ol>
+						</div>
 					</div>
 				</div>
-			</li>
-		{{/if}}
-	</script>
-
-	${fn:replace(mainBannerF,"${const.ASSETS_PATH}",const.ASSETS_PATH)}
-</c:if>
-
-<c:forEach var="item" items="${noticePopup}" varStatus="status">
-	<div id="popupNotice${status.count}" class="popup-writebox" style="display:none;position:absolute;z-index:150;background-color:#ffffff;display:none;border: 1px solid #CCC; border-radius: 5px; position: absolute; width: ${item.width}px;height:${item.height}px !important; top:${item.topMargin}px; left:${item.leftMargin}px; overflow:hidden">
-		<div class="popup-writebox-wrap" style="width:${item.width-14}px; height:${item.height-30}px;">
-			<div class="popup-writebox-content" style="padding:0;">
-					${item.contentHtml}
 			</div>
-			<div class="popup-writebox-footer text-right" style="padding:5px;">
-				<input type="checkbox" id="popup${status.count}"/><label for="popup${status.count}" style="font-size: 11px;font-weight: normal;"> 하루동안 열지 않기</label>&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onclick="closePopup(${status.count})">닫기</button>
+			<!-- //메인 상품목록 -->
+			<!-- 공지사항/공급자몰 -->
+			<div class="cols">
+				<div class="col_lt notice">
+					<h2>공지사항</h2>
+					<ul>
+						<c:forEach var="item" items="${noticeList}">
+						<li>
+							<a href="#"><a href="/shop/cscenter/view/notice/${item.seq}">${item.title}</a></a>
+							<span class="date">
+								<fmt:parseDate value="${item.regDate}" var="regDate" pattern="yyyy-mm-dd"/>
+								<fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
+							</span>
+						</li>
+						</c:forEach>
+						<c:if test="${fn:length(noticeList) eq 0}">
+						<li class="text-center" style="font-size:12px;">등록된 내용이 없습니다.</li>
+						</c:if>
+					</ul>
+					<a href="/shop/cscenter/list/notice" class="btn_more">더보기</a>
+				</div>
+				<div class="col_rt brand_mall">
+					<h2>공급자몰</h2>
+					<ul>
+						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company04.jpg" alt="SAMYOUNG" /></a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- //공지사항/공급자몰 -->
+			<%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>
+		</div>
+		<!-- 반복 주문 상품 -->
+		<div class="repeat_order">
+			<div class="layout_inner">
+				<h2>반복 주문 상품</h2>
+				<div class="scrollable_wrap">
+					<div class="scrollable">
+						<table class="data">
+							<caption>반복 주문 상품 정보</caption>
+							<thead>
+							<tr>
+								<th scope="col" class="col1"><div>최근 구매일</div></th>
+								<th scope="col" class="col2"><div>상품명</div></th>
+								<th scope="col" class="col3"><div>규격</div></th>
+								<th scope="col" class="col4"><div>제조사</div></th>
+								<th scope="col" class="col5"><div>단위</div></th>
+								<th scope="col" class="col6"><div>수량</div></th>
+								<th scope="col" class="col7"><div>공급가</div></th>
+								<th scope="col" class="col8"><div>공급사</div></th>
+								<th scope="col" class="col9"><div><input type="checkbox" title="상품 전체 선택" class="check" /></div></th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td class="col1"><div>2015-09-01</div></td>
+								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
+								<td class="col3"><div>1cc 26G</div></td>
+								<td class="col4"><div>한국백신</div></td>
+								<td class="col5"><div>100ea</div></td>
+								<td class="col6"><div>1</div></td>
+								<td class="col7"><div>5,000원</div></td>
+								<td class="col8"><div>길동메디칼</div></td>
+								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							</tr>
+							<tr>
+								<td class="col1"><div>2015-09-01</div></td>
+								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
+								<td class="col3"><div>1cc 26G</div></td>
+								<td class="col4"><div>한국백신</div></td>
+								<td class="col5"><div>100ea</div></td>
+								<td class="col6"><div>1</div></td>
+								<td class="col7"><div>5,000원</div></td>
+								<td class="col8"><div>길동메디칼</div></td>
+								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							</tr>
+							<tr>
+								<td class="col1"><div>2015-09-01</div></td>
+								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
+								<td class="col3"><div>1cc 26G</div></td>
+								<td class="col4"><div>한국백신</div></td>
+								<td class="col5"><div>100ea</div></td>
+								<td class="col6"><div>1</div></td>
+								<td class="col7"><div>5,000원</div></td>
+								<td class="col8"><div>길동메디칼</div></td>
+								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							</tr>
+							<tr>
+								<td class="col1"><div>2015-09-01</div></td>
+								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
+								<td class="col3"><div>1cc 26G</div></td>
+								<td class="col4"><div>한국백신</div></td>
+								<td class="col5"><div>100ea</div></td>
+								<td class="col6"><div>1</div></td>
+								<td class="col7"><div>5,000원</div></td>
+								<td class="col8"><div>길동메디칼</div></td>
+								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							</tr>
+							<tr>
+								<td class="col1"><div>2015-09-01</div></td>
+								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
+								<td class="col3"><div>1cc 26G</div></td>
+								<td class="col4"><div>한국백신</div></td>
+								<td class="col5"><div>100ea</div></td>
+								<td class="col6"><div>1</div></td>
+								<td class="col7"><div>5,000원</div></td>
+								<td class="col8"><div>길동메디칼</div></td>
+								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							</tr>
+							<tr>
+								<td class="col1"><div>2015-09-01</div></td>
+								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
+								<td class="col3"><div>1cc 26G</div></td>
+								<td class="col4"><div>한국백신</div></td>
+								<td class="col5"><div>100ea</div></td>
+								<td class="col6"><div>1</div></td>
+								<td class="col7"><div>5,000원</div></td>
+								<td class="col8"><div>길동메디칼</div></td>
+								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							</tr>
+							<tr>
+								<td class="col1"><div>2015-09-01</div></td>
+								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
+								<td class="col3"><div>1cc 26G</div></td>
+								<td class="col4"><div>한국백신</div></td>
+								<td class="col5"><div>100ea</div></td>
+								<td class="col6"><div>1</div></td>
+								<td class="col7"><div>5,000원</div></td>
+								<td class="col8"><div>길동메디칼</div></td>
+								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							</tr>
+							<tr>
+								<td class="col1"><div>&nbsp;</div></td>
+								<td class="col2"><div>&nbsp;</div></td>
+								<td class="col3"><div>&nbsp;</div></td>
+								<td class="col4"><div>&nbsp;</div></td>
+								<td class="col5"><div>&nbsp;</div></td>
+								<td class="col6"><div>&nbsp;</div></td>
+								<td class="col7"><div>&nbsp;</div></td>
+								<td class="col8"><div>&nbsp;</div></td>
+								<td class="col9"><div>&nbsp;</div></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<a href="#" class="btn btn_default">선택상품 장바구니 담기</a>
 			</div>
 		</div>
+		<!-- //반복 주문 상품 -->
 	</div>
-</c:forEach>
 
-<!-- 기존 패스워드 6개월이상 유지 회원 변경 안내 레이어 -->
-<c:if test="${sessionScope.notiPasswordFlag eq 'Y'}">
-	<div id="popup_notice_password" style="display:none;position:absolute;border: 2px solid #444; border-radius: 5px;background-color:#fff;z-index:151;width:345px;height:420px !important; top:200px; left:750px; overflow:hidden;">
-		<div style="background-color:#c09853;padding:5px 10px 5px 10px;font-size:18px;font-weight:bold;color:#fff">
-			<i class="fa fa-exclamation-circle"></i> 비밀번호 변경 안내
+	<div id="footer">
+		<div class="cs_service">
+			<div class="layout_inner">
+				<dl class="quick_service">
+					<dt>빠른 서비스</dt>
+					<dd><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/common/icon_quick_service01.png" alt="거래내역서 출력" /></a></dd>
+					<dd><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/common/icon_quick_service02.png" alt="배송&middot;환불&middot;반품안내" /></a></dd>
+					<dd><a href="/shop/about/board/detail/list/2"><img src="/images/common/icon_quick_service03.png" alt="제휴 및 입점 안내" /></a></dd>
+					<dd><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/common/icon_quick_service04.png" alt="세금계산서 발급안내" /></a></dd>
+					<dd><a href="/shop/mypage/order/list"><img src="/images/common/icon_quick_service05.png" alt="주문/배송 조회" /></a></dd>
+					<dd><a href="/shop/mypage/direct/list"><img src="/images/common/icon_quick_service06.png" alt="1:1 문의게시판" /></a></dd>
+				</dl>
+				<dl class="cs_center">
+					<dt>고객센터</dt>
+					<dd class="tel">02-888-7777</dd>
+					<dd class="time">
+						<span>평 일 : 09:00~18:00</span>
+						<span>토요일 : 09:00~13:00</span>
+					</dd>
+				</dl>
+			</div>
 		</div>
-		<div style="font-size:13px;color:#666;padding:10px;">
-			<strong style="font-size:16px">${sessionScope.loginName}</strong> 님께 알려드립니다.<br/><br/>
-			회원님은 현재 비밀번호를 <strong>최근 6개월(180일)</strong> 이상<br/>변경없이 사용하고 계십니다.<br/><br/>
-			회원님의 소중한 <strong>개인정보 보호</strong>를 위하여 <strong>6개월마다</strong><br/> 비밀번호를 변경해 주시기 바랍니다.<br/>
+		<div class="layout_inner">
+			<div class="slide_wrap" id="banner_slide">
+				<div class="slide_list">
+					<ul>
+						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
+						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+					</ul>
+				</div>
+				<div class="slide_control">
+					<a href="#" class="prev"><span class="blind">이전</span></a>
+					<a href="#" class="next"><span class="blind">다음</span></a>
+				</div>
+			</div>
 		</div>
-		<form method="post" action="/shop/member/password/update" target="zeroframe" onsubmit="return updatePassword(this)">
-		<div style="font-size:13px;color:#666;padding:10px;">
-			<table>
-				<tr>
-					<td>기존 비밀번호</td>
-					<td><input type="password" name="password" alt="기존 비밀번호"/></td>
-				</tr>
-				<tr>
-					<td>새 비밀번호</td>
-					<td><input type="password" name="newPassword" alt="새 비밀번호" maxlength="16"/></td>
-				</tr>
-				<tr>
-					<td>새 비밀번호 확인</td>
-					<td><input type="password" name="newPassword_confirm" alt="새 비밀번호 확인" maxlength="16"/></td>
-				</tr>
-			</table>
-		</div>
-		<div style="padding-left:15px;padding-bottom:5px;" class="text-danger">
-			<i class="fa fa-exclamation"></i> 비밀번호는 영문/숫자/특수문자(~!@#$%^&*())를 조합하여<br/>
-			8~16자리까지 허용됩니다.
-		</div>
-		<div class="text-center" style="border-top:1px solid #ddd;padding:10px;">
-			<button type="submit" class="btn btn-sm btn-primary">비밀번호 변경하기</button>
-			<a href="/shop/member/password/update/delay" onclick="$('#popup_notice_password').hide();" target="zeroframe" class="btn btn-sm btn-default">30일간 보이지 않기</a>  
-		</div>
-		</form>
+		<%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
 	</div>
-</c:if>
+</div>
 
-<%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
-<script type="text/javascript" src="/front-assets/js/main/main.js"></script>
-<script type="text/javascript">
-	var closePopup = function(num) {
-		if($('#popup'+num).prop('checked')) {
-			$.cookie("closePopup"+num, "disabled", {expires: 1});
-		}
-		$('#popupNotice'+num).hide();
-	};
-
+<script>
 	$(document).ready(function() {
-		for(var i=1; i<=${fn:length(noticePopup)}; i++) {
-			if ($.cookie("closePopup"+i) !== "disabled") {
-				$('#popupNotice' + i).show();
-			}
+		//checked rememberLoginId
+		if($.cookie("lastLoginId") != undefined && $.cookie("lastLoginId") != "") {
+			$("#rememberLoginId").prop("checked", true);
+			$("#loginId").val($.cookie("lastLoginId"));
 		}
-		
-		//패스원드 변경 알림 팝업창 띄우기
-		<c:if test="${sessionScope.notiPasswordFlag eq 'Y'}">
-		$('#popup_notice_password').show();
-		</c:if>
 	});
-	
-	var updatePassword = function(formObj) {
-		//필수값 체크
-		if(!checkRequiredValue(formObj, "alt")) {
-			return false;
+	var submitProc = function(obj) {
+		var flag = true;
+		$(obj).find("input[alt], textarea[alt], select[alt]").each( function() {
+			if(flag && $(this).val() == "") {
+				alert($(this).attr("alt") + "란을 채워주세요!");
+				flag = false;
+				$(this).focus();
+			}
+		});
+
+		//아이디 기억하기
+		if($("#rememberLoginId").is(":checked")) {
+			$.cookie("lastLoginId", $("#loginId").val(), {expires:7});
+		} else {
+			$.removeCookie("lastLoginId");
 		}
-		
-		//변경 비밀번호 일치 여부 체크
-		if(formObj.newPassword.value != formObj.newPassword_confirm.value) {
-			alert("새 비밀번호가 일치하지 않습니다.");
-			formObj.newPassword_confirm.focus();
-			return false;
-		}
-		
-		return true;
-	}
-	
-	var callbackProc = function(flag) {
-		if( flag == "Y" ) {
-			$('#popup_notice_password').hide();
-		}
+
+		return flag;
 	};
 </script>
 </body>

@@ -4,16 +4,15 @@ import com.smpro.dao.MemberGroupDao;
 import com.smpro.util.Const;
 import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.vo.MemberGroupVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-
-@Service("memberGroupService")
+@Service
 public class MemberGroupServiceImpl implements MemberGroupService {
 
-	@Resource(name = "memberGroupDao")
+	@Autowired
 	private MemberGroupDao memberGroupDao;
 
 	public int regVo(MemberGroupVo vo) {

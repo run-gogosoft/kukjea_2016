@@ -151,7 +151,7 @@ var mergeOrderSeqSell = function(orderSeq,seq,partCancelCnt) {
 	$(obj).each(function() {
 		if(parseInt($(this).attr("data-merge-flag-statuscode")) < 20) {
 			if(parseInt(partCancelCnt)!==1) {
-				$(obj).find(".cancelDiv").html("<button class='btn btn-default btn-xs' style='margin-top:1px;' onclick=hhWrite.writeButton('99','" + seq + "','" + orderSeq + "','ALL')>전체주문 취소</button>");
+				$(obj).find(".cancelDiv").html("<button class='btn btn_default btn_xs' style='margin-top:1px;' onclick=hhWrite.writeButton('99','" + seq + "','" + orderSeq + "','ALL')>전체주문 취소</button>");
 			}
 		}
 	});

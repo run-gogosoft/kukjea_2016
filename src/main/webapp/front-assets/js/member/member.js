@@ -1,36 +1,36 @@
 var CHAgreeUtil = {
 	doSubmit:function(formObj, memberTypeCode) {
 		if(!formObj.agree1.checked) {
-			alert('함께누리 이용약관에 동의하셔야 합니다.');
+			alert('이용약관에 동의하셔야 합니다.');
 			formObj.agree1.focus();
 			return false;
 		} else if(!formObj.agree2.checked) {
-			alert('함께누리 개인정보 수집및 이용에 동의하셔야 합니다.');
+			alert('개인정보 수집및 이용에 동의하셔야 합니다.');
 			formObj.agree2.focus();
 			return false;
 		} else if(!formObj.agree3.checked) {
-			alert('함께누리 개인정보 제3자 제공에 동의하셔야 합니다.');
+			alert('개인정보 제3자 제공에 동의하셔야 합니다.');
 			formObj.agree3.focus();
 			return false;
 		}
+		// if(memberTypeCode === 'C') {
+		// 	if(!formObj.agree4.checked) {
+		// 		alert('고유식별 정보처리에 동의하셔야 합니다.');
+		// 		formObj.agree4.focus();
+		// 		return false;
+		// 	}
+		// }
 
-		if(memberTypeCode === 'C') {
-			if(!formObj.agree4.checked) {
-				alert('함께누리 고유식별 정보처리에 동의하셔야 합니다.');
-				formObj.agree4.focus();
-				return false;
-			}
-		}
 
 		formObj.allCheckFlag.value ='Y';
 
-		if(memberTypeCode == "C") {
-			if(formObj.memberCertFlag.value != "Y") {
-				alert("본인인증(아이핀/휴대폰) 완료 후 회원가입이 가능합니다.");
-				return false;
-			}
-
-		}
+		// if(memberTypeCode == "C") {
+		// 	if(formObj.memberCertFlag.value != "Y") {
+		// 		alert("본인인증(아이핀/휴대폰) 완료 후 회원가입이 가능합니다.");
+		// 		return false;
+		// 	}
+        //
+		// }
 
 		formObj.target = "_top";
 
@@ -51,7 +51,7 @@ var CHInsertUtil = {
 			$('#id').focus();
 			flag = false;
 		} else if($('#password').val() != $('#passwordCheck').val() ){
-			alert('비밀번호 재확인이 실패하였습니다.');
+			alert('동일한 비밀번호를 입력해주세요.');
 			$('#password').focus();
 			flag = false;
 		} else {
@@ -64,32 +64,32 @@ var CHInsertUtil = {
 			});
 		}
 
-		if(memberTypeCode !== 'P' && flag === true) {
-			if(email != $('#emailCheckFlag').val()) {
-				alert('이메일 중복확인을 해주세요.');
-				$('#email1').focus();
-				flag = false;
-			}
-		}
-
-		if(memberTypeCode === 'O' && flag === true) {
-			// 사업자 중복 체크
-			if($("#bizno_check_flag").val() != "Y") {
-				alert("사업자번호 중복 확인 바랍니다.");
-				return false;
-			}
-		}
+		// if(memberTypeCode !== 'P' && flag === true) {
+		// 	if(email != $('#emailCheckFlag').val()) {
+		// 		alert('이메일 중복확인을 해주세요.');
+		// 		$('#email1').focus();
+		// 		flag = false;
+		// 	}
+		// }
+        //
+		// if(memberTypeCode === 'O' && flag === true) {
+		// 	// 사업자 중복 체크
+		// 	if($("#bizno_check_flag").val() != "Y") {
+		// 		alert("사업자번호 중복 확인 바랍니다.");
+		// 		return false;
+		// 	}
+		// }
 
 		if(flag) {
-			if(typeof $('input[name="emailFlag"]:checked').val() === 'undefined') {
-				alert('뉴스레터 수신여부를 선택해주세요.');
-				flag = false;
-				$('#emailReceiveFlagY').focus();
-			} else if(typeof $('input[name="smsFlag"]:checked').val() === 'undefined') {
-					alert('SMS 수신여부를 선택해주세요.');
-					flag = false;
-					$('#smsReceiveFlagY').focus();
-			}
+			// if(typeof $('input[name="emailFlag"]:checked').val() === 'undefined') {
+			// 	alert('뉴스레터 수신여부를 선택해주세요.');
+			// 	flag = false;
+			// 	$('#emailReceiveFlagY').focus();
+			// } else if(typeof $('input[name="smsFlag"]:checked').val() === 'undefined') {
+			// 		alert('SMS 수신여부를 선택해주세요.');
+			// 		flag = false;
+			// 		$('#smsReceiveFlagY').focus();
+			// }
 		}
 		return flag;
 	}
@@ -109,10 +109,12 @@ var CHInsertUtil = {
 			url: '/shop/member/check/id/ajax',
 			success: function(data) {
 				if(data.result === "true") {
-					alert(data.message);
+					// alert(data.message);
+					$('.error_msg').show().addClass('able').removeClass('disable').text(data.message);
 					$("#id_check_flag").val($('#id').val());
 				} else {
-					alert(data.message);
+					// alert(data.message);
+					$('.error_msg').show().removeClass('able').addClass('disable').text(data.message);
 					$("#id_check_flag").val('');
 					$("#id").focus();
 				}

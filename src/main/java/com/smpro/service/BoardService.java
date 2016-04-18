@@ -2,9 +2,11 @@ package com.smpro.service;
 
 import com.smpro.vo.BoardVo;
 import com.smpro.vo.MemberVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface BoardService {
 	public List<BoardVo> getList(BoardVo vo);
 

@@ -6,32 +6,27 @@ import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.MemberDeliveryVo;
 import com.smpro.vo.OrderVo;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-
 import java.util.List;
 
 @Controller
 public class MyPageDeliveryController extends MyPage {
-	@Resource(name="memberDeliveryService")
+	@Autowired
 	private MemberDeliveryService memberDeliveryService;
 
-	@Resource(name="orderService")
+	@Autowired
 	private OrderService orderService;
-
 
 	/** 배송지 리스트 */
 	@RequestMapping("/mypage/delivery/list")
 	public String getDeliveryList(HttpSession session, Model model, OrderVo pvo) {
-		
-
 		initMypage(session, model);
 
 		pvo.setLoginType((String) session.getAttribute("loginType"));
@@ -39,7 +34,6 @@ public class MyPageDeliveryController extends MyPage {
 
 		MemberDeliveryVo vo = new MemberDeliveryVo();
 		vo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
-		model.addAttribute("title", "Delivery List");
 		List<MemberDeliveryVo> list;
 		try {
 			list = memberDeliveryService.getList(vo);
@@ -50,23 +44,25 @@ public class MyPageDeliveryController extends MyPage {
 		model.addAttribute("list", list);
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
+
+		model.addAttribute("title", "배송지 관리");
+		model.addAttribute("on", "02");
 		return "/mypage/delivery_list.jsp";
 	}
 
 	/** 배송지 등록 폼 */
 	@RequestMapping("/mypage/delivery/reg")
 	public String getDeliveryRegForm(HttpSession session, Model model) {
-		
-
 		initMypage(session, model);
-		model.addAttribute("title", "delivery information reg");
+		model.addAttribute("title", "배송지 관리");
+		model.addAttribute("on", "02");
 		return "/mypage/delivery_form.jsp";
 	}
 
 	/** 배송지 등록 처리 */
 	@RequestMapping(value="/mypage/delivery/reg/proc", method=RequestMethod.POST)
 	public String regDeliveryData(HttpSession session, MemberDeliveryVo vo, Model model) {
-		
+
 
 		Integer loginSeq = (Integer)session.getAttribute("loginSeq");
 		vo.setMemberSeq(loginSeq);
@@ -98,7 +94,7 @@ public class MyPageDeliveryController extends MyPage {
 				model.addAttribute("returnUrl", "/shop/mypage/delivery/list");
 				return Const.REDIRECT_PAGE;
 			}
-				
+
 			model.addAttribute("message", "오류가 발생했습니다.");
 			return Const.ALERT_PAGE;
 		} catch(Exception e) {
@@ -110,11 +106,7 @@ public class MyPageDeliveryController extends MyPage {
 	/** 배송지 수정 폼 */
 	@RequestMapping("/mypage/delivery/mod/{seq}")
 	public String getDeliveryModForm(HttpSession session, @PathVariable Integer seq, Model model) {
-		
-
 		initMypage(session, model);
-
-		model.addAttribute("title", "수정되었습니다.");
 		MemberDeliveryVo dvo;
 		try {
 			dvo = memberDeliveryService.getData(seq);
@@ -123,13 +115,15 @@ public class MyPageDeliveryController extends MyPage {
 			return Const.ALERT_PAGE;
 		}
 		model.addAttribute("vo", dvo);
+		model.addAttribute("title", "배송지 관리");
+		model.addAttribute("on", "02");
 		return "/mypage/delivery_form.jsp";
 	}
 
 	/** 배송지 수정 처리 */
 	@RequestMapping(value="/mypage/delivery/mod/{seq}/proc", method=RequestMethod.POST)
 	public String regDeliveryData(@PathVariable Integer seq, HttpSession session, MemberDeliveryVo vo, Model model) {
-		
+
 
 		Integer loginSeq = (Integer)session.getAttribute("loginSeq");
 		vo.setSeq(seq);
@@ -161,8 +155,8 @@ public class MyPageDeliveryController extends MyPage {
 				model.addAttribute("message", "수정되었습니다.");
 				model.addAttribute("returnUrl", "/shop/mypage/delivery/list");
 				return Const.REDIRECT_PAGE;
-			} 
-			
+			}
+
 			model.addAttribute("message", "오류가 발생했습니다.");
 			return Const.ALERT_PAGE;
 
@@ -175,7 +169,7 @@ public class MyPageDeliveryController extends MyPage {
 	/** 배송지 삭제 처리 */
 	@RequestMapping("/mypage/delivery/del/{seq}/proc")
 	public String delDeliveryData(@PathVariable Integer seq, MemberDeliveryVo vo, HttpSession session, Model model) {
-		
+
 
 		Integer loginSeq = (Integer)session.getAttribute("loginSeq");
 		vo.setSeq(seq);
@@ -185,7 +179,7 @@ public class MyPageDeliveryController extends MyPage {
 			model.addAttribute("message", "삭제되었습니다.");
 			model.addAttribute("returnUrl", "/shop/mypage/delivery/list");
 			return Const.REDIRECT_PAGE;
-		} 
+		}
 
 		model.addAttribute("message", "오류가 발생했습니다.");
 		return Const.ALERT_PAGE;

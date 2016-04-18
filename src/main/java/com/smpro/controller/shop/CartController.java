@@ -1,35 +1,36 @@
 package com.smpro.controller.shop;
 
-import com.smpro.service.*;
+import com.smpro.service.CartService;
+import com.smpro.service.ItemOptionService;
+import com.smpro.service.ItemService;
+import com.smpro.service.SystemService;
 import com.smpro.util.Const;
 import com.smpro.vo.ItemOptionVo;
 import com.smpro.vo.ItemVo;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @Controller
 public class CartController extends MyPage {
-	@Resource(name="cartService")
+	@Autowired
 	private CartService cartService;
 
-	@Resource(name="itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name="systemService")
+	@Autowired
 	private SystemService systemService;
-	
-	@Resource(name="itemOptionService")
+
+	@Autowired
 	private ItemOptionService itemOptionService;
 
 	public void setItemOptionService(ItemOptionService itemOptionService) {
@@ -39,7 +40,7 @@ public class CartController extends MyPage {
 	@RequestMapping("/cart")
 	public String cart(HttpServletRequest request, Model model){
 		HttpSession session = request.getSession();
-		
+
 		initMypage(session, model);
 
 		ItemVo vo = new ItemVo();
@@ -48,7 +49,7 @@ public class CartController extends MyPage {
 		if(session.getAttribute("notLoginKey") != null) {
 			vo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
 		}
-		
+
 		List<ItemVo> list = cartService.getList(vo);
 
 		// 즉시구매로 들어온 내역은 지워버린다
@@ -58,20 +59,23 @@ public class CartController extends MyPage {
 			}
 		}
 
+		model.addAttribute("title", "장바구니");
+		model.addAttribute("on", "05");
+
 		return "/cart.jsp";
 	}
 
 	@RequestMapping("/cart/list/json")
 	public String cartList( HttpServletRequest request, Model model){
 		HttpSession session = request.getSession();
-		
+
 		ItemVo vo = new ItemVo();
 		vo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
 		//비회원일 경우 별도 인증키 값 저장
 		if(session.getAttribute("notLoginKey") != null) {
 			vo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
 		}
-				
+
 		List<ItemVo> list = cartService.getList(vo);
 
 		model.addAttribute("list", list);
@@ -88,7 +92,7 @@ public class CartController extends MyPage {
 			vo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
 		}
 		vo.setDirectFlag("N");
-		
+
 		model.addAttribute("message", cartService.getListTotalCount(vo));
 
 		return Const.AJAX_PAGE;
@@ -97,13 +101,13 @@ public class CartController extends MyPage {
 	@RequestMapping("/cart/update")
 	public String update(ItemVo vo, HttpServletRequest request, Model model) {
 		HttpSession session  = request.getSession();
-		
+
 		vo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
 		//비회원일 경우 별도 인증키 값 저장
 		if(session.getAttribute("notLoginKey") != null) {
 			vo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
 		}
-				
+
 		if(vo.getCount() == 0) {
 			cartService.deleteVo(vo);
 		} else {
@@ -117,7 +121,7 @@ public class CartController extends MyPage {
 	@RequestMapping("/cart/add")
 	public String add(ItemVo vo, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
-		
+
 		if("C".equals(vo.getTypeCode())) {
 			model.addAttribute("callback", "ERROR[5]");
 			return Const.ALERT_PAGE;
@@ -142,9 +146,9 @@ public class CartController extends MyPage {
 			if(session.getAttribute("notLoginKey") == null) {
 				//키값이 세션에 없으면 새로 생성한다.
 				session.setAttribute("notLoginKey", session.getId() + System.currentTimeMillis());
-			} 
+			}
 			vo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
-		} else {			
+		} else {
 			vo.setMemberSeq(memberSeq);
 		}
 
@@ -191,10 +195,10 @@ public class CartController extends MyPage {
 	@RequestMapping("/cart/remove")
 	public String remove(@RequestParam Integer seq,  HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
-		
+
 		ItemVo vo = new ItemVo();
 		vo.setSeq(seq);
-		
+
 		vo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
 		//비회원일 경우 별도 인증키 값 저장
 		if(session.getAttribute("notLoginKey") != null) {
@@ -209,7 +213,7 @@ public class CartController extends MyPage {
 		model.addAttribute("message", "OK");
 		return Const.AJAX_PAGE;
 	}
-	
+
 	/**
 	 * 주문 상세 페이지(프린트용)
 	 *
@@ -221,7 +225,7 @@ public class CartController extends MyPage {
 		if("estimate".equals(pageType)) {
 			model.addAttribute("title", "견 적 서");
 		}
-		
+
 		ItemVo vo = new ItemVo();
 		vo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
 		vo.setCartSeqs(cartSeqs);
@@ -229,7 +233,7 @@ public class CartController extends MyPage {
 		if(session.getAttribute("notLoginKey") != null) {
 			vo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
 		}
-		
+
 		/* 주문 상품 리스트 */
 		model.addAttribute("list", cartService.getList(vo));
 		model.addAttribute("nowDate", new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString());

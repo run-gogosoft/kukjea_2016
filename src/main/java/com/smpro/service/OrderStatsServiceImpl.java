@@ -4,16 +4,16 @@ import com.smpro.dao.OrderStatsDao;
 import com.smpro.vo.MemberGroupVo;
 import com.smpro.vo.OrderVo;
 import com.smpro.vo.SellerVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 
-@Service("orderStatsService")
+@Service
 public class OrderStatsServiceImpl implements OrderStatsService {
 
-	@Resource(name = "orderStatsDao")
+	@Autowired
 	private OrderStatsDao orderStatsDao;
 
 	public List<HashMap<String,Integer>> getListByCategory(OrderVo vo) {

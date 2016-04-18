@@ -1,18 +1,15 @@
 package com.smpro.controller.admin;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.*;
+import com.smpro.util.Const;
+import com.smpro.util.EditorUtil;
+import com.smpro.util.StringUtil;
+import com.smpro.util.exception.ImageIsNotAvailableException;
+import com.smpro.util.exception.ImageSizeException;
 import com.smpro.vo.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,29 +18,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import com.smpro.util.Const;
-import com.smpro.util.EditorUtil;
-import com.smpro.util.StringUtil;
-import com.smpro.util.exception.ImageIsNotAvailableException;
-import com.smpro.util.exception.ImageSizeException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Controller
 public class EventController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
-	
-	@Resource(name = "eventService")
+
+	@Autowired
 	private EventService eventService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name = "categoryService")
+	@Autowired
 	private CategoryService categoryService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "displayService")
+	@Autowired
 	private DisplayService displayService;
 
 	@CheckGrade(controllerName = "eventController", controllerMethod = "list")
@@ -448,7 +444,7 @@ public class EventController {
 		try {
 			fileMap = eventService.uploadImagesByMap(request);
 		} catch (IOException ie) {
-			LOGGER.error(ie.getMessage());
+			log.error(ie.getMessage());
 			model.addAttribute("message", "서버상의 문제가 발생했습니다. 관리자에게 문의하여 주십시오.");
 			ie.printStackTrace();
 			return Const.ALERT_PAGE;

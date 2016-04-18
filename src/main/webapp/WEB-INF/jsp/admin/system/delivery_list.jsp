@@ -9,13 +9,13 @@
 	<div class="content-wrapper">
 		<!-- 헤더 -->
 		<section class="content-header">
-          <h1>배송업체 관리(${fn:length(list)}) <small></small></h1>
-          <ol class="breadcrumb">
-            <li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-            <li>시스템 관리</li>
-            <li class="active">배송업체 관리</li>
-          </ol>
-        </section>
+			<h1>배송업체 관리<small></small></h1>
+			<ol class="breadcrumb">
+				<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
+				<li>시스템 관리</li>
+				<li class="active">배송업체 관리</li>
+			</ol>
+		</section>
         <!-- 콘텐츠 -->
         <section class="content">
         	<div class="row">

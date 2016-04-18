@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-    <title>함께누리몰 어드민</title>
+    <title>국제몰 어드민</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -35,7 +35,7 @@
 </head>
 <body class="login-page">
 	<div class="main-logo">
-		<img src="/assets/img/main_logo.png" class="main-logo-img" alt="함께누리 로고"/>
+		<img src="/images/common/logo.png" class="main-logo-img" alt="국제몰 로고"/>
 	</div>
 
 	<div class="admin-description"></div>
@@ -44,7 +44,7 @@
 		<div class="login-logo login-description"></div>
 		<!-- /.login-logo -->
 		<div class="login-box-body" style="box-shadow:4px 5px 10px rgba(128, 128, 128, 0.8);">
-			<!-- <h4 class="login-box-msg">함께누리몰 어드민<h4> -->
+			<!-- <h4 class="login-box-msg">국제몰 어드민<h4> -->
 			<form method="post" action="/admin/login/proc" target="zeroframe" onsubmit="return loginSubmit();" class="text-center">
 				<div class="col-xs-5" style="float:none; display:inline-block; padding:0;">
 					<div class="form-group has-feedback" style="margin-bottom:5px;">
@@ -72,7 +72,7 @@
 				</div>
 			</form>
 		</div>
-		<div class="text-right" style="margin-top:10px; font-size:12px; color:#888888;">이용문의: 함께누리몰 고객지원센터 <strong class="text-primary">02-2222-3896</strong> ( <strong class="text-primary">hknuri@happyict.co.kr</strong> )</div>
+		<div class="text-right" style="margin-top:10px; font-size:12px; color:#888888;">이용문의: 국제몰 고객지원센터 <strong class="text-primary">02-888-7777</strong></div>
 		<div class="text-warning text-right" style="font-size:12px;color:#787878;">
 			<strong><i class="fa fa-exclamation"></i></strong>&nbsp;<strong>IE9</strong> 이상의 브라우저에 최적화 되어 있습니다.
 		</div>
@@ -92,7 +92,7 @@
 		<div class="hh-writebox-content">
 			<form class="form-horizontal" name="passwordSearchForm" role="form" method="post" onsubmit="return CHFindPassUtil.findPassProc(this);" action="/shop/member/password/proc" target="zeroframe">
 				<div class="hh-writebox-customer">
-					<img src="${const.ASSETS_PATH}/front-assets/images/login/member-pw-sub-title.png" style="margin-top: 20px;" alt="비밀번호 찾기">
+					<img src="/front-assets/images/login/member-pw-sub-title.png" style="margin-top: 20px;" alt="비밀번호 찾기">
 					<table class="table">
 						<tr>
 							<td>구분</td>
@@ -141,7 +141,7 @@
 		<div class="hh-writebox-content">
 			<form class="form-horizontal" name="idSearchForm" role="form" method="post" onsubmit="return CHFindPassUtil.findPassProc(this);" action="/shop/member/id/proc" target="zeroframe">
 				<div class="hh-writebox-customer">
-					<img src="${const.ASSETS_PATH}/front-assets/images/login/member-id-title.png" style="margin-top: 20px;" alt="아이디 찾기">
+					<img src="/front-assets/images/login/member-id-title.png" style="margin-top: 20px;" alt="아이디 찾기">
 					<table class="table">
 						<tr>
 							<td>구분</td>
@@ -191,9 +191,9 @@
 	$(document).ready(function () {
 		var width = $(window).width();
 		if(width > 940) {
-			$('.admin-description').html('서울시가 운영하는 사회적 경제 기업 전용 쇼핑몰 <span>함께누리 어드민 로그인</span> 입니다!');
+			$('.admin-description').html('쇼핑몰 <span>국제몰 어드민 로그인</span> 입니다!');
 		} else {
-			$('.admin-description').html('서울시가 운영하는 사회적 경제 기업 전용 쇼핑몰 <br/><span>함께누리 어드민 로그인</span> 입니다!');
+			$('.admin-description').html('쇼핑몰 <br/><span>국제몰 어드민 로그인</span> 입니다!');
 		}
 
 		if(width > 640) {

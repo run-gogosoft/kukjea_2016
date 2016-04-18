@@ -9,7 +9,7 @@ import com.smpro.util.Const;
 import com.smpro.util.EditorUtil;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -32,16 +30,16 @@ import java.util.GregorianCalendar;
 
 @Controller
 public class SystemController {
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "memberService")
+	@Autowired
 	private MemberService memberService;
 
-	@Resource(name = "smsService")
+	@Autowired
 	private SmsService smsService;
 
 	@CheckGrade(controllerName = "systemController", controllerMethod = "list")

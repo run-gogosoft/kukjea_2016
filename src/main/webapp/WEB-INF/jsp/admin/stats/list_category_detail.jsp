@@ -9,11 +9,11 @@
 <div class="content-wrapper">
 	<!-- 헤더 -->
 	<section class="content-header">
-		<h1>공공기관별 매출 현황  <small>주문 리스트</small></h1>
+		<h1>상품 카테고리별 매출 현황 <small>주문 리스트</small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
 			<li>통계</li>
-			<li>공공기관별 매출 현황</li>
+			<li>상품 카테고리별 매출 현황</li>
 			<li class="active">주문 리스트</li>
 		</ol>
 	</section>

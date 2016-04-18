@@ -4,9 +4,11 @@ import com.smpro.vo.DisplayLvItemVo;
 import com.smpro.vo.DisplayVo;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class DisplayDaoImpl implements DisplayDao {
 	@Autowired
 	private SqlSession sqlSession;

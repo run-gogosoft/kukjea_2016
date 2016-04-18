@@ -4,14 +4,14 @@ import com.smpro.dao.DisplayDao;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.DisplayLvItemVo;
 import com.smpro.vo.DisplayVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("displayService")
+@Service
 public class DisplayServiceImpl implements DisplayService {
-	@Resource(name = "displayDao")
+	@Autowired
 	private DisplayDao displayDao;
 
 	public DisplayVo getVo(DisplayVo vo) {

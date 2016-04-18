@@ -74,7 +74,7 @@
 					<div class="box">
 						<div class="box-body">
 							<table class="table table-bordered table-list">
-								<caption>포인트 리스트</caption>
+								<caption>현재 잔여 포인트</caption>
 								<colgroup>
 									<col style="width:25%;"/>
 									<col style="width:25%;"/>
@@ -106,7 +106,7 @@
 					<div class="box">
 						<div class="box-body">
 							<table class="table table-bordered table-list">
-								<caption>포인트 리스트</caption>
+								<caption>포인트 적립/사용 내역</caption>
 								<colgroup>
 									<col style="width:5%;"/>
 									<col style="width:10%;"/>
@@ -155,10 +155,10 @@
 											</c:choose>
 										</td>
 										<td class="text-center">
-											<a href="/admin/order/list?search=order_seq&findword=${item.orderSeq}&totalFlag=Y">${item.orderSeq}</a>
+											<a href="/admin/order/list?searchOrder=orderSeq&orderSeq=${item.orderSeq}" target="_blank">${item.orderSeq}</a>
 										</td>
 										<td class="text-center">
-											<a href="/admin/order/view/${item.orderSeq}?seq=${item.orderDetailSeq}">${item.orderDetailSeq}</a>
+											<a href="/admin/order/view/${item.orderSeq}?seq=${item.orderDetailSeq}" target="_blank">${item.orderDetailSeq}</a>
 										</td>
 										<td class="text-center">
 											${item.note}
@@ -175,7 +175,7 @@
 					<div class="box">
 						<div class="box-body">
 							<table class="table table-bordered table-list">
-								<caption>포인트 리스트</caption>
+								<caption>포인트 적립 상세 내역</caption>
 								<colgroup>
 									<col style="width:5%;"/>
 									<col style="width:10%;"/>
@@ -246,9 +246,9 @@
 							</table>
 						</div>
 					</div>
-					<%--<div class="pull-right"><a href="/admin/point/form?formFlag=Y&memberSeq=${memberSeq}" class="btn btn-info">신규등록</a></div>--%>
 					<div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div>
 				</c:if>
+			</div>
 		</div>
 	</section>
 </div>

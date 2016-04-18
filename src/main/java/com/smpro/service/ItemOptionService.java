@@ -2,9 +2,11 @@ package com.smpro.service;
 
 import com.smpro.vo.ItemOptionVo;
 import com.smpro.vo.ItemVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface ItemOptionService {
 	public List<ItemOptionVo> getList(Integer itemSeq);
 

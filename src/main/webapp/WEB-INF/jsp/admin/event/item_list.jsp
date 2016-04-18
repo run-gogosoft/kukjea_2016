@@ -196,8 +196,8 @@
 							</div>
 						</div>
 						<div class="box-footer">
-								<div class="pull-left">! 총 <b style="color:#00acd6;"><fmt:formatNumber value="${item.totalRowCount}"/></b> 건이 조회 되었습니다.</div>
-								<div class="pull-right">
+							<div class="pull-left">! 총 <strong style="color:#00acd6;" id="totalRowCount">0</strong> 건이 조회 되었습니다.</div>
+							<div class="pull-right">
 									상품군 선택 :
 									<select id="selectGroupSeq"  style="width:100px;height:30px;">
 										<option>--선택--</option>
@@ -526,13 +526,7 @@
 
 	var goPage = function (page) {
 		var lv1Value = parseInt($('#lv1 option:selected').val(),10) || 0;
-//		if(lv1Value===0){
-//			alert('카테고리가 선택되지 않았습니다.');
-//			return;
-//		}
-		getItemtList(page, (function () {
-			getItemListPaging(page);
-		})());
+		getItemtList(page);
 	};
 
 	var callbackProc = function(msg) {
@@ -706,34 +700,24 @@ var CHPlan = {
 			type: "GET",
 			url: "/admin/system/tmpl/sub/item/list",
 			dataType: "text",
-			data: {mallSeq:mallSeq, lv1: $("select[name=lv1]").val(), lv2: $("select[name=lv2]").val(), lv3: $("select[name=lv3]").val(), lv4: $("select[name=lv4]").val(), seq: $("#searchItemSeq").val(), name: $("#searchItemName").val(),  sellerName: $("#sellerName").val(), rowCount: $("#rowCount").val(), pageNum: pageNum},
+			data: {mallSeq:mallSeq, cateLv1Seq: $("select[name=lv1]").val(), cateLv2Seq: $("select[name=lv2]").val(), cateLv3Seq: $("select[name=lv3]").val(), cateLv4Seq: $("select[name=lv4]").val(), seq: $("#searchItemSeq").val(), name: $("#searchItemName").val(),  sellerName: $("#sellerName").val(), rowCount: $("#rowCount").val(), pageNum: pageNum},
 			success: function (data) {
-				var list = $.parseJSON(data);
+				var vo = $.parseJSON(data);
 
-				if (list.length != 0) {
-					$("#boardTarget").html($("#trTemplate").tmpl(list));
+				if (vo.list.length != 0) {
+					$("#boardTarget").html($("#trTemplate").tmpl(vo.list));
 				} else {
 					$("#boardTarget").html("<tr><td class='text-center' colspan='7'>등록된 내용이 없습니다.</td></tr>");
 				}
+
+				$("#totalRowCount").html(vo.total);
+
+				$("#paging").html(vo.paging);
+				$("#paging").addClass("pagination").addClass("alternate");
+
 				if (typeof callback === "function") {
 					callback();
 				}
-			},
-			error: function (error) {
-				alert(error.status + ":" + error.statusText);
-			}
-		});
-	};
-
-	var getItemListPaging = function (pageNum) {
-		$.ajax({
-			type: "GET",
-			url: "/admin/system/tmpl/sub/item/list/paging",
-			dataType: "text",
-			data: {mallSeq:mallSeq, lv1: $("select[name=lv1]").val(), lv2: $("select[name=lv2]").val(), lv3: $("select[name=lv3]").val(), lv4: $("select[name=lv4]").val(), seq: $("#searchItemSeq").val(), name: $("#searchItemName").val(), rowCount: $("#rowCount").val(), sellerName: $("#sellerName").val(), pageNum: pageNum},
-			success: function (data) {
-				$("#paging").html(data);
-				$("#paging").addClass("pagination").addClass("alternate");
 			},
 			error: function (error) {
 				alert(error.status + ":" + error.statusText);

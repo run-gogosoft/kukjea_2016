@@ -3,7 +3,7 @@
 	    <div class="pull-right hidden-xs">
 	      <b>Version</b> 1.0
 	    </div>
-    	<strong>Copyright &copy; 2015 <a href="http://hknuri.co.kr/">HKNURI MALL</a>.</strong> All rights reserved.
+    	<strong>Copyright &copy; 2015 international SHOP.</strong> All rights reserved.
   	</footer>
 </div><!-- ./wrapper -->
 
@@ -29,7 +29,7 @@
 <!-- <script src="/assets/admin_lte2/plugins/fastclick/fastclick.min.js" type="text/javascript"></script> -->
 <!-- AdminLTE App -->
 <script src="/assets/admin_lte2/dist/js/app.min.js" type="text/javascript"></script>
-    
+
 <!-- jQuery message gbox -->
 <script src="/assets/js/plugins/msgbox/jquery.msgbox.js"></script>
 <script src="/assets/js/plugins/msgGrowl/js/msgGrowl.min.js"></script>
@@ -37,9 +37,9 @@
 <script src="/assets/js/libs/common.js"></script>
 
 <script type="text/javascript">
-var s3_upload_path = "${const.UPLOAD_PATH}";
+var s3_upload_path = "/upload";
 $(document).ready(function() {
-	
+
 });
 </script>
 

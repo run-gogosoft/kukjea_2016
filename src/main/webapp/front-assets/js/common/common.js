@@ -1,140 +1,4 @@
 var validMenuJson = $.extend(true, menuJson, {});
-// category proc
-var CHCateogory = {
-	clickFlag:false
-	, toggle:function(){
-		if( $("#ch-category").height() === 0 ) {
-			CHCateogory.show();
-		} else {
-			CHCateogory.hide();
-		}
-	}
-	, show:function(){
-		$("#ch-category")
-			.show()
-			.stop()
-			.animate({
-				height:$("#ch-category .inner").height()
-			}, "fast");
-
-		$("#ch-category>.inner")
-			.show()
-			.stop()
-			.css({
-				marginTop:-1*$("#ch-category .inner").height()
-			}).animate({
-				marginTop:0
-			}, "fast");
-
-		$('#NavFirst').css({'height':50+'px', 'background-color':'#4db7c9', 'color':'#fff'});
-
-		//현재 전체카테고리를 선택하였나 확인
-		CHCateogory.clickFlag = true;
-		CHCateogory.drawMenu(); //초기 카테고리를 불러온다.
-	}
-	, hide:function(){
-		$(".ch-nav li:first-child img")
-			.css({"box-shadow":"none"});
-
-		$("#ch-category").css({height:0}).hide();
-
-		$('#NavFirst').css({'background-color':'#fff', 'color':'black', 'height':39+'px'});
-		$('#NavFirst').find('img').attr("src", $('#NavFirst').find('img').attr("src").replace("_on", "_off"));
-		CHCateogory.clickFlag = false;
-	}
-	, drawMenu:function(){
-		//대분류카테고리를 불러옴
-		for(var i=0; i<validMenuJson.length; i++) {
-			validMenuJson[i].index = i;
-		}
-		$("#lv1CategoryList").html( $("#lv1CategoryTemplate").tmpl(validMenuJson));
-
-		var liLength = $("#lv1CategoryList li.first-category").length;
-		for(var i=liLength; i<12; i++) {
-			$("#lv1CategoryList").append('<li class="first-category"><div class="title"></div></li>');
-		}
-		// $("#popCartTemplate").tmpl({arrList:arrList, cartLength:arrList.length}).appendTo("#popup-zone .pop-cart>ul");
-		// for(var i=0; i<validMenuJson.length; i++) {
-		// 	if (parseInt(validMenuJson[i].seq, 10) === seq) {
-		// 		$('#lv2CategoryList').html($("#lv2CategoryTemplate").tmpl(validMenuJson[i].lv2List));
-		// 		$('.category-list-lv2').show();
-		// 		//현재 카테고리가 선택된 카테고리인지 판별하는 배열이다.
-		// 		for(var j=0; j<validMenuJson[j].lv2List.length; j++) {
-		// 			CHCateogory.lv2OverArray[j] = false;
-		// 		}
-		// 		break;
-		// 	}
-		// }
-	}
-};
-
-var EBLB = {
-	goTop:function(obj){
-		var height = $(obj).offset().top;
-		$("html, body").animate({scrollTop:0}, (height/4));
-	}
-	, showPopup:function(id) {
-		$("[id^=ebpop-]").hide();
-		$("#"+id).slideDown();
-
-		if(id === "ebpop-ranking-zone") {
-			getRankingList();
-		}
-	}
-	, hidePopup:function() {
-		$("[id^=ebpop-]").slideUp();
-	}
-	, goAnchor:function(obj) {
-		var height = $($(obj).find('a').attr("href")).offset().top-70;
-		$("html, body").stop().animate({scrollTop:height}, 1500);
-	}
-};
-
-var CHCarousel = {
-	start: function (id, json) {
-		$("#" + id + " .overview").html("");
-		$("#" + id + " .data>a, #" + id + " .data>img").each(function () {
-			$("#" + id + " .overview").append($("<li></li>").append($(this)));
-		});
-
-		if ($("#" + id + " .overview li").length > 1 && json.pager === true) {
-			$("#" + id + " .overview li").each(function (idx) {
-				$("#" + id + " .pagers").append($("<li><a rel='" + idx + "' class='pagenum' href='#'>" + (idx + 1) + "</a></li>"));
-			});
-		} else if ($("#" + id + " .overview li").length <= 1) {
-			$("#" + id + " .btn-group").hide();
-		}
-		$('#' + id).tinycarousel(json);
-	}
-};
-
-var checkRequiredValue = function(frmObj, requiredLabelName) {
-	var flag = true;
-	/* text trim */
-	$(frmObj).find("input[type='text'],input[type='password'],textarea").each( function() {
-		var value = $.trim($(this).val());
-		$(this).val(value);
-	});
-
-	/* required field check */checkRequiredValue
-	$(frmObj).find("input["+requiredLabelName+"],textarea["+requiredLabelName+"]").each( function() {
-		if(flag && $(this).val() == "") {
-			alert($(this).attr(requiredLabelName) + "을 입력해주세요.");
-			$(this).focus();
-			flag = false;
-		}
-	});
-
-	$(frmObj).find("select["+requiredLabelName+"]").each( function() {
-		if(flag && $(this).val() == "") {
-			alert($(this).attr(requiredLabelName) + "을 입력해주세요.");
-			$(this).focus();
-			flag = false;
-		}
-	});
-
-	return flag;
-};
 
 var numberCheck = function(obj){
 	obj.value=obj.value.replace(/[^\d]/g, '');
@@ -345,99 +209,6 @@ var checkRequiredValue = function(frmObj, attrName) {
 	return submit;
 };
 
-$(document).ready(function() {
-	var menuList = {menu:[]};
-	menuList.menu = validMenuJson;
-	$("#mainSubCategoryList").html($("#mainSubCategoryTemplate").tmpl(menuList));//메인 페이지 좌단메뉴 호출
-//	$("#mainSubCategoryList").html($("#mainSubCategoryTemplate").tmpl(validMenuJson));//메인 페이지 좌단메뉴 호출
-
-	$('#NavFirst').mouseover(function(){
-		$(this).css({'background-color':'#4db7c9','color':'#fff'});
-		$(this).find('img').attr("src", $(this).find('img').attr("src").replace("_off", "_on"));
-	}).mouseleave(function(){
-		if(CHCateogory.clickFlag === false) {
-			$(this).css({'background-color':'#fff', 'color':'black'});
-			$(this).find('img').attr("src", $(this).find('img').attr("src").replace("_on", "_off"));
-		}
-	});
-
-	// toggle images
-	$("img.ch-swap").each(function(){
-		$(this).mouseover(function(){
-			$(this).attr("src", $(this).attr("src").replace("-off", "-on"));
-		}).mouseleave(function(){
-			$(this).attr("src", $(this).attr("src").replace("-on", "-off"));
-		});
-	});
-
-	// cart render
-	(function(){
-		var cartList = (typeof $.cookie('cartList') === "undefined") ? []: $.cookie('cartList').split("::");
-		var cartImageList = (typeof $.cookie('cartImageList') === "undefined") ? []: $.cookie('cartImageList').split("::");
-
-		for(var i=0; i<cartImageList.length; i++) {
-			if(cartImageList[i].indexOf(constants.UPLOAD_PATH) !== 0) {
-				cartImageList[i] = "";
-			}
-		}
-
-		var arrList = [];
-		if($("#popup-zone .pop-cart>ul").size() !== 0) {
-			for(var i=cartList.length-1; i>=0; i--) {
-				arrList.push({seq:cartList[i], img:cartImageList[i], count:i+1});
-			}
-			$('#cartLength').text(arrList.length);
-			$('#vaWrapper').html($("#popCartTemplate").tmpl(arrList));
-		}
-
-//		$('#popLatelyItemCount').text(cartList.length);//최근본상품 갯수
-	})();
-
-	if( $("#popup-zone").length !== 0) {
-		setTimeout(function(){
-			$("#popup-zone>div").affix({ offset: { top: $("#popup-zone").offset().top } });
-		},100);
-	}
-
-	$('#va-accordion').vaccordion({
-		accordionW:100,
-		accordionH:270,
-		visibleSlices:2,
-		animSpeed		: 500,
-		animEasing		: 'easeInOutBack',
-		animOpacity		: 0.4
-	});
-
-	$('.navi-text').mouseover(function(){
-		$(this).next().css({'background-color':'#4db7c9'});
-		$(this).next().find('img').attr("src", $(this).next().find('img').attr("src").replace("_off", "_on"));
-	}).mouseleave(function(){
-		$(this).next().css({'background-color':'#fff'});
-		$(this).next().find('img').attr("src", $(this).next().find('img').attr("src").replace("_on", "_off"));
-	});
-
-	$('.navi-a').mouseover(function(){
-		$(this).css({'background-color':'#4db7c9'});
-		$(this).find('img').attr("src", $(this).find('img').attr("src").replace("_off", "_on"));
-	}).mouseleave(function(){
-		$(this).css({'background-color':'#fff'});
-		$(this).find('img').attr("src", $(this).find('img').attr("src").replace("_on", "_off"));
-	});
-	
-	// 사회적경제 메뉴 마우스오버 
-	$(document).ready(function(){
-		$('#mainMenu li').each(function(){
-				$(this).mouseover(function(){
-					$('ul').find('.dropdown-menu').hide();
-					$(this).find('ul').show();
-			});
-		});
-		
-		$('.about-nav-wrap').mouseleave(function(){
-			$(this).find('.dropdown-menu').hide();
-		})
-	});
-});
 
 var checkFileSize = function(obj) {
 	var size = obj.files[0].size; 
@@ -451,3 +222,26 @@ var checkFileSize = function(obj) {
 	
 	return true;
 };
+
+$(document).ready(function(){
+	var cartList = (typeof $.cookie('cartList') === "undefined") ? []: $.cookie('cartList').split("::");
+	var cartImageList = (typeof $.cookie('cartImageList') === "undefined") ? []: $.cookie('cartImageList').split("::");
+
+	for(var i=0; i<cartImageList.length; i++) {
+		if(cartImageList[i].indexOf('/upload') !== 0) {
+			cartImageList[i] = "";
+		}
+	}
+
+	var arrList = [];
+	for(var i=cartList.length-1; i>=0; i--) {
+		arrList.push({seq:cartList[i], img:cartImageList[i], count:i+1});
+	}
+	$('#cartLength').text(arrList.length);
+	$('#vaWrapper').html($("#popCartTemplate").tmpl(arrList));
+});
+
+function quickMove(m) {
+    var o = $('#vaWrapper').scrollTop();
+    $('#vaWrapper').animate({'scrollTop':o+(m)});
+}

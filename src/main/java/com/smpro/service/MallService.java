@@ -1,9 +1,11 @@
 package com.smpro.service;
 
 import com.smpro.vo.MallVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface MallService {
 	public List<MallVo> getList(MallVo reqVo);
 

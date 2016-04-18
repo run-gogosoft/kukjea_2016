@@ -9,35 +9,35 @@ import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.vo.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.*;
 
-@Service("orderService")
+@Service
 public class OrderServiceImpl implements OrderService {
 
-	@Resource(name = "orderDao")
+	@Autowired
 	private OrderDao orderDao;
 
-	@Resource(name = "orderPayDao")
+	@Autowired
 	private OrderPayDao orderPayDao;
 
-	@Resource(name = "systemDao")
+	@Autowired
 	private SystemDao systemDao;
 
-	@Resource(name = "pointDao")
+	@Autowired
 	private PointDao pointDao;
-	
-	@Resource(name = "estimateDao")
+
+	@Autowired
 	private EstimateDao estimateDao;
-	
-	@Resource(name = "orderTaxRequestDao")
+
+	@Autowired
 	private OrderTaxRequestDao orderTaxRequestDao;
 
 	public List<OrderVo> getList(OrderVo pvo) throws Exception {

@@ -1,7 +1,9 @@
 package com.smpro.service;
 
 import com.smpro.vo.UserVo;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface LoginService {
 	/** 로그인 */
 	public UserVo getData(UserVo vo);

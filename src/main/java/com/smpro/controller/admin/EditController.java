@@ -12,7 +12,6 @@ import com.smpro.util.FileUploadUtil;
 
 @Controller
 public class EditController {
-	//private static final Logger LOGGER = LoggerFactory.getLogger(EditController.class);
 	
 	/** 에디터 이미지 업로드 기능을 사용할 경우 해당 이미지를 임시 저장 */
 	@RequestMapping("/editor/upload")

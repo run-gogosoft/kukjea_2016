@@ -1,9 +1,11 @@
 package com.smpro.service;
 
 import com.smpro.vo.*;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public interface OrderStatsService {
 	/** 상품 카테고리별 매출 통계 */
 	public List<HashMap<String,Integer>> getListByCategory(OrderVo vo);

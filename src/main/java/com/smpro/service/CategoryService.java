@@ -2,9 +2,11 @@ package com.smpro.service;
 
 import com.smpro.vo.CategoryVo;
 import com.smpro.vo.ItemVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface CategoryService {
 	public List<CategoryVo> getList(CategoryVo vo);
 

@@ -4,47 +4,39 @@ import com.smpro.service.MallService;
 import com.smpro.service.MenuService;
 import com.smpro.service.SystemService;
 import com.smpro.vo.MallVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.net.URLEncoder;
 
+@Slf4j
+@Component
 public class MallCheckInterceptor extends HandlerInterceptorAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MallCheckInterceptor.class);
 	
 	@Autowired
 	private MallService mallService;
-	public void setMallService(MallService mallService) {
-		this.mallService = mallService;
-	}
 	
-	@Resource(name = "menuService")
+	@Autowired
 	private MenuService menuService;
 
 	@Autowired
 	private SystemService systemService;
-	public void setSystemService(SystemService systemService) {
-		this.systemService = systemService;
-	}
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		LOGGER.debug("interceptor--handler #1:" + handler);
-		LOGGER.info("interceptor--catched #1");
+		log.debug("interceptor--handler #1:" + handler);
+		log.info("interceptor--catched #1");
 		response.addHeader("Progma", "No-cache");
 		response.addHeader("Cache-Control", "no-cache");
 		response.addHeader("Cache-Control", "no-store"); // 일부 파이어폭스 버그 관련
 		response.addHeader("X-UA-Compatible", "IE=Edge");
 //		response.setHeader("Pragma", "no-cache");
 //		response.setHeader("Expires", "-1"); // 일부 파이어폭스 버그 관련
-		LOGGER.info("### requestURI : " + request.getRequestURI());
+		log.info("### requestURI : " + request.getRequestURI());
 		
 		String[] requestURI = request.getRequestURI().replace("http://","").split("/");
 		String mallId = "";
@@ -59,7 +51,7 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 				//몰과 상관없이 공통적으로 쓰는 페이지는 skip
 				return true;
 			} 
-			mallId = "hknuri";
+			mallId = "kookje";
 			MallVo vo = mallService.getMainInfo(mallId);
 			if(vo == null) {
 				errMsg = "존재하지 않는 쇼핑몰 접근입니다.";

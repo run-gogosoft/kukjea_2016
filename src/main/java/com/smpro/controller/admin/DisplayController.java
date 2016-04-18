@@ -1,45 +1,39 @@
 package com.smpro.controller.admin;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
 import com.smpro.component.admin.annotation.CheckGrade;
-import com.smpro.service.CategoryService;
-import com.smpro.service.DisplayService;
-import com.smpro.service.ItemService;
-import com.smpro.service.MallService;
-import com.smpro.service.SystemService;
+import com.smpro.service.*;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.CommonVo;
 import com.smpro.vo.DisplayLvItemVo;
 import com.smpro.vo.DisplayVo;
 import com.smpro.vo.ItemVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+
+@Slf4j
 @Controller
 public class DisplayController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DisplayController.class);
-	
-	@Resource(name = "displayService")
+
+	@Autowired
 	private DisplayService displayService;
 
-	@Resource(name = "categoryService")
+	@Autowired
 	private CategoryService categoryService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
 
 	@CheckGrade(controllerName = "displayController", controllerMethod = "lv1")
@@ -131,16 +125,9 @@ public class DisplayController {
 		vo.setStatusCode("Y");
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
 		model.addAttribute("list", itemService.getListSimple(vo));
+		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
+		model.addAttribute("total", new Integer(vo.getTotalRowCount()));
 		return "/ajax/get-lv1DisplayItem-list.jsp";
-	}
-
-	@RequestMapping("/system/tmpl/sub/item/list/paging")
-	public String getItemListForAjaxPaging(HttpSession session, ItemVo vo, Model model) {
-		vo.setLoginType((String)session.getAttribute("loginType"));
-		vo.setStatusCode("Y");
-		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
-		model.addAttribute("message", vo.drawPagingNavigation("goPage"));
-		return Const.AJAX_PAGE;
 	}
 
 	/** 초기 스타일 등록 */
@@ -281,9 +268,9 @@ public class DisplayController {
 	public String delProc(DisplayLvItemVo vo, Model model) {
 		// 원래는 seq에 따라 삭제할 수 있는 유저를 판별해야 하지만 어차피 최고 관리자 밖에 쓸 수 없기 때문에 굳이 판별하지 않고
 		// 바로 seq를 매칭한다
-		LOGGER.info(
+		log.info(
 				"vo.getStyleCode() --> " + vo.getStyleCode());
-		LOGGER.info(
+		log.info(
 				"vo.getCateSeq() --> " + vo.getCateSeq());
 
 		if (!displayService.deleteData(vo.getSeq())) {

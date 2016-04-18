@@ -1,44 +1,37 @@
 package com.smpro.controller.admin;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.CategoryService;
 import com.smpro.service.OrderStatsService;
 import com.smpro.service.SystemService;
 import com.smpro.util.ExcelUtil;
 import com.smpro.util.StringUtil;
-import com.smpro.vo.CategoryVo;
-import com.smpro.vo.CommonVo;
-import com.smpro.vo.MemberGroupVo;
-import com.smpro.vo.OrderVo;
-import com.smpro.vo.SellerVo;
-
+import com.smpro.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 @Controller
 public class OrderStatsController {
-	//private static final Logger LOGGER = LoggerFactory.getLogger(OrderStatsController.class);
-	
-	@Resource(name = "orderStatsService")
+
+	@Autowired
 	private OrderStatsService orderStatsService;
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
-	
-	@Resource(name = "categoryService")
+
+	@Autowired
 	private CategoryService categoryService;
 
 	/** 상품 카테고리별 매출 통계 */

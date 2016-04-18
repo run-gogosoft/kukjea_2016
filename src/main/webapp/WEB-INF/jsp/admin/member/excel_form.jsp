@@ -98,8 +98,8 @@
 							</div>
 							<div class="form-group">
 								<label class="col-md-2 control-label">업로드</label>
-								<div class="col-md-2">
-									<input type="file" onchange="checkFileSize(this);" id="xlsPointFile" name="xlsFile" alt="업로드"  style="width:100%;height:35px;">
+								<div class="col-md-4">
+								<input type="file" onchange="checkFileSize(this);" id="xlsPointFile" name="xlsFile" alt="업로드"  style="width:100%;height:35px;">
 								</div>
 								<div class="col-md-2">
 									<button type="submit" class="btn btn-success fileinput-button">

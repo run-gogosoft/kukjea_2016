@@ -10,21 +10,21 @@ import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.vo.SellerVo;
 import com.smpro.vo.UserVo;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-@Service("sellerService")
+@Service
 public class SellerServiceImpl implements SellerService {
-	@Resource(name = "sellerDao")
+	@Autowired
 	private SellerDao sellerDao;
 
-	@Resource(name = "userDao")
+	@Autowired
 	private UserDao userDao;
 
 	@Override
@@ -32,7 +32,8 @@ public class SellerServiceImpl implements SellerService {
 		List<SellerVo> list = sellerDao.getList(srchVo);
 		for(SellerVo vo : list) {
 			if(vo.getIntro() != null) {
-				vo.setIntro( vo.getIntro().replaceAll("\\<[^>]*>","").replaceAll("&nbsp;"," ") );
+				vo.setIntro(StringUtil.restoreClearXSS(vo.getIntro()).replaceAll("\\<[^>]*>","").replaceAll("&nbsp;"," ") );
+
 			}
 		}
 		return list;

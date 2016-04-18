@@ -1,9 +1,11 @@
 package com.smpro.service;
 
+import com.smpro.vo.CommonBoardVo;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
-import com.smpro.vo.CommonBoardVo;
-
+@Service
 public interface CommonBoardService {
 	public int getListCount(CommonBoardVo vo);
 	public List<CommonBoardVo> getList(CommonBoardVo vo);

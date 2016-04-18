@@ -62,11 +62,11 @@
 						<h3 class="box-title">
 							주문 상품 정보
 						</h3>
-						<c:if test="${sessionScope.loginType eq 'A' }">
 						<div class="pull-right" style="font-size:15px;">
 							<span style="margin-right:30px;">
 								<strong>주문번호:</strong> 
 								<strong style="color:#444;">${vo.orderSeq}</strong>
+								<c:if test="${sessionScope.loginType eq 'A' }">
 								<c:set var="confirmCnt" value="0"/>
 								<c:forEach var="item" items="${list}">
 									<c:if test="${item.statusCode eq '00'}">
@@ -79,11 +79,13 @@
 								<c:if test="${checkCancelAll}">
 									<button type="button" onclick="cancel('ALL');" class="btn btn-sm btn-danger">전체취소</button>
 								</c:if>
+								</c:if>
 							</span>
 							<span style="margin-right:30px;">
 								<strong>주문일자:</strong> 
 								<strong style="color:#444;">${fn:substring(vo.regDate,0,19)}</strong>
 							</span>
+							<c:if test="${sessionScope.loginType eq 'A' }">
 							<span style="margin-right:30px;">
 								<strong>주문합계금액:</strong> 
 								<strong style="color:#444;"><fmt:formatNumber value="${vo.totalPrice}"/></strong>
@@ -100,8 +102,8 @@
 								<strong>결제 수단:</strong> 
 								<strong style="color:#444;">${vo.payMethodName}</strong>
 							</span>
+							</c:if>
 						</div>
-						</c:if>
 					</div>
 					<div class="box-body">
 						<c:set var="seq" value="" />
@@ -174,7 +176,7 @@
 									<td class="text-center">${vo.itemSeq}</td>
 									<td class="text-center">
 										<c:if test="${vo.img1 ne ''}">
-											<img src="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's206')}" alt="" style="width:60px;height:60px" />
+											<img src="/upload${fn:replace(vo.img1, 'origin', 's206')}" alt="" style="width:60px;height:60px" />
 										</c:if>
 									</td>
 									<td>${vo.itemName}</td>

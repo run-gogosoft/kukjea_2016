@@ -2,14 +2,14 @@ package com.smpro.service;
 
 import com.smpro.dao.SmsDao;
 import com.smpro.vo.SmsVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("smsService")
+@Service
 public class SmsServiceImpl implements SmsService {
-	@Resource(name = "smsDao")
+	@Autowired
 	private SmsDao smsDao;
 
 	public List<SmsVo> getList() {

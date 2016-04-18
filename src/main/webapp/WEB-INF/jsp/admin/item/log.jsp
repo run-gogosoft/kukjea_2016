@@ -2,9 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
 <%@ taglib prefix="smp" tagdir="/WEB-INF/tags" %>
-<un:useConstants var="const" className="com.smpro.util.Const"/>
 <%--
 	이 파일은 ajax로 통신되어 문자열만 반환하기 위해 사용하므로 doctype이나 헤더나 풋터가 필요없다
 --%>

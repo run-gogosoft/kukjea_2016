@@ -1,9 +1,11 @@
 package com.smpro.service;
 
 import com.smpro.vo.FestivalVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface FestivalService {
 	/** 행사 리스트 */
 	public List<FestivalVo> getList(FestivalVo vo);

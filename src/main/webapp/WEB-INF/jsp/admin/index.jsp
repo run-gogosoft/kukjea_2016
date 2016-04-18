@@ -38,8 +38,8 @@
 	<!-- 콘텐츠 -->
 	<section class="content">
 		<div class="row">
-			<div class="col-md-4">
-				<div class="box box-warning">
+			<div class="col-md-${sessionScope.loginType eq 'A' ? "4":"6"}">
+			<div class="box box-warning">
 					<div class="box-header">
 						<h3 class="box-title">공지사항</h3>
 						<div class="pull-right">
@@ -58,8 +58,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="box box-warning">
+			<div class="col-md-${sessionScope.loginType eq 'A' ? "4":"6"}">
+			<div class="box box-warning">
 					<div class="box-header">
 						<h3 class="box-title">미답변 상품 Q&A</h3>
 						<div class="pull-right">
@@ -78,6 +78,8 @@
 					</div>
 				</div>
 			</div>
+			<c:if test="${sessionScope.loginType eq 'A'}">
+			<!-- 관리자에게만 보여준다. -->
 			<div class="col-md-4">
 				<div class="box box-warning">
 					<div class="box-header">
@@ -98,6 +100,7 @@
 					</div>
 				</div>
 			</div>
+			</c:if>
 		</div>
 		<div class="row">
 			<div class="col-md-6">

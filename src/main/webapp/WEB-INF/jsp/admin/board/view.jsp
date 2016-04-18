@@ -286,7 +286,7 @@
 				          <tr>
 				            <th>상품명</th>
 				            <td>
-	                                     <div style="float:left;"><img src="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's206')}" style="width:70px;" alt=""/></div><div style="float:left;width:430px;">${vo.itemName}</div>
+	                                     <div style="float:left;"><img src="/upload${fn:replace(vo.img1, 'origin', 's206')}" style="width:70px;" alt=""/></div><div style="float:left;width:430px;">${vo.itemName}</div>
 	                                 </td>
 				          </tr>
 				          <tr>

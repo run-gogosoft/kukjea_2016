@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.smpro.dao.EventDao">
+<mapper namespace="event">
 	<select id="getListCount" parameterType="com.smpro.vo.EventVo" resultType="int">
 		SELECT
 			COUNT(*) AS cnt
@@ -44,6 +44,7 @@
 			e.title,
 			e.html,
 			e.thumb_img AS thumbImg,
+			e.reg_date AS regDate,
 			e.end_date AS endDate,
 			ic.cate_name AS cateName,
 			e.coupon_seq AS couponSeq,
@@ -223,12 +224,14 @@
 				  , i.img3 AS img3
 				  , i.img4 AS img4
 			      , i.sell_price AS sellPrice
+				  , i.maker
 			      , (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = ei.item_seq) AS reviewGrade
 			      , CASE WHEN i.status_code = 'H' THEN '가승인'
 				         WHEN i.status_code = 'Y' THEN '판매중'
 				         WHEN i.status_code = 'N' THEN '판매중지'
 				    END AS statusFlag
-			   FROM
+				  , i.img_banner_code AS imgBannerCode
+		FROM
 			   		sm_event_group eg LEFT OUTER JOIN
 			   		sm_event_item ei ON (eg.seq = ei.group_seq) LEFT OUTER JOIN
 			   		sm_item i ON (ei.item_seq = i.seq)

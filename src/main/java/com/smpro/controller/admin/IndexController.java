@@ -4,52 +4,49 @@ import com.smpro.service.*;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.BoardVo;
+import com.smpro.vo.MemberVo;
 import com.smpro.vo.NoticePopupVo;
 import com.smpro.vo.UserVo;
-import com.smpro.vo.MemberVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 public class IndexController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
-	
-	@Resource(name = "boardService")
+
+	@Autowired
 	private BoardService boardService;
 
-	@Resource(name = "loginService")
+	@Autowired
 	private LoginService loginService;
-	
-	@Resource(name = "sellerService")
+
+	@Autowired
 	private SellerService sellerService;
 
-	@Resource(name = "memberService")
+	@Autowired
 	private MemberService memberService;
 
-	@Resource(name = "orderService")
+	@Autowired
 	private OrderService orderService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name = "reviewService")
+	@Autowired
 	private ReviewService reviewService;
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
 
 	/** 메인현황 페이지 */
@@ -172,10 +169,10 @@ public class IndexController {
 		/* 비정상적으로 접속하는 아이피 차단 */
 		String[] blockIpAddrs = { "117.52.109.211", "117.52.109.212", "117.52.109.213" };
 		String remoteAddr = request.getRemoteAddr();
-		LOGGER.info("### 관리자 로그인 아이피 주소 : " + remoteAddr);
+		log.info("### 관리자 로그인 아이피 주소 : " + remoteAddr);
 		for (String blockIpAddr : blockIpAddrs) {
 			if (blockIpAddr.equals(remoteAddr)) {
-				LOGGER.info("### 해당 아이피 주소는 차단되었습니다.");
+				log.info("### 해당 아이피 주소는 차단되었습니다.");
 				// model.addAttribute("message", "해당 아이피 주소는 차단되었습니다.");
 				return "";
 			}
@@ -265,7 +262,7 @@ public class IndexController {
 		response.addCookie(createCookie("loginToken", vo.getLoginToken()));
 
 		/* 로그인 정보 로그기록 */
-		LOGGER.info("[login seq:id:name:grade:type:token] " + vo.getLoginSeq() + ":" + vo.getId() + ":" + vo.getName() + ":"	+ vo.getGradeCode() + ":" + vo.getLoginType() + ":"	+ vo.getLoginToken());
+		log.info("[login seq:id:name:grade:type:token] " + vo.getLoginSeq() + ":" + vo.getId() + ":" + vo.getName() + ":"	+ vo.getGradeCode() + ":" + vo.getLoginType() + ":"	+ vo.getLoginToken());
 	}
 
 	/** 쿠키 생성 */

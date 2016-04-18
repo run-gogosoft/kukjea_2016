@@ -47,7 +47,10 @@ public class DisplayLvItemVo {
 	private String brand = "";
 	/** 상품구분 */
 	private String typeCode = "";
-	
+
+	/** 상품이미지내 이벤트 배너 전시 코드값(01:세일,02:특가,03:한정수량,04:행사) */
+	private String imgBannerCode = "";
+
 	public Integer getSeq() {
 		return seq;
 	}
@@ -255,4 +258,13 @@ public class DisplayLvItemVo {
 	public void setTypeCode(String typeCode) {
 		this.typeCode = typeCode;
 	}
+
+	public String getImgBannerCode() {
+		return imgBannerCode;
+	}
+
+	public void setImgBannerCode(String imgBannerCode) {
+		this.imgBannerCode = imgBannerCode;
+	}
+
 }

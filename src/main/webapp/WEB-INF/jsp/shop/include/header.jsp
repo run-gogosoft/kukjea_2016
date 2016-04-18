@@ -1,29 +1,68 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
-<un:useConstants var="const" className="com.smpro.util.Const" />
-<%@ taglib prefix="smp" tagdir="/WEB-INF/tags" %>
-<% pageContext.setAttribute("newLine","\n"); %>
-<% pageContext.setAttribute("carriageReturn","\r"); %>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-<meta name="viewport" content="width=device-width, initial-scale=0.1, maximum-scale=1.0, user-scalable=yes" />
-<title> <c:if test="${title ne null}">${title} : </c:if>&nbsp;함께누리몰에 오신것을 환영합니다.</title>
+<div id="header">
+    <div class="global_top">
+        <div class="layout_inner">
+            <a href="#" id="favorite" class="btn_favorite">즐겨찾기 추가</a>
+            <ul class="mall_links">
+                <li><a href="#">병원몰</a></li>
+                <li><a href="#">약국몰</a></li>
+                <li><a href="#">B2B 몰</a></li>
+            </ul>
+            <c:choose>
+            <c:when test="${sessionScope.loginSeq > 0}">
+                <ul class="utils">
+                    <li class="user">${sessionScope.loginName}님 (<em data-access="point">---</em>)</li>
+                    <li><a href="/shop/cart">장바구니</a></li>
+                    <li><a href="/shop/mypage/main">마이페이지</a></li>
+                    <li><a href="/shop/mypage/order/list">주문배송조회</a></li>
+                    <li><a href="/shop/cscenter/list/notice">고객센터</a></li>
+                    <li><a href="/shop/logout">로그아웃</a></li>
+                </ul>
+            </c:when>
+            <c:otherwise>
+                <ul class="utils">
+                    <li><a href="/shop/login">로그인</a></li>
+                    <li><a href="/shop/cscenter/member/start">회원가입</a></li>
+                    <li><a href="/shop/cscenter/search/id">ID/PW찾기</a></li>
+                    <li><a href="/shop/mypage/main">마이페이지</a></li>
+                    <li><a href="/shop/cscenter/list/notice">고객센터</a></li>
+                </ul>
+            </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+    <div class="layout_inner search_section">
+        <h1><a href="/shop/main"><img src="/images/common/logo.png" alt="국제몰 (KUK JE MALL)" /></a></h1>
+        <div class="search">
+            <form action="/shop/search" role="form" onsubmit="return checkRequiredValue(this, 'data-required-label');">
+                <fieldset>
+                    <legend>통합검색</legend>
+                    <div class="search_area">
+                        <input type="text" name="name" class="intxt search-input" placeholder="검색어 입력" style="ime-mode:active" />
+                        <button type="submit" class="btn_total_search"><span class="blind">검색</span></button>
+                    </div>
+                </fieldset>
+            </form>
+            <div class="popular_keyword">
+                <dl>
+                    <dt><span class="icon icon_search"><span class="blind">인기검색어</span></span></dt>
+                    <dd>
+                        <a href="/shop/search?name=드레싱포셉">드레싱포셉</a>
+                        <a href="/shop/search?name=일회용주사기">일회용주사기</a>
+                        <a href="/shop/search?name=발마사지기">발마사지기</a>
+                    </dd>
+                </dl>
+                <%-- div class="btn_paging">
+                    <button class="btn_prev"><span class="blind">이전</span></button>
+                    <button class="btn_next"><span class="blind">다음</span></button>
+                </div --%>
+            </div>
+        </div>
+        <div class="promotion_top">
+            <img src="/images/thumb/thumb_promotion230x70.jpg" alt="">
+        </div>
+        <p class="noti">[공지] 국제몰 오픈 안내 공지사항 입니다. 공지공지공지공지 공지가 길면...</p>
+    </div>
 
-<link href="/front-assets/css/plugin/bootstrap.css" type="text/css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">
-<link href="/front-assets/css/common/common.css" type="text/css" rel="stylesheet">
-<link href="/front-assets/css/plugin/base_admin.css" type="text/css" rel="stylesheet">
-<link href="/front-assets/css/plugin/datepicker3.css" type="text/css" rel="stylesheet">
-<link href="/front-assets/css/plugin/verticalslide/style.css" type="text/css" rel="stylesheet"/>
-<script type="text/javascript" src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}/menuJson.js"></script>
-<script type="text/javascript">
-	var constants = { "ASSETS_PATH":"${const.ASSETS_PATH}", "UPLOAD_PATH":"${const.IMG_DOMAIN}${const.UPLOAD_PATH}" };
-</script>
-<!--[if lt IE 9]>
-<script type="text/javascript" src="${const.ASSETS_PATH}/front-assets/js/plugin/html5shiv.js"></script>
-<script type="text/javascript" src="${const.ASSETS_PATH}/front-assets/js/plugin/selectivizr-min.js"></script>
-<![endif]-->
+    <%@ include file="/WEB-INF/jsp/shop/include/navigation.jsp" %>
+</div>

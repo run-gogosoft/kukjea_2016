@@ -6,6 +6,7 @@ import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -30,23 +31,23 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class PointController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PointController.class);
-	
-	@Resource(name = "mallService")
+
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "pointService")
+	@Autowired
 	private PointService pointService;
 
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name = "memberService")
+	@Autowired
 	private MemberService memberService;
 
-	@Resource(name = "orderService")
+	@Autowired
 	private OrderService orderService;
 
 	/*
@@ -55,10 +56,6 @@ public class PointController {
 	 */
 	@Autowired
 	DataSourceTransactionManager transactionManager;
-
-	public void setTransactionManager(DataSourceTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
-	}
 
 	/** 포인트 리스트 */
 	@CheckGrade(controllerName = "pointController", controllerMethod = "pointList")
@@ -92,7 +89,7 @@ public class PointController {
 		try {
 			wb = pointService.writePointList(vo, "xls");
 		} catch (Exception e) {
-			LOGGER.info(
+			log.info(
 					"회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 		}
 
@@ -164,7 +161,7 @@ public class PointController {
 		try {
 			wb = pointService.writeDetailPointList(vo, "xls");
 		} catch (Exception e) {
-			LOGGER.info(
+			log.info(
 					"회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 		}
 
@@ -352,7 +349,7 @@ public class PointController {
 
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			LOGGER.error(
+			log.error(
 					"POINT FAIL:: ===> " + e.getMessage());
 			e.printStackTrace();
 			transactionManager.rollback(status);
@@ -475,7 +472,7 @@ public class PointController {
 		try {
 			wb = pointService.writeExcelPointList(vo, "xls");
 		} catch (Exception e) {
-			LOGGER.info(
+			log.info(
 					"회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 		}
 
@@ -527,7 +524,7 @@ public class PointController {
 		try {
 			wb = pointService.writePointAllList(vo, "xls");
 		} catch (Exception e) {
-			LOGGER.info("회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
+			log.info("회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 		}
 
 		// 파일스트림

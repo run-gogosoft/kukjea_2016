@@ -2,9 +2,11 @@ package com.smpro.service;
 
 import com.smpro.vo.DisplayLvItemVo;
 import com.smpro.vo.DisplayVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface DisplayService {
 	public DisplayVo getVo(DisplayVo vo);
 

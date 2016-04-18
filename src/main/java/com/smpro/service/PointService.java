@@ -2,9 +2,11 @@ package com.smpro.service;
 
 import com.smpro.vo.PointVo;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface PointService {
 	public List<PointVo> getList(PointVo vo);
 

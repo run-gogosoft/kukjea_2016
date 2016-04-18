@@ -91,7 +91,7 @@
 
 							<div class="form-group">
 								<label class="col-md-2 control-label">결제 수단</label>
-								<div class="checkbox">
+								<div class="checkbox col-md-10" style="padding-left:15px;">
 								<c:forEach var="item" items="${payMethodList}" begin="0" step="1" varStatus="status">
 									<c:if test="${!fn:contains(item.value,'+POINT')}">
 									<label><input type="checkbox" name="payMethod" value="${item.value}" <c:if test="${fn:indexOf(vo.payMethod,item.value) >= 0}">checked</c:if>/> ${item.name}</label>

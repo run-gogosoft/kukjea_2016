@@ -2,12 +2,11 @@ package com.smpro.controller.admin;
 
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.*;
+import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.*;
-
 import org.apache.poi.ss.usermodel.Workbook;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,52 +14,49 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.smpro.util.Const;
-
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
 @Controller
 public class MemberController {
-	//private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
-	
-	@Resource(name = "memberService")
+
+	@Autowired
 	private MemberService memberService;
-	
-	@Resource(name = "memberGroupService")
+
+	@Autowired
 	private MemberGroupService memberGroupService;
 
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "pointService")
+	@Autowired
 	private PointService pointService;
 
-	@Resource(name = "orderService")
+	@Autowired
 	private OrderService orderService;
-	
-	@Resource(name = "boardService")
+
+	@Autowired
 	private BoardService boardService;
-	
-	@Resource(name = "reviewService")
+
+	@Autowired
 	private ReviewService reviewService;
-	
-	@Resource(name = "memberDeliveryService")
+
+	@Autowired
 	private MemberDeliveryService memberDeliveryService;
 
 	@CheckGrade(controllerName = "memberController", controllerMethod = "getStats")

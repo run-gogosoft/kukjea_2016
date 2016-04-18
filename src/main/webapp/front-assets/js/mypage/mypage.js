@@ -1,19 +1,3 @@
-$(document).ready(function() {
-	//페이징 클래스 추가
-	$("#paging>ul").addClass("ch-pagination");
-	$('.datepicker').datepicker({
-		autoclose: true
-	});
-
-	var arrayStr = ['order', 'cancel', 'estimate', 'compare', 'NP_CARD2', 'taxrequest', 'confirm', 'delivery', 'direct'];
-	for(var i=0; i<$(".sub-list li").length; i++) {
-		if(location.pathname.match(arrayStr[i])) {
-			$(".sub-list li").eq(i).find('a').addClass('current');
-			return false;
-		}
-	}
-});
-
 //날짜 계산
 var calcDate = function(val) {
 	if(val === "clear") {

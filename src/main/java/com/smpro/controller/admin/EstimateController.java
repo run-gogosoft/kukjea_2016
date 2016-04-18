@@ -1,15 +1,13 @@
 package com.smpro.controller.admin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.EstimateService;
 import com.smpro.service.SystemService;
-import com.smpro.vo.EstimateVo;
+import com.smpro.util.Const;
+import com.smpro.util.FileUtil;
 import com.smpro.vo.CommonVo;
-
+import com.smpro.vo.EstimateVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,20 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.smpro.util.Const;
-import com.smpro.util.FileUtil;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 @Controller
 public class EstimateController {
-	@Resource(name = "estimateService")
+	@Autowired
 	private EstimateService estimateService;
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
 	
 	@CheckGrade(controllerName = "estimateController", controllerMethod = "getList")

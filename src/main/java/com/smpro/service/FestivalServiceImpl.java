@@ -3,14 +3,14 @@ package com.smpro.service;
 import com.smpro.dao.FestivalDao;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.FestivalVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("festivalService")
+@Service
 public class FestivalServiceImpl implements FestivalService {
-	@Resource(name = "festivalDao")
+	@Autowired
 	private FestivalDao festivalDao;
 
 	public List<FestivalVo> getList(FestivalVo vo) {

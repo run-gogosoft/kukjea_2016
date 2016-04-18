@@ -14,8 +14,8 @@
 		<h1>상품 카테고리별 매출 현황 <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li></li>
-			<li class="active"></li>
+			<li>통계</li>
+			<li class="active">상품 카테고리별 매출 현황</li>
 		</ol>
 	</section>
 	<section class="content">

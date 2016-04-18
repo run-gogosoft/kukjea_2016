@@ -6,9 +6,8 @@ import com.smpro.util.StringUtil;
 import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.util.pg.PgUtil;
 import com.smpro.vo.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.stereotype.Controller;
@@ -17,74 +16,69 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.List;
 
+@Slf4j
 @Controller
 public class OrderController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
-	
-	@Resource(name="itemOptionService")
+
+	@Autowired
 	private ItemOptionService itemOptionService;
 
-	@Resource(name="cartService")
+	@Autowired
 	private CartService cartService;
-	
-	@Resource(name="sellerService")
+
+	@Autowired
 	private SellerService sellerService;
 
-	@Resource(name="orderService")
+	@Autowired
 	private OrderService orderService;
-	
-	@Resource(name="estimateService")
+
+	@Autowired
 	private EstimateService estimateService;
 
-	@Resource(name="memberService")
+	@Autowired
 	private MemberService memberService;
 
-	@Resource(name="mailService")
+	@Autowired
 	private MailService mailService;
 
-	@Resource(name="pointService")
+	@Autowired
 	private PointService pointService;
 
-	@Resource(name="memberDeliveryService")
+	@Autowired
 	private MemberDeliveryService memberDeliveryService;
 
-	@Resource(name="systemService")
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name="itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name="smsService")
+	@Autowired
 	private SmsService smsService;
-	
-	@Resource(name = "memberGroupService")
+
+	@Autowired
 	private MemberGroupService memberGroupService;
-	
+
 	/** 결제 진행 페이지 */
 	@RequestMapping("/order")
 	public String orderForm(HttpServletRequest request, Model model){
-		HttpSession session = request.getSession();	
+		HttpSession session = request.getSession();
 		Integer memberSeq = (Integer)session.getAttribute("loginSeq");
-		
+
 		String seq = request.getParameter("seq");
-		
+
 		//견적주문 여부 구분 값
 		String estimateFlag = request.getParameter("estimate_flag");
-		
+
 		//주문할 상품 가져오기
 		List<ItemVo> list = getListItem(seq, session, estimateFlag, model);
-		
+
 		if(list == null) {
-			if("Y".equals(estimateFlag)) {
-				return Const.BACK_PAGE;
-			}
-			return Const.ALERT_PAGE;
+			return Const.BACK_PAGE;
 		}
 
 		MemberVo mvo = null;
@@ -110,26 +104,28 @@ public class OrderController {
 
 		//공통코드 조회(결제수단)
 		model.addAttribute("payMethodList", systemService.getCommonListByGroup(new Integer(21)));
-		
+
 		//견적주문 여부 구분
 		model.addAttribute("estimateFlag", estimateFlag);
-		
+
 		// 세금계산서 필드 (공공기관일 경우)
 		if(mvo != null) {
 			model.addAttribute("mgVo", memberGroupService.getVo(mvo.getGroupSeq()) );
 		}
+
+		model.addAttribute("title", "결제");
 		return "/order/order.jsp";
 	}
 
 	@RequestMapping("/order/start")
 	public String orderStart(OrderVo vo, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
-		
+
 		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
-		
+
 		String seqs = request.getParameter("seqs");
 		String estimateFlag = request.getParameter("estimate_flag");
-		
+
 		Integer memberSeq = (Integer)session.getAttribute("loginSeq");
 
 		// 주문할 상품 가져오기
@@ -140,17 +136,17 @@ public class OrderController {
 
 		// 총금액을 구한다
 		int totalPrice = getTotalPrice(list, estimateFlag);
-		
+
 		// 실결제금액
 		int payPrice = totalPrice;
-		
+
 		// 포인트 유효성 체크 및 실 결제 금액에서 차감
 		if(!checkPoint(mallVo.getPayMethod(), vo.getPoint(), memberSeq, totalPrice, model )) {
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
 		}
 		payPrice -= vo.getPoint();
-		
+
 		//결제수단 체크
 		if(payPrice > 0 && "".equals(vo.getPayMethod())) {
 			model.addAttribute("message", "사용하실 결제 수단을 체크해 주세요.");
@@ -166,24 +162,24 @@ public class OrderController {
 		// 수신자 주소 set
 		vo.setReceiverAddr1(vo.getAddr1());
 
-	
+
 		// 휴대폰번호와 전화번호가 잘라져서 넘어오기 때문에 번호가 맞지 않으면 안되므로 검증을 한다.
 		if(StringUtil.isBlank(vo.getReceiverTel1()) || StringUtil.isBlank(vo.getReceiverTel2()) || StringUtil.isBlank(vo.getReceiverTel3())){
 			model.addAttribute("message", "Tel을 입력해주세요.");
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
 		}
-	
+
 		if(StringUtil.isBlank(vo.getReceiverCell1()) || StringUtil.isBlank(vo.getReceiverCell2()) || StringUtil.isBlank(vo.getReceiverCell3())){
 			model.addAttribute("message", "Cell을 입력해주세요.");
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		if(!StringUtil.isBlank(vo.getMemberCell1()) && !StringUtil.isBlank(vo.getMemberCell2()) && !StringUtil.isBlank(vo.getMemberCell3())) {
 			vo.setMemberCell(StringUtil.formatPhone(vo.getMemberCell1(), vo.getMemberCell2(), vo.getMemberCell3()));
 		}
-		
+
 		if(!StringUtil.isBlank(vo.getReceiverTel1()) && !StringUtil.isBlank(vo.getReceiverTel2()) && !StringUtil.isBlank(vo.getReceiverTel3())) {
 			vo.setReceiverTel(StringUtil.formatPhone(vo.getReceiverTel1(), vo.getReceiverTel2(), vo.getReceiverTel3()));
 		}
@@ -201,16 +197,16 @@ public class OrderController {
 
 		//PG결제 금액 셋팅
 		vo.setPayPrice(payPrice);
-		
+
 		Device device = (Device)request.getAttribute("currentDevice");
-		
+
 		//결제 디바이스 타입 등록(N:PC, M:모바일)
 		vo.setDeviceType(device.isMobile() ? "M" : "N");
-						
+
 		//PG결제창에서 리다이렉트시 주문페이지에서 넘어온 파라메타 정보를 유지하기위하여 세션에 저장한다.
 		session.setAttribute("orderMain", vo);
 		session.setAttribute("seqs", seqs);
-		
+
 		//견적주문 여부 구분 값 세션 저장
 		session.setAttribute("estimateFlag", estimateFlag);
 
@@ -220,15 +216,15 @@ public class OrderController {
 			model.addAttribute("returnUrl",	"/shop/order/result");
 			return Const.REDIRECT_PAGE;
 		}
-		
-		LOGGER.debug("###device.isNormal() : " + device.isNormal());
-		LOGGER.debug("###device.isMobile() : " + device.isMobile());
-		LOGGER.debug("###device.isTablet() : " + device.isTablet());
+
+		log.debug("###device.isNormal() : " + device.isNormal());
+		log.debug("###device.isMobile() : " + device.isMobile());
+		log.debug("###device.isTablet() : " + device.isTablet());
 
 		SitePreference sitePreference = (SitePreference)request.getAttribute("currentSitePreference");
-		LOGGER.debug("###sitePreference.isNormal() : " + sitePreference.isNormal());
-		LOGGER.debug("###sitePreference.isMobile() : " + sitePreference.isMobile());
-		LOGGER.debug("###sitePreference.isTablet() : " + sitePreference.isTablet());
+		log.debug("###sitePreference.isNormal() : " + sitePreference.isNormal());
+		log.debug("###sitePreference.isMobile() : " + sitePreference.isMobile());
+		log.debug("###sitePreference.isTablet() : " + sitePreference.isTablet());
 
 		//모바일 기기에서 PC버전 사이트 접속일 경우, 휴대폰 결제 모듈 실행을 위해 'mobile/' prefix를 강제로 셋팅한다.
 		if(device.isMobile() && sitePreference.isNormal()) {
@@ -246,17 +242,17 @@ public class OrderController {
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		Integer memberSeq = (Integer)session.getAttribute("loginSeq");
 		String seqs = (String)session.getAttribute("seqs");
 		OrderVo ovo = (OrderVo)session.getAttribute("orderMain");
-			
+
 		//견적주문 여부 구분 값
 		String estimateFlag = (String)session.getAttribute("estimateFlag");
-		
+
 		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
 		ovo.setMallSeq(mallVo.getSeq());
-		
+
 		// 주문할 상품 가져오기
 		List<ItemVo> list = getListItem(seqs, session, estimateFlag, model);
 		if(list == null) {
@@ -266,7 +262,7 @@ public class OrderController {
 		int totalPrice = getTotalPrice(list, estimateFlag);
 		// 실 결제 금액
 		int payPrice = totalPrice;
-		
+
 		// 포인트 유효성 체크 및 실결제금액에서 차감
 		if(!checkPoint(mallVo.getPayMethod(), ovo.getPoint(), memberSeq, totalPrice, model )) {
 			model.addAttribute("callback", "fail");
@@ -280,16 +276,16 @@ public class OrderController {
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		//최종 결제 수단 결정
 		ovo.setPayMethod(getPayMethod(ovo));
-				
+
 		//주문 상세 정보 데이터 생성
 		List<OrderVo> details = orderService.createDetails(ovo.getOrderSeq(), list, ovo.getPayMethod());
-				
+
 		//면세 금액 계산
 		request.setAttribute("taxFreeAmt", new Integer(calcTaxFreeAmt(list)));
-				
+
 		//PG승인이 필요한 결제수단은 해당 로직을 수행한다.
 		PgUtil pgUtil = null;
 		OrderPayVo payVo = null;
@@ -313,11 +309,11 @@ public class OrderController {
 				return Const.ALERT_PAGE;
 			}
 		}
-								
+
 		ovo.setTotalPrice(totalPrice);
 		ovo.setPayPrice(payPrice);
 		ovo.setMemberSeq(memberSeq);
-		
+
 		boolean flag=false;
 		//SMS 발송을 위해 암호화가 되기전의 휴대폰 번호를 저장한다.
 		String validMemberCell = ovo.getMemberCell();
@@ -341,8 +337,8 @@ public class OrderController {
 			//재고 수량 감소
 			itemOptionService.popStock(list);
 			//장바구니 비움
-			cartService.deleteVo(list);		
-								
+			cartService.deleteVo(list);
+
 			//SMS 발송
 			SmsVo svo = new SmsVo();
 			svo.setStatusCode("10");
@@ -353,12 +349,12 @@ public class OrderController {
 			svo.setTrMsgType("0");
 			svo.setTrPhone(validMemberCell.replace("-", ""));
 			svo.setTrMsg(content);
-			
+
 			try {
 				smsService.insertSmsSendVo(svo);
 			} catch(Exception e) {
 				e.printStackTrace();
-				LOGGER.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+				log.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
 			}
 
 		} else {
@@ -370,7 +366,7 @@ public class OrderController {
 					errMsg.append("\\nPG결제 취소 처리 실패["); errMsg.append(payVo.getResultCode()); errMsg.append(":"); errMsg.append(payVo.getResultMsg()); errMsg.append("]");
 				}
 			}
-			
+
 			model.addAttribute("message", errMsg.toString());
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
@@ -384,7 +380,7 @@ public class OrderController {
 		model.addAttribute("returnUrl", "/shop/order/finish?orderSeq=" + ovo.getOrderSeq());
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	@RequestMapping("/order/start/{orderSeq}")
 	public String orderStart(@PathVariable Integer orderSeq, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
@@ -393,15 +389,15 @@ public class OrderController {
 			model.addAttribute("returnUrl", "/shop/login");
 			return Const.REDIRECT_PAGE;
 		}
-		
-		MallVo mallVo = (MallVo)request.getAttribute("mallVo");	
-		
+
+		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
+
 		//결제 가능한 주문인지 체크
 		if(orderService.checkOrder(orderSeq) > 0) {
 			model.addAttribute("message", "취소 처리 진행중인 주문 건이 존재합니다.\\n\\n해당 주문 건들의 취소 완료 처리 후 결제를 진행하시기 바랍니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		OrderVo vo;
 		try {
 			vo = orderService.getVoNP(orderSeq);
@@ -410,29 +406,29 @@ public class OrderController {
 			model.addAttribute("message", "주문 정보를 가져오는 도중 오류가 발생하였습니다.["+e.getMessage()+"]");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		if(vo == null) {
 			model.addAttribute("message", "이미 결제가 완료되었거나 존재하지 않는 주문입니다.");
 			return Const.ALERT_PAGE;
 		}
-				
+
 		//결제 디바이스 타입
 		Device device = (Device)request.getAttribute("currentDevice");
-		
+
 		//주문 상품명 저장
 		vo.setItemName(orderService.getOrderItemName(orderSeq));
-		
+
 		//PG결제창에서 리다이렉트시 주문정보 유지
 		session.setAttribute("orderMain", vo);
-		
-		LOGGER.debug("###device.isNormal() : " + device.isNormal());
-		LOGGER.debug("###device.isMobile() : " + device.isMobile());
-		LOGGER.debug("###device.isTablet() : " + device.isTablet());
+
+		log.debug("###device.isNormal() : " + device.isNormal());
+		log.debug("###device.isMobile() : " + device.isMobile());
+		log.debug("###device.isTablet() : " + device.isTablet());
 
 		SitePreference sitePreference = (SitePreference)request.getAttribute("currentSitePreference");
-		LOGGER.debug("###sitePreference.isNormal() : " + sitePreference.isNormal());
-		LOGGER.debug("###sitePreference.isMobile() : " + sitePreference.isMobile());
-		LOGGER.debug("###sitePreference.isTablet() : " + sitePreference.isTablet());
+		log.debug("###sitePreference.isNormal() : " + sitePreference.isNormal());
+		log.debug("###sitePreference.isMobile() : " + sitePreference.isMobile());
+		log.debug("###sitePreference.isTablet() : " + sitePreference.isTablet());
 
 		//모바일 기기에서 PC버전 사이트 접속일 경우, 휴대폰 결제 모듈 실행을 위해 'mobile/' prefix를 강제로 셋팅한다.
 		if(device.isMobile() && sitePreference.isNormal()) {
@@ -441,24 +437,24 @@ public class OrderController {
 
 		return "/pg/"+mallVo.getPgCode()+"/pay.jsp";
 	}
-	
+
 	@RequestMapping("/order/result/{orderSeq}")
 	public String result(@PathVariable Integer orderSeq, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
 		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
-		
+
 		if(session.getAttribute("loginSeq") == null) {
 			model.addAttribute("message", "회원 로그인 후 이용하시기 바랍니다.");
 			model.addAttribute("returnUrl", "/shop/login");
 			return Const.REDIRECT_PAGE;
 		}
-					
+
 		//결제 가능한 주문인지 체크
 		if(orderService.checkOrder(orderSeq) > 0) {
 			model.addAttribute("message", "취소 처리 진행중인 주문 건이 존재합니다.\\n\\n해당 주문 건들의 취소 완료 처리 후 결제를 진행하시기 바랍니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		OrderVo vo;
 		try {
 			vo = orderService.getVoNP(orderSeq);
@@ -467,18 +463,18 @@ public class OrderController {
 			model.addAttribute("message", "주문정보를 가져오는 도중 오류가 발생하였습니다.["+e.getMessage()+"]");
 			return Const.ALERT_PAGE;
 		}
-								
+
 		if(vo == null) {
 			model.addAttribute("message", "이미 결제가 완료되었거나 존재하지 않는 주문입니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		// 실 결제 금액
 		int payPrice = vo.getPayPrice();
 
 		//면세 금액 설정
 		request.setAttribute("taxFreeAmt", Integer.valueOf(vo.getTaxFreeAmount()));
-		
+
 		StringBuffer errMsg = new StringBuffer();
 		PgUtil pgUtil = new PgUtil(mallVo.getPgCode());
 		OrderPayVo payVo = null;
@@ -497,8 +493,8 @@ public class OrderController {
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
 		}
-				
-		
+
+
 		boolean flag = false;
 		try {
 			//주문 정보 수정(입금완료 처리)
@@ -507,18 +503,18 @@ public class OrderController {
 			e.printStackTrace();
 			flag = false;
 		}
-		if(!flag) {				
+		if(!flag) {
 			errMsg = new StringBuffer("주문 DB 처리에 실패하였습니다.");
 			//PG 자동 취소
 			payVo = pgUtil.doCancelDirect();
 			if(!"Y".equals(payVo.getResultFlag())) {
 				errMsg.append("\\nPG결제 취소 처리 실패["); errMsg.append(payVo.getResultCode()); errMsg.append(":"); errMsg.append(payVo.getResultMsg()); errMsg.append("]");
 			}
-	
+
 			model.addAttribute("message", errMsg.toString());
 			model.addAttribute("callback", "fail");
 			return Const.ALERT_PAGE;
-		} 
+		}
 
 		//이니시스 결제 프로세스 팝업창을 닫기 위해 자바스크립트 callback함수 호출
 		model.addAttribute("callback","");
@@ -539,12 +535,12 @@ public class OrderController {
 			if(session.getAttribute("notLoginKey") == null) {
 				//키값이 세션에 없으면 새로 생성한다.
 				session.setAttribute("notLoginKey", session.getId() + System.currentTimeMillis());
-			} 
+			}
 			vo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
-		} else {			
+		} else {
 			vo.setMemberSeq(memberSeq);
 		}
-		
+
 		if(vo.getCount() <= 0) {
 			model.addAttribute("message", "오류가 발생했습니다. [CODE:1]");
 			return Const.ALERT_PAGE;
@@ -558,12 +554,12 @@ public class OrderController {
 		}
 
 		List<ItemVo> list = cartService.getList(vo);
-		
+
 		// 장바구니에 동일한 optionValueSeq를 가진 상품이 있는가?
 		int duplicatedIdx = -1;
 		for(int i=0; i<list.size(); i++) {
 			if(list.get(i).getOptionValueSeq() == ivo.getSeq()) {
-				LOGGER.info("duplicatedIdx ==> " + i);
+				log.info("duplicatedIdx ==> " + i);
 				duplicatedIdx = i;
 			}
 
@@ -587,14 +583,14 @@ public class OrderController {
 			model.addAttribute("message", "오류가 발생했습니다. [CODE:3]");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		//견적주문 여부 구분 값
 		String estimateFlag = request.getParameter("estimate_flag");
 		List<ItemVo> cartList = getListItem(String.valueOf(vo.getSeq().intValue()), session, estimateFlag, model);
 		if(cartList == null) {
 			return Const.ALERT_PAGE;
 		}
-		
+
 		// 즉시 구매에서는 굳이 수량을 체크하지 않아도 별 문제없다
 		model.addAttribute("returnUrl", "/shop/order?seq=" + vo.getSeq());
 		return Const.REDIRECT_PAGE;
@@ -611,7 +607,7 @@ public class OrderController {
 		vo.setLoginSeq(memberSeq);
 		vo.setLoginType(loginType);
 		vo.setOrderSeq(orderSeq);
-		
+
 		OrderVo ovo;
 		try {
 			ovo = orderService.getData(vo);
@@ -634,13 +630,13 @@ public class OrderController {
 		model.addAttribute("vo", ovo);
 		model.addAttribute("list", list);
 
-		LOGGER.info("######### referer : " + request.getHeader("REFERER"));
+		log.info("######### referer : " + request.getHeader("REFERER"));
 
 		//메일 발송시 중복 처리 방지
 		if(orderSeq != null && !orderSeq.equals(session.getAttribute("orderSeq"))) {
 			// 고객 주문 이메일 발송
 			mailService.sendMailToMemberForOrder(ovo, list, request.getServletContext().getRealPath("/"));
-			
+
 			//주문과 동시에 결제완료되는 결제수단에만 입점업체 주문확인 메일을 발송한다.
 			if(ovo.getPayMethod().startsWith("CARD") || ovo.getPayMethod().startsWith("OFFLINE") || "POINT".equals(ovo.getPayMethod()) || ovo.getPayMethod().startsWith("NP") ) {
 				mailService.sendMailToSellerForOrder(ovo, request.getServletContext().getRealPath("/"));
@@ -651,12 +647,12 @@ public class OrderController {
 
 		return "/order/finish.jsp";
 	}
-	
+
 	/** 주문할 상품 리스트 가져오기 */
 	private List<ItemVo> getListItem(String seq, HttpSession session, String estimateFlag, Model model) {
-		LOGGER.info("### session's loginSeq : " + session.getAttribute("loginSeq"));
-		LOGGER.info("### session's notLoginKey : " + session.getAttribute("notLoginKey"));
-		
+		log.info("### session's loginSeq : " + session.getAttribute("loginSeq"));
+		log.info("### session's notLoginKey : " + session.getAttribute("notLoginKey"));
+
 		List<ItemVo> list = null;
 		if("Y".equals(estimateFlag)) {
 			EstimateVo vo = new EstimateVo();
@@ -673,7 +669,7 @@ public class OrderController {
 			}
 			list = cartService.getList(vo);
 		}
-		
+
 		if (list == null || list.size() == 0) {
 			// 주문 상품 존재여부 체크
 			model.addAttribute("message", "죄송합니다.\\n주문하실 상품이 존재하지 않습니다");
@@ -696,7 +692,7 @@ public class OrderController {
 
 		return list;
 	}
-	
+
 	/** 총금액을 구한다 */
 	private int getTotalPrice(List<ItemVo> list, String estimateFlag) {
 		int totalPrice = 0;
@@ -710,14 +706,14 @@ public class OrderController {
 				}
 			}
 		}
-		
+
 		return totalPrice;
 	}
 
 	/** 배송지 등록, 수정 처리 */
 	@RequestMapping(value="/order/delivery/{submitFlag}/proc", method= RequestMethod.POST)
 	public String regDeliverySubmit(@PathVariable String submitFlag, HttpSession session, MemberDeliveryVo vo, Model model) {
-		
+
 
 		Integer loginSeq = (Integer)session.getAttribute("loginSeq");
 		vo.setMemberSeq(loginSeq);
@@ -886,12 +882,12 @@ public class OrderController {
 	/** 최종 결제수단 결정 **/
 	private String getPayMethod(OrderVo vo) {
 		String payMethod = vo.getPayMethod();
-		
+
 		// 방문결제, 후청구 결제시 결제완료여부 '미처리' 설정
 		if("OFFLINE".equals(payMethod) || payMethod.startsWith("NP")) {
 			vo.setNpPayFlag("N");
 		}
-		
+
 		if(vo.getPayPrice() > 0) {
 			if(vo.getPoint() > 0) {
 				payMethod = payMethod + "+POINT";

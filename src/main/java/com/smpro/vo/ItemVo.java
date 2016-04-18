@@ -221,7 +221,12 @@ public class ItemVo extends PagingVo {
 	
 	/** 회원 유형 코드 */
 	private String memberTypeCode = "";
-	
+
+	/** 상품이미지내 이벤트 배너 전시 코드값(01:세일,02:특가,03:한정수량,04:행사) */
+	private String imgBannerCode = "";
+
+	private String listStyle = "img";
+
 	@Override
 	public String getSearch() {
 		// TODO Auto-generated method stub
@@ -1118,6 +1123,22 @@ public class ItemVo extends PagingVo {
 		this.memberTypeCode = memberTypeCode;
 	}
 
+	public String getImgBannerCode() {
+		return imgBannerCode;
+	}
+
+	public void setImgBannerCode(String imgBannerCode) {
+		this.imgBannerCode = imgBannerCode;
+	}
+
+	public String getListStyle() {
+		return listStyle;
+	}
+
+	public void setListStyle(String listStyle) {
+		this.listStyle = listStyle;
+	}
+
 	@Override
 	public String toString() {
 		return "ItemVo [rankNumber=" + rankNumber + ", seq=" + seq + ", name="
@@ -1172,6 +1193,6 @@ public class ItemVo extends PagingVo {
 				+ ", itemSearchType=" + itemSearchType + ", itemSearchValue="
 				+ itemSearchValue + ", sellerSearchType=" + sellerSearchType
 				+ ", sellerSearchValue=" + sellerSearchValue + ", orderType="
-				+ orderType + ", authCategory=" + authCategory + "]";
+				+ orderType + ", authCategory=" + authCategory + "imgBannerCode="+imgBannerCode+"]";
 	}
 }

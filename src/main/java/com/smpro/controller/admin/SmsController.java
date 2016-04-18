@@ -7,34 +7,29 @@ import com.smpro.service.SmsService;
 import com.smpro.service.SystemService;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
-import com.smpro.vo.*;
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import com.smpro.vo.SmsVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.annotation.Resource;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 @Controller
 public class SmsController {
-	//private static final Logger LOGGER = LoggerFactory.getLogger(SmsController.class);
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "memberService")
+	@Autowired
 	private MemberService memberService;
 
-	@Resource(name = "smsService")
+	@Autowired
 	private SmsService smsService;
 
 	@CheckGrade(controllerName = "smsController", controllerMethod = "smsList")
@@ -133,8 +128,8 @@ public class SmsController {
 			return Const.ALERT_PAGE;
 		}
 
-		if (StringUtil.getByteLength(vo.getContent()) > 160) {
-			model.addAttribute("message", "내용은 160바이트 이하로 입력해주세요.");
+		if (StringUtil.getByteLength(vo.getContent()) > 129) {
+			model.addAttribute("message", "내용은 129바이트 이하로 입력해주세요.");
 			return Const.ALERT_PAGE;
 		}
 

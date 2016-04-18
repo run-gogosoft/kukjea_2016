@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.smpro.dao.OrderStatsDao">
+<mapper namespace="order_stats">
 	<!-- 상품 카테고리별 매출 통계 -->
 	<select id="getListByCategory" parameterType="com.smpro.vo.OrderVo" resultType="java.util.HashMap">
 		SELECT 

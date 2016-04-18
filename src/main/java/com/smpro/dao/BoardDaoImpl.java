@@ -30,7 +30,7 @@ public class BoardDaoImpl implements BoardDao {
 	
 	@Override
 	public int createSeq(BoardVo vo) {
-		return sqlSession.update("board.BoardVo", vo);
+		return sqlSession.update("board.createSeq", vo);
 	}
 
 	@Override

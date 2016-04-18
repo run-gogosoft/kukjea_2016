@@ -1,93 +1,66 @@
 package com.smpro.controller.admin;
 
 import com.smpro.component.admin.annotation.CheckGrade;
-import com.smpro.service.CategoryService;
-import com.smpro.service.EstimateService;
-import com.smpro.service.ItemOptionService;
-import com.smpro.service.ItemService;
-import com.smpro.service.MailService;
-import com.smpro.service.MallService;
-import com.smpro.service.MemberGroupService;
-import com.smpro.service.OrderService;
-import com.smpro.service.PointService;
-import com.smpro.service.SmsService;
-import com.smpro.service.SystemService;
-import com.smpro.service.XlsService;
+import com.smpro.service.*;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.util.pg.PgUtil;
-import com.smpro.vo.CategoryVo;
-import com.smpro.vo.CommonVo;
-import com.smpro.vo.DeliCompanyVo;
-import com.smpro.vo.EstimateVo;
-import com.smpro.vo.ItemVo;
-import com.smpro.vo.OrderCsVo;
-import com.smpro.vo.OrderLogVo;
-import com.smpro.vo.OrderPayVo;
-import com.smpro.vo.OrderVo;
-import com.smpro.vo.PointVo;
-
+import com.smpro.vo.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class OrderController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
-	
-	@Resource(name = "orderService")
+
+	@Autowired
 	private OrderService orderService;
 
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
 
-	@Resource(name = "categoryService")
+	@Autowired
 	private CategoryService categoryService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name = "itemOptionService")
+	@Autowired
 	private ItemOptionService itemOptionService;
 
-	@Resource(name = "pointService")
+	@Autowired
 	private PointService pointService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "smsService")
+	@Autowired
 	private SmsService smsService;
-	
-	@Resource(name = "estimateService")
+
+	@Autowired
 	private EstimateService estimateService;
-	
-	@Resource(name = "memberGroupService")
+
+	@Autowired
 	private MemberGroupService memberGroupService;
-	
-	@Resource(name = "mailService")
+
+	@Autowired
 	private MailService mailService;
 	
 	/** 주문 리스트 */
@@ -217,7 +190,7 @@ public class OrderController {
 			wb = orderService.writeExcelOrderListNP(vo, "xls", session);
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.info("회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
+			log.info("회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 		}
 
 		// 파일전송
@@ -435,7 +408,7 @@ public class OrderController {
 						smsService.insertSmsSendVo(svo);
 					} catch (Exception e) {
 						e.printStackTrace();
-						LOGGER.info("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+						log.info("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
 					}
 				}
 				*/
@@ -715,67 +688,6 @@ public class OrderController {
 		return Const.AJAX_PAGE;
 	}
 
-	/** 판매일보 */
-	@CheckGrade(controllerName = "orderController", controllerMethod = "sellDaily")
-	@RequestMapping("/order/selldaily/{dailyName}")
-	public String sellDaily(@PathVariable String dailyName, OrderVo vo, Model model) {
-		/** 대분류, 중분류, 소분류 카테고리를 불러온다 */
-		CategoryVo cvo = new CategoryVo();
-		cvo.setDepth(1);
-		model.addAttribute("cateLv1List", categoryService.getList(cvo));
-		// 중분류, 소분류 카테고리를 가져온다
-		if (vo.getLv1Seq() != null) {
-			// 2단
-			cvo.setDepth(2);
-			cvo.setParentSeq(vo.getLv1Seq());
-			model.addAttribute("cateLv2List", categoryService.getList(cvo));
-		}
-		if (vo.getLv1Seq() != null && vo.getLv2Seq() != null) {
-			// 3단
-			cvo.setDepth(3);
-			cvo.setParentSeq(vo.getLv2Seq());
-			model.addAttribute("cateLv3List", categoryService.getList(cvo));
-		}
-		/** 일별,월별 판매 일보 */
-		if ("day".equals(dailyName)) {
-			model.addAttribute("title", "일별 판매일보");
-			vo.setSearchDate1(vo.getSearchDate1().replace("-", ""));
-			vo.setSearchDate2(vo.getSearchDate2().replace("-", ""));
-			/**
-			 * 날짜 검색을 하지 않았을 경우(SrchDate1,SrchDate2가 null일 경우) 금일 기준 한달 전 까지 기본값
-			 * 세팅
-			 */
-			if ("".equals(vo.getSearchDate1())) {
-				vo.setSearchDate1(StringUtil.getDate(-30, "yyyyMMdd"));
-			}
-			if ("".equals(vo.getSearchDate2())) {
-				vo.setSearchDate2(StringUtil.getDate(0, "yyyyMMdd"));
-			}
-			/** Day, Month 플래그 */
-			vo.setSellDailyName(dailyName);
-		} else if ("month".equals(dailyName)) {
-			model.addAttribute("title", "월별 판매일보");
-			vo.setSearchDate1(vo.getSearchDate1().replace("-", ""));
-			vo.setSearchDate2(vo.getSearchDate2().replace("-", ""));
-			/**
-			 * 날짜 검색을 하지 않았을 경우(SrchDate1,SrchDate2가 null일 경우) 이번달 기준 3년 전 까지
-			 * 기본값 세팅
-			 */
-			if ("".equals(vo.getSearchDate1())) {
-				vo.setSearchDate1(StringUtil.getDate(-1096, "yyyyMM"));
-			}
-			if ("".equals(vo.getSearchDate2())) {
-				vo.setSearchDate2(StringUtil.getDate(0, "yyyyMM"));
-			}
-			/** Day, Month 플래그 */
-			vo.setSellDailyName(dailyName);
-		}
-		model.addAttribute("list", orderService.getSellDaily(vo));
-		model.addAttribute("sellDailyName", dailyName);
-		model.addAttribute("vo", vo);
-		return "/order/sell_daily.jsp";
-	}
-
 	@CheckGrade(controllerName = "orderController", controllerMethod = "orderDeliveryProcList")
 	@RequestMapping("/order/delivery/proc/list")
 	public String orderDeliveryProcList(HttpSession session, OrderVo pvo, Model model) {
@@ -1038,7 +950,7 @@ public class OrderController {
 			wb = orderService.writeExcelOrderList(vo, "xls");
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.info("회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
+			log.info("회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 		}
 
 		// 파일스트림
@@ -1144,19 +1056,19 @@ public class OrderController {
 		String date		 = request.getParameter("Date");
 		String time		 = request.getParameter("Time");
 		
-		LOGGER.info("### " + pgCode + " 신용카드 ARS 결제 입금 통보 수신 ###");
-		LOGGER.info("### PG IP Addr : " + request.getRemoteAddr());
-		LOGGER.info("### tid : " + tid);
-		LOGGER.info("### mid : " + mid);
-		LOGGER.info("### oid : " + oid);
-		LOGGER.info("### amount : " + amount);
-		LOGGER.info("### resultCode : " + resultCode);
-		LOGGER.info("### resultMsg : " + resultMsg);
-		LOGGER.info("### approvalNo : " + approvalNo);
-		LOGGER.info("### cardMonth : " + cardMonth);
-		LOGGER.info("### orgCode : " + orgCode);
-		LOGGER.info("### date : " + date);
-		LOGGER.info("### time : " + time);
+		log.info("### " + pgCode + " 신용카드 ARS 결제 입금 통보 수신 ###");
+		log.info("### PG IP Addr : " + request.getRemoteAddr());
+		log.info("### tid : " + tid);
+		log.info("### mid : " + mid);
+		log.info("### oid : " + oid);
+		log.info("### amount : " + amount);
+		log.info("### resultCode : " + resultCode);
+		log.info("### resultMsg : " + resultMsg);
+		log.info("### approvalNo : " + approvalNo);
+		log.info("### cardMonth : " + cardMonth);
+		log.info("### orgCode : " + orgCode);
+		log.info("### date : " + date);
+		log.info("### time : " + time);
 		
 		if(tid == null || resultCode == null) {
 			response.getWriter().print("tid or ResultCode not found");

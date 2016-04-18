@@ -1,97 +1,159 @@
 package com.smpro.controller.shop;
 
 import com.smpro.service.*;
-import com.smpro.util.CommonServletUtil;
-import com.smpro.util.Const;
-import com.smpro.util.FileDownloadUtil;
-import com.smpro.util.FileUploadUtil;
-import com.smpro.util.StringUtil;
+import com.smpro.util.*;
 import com.smpro.util.pg.PgUtil;
 import com.smpro.vo.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @Controller
 public class MyPageController extends MyPage {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MyPageController.class);
-	
-	@Resource(name="loginService")
+
+	@Autowired
 	private LoginService loginService;
 
-	@Resource(name="memberService")
+	@Autowired
 	private MemberService memberService;
-	
-	@Resource(name = "memberGroupService")
+
+	@Autowired
 	private MemberGroupService memberGroupService;
-	
-	@Resource(name="orderService")
+
+	@Autowired
 	private OrderService orderService;
-	
-	@Resource(name="reviewService")
+
+	@Autowired
 	private ReviewService reviewService;
 
-	@Resource(name="pointService")
+	@Autowired
 	private PointService pointService;
-	
-	@Resource(name="boardService")
+
+	@Autowired
 	private BoardService boardService;
-	
-	@Resource(name="systemService")
+
+	@Autowired
 	private SystemService systemService;
-	
-	@Resource(name="estimateService")
+
+	@Autowired
 	private EstimateService estimateService;
-	
-	@Resource(name = "filenameService")
+
+	@Autowired
 	private FilenameService filenameService;
-	
+
+	@Autowired
+	private EventService eventService;
+
+	@RequestMapping("/mypage/main")
+	public String mypageMain(HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
+			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
+			model.addAttribute("returnUrl", "/shop/login");
+			return Const.REDIRECT_PAGE;
+		}
+
+		initMypage(session, model);
+		OrderVo pvo = new OrderVo();
+		pvo.setLoginType((String)session.getAttribute("loginType"));
+		pvo.setLoginSeq((Integer)session.getAttribute("loginSeq"));
+
+		/** 비회원 조회용 */
+		pvo.setLoginName((String)session.getAttribute("loginName"));
+		pvo.setLoginEmail((String)session.getAttribute("loginEmail"));
+
+		//기본 조회기간 일주일
+		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+		}
+
+		pvo.setRowCount(5);
+		pvo.setBoardType("order");
+
+		pvo.setTotalRowCount(orderService.getListCount(pvo));
+
+		List<OrderVo> list;
+		try {
+			list = orderService.getList(pvo);
+		} catch(Exception e) {
+			model.addAttribute("message", "회원 정보 복호화에 실패했습니다. ["+e.getMessage()+"]");
+			return Const.ALERT_PAGE;
+		}
+
+		model.addAttribute("orderList",  list);
+		/* 주문 상태별 건수 */
+		model.addAttribute("data", orderService.getCntByStatus(pvo));
+		model.addAttribute("pvo", pvo);
+
+
+		// 공지사항
+		BoardVo bvo = new BoardVo();
+		bvo.setCategoryCode(new Integer(1));
+		bvo.setGroupCode("notice");
+		bvo.setRowCount(5);
+		bvo.setPageCount(3);
+		model.addAttribute("noticeList", boardService.getList(bvo));
+
+
+		// 이벤트
+		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
+		/** 현재 진행중인 기획전 상품리스트를 가져옴 */
+		EventVo evo = new EventVo();
+		evo.setTypeCode("1");
+		evo.setStatusCode("Y");
+		evo.setMallSeq(mallVo.getSeq());
+		//현재날짜 저장
+		evo.setCurDate(StringUtil.getDate(0, "yyyyMMdd"));
+
+		List<EventVo> eventVo = eventService.getList(evo);
+		for(int i=0;i<eventVo.size();i++){
+			EventVo tmpVo = eventVo.get(i);
+			tmpVo.setTitle(StringUtil.cutString(tmpVo.getTitle(),150));
+		}
+		model.addAttribute("eventList",eventVo);
+		model.addAttribute("evo", evo);
+
+		model.addAttribute("title", "마이페이지");
+		return "/mypage/main.jsp";
+	}
+
 	/**
 	 * 회원수정 전 검증 페이지
 	 */
 	@RequestMapping("/mypage/confirm")
 	public String mypageConfirm(HttpSession session, Model model, OrderVo pvo) {
 		initMypage(session, model);
-		
+
 
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
-
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
+		model.addAttribute("title", "나의정보");
+		model.addAttribute("on", "01");
 		return "/mypage/member_confirm.jsp";
 	}
 
 	/** 회원수정,탈퇴 전 검증 **/
 	@RequestMapping("/mypage/confirm/proc")
 	public String confirmPassword(String member, HttpServletRequest request, HttpSession session, UserVo vo, Model model){
-		
+
 
 		vo.setId((String)session.getAttribute("loginId"));
 
@@ -122,16 +184,15 @@ public class MyPageController extends MyPage {
 			model.addAttribute("returnUrl", "/shop/mypage/mod");
 			return Const.REDIRECT_PAGE;
 		}
-		
+
 		session.setAttribute("checkPass", "pass");
 		model.addAttribute("returnUrl", "/shop/mypage/leave");
 		return Const.REDIRECT_PAGE;
-		
+
 	}
 
 	@RequestMapping(value = "/mypage/mod")
-	public String modForm(HttpSession session, MemberVo mvo, Model model, OrderVo pvo) {		
-
+	public String modForm(HttpSession session, MemberVo mvo, Model model, OrderVo pvo) {
 		initMypage(session, model);
 
 		pvo.setLoginType((String) session.getAttribute("loginType"));
@@ -145,7 +206,7 @@ public class MyPageController extends MyPage {
 		MemberVo vo;
 		try {
 			vo = memberService.getData((Integer)session.getAttribute("loginSeq"));
-			
+
 			if(vo.getGroupSeq() != null) {
 				model.addAttribute("gvo", memberGroupService.getVo(vo.getGroupSeq()));
 			}
@@ -154,12 +215,14 @@ public class MyPageController extends MyPage {
 			return Const.ALERT_PAGE;
 		}
 		model.addAttribute("vo", vo);
-		
-		CommonVo cvo = new CommonVo();
-		//자치구 코드
-		cvo.setGroupCode(new Integer(29));
-		model.addAttribute("jachiguList", systemService.getCommonList(cvo));
-		
+
+//		CommonVo cvo = new CommonVo();
+//		//자치구 코드
+//		cvo.setGroupCode(new Integer(29));
+//		model.addAttribute("jachiguList", systemService.getCommonList(cvo));
+
+		model.addAttribute("title", "나의정보");
+		model.addAttribute("on", "01");
 		return "/mypage/member_mod.jsp";
 	}
 
@@ -168,7 +231,7 @@ public class MyPageController extends MyPage {
 	 */
 	@RequestMapping(value = "/mypage/mod/proc", method = RequestMethod.POST)
 	public String modData(HttpServletRequest request, HttpSession session, MemberVo vo, MemberGroupVo gvo, Model model) {
-		
+
 		boolean flag = false;
 		boolean groupFlag = false;
 		boolean resultFlag = false;
@@ -178,21 +241,21 @@ public class MyPageController extends MyPage {
 		vo.setSeq((Integer)session.getAttribute("loginSeq"));
 		vo.setLogLoginSeq((Integer)session.getAttribute("loginSeq"));
 		vo.setMemberTypeCode((String)session.getAttribute("loginMemberTypeCode"));
-		
+
 		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
-		
+
 		if(!memberValidCheck(vo, gvo, model)){
 			return Const.ALERT_PAGE;
 		}
-		
+
 		try {
 			vo.setMallSeq(mallVo.getSeq());
 			flag = memberService.modData(vo);
 
 			if("P".equals(vo.getMemberTypeCode()) || "O".equals(vo.getMemberTypeCode())) {
 				gvo.setSeq(vo.getGroupSeq());
-				groupFlag = memberGroupService.modVo(gvo);	
-			}	
+				groupFlag = memberGroupService.modVo(gvo);
+			}
 
 		} catch (NoSuchAlgorithmException nsae) {
 			nsae.printStackTrace();
@@ -214,13 +277,13 @@ public class MyPageController extends MyPage {
 				resultFlag = true;
 			}
 		}
-		
+
 		if(resultFlag) {
 			model.addAttribute("message", "수정되었습니다.");
 			model.addAttribute("returnUrl", "/shop/mypage/confirm");
 			return Const.REDIRECT_PAGE;
 		}
-		
+
 		model.addAttribute("message", errMsg);
 		return Const.ALERT_PAGE;
 	}
@@ -230,7 +293,7 @@ public class MyPageController extends MyPage {
 	 */
 	@RequestMapping(value = "/mypage/mod/callback", method = RequestMethod.POST)
 	public String modDataOnlyMember(HttpServletRequest request, HttpSession session, MemberVo vo, Model model) {
-		
+
 		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
 		boolean flag = false;
 		String errMsg = "";
@@ -269,8 +332,8 @@ public class MyPageController extends MyPage {
 		if (flag) {
 			model.addAttribute("callback", "MEMBER_MOD_OK");
 			return Const.REDIRECT_PAGE;
-		} 
-		
+		}
+
 		model.addAttribute("message", errMsg);
 		return Const.ALERT_PAGE;
 	}
@@ -291,7 +354,7 @@ public class MyPageController extends MyPage {
 			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
 			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
-		
+
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
 		initMypage(session, model);
 
@@ -302,6 +365,9 @@ public class MyPageController extends MyPage {
 		model.addAttribute("list", pointService.getShopPointList(pvo));
 		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", pvo);
+
+		model.addAttribute("title", "나의 포인트");
+		model.addAttribute("on", "03");
 
 		return "/mypage/point.jsp";
 	}
@@ -317,25 +383,25 @@ public class MyPageController extends MyPage {
 			model.addAttribute("returnUrl", "/shop/login");
 			return Const.REDIRECT_PAGE;
 		}
-		
+
 		initMypage(session, model);
 
 		pvo.setLoginType((String)session.getAttribute("loginType"));
 		pvo.setLoginSeq((Integer)session.getAttribute("loginSeq"));
-		
+
 		/** 비회원 조회용 */
 		pvo.setLoginName((String)session.getAttribute("loginName"));
 		pvo.setLoginEmail((String)session.getAttribute("loginEmail"));
-		
+
 		//기본 조회기간 일주일
 		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
 			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
 			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
-						
+
 		pvo.setRowCount(5);
 		pvo.setBoardType("order");
-		
+
 		pvo.setTotalRowCount(orderService.getListCount(pvo));
 
 		List<OrderVo> list;
@@ -353,6 +419,9 @@ public class MyPageController extends MyPage {
 		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", pvo);
 
+		model.addAttribute("title", "구매리스트");
+		model.addAttribute("on", "06");
+
 		return "/mypage/order/list.jsp";
 	}
 
@@ -360,19 +429,19 @@ public class MyPageController extends MyPage {
 	public String getListByPayMethod(HttpServletRequest request, OrderVo vo, Model model) {
 		vo.setPayMethod("NP_CARD");
 		HttpSession session = request.getSession();
-				
+
 		vo.setLoginType((String)session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer)session.getAttribute("loginSeq"));
-		
+
 		//기본 조회기간 일주일
 		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
 			vo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
 			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
-		
+
 		vo.setRowCount(5);
 		vo.setTotalRowCount(orderService.getListNPCount(vo));
-		
+
 		try {
 			model.addAttribute("list", orderService.getListNP(vo));
 		} catch (Exception e) {
@@ -380,17 +449,29 @@ public class MyPageController extends MyPage {
 			model.addAttribute("message", "회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", vo);
 		return "/mypage/order/list_NP_CARD.jsp";
 	}
-	
+
 	@RequestMapping("/mypage/item/info/ajax")
 	public String getItemInfo(OrderVo vo, Model model) {
-		
+
 		model.addAttribute("vo", orderService.getVoDetail(vo.getSeq()));
 		return "/ajax/get-item-info-vo.jsp";
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/mypage/point/ajax", produces = "application/json; charset=utf-8")
+	public String getPoint(HttpSession session) {
+		Integer loginSeq = (Integer)session.getAttribute("loginSeq");
+		Integer useablePoint = pointService.getUseablePoint(loginSeq);
+
+		Map map = new HashMap();
+		map.put("point", useablePoint == null ? new Integer(0) : useablePoint);
+
+		return JsonHelper.render(map);
 	}
 
 	/**
@@ -401,7 +482,7 @@ public class MyPageController extends MyPage {
 	 */
 	@RequestMapping("/mypage/order/detail/{orderSeq}")
 	public String myPageOrderDetail(HttpSession session, @PathVariable Integer orderSeq, Model model) {
-		
+
 		initMypage(session, model);
 
 		OrderVo pvo = new OrderVo();
@@ -412,7 +493,7 @@ public class MyPageController extends MyPage {
 		/** 비회원 조회용 */
 		pvo.setLoginName((String)session.getAttribute("loginName"));
 		pvo.setLoginEmail((String)session.getAttribute("loginEmail"));
-		
+
 		OrderVo ovo;
 		try {
 			ovo = orderService.getData(pvo);
@@ -431,8 +512,7 @@ public class MyPageController extends MyPage {
 		} catch(Exception e) {
 			// 안해도 별 상관없을 것이다
 		}
-		
-		
+
 		/* 비교견적 첨부파일 리스트 */
 		EstimateVo evo = new EstimateVo();
 		evo.setLoginType(pvo.getLoginType());
@@ -440,9 +520,12 @@ public class MyPageController extends MyPage {
 		evo.setOrderSeq(pvo.getOrderSeq());
 		model.addAttribute("estimateCompareFileList", estimateService.getListCompareFile(evo));
 
+		model.addAttribute("title", "구매 상세정보");
+		model.addAttribute("on", "06");
+
 		return "/mypage/order/detail.jsp";
 	}
-	
+
 	/**
 	 * 주문 상세 페이지(프린트용)
 	 *
@@ -462,12 +545,12 @@ public class MyPageController extends MyPage {
 			model.addAttribute("title", "납품확인서");
 			goUrl = "/mypage/order/delivery_confirm_view.jsp";
 		}
-		
+
 		OrderVo vo = new OrderVo();
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		vo.setOrderSeq(orderSeq);
-		
+
 		OrderVo ovo;
 		try {
 			ovo = orderService.getData(vo);
@@ -480,7 +563,7 @@ public class MyPageController extends MyPage {
 		model.addAttribute("vo", ovo);
 		/* 주문 상품 리스트 */
 		model.addAttribute("list", orderService.getListForDetail(vo));
-		
+
 		MemberVo mvo = memberService.getData((Integer) session.getAttribute("loginSeq"));
 		model.addAttribute("memberVo", mvo);
 		if(mvo != null) {
@@ -495,7 +578,7 @@ public class MyPageController extends MyPage {
 	 */
 	@RequestMapping(value = "/mypage/order/status/update/proc", method = RequestMethod.POST)
 	public String updateStatus(HttpSession session, OrderVo vo, Model model) {
-		
+
 		boolean flag = false;
 		String errMsg = "처리에 실패 했습니다.";
 
@@ -531,7 +614,7 @@ public class MyPageController extends MyPage {
 		return Const.ALERT_PAGE;
 
 	}
-	
+
 	/**
 	 * 주문 취소 상세 페이지
 	 */
@@ -552,12 +635,12 @@ public class MyPageController extends MyPage {
 		ovo.setStatusCode(vo.getStatusCode());
 		ovo.setLoginType((String) session.getAttribute("loginType"));
 		ovo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
-		
+
 		if(vo.getGoodGrade()==0){
 			model.addAttribute("message", "평점을 선택해주세요.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		if(StringUtil.isBlank(vo.getReview())){
 			model.addAttribute("message", "내용을 입력해주세요.");
 			return Const.ALERT_PAGE;
@@ -580,7 +663,7 @@ public class MyPageController extends MyPage {
 	/**
 	 * 상품평 페이지
 	 *
-	 * @param request
+	 * @param
 	 * @param model
 	 * @return
 	 */
@@ -623,12 +706,12 @@ public class MyPageController extends MyPage {
 	 */
 	@RequestMapping("/mypage/direct/list")
 	public String myPageDirectList(HttpSession session, BoardVo pvo, OrderVo povo, Model model) {
-		
+
 		povo.setLoginType((String) session.getAttribute("loginType"));
 		povo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
 		initMypage(session, model);
-		
+
 		//기본 조회기간 일주일
 		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
 			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
@@ -653,38 +736,42 @@ public class MyPageController extends MyPage {
 		model.addAttribute("total", new Integer(pvo.getTotalRowCount()));
 		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", pvo);
-		
+
 		CommonVo cvo = new CommonVo();
 		//1:1문의 구분 코드
 		cvo.setGroupCode(new Integer(36));
 		model.addAttribute("commonList", systemService.getCommonList(cvo));
+
+		model.addAttribute("title", "내질문보기");
+		model.addAttribute("on", "12");
 		return "/mypage/direct_list.jsp";
 	}
-	
+
 	@RequestMapping("/mypage/direct/form")
 	public String directForm(HttpSession session, Model model) {
 		initMypage(session, model);
-		model.addAttribute("title", "1:1문의 하기");
-		
+		model.addAttribute("title", "1:1 문의하기");
+		model.addAttribute("on", "12");
+
 		CommonVo cvo = new CommonVo();
 		//1:1문의 구분 코드
 		cvo.setGroupCode(new Integer(36));
 		model.addAttribute("commonList", systemService.getCommonList(cvo));
 		return "/mypage/direct_form.jsp";
 	}
-	
+
 	@RequestMapping("/mypage/{boardName}/edit/form/{seq}")
 	public String directModForm(@PathVariable String boardName, @PathVariable Integer seq, Model model) {
 		BoardVo vo = new BoardVo();
 		String codeName = "";
 		String goUrl = "";
-		
+
 		if("direct".equals(boardName)) {
 			model.addAttribute("title", "1:1 문의하기");
 			vo.setGroupCode("one");
 			vo.setSeq(seq);
 			codeName = "directBoard";
-			goUrl = "/mypage/direct_form.jsp"; 
+			goUrl = "/mypage/direct_form.jsp";
 		} else if("qna".equals(boardName)) {
 			model.addAttribute("title", "QnA 문의하기");
 			vo.setGroupCode("qna");
@@ -692,21 +779,21 @@ public class MyPageController extends MyPage {
 			goUrl = "/mypage/qna_form.jsp";
 			codeName = "qnaBoard";
 		}
-		
+
 		model.addAttribute("vo", boardService.getVo(vo));
-		
+
 		CommonVo cvo = new CommonVo();
 		//1:1문의 구분 코드
 		cvo.setGroupCode(new Integer(36));
 		model.addAttribute("commonList", systemService.getCommonList(cvo));
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentCode", codeName);
 		map.put("parentSeq", vo.getSeq());
 		model.addAttribute("file", filenameService.getList(map));
 		return goUrl;
 	}
-	
+
 	/**
 	 * 1:1문의 등록하기
 	 */
@@ -717,15 +804,15 @@ public class MyPageController extends MyPage {
 		//멀티파트로 보내기때문에 파라미터를 따로 처리한다.
 		HashMap<String,Object> map = CommonServletUtil.getRequestParameterMap(request);
 		BoardVo vo = getBoardVo(map, boardName);
-		
+
 		if("direct".equals(boardName)) {
 			if(vo.getCategoryCode() == null) {
 				model.addAttribute("message", "구분이 선택되지 않았습니다.");
 				return Const.ALERT_PAGE;
-			} 			
+			}
 			codeName = "directBoard";
 		}
-		
+
 		if (vo.getTitle() != null && vo.getTitle().length() != 0 && (vo.getTitle().length() > 100)) {
 			model.addAttribute("message", "제목 길이를 초과하였습니다.");
 			return Const.ALERT_PAGE;
@@ -739,7 +826,7 @@ public class MyPageController extends MyPage {
 			model.addAttribute("message", "내용을 4000byte 이하로 입력해주세요.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		Iterator<String> iter = mpRequest.getFileNames();
 		FileUploadUtil util = new FileUploadUtil();
 		List<FilenameVo> fileList = new ArrayList<>();
@@ -761,39 +848,39 @@ public class MyPageController extends MyPage {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
 			}
 		}
-		
+
 		/** 1:1문의 */
 		vo.setUserSeq((Integer) session.getAttribute("loginSeq"));
 		if("direct".equals(boardName)) {
 			vo.setGroupCode("O");
 		}
-		
+
 		//시퀀스 생성
 		boardService.createSeq(vo);
-		
+
 		if (!boardService.insertData(vo)) {
 			model.addAttribute("message", "등록 할 수 없었습니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		// 파일 내역을 DB에 저장한다
 		for(FilenameVo fvo : fileList) {
 			fvo.setParentSeq(vo.getSeq());
 			filenameService.replaceFilename(fvo);
 		}
-					
+
 		model.addAttribute("message", "등록 되었습니다.");
 		model.addAttribute("returnUrl", "/shop/mypage/direct/list");
 
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	/**
 	 * 1:1문의 수정하기
 	 */
@@ -805,12 +892,12 @@ public class MyPageController extends MyPage {
 		HashMap<String,Object> map = CommonServletUtil.getRequestParameterMap(request);
 		BoardVo vo = getBoardVo(map, boardName);
 		vo.setSeq(seq);
-		
+
 		if("direct".equals(boardName)) {
 			if(vo.getCategoryCode() == null) {
 				model.addAttribute("message", "구분이 선택되지 않았습니다.");
 				return Const.ALERT_PAGE;
-			} 	
+			}
 			codeName = "directBoard";
 			vo.setGroupCode("one");
 		} else if("qna".equals(boardName)) {
@@ -830,7 +917,7 @@ public class MyPageController extends MyPage {
 			model.addAttribute("message", "내용을 4000byte 이하로 입력해주세요.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		Iterator<String> iter = mpRequest.getFileNames();
 		FileUploadUtil util = new FileUploadUtil();
 		List<FilenameVo> fileList = new ArrayList<>();
@@ -853,30 +940,30 @@ public class MyPageController extends MyPage {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
 			}
 		}
-		
+
 		/** 1:1문의 */
 		if (!boardService.updateData(vo)) {
 			model.addAttribute("message", "수정 할 수 없었습니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		// 파일 내역을 DB에 저장한다
 		for(FilenameVo fvo : fileList) {
 			filenameService.replaceFilename(fvo);
 		}
-					
+
 		model.addAttribute("message", "수정 되었습니다.");
 		model.addAttribute("returnUrl", "/shop/mypage/"+boardName+"/list");
 
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	@RequestMapping("/mypage/{boardName}/file/delete/proc")
 	public String fileDelete(@PathVariable String boardName, @RequestParam int seq, @RequestParam int num, HttpServletRequest request, Model model) {
 		String code = "";
@@ -885,7 +972,7 @@ public class MyPageController extends MyPage {
 			code = "directBoard";
 			groupCode = "one";
 		}
-		
+
 		BoardVo bvo = new BoardVo();
 		bvo.setSeq(new Integer(seq));
 		bvo.setGroupCode(groupCode);
@@ -905,17 +992,17 @@ public class MyPageController extends MyPage {
 
 		// 파일을 삭제
 		try {
-			LOGGER.info("file>>delete>> " + deletePath);
+			log.info("file>>delete>> " + deletePath);
 			filenameService.deleteVo(fvo);
 			new File(deletePath).delete();
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			log.error(e.getMessage());
 		}
 
 		model.addAttribute("callback", new Integer(num));
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	@RequestMapping("/mypage/{boardName}/file/download/proc")
 	public String download(@PathVariable String boardName, @RequestParam int seq, @RequestParam int num, HttpServletResponse response) throws Exception {
 		String code = "";
@@ -924,8 +1011,8 @@ public class MyPageController extends MyPage {
 			code = "directBoard";
 			groupCode = "one";
 		}
-		
-		
+
+
 		BoardVo bvo = new BoardVo();
 		bvo.setSeq(new Integer(seq));
 		bvo.setGroupCode(groupCode);
@@ -945,29 +1032,29 @@ public class MyPageController extends MyPage {
 		response.setHeader("Content-Disposition", "attachment; filename=\""+ new String(fvo.getFilename().getBytes("utf-8"), "ISO-8859-1") +"\";");
 
 		// 바보같겠지만... upload하는 메서드를 수정하긴 너무 빡셌다. 리얼에서만 돌아가는 것을 확인
-		LOGGER.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
+		log.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		File file = new File(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		FileDownloadUtil.download(response, file);
 		return null;
 	}
-	
+
 	@RequestMapping("/mypage/{boardName}/del/proc")
 	public String delProc(@PathVariable String boardName, Integer seq, Model model) {
 		BoardVo vo = new BoardVo();
 		vo.setSeq(seq);
-		
+
 		if (!boardService.deleteData(vo)) {
 			model.addAttribute("message", "게시물을 삭제할 수 없었습니다");
 			model.addAttribute("returnUrl", "/shop/mypage/"+boardName+"/list");
 			return Const.REDIRECT_PAGE;
-		}		
-		
+		}
+
 		model.addAttribute("message", "삭제 되었습니다");
 		model.addAttribute("returnUrl", "/shop/mypage/"+boardName+"/list");
 
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	/**
 	 * 취소/반품/교환 내역
 	 */
@@ -977,7 +1064,7 @@ public class MyPageController extends MyPage {
 		//OrderVo pvo = new OrderVo();
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
-		
+
 		/** 비회원 조회용 */
 		pvo.setLoginName((String)session.getAttribute("loginName"));
 		pvo.setLoginEmail((String)session.getAttribute("loginEmail"));
@@ -1025,7 +1112,7 @@ public class MyPageController extends MyPage {
 			vo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
 			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
-		
+
 		model.addAttribute("loginSeq", session.getAttribute("loginSeq"));
 		/** 게시판에서 검색항목 드롭박스를 선택 안했을시 디폴트로 title를 검색 */
 		if ("".equals(vo.getSearch())) {
@@ -1062,7 +1149,7 @@ public class MyPageController extends MyPage {
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		
+
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
 		return "/mypage/cancel_info.jsp";
@@ -1076,7 +1163,7 @@ public class MyPageController extends MyPage {
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		
+
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
 		return "/mypage/member_agree.jsp";
@@ -1092,8 +1179,11 @@ public class MyPageController extends MyPage {
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		
+
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
+
+		model.addAttribute("title", "회원탈퇴");
+		model.addAttribute("on", "14");
 
 		return "/mypage/member_leave_confirm.jsp";
 	}
@@ -1114,7 +1204,7 @@ public class MyPageController extends MyPage {
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		
+
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
 		return "/mypage/member_leave.jsp";
@@ -1126,7 +1216,7 @@ public class MyPageController extends MyPage {
 	@RequestMapping(value = "/mypage/order/cancel", method = RequestMethod.POST)
 	public String cancelOrder(HttpServletRequest request, OrderVo vo, Model model) {
 		HttpSession session = request.getSession();
-		
+
 
 		boolean flag;
 		String errMsg = "취소 처리에 실패했습니다.";
@@ -1158,7 +1248,7 @@ public class MyPageController extends MyPage {
 			model.addAttribute("message", "유효하지 않은 접근입니다.");
 			return Const.ALERT_PAGE;
 		}
-	
+
 		OrderPayVo payVoCancel = null;
 		/*** PG 취소 처리 ***/
 		OrderPayVo payVo = orderService.getPayVoForCancel(vo.getOrderSeq());
@@ -1246,7 +1336,7 @@ public class MyPageController extends MyPage {
 		model.addAttribute("vo", vo);
 		return "/ajax/get-deli-addr.jsp";
 	}
-	
+
 	/**
 	 * 비교견적요청관리 (공공기관일 경우에만)
 	 */
@@ -1254,10 +1344,10 @@ public class MyPageController extends MyPage {
 	public String myPageCompare(OrderVo pvo, HttpServletRequest request, Model model) {
 		pvo.setEstimateCompareFlag("Y");
 		myPageOrderNow(pvo, request, model);
-		
+
 		return "/mypage/order/list_compare.jsp";
 	}
-	
+
 	/**
 	 * 비교견적요청관리 상세 (공공기관일 경우에만)
 	 */
@@ -1266,7 +1356,7 @@ public class MyPageController extends MyPage {
 		myPageOrderDetail(session, orderSeq, model);
 		return "/mypage/order/detail_compare.jsp";
 	}
-	
+
 	/**
 	 * 세금계산서 (공공기관일 경우에만)
 	 */
@@ -1274,10 +1364,10 @@ public class MyPageController extends MyPage {
 	public String myPageTaxRequest(OrderVo pvo, HttpServletRequest request, Model model) {
 		pvo.setTaxRequest("A");
 		myPageOrderNow(pvo, request, model);
-		
+
 		return "/mypage/order/list_taxrequest.jsp";
 	}
-	
+
 	/**
 	 * 세금계산서 상세 (공공기관일 경우에만)
 	 */
@@ -1286,7 +1376,7 @@ public class MyPageController extends MyPage {
 		myPageOrderDetail(session, orderSeq, model);
 		return "/mypage/order/detail_taxrequest.jsp";
 	}
-	
+
 	private boolean memberValidCheck(MemberVo vo, MemberGroupVo gvo, Model model) {
 		boolean flag = true;
 		/* 유효성 검사 */
@@ -1319,48 +1409,48 @@ public class MyPageController extends MyPage {
 			if("".equals(gvo.getCeoName())) {
 				model.addAttribute("message", "대표자를 입력해주세요.");
 				flag = false;
-			} else if("P".equals(vo.getMemberTypeCode()) && "".equals(gvo.getJachiguCode())) { //공공기관일때만 검증
-				model.addAttribute("message", "자치구를 입력해주세요.");
-				flag = false;
+//			} else if("P".equals(vo.getMemberTypeCode()) && "".equals(gvo.getJachiguCode())) { //공공기관일때만 검증
+//				model.addAttribute("message", "자치구를 입력해주세요.");
+//				flag = false;
 			} else if("".equals(vo.getPostcode())) {
 				model.addAttribute("message", "우편번호를 입력해주세요.");
 				flag = false;
 			} else if("".equals(vo.getAddr1()) || "".equals(vo.getAddr2())) {
 				model.addAttribute("message", "주소를 입력해주세요.");
 				flag = false;
-			} else if("".equals(vo.getName())) {
-				model.addAttribute("message", "담당자 이름을 입력해주세요.");
-				flag = false;
-			}  else if("".equals(vo.getEmail1()) || "".equals(vo.getEmail2())) {
-				model.addAttribute("message", "담당자 이메일을 입력해주세요.");
-				flag = false;
-			} else if(!vo.getEmail1().matches("^[a-zA-Z0-9._-]*$") || !vo.getEmail2().matches("^[a-zA-Z0-9._-]*$")) {
-				model.addAttribute("message", "담당자 이메일은 영문/숫자/._-만 가능 합니다.");
-				flag = false;
+//			} else if("".equals(vo.getName())) {
+//				model.addAttribute("message", "담당자 이름을 입력해주세요.");
+//				flag = false;
+//			}  else if("".equals(vo.getEmail1()) || "".equals(vo.getEmail2())) {
+//				model.addAttribute("message", "담당자 이메일을 입력해주세요.");
+//				flag = false;
+//			} else if(!vo.getEmail1().matches("^[a-zA-Z0-9._-]*$") || !vo.getEmail2().matches("^[a-zA-Z0-9._-]*$")) {
+//				model.addAttribute("message", "담당자 이메일은 영문/숫자/._-만 가능 합니다.");
+//				flag = false;
 			} else if("".equals(vo.getCell1()) || "".equals(vo.getCell2()) || "".equals(vo.getCell3())) {
 				model.addAttribute("message", "담당자 휴대폰번호를 입력해주세요.");
 				flag = false;
-			} else if("".equals(vo.getTel1()) || "".equals(vo.getTel2()) || "".equals(vo.getTel3())) {
-				model.addAttribute("message", "담당자 전화번호를 입력해주세요.");
-				flag = false;
-			} else if("".equals(vo.getEmailFlag())) {
-				model.addAttribute("message", "뉴스레터 수신여부를 선택해주세요.");
-				flag = false;
-			} else if("".equals(vo.getSmsFlag())) {
-				model.addAttribute("message", "SMS 수신여부를 선택해주세요.");
-				flag = false;
-			} else if(!gvo.getTaxEmail1().matches("^[a-zA-Z0-9._-]*$") || !gvo.getTaxEmail2().matches("^[a-zA-Z0-9._-]*$")) {
-				model.addAttribute("message", "계산서 담당자 이메일은 영문/숫자/._-만 가능 합니다.");
-				flag = false;
+//			} else if("".equals(vo.getTel1()) || "".equals(vo.getTel2()) || "".equals(vo.getTel3())) {
+//				model.addAttribute("message", "담당자 전화번호를 입력해주세요.");
+//				flag = false;
+//			} else if("".equals(vo.getEmailFlag())) {
+//				model.addAttribute("message", "뉴스레터 수신여부를 선택해주세요.");
+//				flag = false;
+//			} else if("".equals(vo.getSmsFlag())) {
+//				model.addAttribute("message", "SMS 수신여부를 선택해주세요.");
+//				flag = false;
+//			} else if(!gvo.getTaxEmail1().matches("^[a-zA-Z0-9._-]*$") || !gvo.getTaxEmail2().matches("^[a-zA-Z0-9._-]*$")) {
+//				model.addAttribute("message", "계산서 담당자 이메일은 영문/숫자/._-만 가능 합니다.");
+//				flag = false;
 			}
 		}
 		return flag;
-	} 
-	
+	}
+
 	private BoardVo getBoardVo(HashMap<String, Object> map, String boardName) {
 		BoardVo vo = new BoardVo();
 		if("direct".equals(boardName)) {
-			vo.setCategoryCode(Integer.valueOf((String)map.get("categoryCode")));			
+			vo.setCategoryCode(Integer.valueOf((String)map.get("categoryCode")));
 		}
 		vo.setTitle((String)map.get("title") == null ? "" : (String)map.get("title"));
 		vo.setContent((String)map.get("content") == null ? "" : (String)map.get("content"));

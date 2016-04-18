@@ -12,11 +12,11 @@ import com.smpro.vo.MemberStatsVo;
 import com.smpro.vo.MemberVo;
 import com.smpro.vo.UserVo;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -24,16 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-@Service("memberService")
+@Service
 public class MemberServiceImpl implements MemberService {
 
-	@Resource(name = "memberDao")
+	@Autowired
 	private MemberDao memberDao;
 
-	@Resource(name = "userDao")
+	@Autowired
 	private UserDao userDao;
 
-	@Resource(name = "memberDeliveryDao")
+	@Autowired
 	private MemberDeliveryDao memberDeliveryDao;
 
 	/** 회원 리스트 */

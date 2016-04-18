@@ -5,7 +5,9 @@ import java.util.List;
 import com.smpro.vo.MemberVo;
 
 import com.smpro.vo.ReviewVo;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface ReviewService {
 
 	public List<ReviewVo> getList(ReviewVo vo);

@@ -2,8 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
-<un:useConstants var="const" className="com.smpro.util.Const" />
 <% pageContext.setAttribute("newLine","\n"); %>
 <% pageContext.setAttribute("carriageReturn","\r"); %>
 <% pageContext.setAttribute("etx", new Character((char)3));%>
@@ -13,7 +11,7 @@
 	{
 	"seq":"${item.seq}"
 	, "itemSeq":"${item.itemSeq}"
-	, "img1":"<c:if test="${item.img1 ne ''}">${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's206')}</c:if>"
+	, "img1":"<c:if test="${item.img1 ne ''}">/upload${fn:replace(item.img1, 'origin', 's206')}</c:if>"
 	, "displaySeq":"${item.displaySeq}"
 	, "listTitle":"${ item.listTitle }"
 	, "orderNo":"${item.orderNo}"

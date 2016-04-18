@@ -2,17 +2,18 @@ package com.smpro.service;
 
 import com.smpro.dao.WishDao;
 import com.smpro.vo.ItemVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("wishService")
+@Service
 public class WishServiceImpl implements WishService {
-	@Resource(name = "wishDao")
+	@Autowired
 	private WishDao wishDao;
 
 	/** 리스트 */
+	@Override
 	public List<ItemVo> getList(ItemVo vo) {
 		return wishDao.getList(vo);
 	}

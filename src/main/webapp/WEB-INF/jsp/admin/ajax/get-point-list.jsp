@@ -2,8 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
-<un:useConstants var="const" className="com.smpro.util.Const" />
 <% pageContext.setAttribute("newLine","\n"); %>
 <% pageContext.setAttribute("carriageReturn","\r"); %>
 {
@@ -18,7 +16,8 @@
 		"mallName":"${item.mallName}",
 		"orderSeq":"${item.orderSeq}",
 		"orderDetailSeq":"${item.orderDetailSeq}",
-		"note":"${item.note}"
+		"note":"${item.note}",
+		"statusName":"${item.statusName}"
 		}
 	</c:forEach>
 	],

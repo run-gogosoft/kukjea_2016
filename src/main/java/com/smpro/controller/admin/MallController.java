@@ -1,44 +1,37 @@
 package com.smpro.controller.admin;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.*;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
-import com.smpro.vo.CommonVo;
-import com.smpro.vo.MallVo;
-import com.smpro.vo.MemberVo;
-import com.smpro.vo.OrderVo;
-import com.smpro.vo.UserVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.smpro.vo.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+
+@Slf4j
 @Controller
 public class MallController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MallController.class);
-	
-	@Resource(name = "memberService")
+
+	@Autowired
 	private MemberService memberService;
-	
-	@Resource(name = "orderService")
+
+	@Autowired
 	private OrderService orderService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
 
-	@Resource(name = "categoryService")
+	@Autowired
 	private CategoryService categoryService;
 
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
 
 	/** 쇼핑몰 리스트 */
@@ -161,7 +154,7 @@ public class MallController {
 			if (!StringUtil.isBlank(vo.getPassword())) {
 				vo.setPassword(StringUtil.encryptSha2(vo.getPassword()));
 			}
-			LOGGER.info(
+			log.info(
 					"### password to sha2 encryption : " + vo.getPassword());
 			if (mallService.modVo(vo)) {
 				model.addAttribute("returnUrl", "/admin/mall/list");

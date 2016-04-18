@@ -1,44 +1,58 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<!--[if IE 7]><html class="ie ie7" lang="ko"><![endif]-->
+<!--[if IE 8]><html class="ie ie8" lang="ko"><![endif]-->
+<!--[if !(IE 7) | !(IE 8) ]><!--><html lang="ko"><!--<![endif]-->
 <head>
-  <%@ include file="/WEB-INF/jsp/shop/include/header.jsp" %>
-  <link href="${const.ASSETS_PATH}/front-assets/css/plan/plan.css" type="text/css" rel="stylesheet">
-  <title>${title}</title>
-
-  <style type="text/css">
-    #popup-zone {
-          margin-top:0;
-    }
-  </style>
+    <%@ include file="/WEB-INF/jsp/shop/include/head.jsp" %>
 </head>
 <body>
-<%@ include file="/WEB-INF/jsp/shop/include/navigation.jsp" %>
 
-<div class="breadcrumb">
-  <div class="pull-left" style="margin:8px 10px 0 0;">
-    <img src="/front-assets/images/detail/home.png" alt="홈"> 홈<span class="arrow-sub">&gt;</span><strong>기획전</strong>
-  </div>
+<div id="skip_navi">
+    <p><a href="#contents">본문바로가기</a></p>
 </div>
 
-<%@ include file="/WEB-INF/jsp/shop/include/popup.jsp" %>
-
-<ul class="widget-3th-type">
-  <c:forEach var="item" items="${list}" varStatus="status" begin="0" step="1">
-    <c:if test="${item.showFlag eq 'Y'}">
-      <li style="margin-bottom: 10px;">
-        <a href="/shop/event/plan/plansub/${item.seq}">
-          <img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${item.thumbImg}" style="width:270px;height:495px;"/>
-        </a>
-        <div class="item">
-          <span class="title"><a href="/shop/event/plan/plansub/${item.seq}">${item.title}</a></span>
+<div id="wrap" class="sub">
+    <%@ include file="/WEB-INF/jsp/shop/include/header.jsp" %>
+    <div id="container">
+        <div class="layout_inner sub_container">
+            <%@ include file="/WEB-INF/jsp/shop/include/hotzone_left.jsp" %>
+            <div id="contents">
+                <%@ include file="/WEB-INF/jsp/shop/include/hotzone_anchor.jsp" %>
+                <div class="event_list board_type">
+                    <ul>
+                        <c:forEach var="item" items="${list}" varStatus="status" begin="0" step="1">
+                        <c:if test="${item.showFlag eq 'Y'}">
+                        <li>
+                            <dl>
+                                <dt><a href="/shop/event/plan/plansub/${item.seq}">${item.title}</a></dt>
+                                <dd class="date">
+                                    <fmt:parseDate value="${item.regDate}" var="regDate" pattern="yyyy-mm-dd"/>
+                                    <fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
+                                    ~
+                                    <fmt:parseDate value="${item.endDate}" var="endDate" pattern="yyyymmdd"/>
+                                    <fmt:formatDate value="${endDate}" pattern="yyyy-mm-dd"/>
+                                </dd>
+                                <dd class="thumb">
+                                    <a href="/shop/event/plan/plansub/${item.seq}">
+                                        <img src="/upload${item.thumbImg}" alt="${item.title}" onerror="noImage(this)" />
+                                    </a>
+                                </dd>
+                            </dl>
+                        </li>
+                        </c:if>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </li>
-    </c:if>
-  </c:forEach>
-</ul>
+        <%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>
+    </div>
 
-<div class="clearfix"></div>
-<%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
+    <div id="footer">
+        <%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
+    </div>
+</div>
+
 </body>
 </html>

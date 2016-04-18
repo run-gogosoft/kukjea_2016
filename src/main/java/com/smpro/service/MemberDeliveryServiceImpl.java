@@ -5,14 +5,14 @@ import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.vo.MemberDeliveryVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("memberDeliveryService")
+@Service
 public class MemberDeliveryServiceImpl implements MemberDeliveryService {
-	@Resource(name = "memberDeliveryDao")
+	@Autowired
 	private MemberDeliveryDao memberDeliveryDao;
 
 	/** 등록 */

@@ -423,9 +423,7 @@ var goPage = function (page) {
 		alert('카테고리가 선택되지 않았습니다.');
 		return;
 	}
-	getItemtList(page, (function () {
-		getItemListPaging(page);
-	})());
+	getItemtList(page);
 };
 
 var initMainPage = function(){
@@ -782,36 +780,23 @@ var getItemtList = function (pageNum, callback) {
 
 	$.ajax({
 		type: "GET",
-		url: "/admin/system/tmpl/main/item/list",
+		url: "/admin/system/tmpl/sub/item/list",
 		dataType: "text",
 		data: {cateLv1Seq: $("select[name=cateLv1Seq]").val(), cateLv2Seq: $("select[name=cateLv2Seq]").val(), cateLv3Seq: $("select[name=cateLv3Seq]").val(), cateLv4Seq: $("select[name=cateLv4Seq]").val(), seq: $("#searchItemSeq").val(), name: $("#searchItemName").val(), pageNum: pageNum},
 		success: function (data) {
-			var list = $.parseJSON(data);
-			if (list.length != 0) {
-				$("#searchBoardTarget").html($("#trSearchTemplate").tmpl(list));
+			var vo = $.parseJSON(data);
+			if (vo.list.length != 0) {
+				$("#searchBoardTarget").html($("#trSearchTemplate").tmpl(vo.list));
 			} else {
 				$("#searchBoardTarget").html("<tr><td class='text-center' colspan='6'>등록된 내용이 없습니다.</td></tr>");
 			}
+
+			$("#paging").html(vo.paging);
+			$("#paging").addClass("pagination").addClass("alternate");
+
 			if (typeof callback === "function") {
 				callback();
 			}
-		},
-		error: function (error) {
-			alert(error.status + ":" + error.statusText);
-		}
-	});
-};
-
-var getItemListPaging = function (pageNum) {
-	var memberTypeCode = $('#memberTypeList option:selected').val();
-	$.ajax({
-		type: "GET",
-		url: "/admin/system/tmpl/main/item/list/paging",
-		dataType: "text",
-		data: {cateLv1Seq: $("select[name=cateLv1Seq]").val(), cateLv2Seq: $("select[name=cateLv2Seq]").val(), cateLv3Seq: $("select[name=cateLv3Seq]").val(), cateLv4Seq: $("select[name=cateLv4Seq]").val(), seq: $("#searchItemSeq").val(), name: $("#searchItemName").val(), pageNum: pageNum},
-		success: function (data) {
-			$("#paging").html(data);
-			$("#paging").addClass("pagination").addClass("alternate");
 		},
 		error: function (error) {
 			alert(error.status + ":" + error.statusText);

@@ -96,7 +96,7 @@ var CHCommonBoardUtil = {
 			var parseLoginSeq = parseInt(loginSeq, 10) || 0;
 			var parseCommonBoardSeq = parseInt(commonBoardSeq, 10) || 0;
 			//비회원이고 상품등록 게시판이라면
-			if(parseLoginSeq === 0 && parseCommonBoardSeq === 1) {
+			if(parseLoginSeq === 0 && (parseCommonBoardSeq === 1 || parseCommonBoardSeq === 2)) {
 				alert("회원 로그인 후 이용하시기 바랍니다.");
 				return;
 			}

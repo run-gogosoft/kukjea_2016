@@ -5,18 +5,18 @@ import com.smpro.util.ExcelUtil;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.PointVo;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-@Service("pointService")
+@Service
 public class PointServiceImpl implements PointService {
-	@Resource(name = "pointDao")
+	@Autowired
 	private PointDao pointDao;
 
 	public List<PointVo> getList(PointVo vo) {

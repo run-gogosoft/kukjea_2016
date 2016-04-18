@@ -9,8 +9,8 @@
 	<div class="content-wrapper">
 		<!-- 제목 -->
 		<section class="content-header">
-          <h1>공통코드 관리 <small></small></h1>
-          <ol class="breadcrumb">
+			<h1>결제수단별 수수료 관리 <small></small></h1>
+			<ol class="breadcrumb">
             <li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
             <li>시스템 관리</li>
             <li class="active">결제수단별 수수료 관리</li>

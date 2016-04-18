@@ -2,14 +2,14 @@ package com.smpro.service;
 
 import com.smpro.dao.CartDao;
 import com.smpro.vo.ItemVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("cartService")
+@Service
 public class CartServiceImpl implements CartService {
-	@Resource(name = "cartDao")
+	@Autowired
 	private CartDao cartDao;
 
 	public List<ItemVo> getList(ItemVo vo) {

@@ -3,9 +3,11 @@ package com.smpro.dao;
 import com.smpro.vo.FestivalVo;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class FestivalDaoImpl implements FestivalDao {
 	@Autowired
 	private SqlSession sqlSession;

@@ -2,9 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
 <%@ taglib prefix="smp" tagdir="/WEB-INF/tags" %>
-<un:useConstants var="const" className="com.smpro.util.Const" />
 <% pageContext.setAttribute("newLine","\n"); %>
 <% pageContext.setAttribute("carriageReturn","\r"); %>
 [
@@ -14,7 +12,7 @@
 		"minCnt":"${item.minCnt}"
 		, "maxCnt":"${item.maxCnt}"
 		, "seq":"${item.seq}"
-		, "img1":"${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's206')}"
+		, "img1":"/upload${fn:replace(item.img1, 'origin', 's206')}"
 		, "itemSeq":"${item.itemSeq}"
 		, "name":"${item.name}"
 		<%--
@@ -39,6 +37,7 @@
 		, "packageDeliCost":"${item.packageDeliCost}"
 		, "sellerName":"${item.sellerName}"
 		, "stockCount":"${item.stockCount}"
+		, "stockFlag":"${item.stockFlag}"
 	}
 </c:forEach>
 ]

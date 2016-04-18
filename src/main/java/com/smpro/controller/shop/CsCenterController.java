@@ -1,22 +1,5 @@
 package com.smpro.controller.shop;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.smpro.service.BoardService;
 import com.smpro.service.FilenameService;
 import com.smpro.util.Const;
@@ -24,20 +7,91 @@ import com.smpro.util.FileDownloadUtil;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.BoardVo;
 import com.smpro.vo.FilenameVo;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Slf4j
 @Controller
 public class CsCenterController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CsCenterController.class);
-	
-	@Resource(name="boardService")
+
+	@Autowired
 	private BoardService boardService;
-	
-	@Resource(name = "filenameService")
+
+	@Autowired
 	private FilenameService filenameService;
-	
+
+	@RequestMapping("/cscenter/guide")
+	public static String guide(Model model) {
+		model.addAttribute("title", "이용안내");
+		model.addAttribute("on", "04");
+		return "/cscenter/guide.jsp";
+	}
+
+	@RequestMapping("/cscenter/policy")
+	public static String policy(Model model) {
+		model.addAttribute("title", "이용약관");
+		model.addAttribute("on", "05");
+		return "/cscenter/policy.jsp";
+	}
+
+	@RequestMapping("/cscenter/privacy")
+	public String privacy(Model model){
+		model.addAttribute("title", "개인정보처리방침");
+		model.addAttribute("on", "06");
+		return "/cscenter/privacy.jsp";
+	}
+
+	@RequestMapping("/cscenter/reject/email/collection")
+	public String rejectEmailCollection(Model model){
+		model.addAttribute("title", "이메일 무단수집 거부");
+		model.addAttribute("on", "07");
+		return "/cscenter/reject_email_collection.jsp";
+	}
+
+	@RequestMapping("/cscenter/price")
+	public String price(Model model){
+		model.addAttribute("title", "가격제안");
+		model.addAttribute("on", "10");
+		return "/cscenter/price.jsp";
+	}
+
+	@RequestMapping("/cscenter/fax")
+	public String fax(Model model){
+		model.addAttribute("title", "FAX 주문");
+		model.addAttribute("on", "11");
+		return "/cscenter/fax.jsp";
+	}
+
+	@RequestMapping("/cscenter/search/id")
+	public String searchId(Model model){
+		model.addAttribute("title", "ID/PW 찾기");
+		model.addAttribute("on", "13");
+		return "/cscenter/search_id.jsp";
+	}
+
+	@RequestMapping("/cscenter/search/pw")
+	public String searchPw(Model model){
+		model.addAttribute("title", "ID/PW 찾기");
+		model.addAttribute("on", "13");
+		return "/cscenter/search_pw.jsp";
+	}
+
 	@RequestMapping("/cscenter/main")
 	public String csCenterMain(Model model){
 		List<BoardVo> list = null;
-	
+
 		/** 공지사항 */
 		BoardVo noticeVo = new BoardVo();
 		noticeVo.setCategoryCode(new Integer(1));
@@ -78,7 +132,7 @@ public class CsCenterController {
 	/** 고객센터 -> 게시판 리스트 */
 	@RequestMapping("/cscenter/list/{boardName}")
 	public String list(@PathVariable String boardName, BoardVo pvo , Model model){
-	
+
 		String goPage = "";
 
 		/** 게시판에서 검색항목 드롭박스를 선택 안했을시 디폴트로 title를 검색 */
@@ -103,6 +157,8 @@ public class CsCenterController {
 			model.addAttribute("total", new Integer(pvo.getTotalRowCount()));
 			model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 			model.addAttribute("vo", pvo);
+			model.addAttribute("title", "자주하는 질문");
+			model.addAttribute("on", "02");
 			goPage = "/cscenter/faq_list.jsp";
 		}
 		/** 공지사항 */
@@ -123,6 +179,8 @@ public class CsCenterController {
 			model.addAttribute("total", new Integer(pvo.getTotalRowCount()));
 			model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 			model.addAttribute("vo", pvo);
+			model.addAttribute("title", "공지사항");
+			model.addAttribute("on", "01");
 			goPage = "/cscenter/notice_list.jsp";
 		}
 		return goPage;
@@ -131,7 +189,7 @@ public class CsCenterController {
 	/** 고객센터 -> 뷰페이지 */
 	@RequestMapping("/cscenter/view/{boardName}/{seq}")
 	public String view(@PathVariable String boardName, @PathVariable Integer seq, BoardVo paramVo, Model model){
-		
+
 		String goPage = "";
 		/** 공지사항 */
 		if("notice".equals(boardName)){
@@ -143,34 +201,39 @@ public class CsCenterController {
 				model.addAttribute("message", "잘못된 접근 입니다.");
 				return Const.ALERT_PAGE;
 			}
-			
+
 			//글내용이 아이프레임에 보여질때 오류가 발생할 수 있는 문자 제거
 			String content = vo.getContent().replace("\n", "");
 			content = content.replace("\r", "");
 			content = content.replace("\"", "'");
-			
+
 			model.addAttribute("content", content);
 			model.addAttribute("boardGroup",boardName);
 			model.addAttribute("vo", vo);
 			goPage = "/cscenter/notice_view.jsp";
 		}
-		
+
 		String codeName = "";
-		
+
 		if("faq".equals(boardName)) {
 			codeName = "faqBoard";
+			model.addAttribute("title", "자주하는 질문");
+			model.addAttribute("on", "02");
 		} else if("notice".equals(boardName)) {
 			codeName = "noticeBoard";
+			model.addAttribute("title", "공지사항");
+			model.addAttribute("on", "01");
 		}
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentCode", codeName);
 		map.put("parentSeq", seq);
 		model.addAttribute("file", filenameService.getList(map));
-		
+
+
 		return goPage;
 	}
-	
+
 	@RequestMapping("/cscenter/{boardName}/file/download/proc")
 	public String download(@PathVariable String boardName, @RequestParam int seq, @RequestParam int num, HttpServletResponse response) throws Exception {
 		String codeName = "";
@@ -179,8 +242,8 @@ public class CsCenterController {
 		} else if("notice".equals(boardName)) {
 			codeName = "noticeBoard";
 		}
-		
-		
+
+
 		BoardVo bvo = new BoardVo();
 		bvo.setSeq(new Integer(seq));
 		bvo.setGroupCode(boardName);
@@ -200,15 +263,10 @@ public class CsCenterController {
 		response.setHeader("Content-Disposition", "attachment; filename=\""+ new String(fvo.getFilename().getBytes("utf-8"), "ISO-8859-1") +"\";");
 
 		// 바보같겠지만... upload하는 메서드를 수정하긴 너무 빡셌다. 리얼에서만 돌아가는 것을 확인
-		LOGGER.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
+		log.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		File file = new File(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		FileDownloadUtil.download(response, file);
 		return null;
-	}
-	
-	@RequestMapping("/cscenter/policy")
-	public static String movePage() {
-		return "/cscenter/site_policy.jsp";
 	}
 
 	@RequestMapping("/cscenter/write/proc/qna")
@@ -230,7 +288,7 @@ public class CsCenterController {
 
 		//시퀀스 생성
 		boardService.createSeq(vo);
-				
+
 		if(!boardService.insertData(vo)) {
 			model.addAttribute("message", "등록 할 수 없었습니다.");
 			return Const.ALERT_PAGE;

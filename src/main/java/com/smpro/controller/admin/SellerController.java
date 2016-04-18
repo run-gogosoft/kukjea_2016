@@ -5,21 +5,11 @@ import com.smpro.service.FilenameService;
 import com.smpro.service.ItemService;
 import com.smpro.service.SellerService;
 import com.smpro.service.SystemService;
-import com.smpro.util.CommonServletUtil;
-import com.smpro.util.Const;
-import com.smpro.util.FileUploadUtil;
-import com.smpro.util.FileUtil;
-import com.smpro.util.StringUtil;
-import com.smpro.vo.CommonVo;
-import com.smpro.vo.FilenameVo;
-import com.smpro.vo.ItemLogVo;
-import com.smpro.vo.ItemVo;
-import com.smpro.vo.MemberVo;
-import com.smpro.vo.SellerVo;
-
+import com.smpro.util.*;
+import com.smpro.vo.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,37 +19,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @Controller
 public class SellerController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SellerController.class);
-	
-	@Resource(name = "sellerService")
+
+	@Autowired
 	private SellerService sellerService;
-	
-	@Resource(name = "itemService")
+
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name = "systemService")
+	@Autowired
 	private SystemService systemService;
-	
-	@Resource(name = "filenameService")
+
+	@Autowired
 	private FilenameService filenameService;
 	
 	/** 총판/입점업체 리스트 */
@@ -220,7 +203,7 @@ public class SellerController {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
@@ -305,7 +288,7 @@ public class SellerController {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
@@ -382,11 +365,11 @@ public class SellerController {
 
 		// 파일을 삭제
 		try {
-			LOGGER.info("file>>delete>> " + deletePath);
+			log.info("file>>delete>> " + deletePath);
 			filenameService.deleteVo(fvo);
 			new File(deletePath).delete();
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			log.error(e.getMessage());
 		}
 
 		model.addAttribute("callback", new Integer(num));

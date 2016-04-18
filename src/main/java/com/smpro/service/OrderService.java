@@ -4,6 +4,7 @@ import com.smpro.vo.*;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.*;
 
+@Service
 public interface OrderService {
 	public List<OrderVo> getList(OrderVo pvo) throws Exception;
 

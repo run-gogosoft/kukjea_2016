@@ -3,11 +3,13 @@ package com.smpro.service;
 import com.smpro.vo.*;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.List;
 
+@Service
 public interface MemberService {
 	/** 회원 리스트 
 	 * @throws Exception */

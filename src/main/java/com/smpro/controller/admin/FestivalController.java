@@ -1,31 +1,14 @@
 package com.smpro.controller.admin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.FestivalService;
 import com.smpro.service.FilenameService;
 import com.smpro.service.SystemService;
-import com.smpro.util.CommonServletUtil;
-import com.smpro.util.Const;
-import com.smpro.util.EditorUtil;
-import com.smpro.util.FileUploadUtil;
-import com.smpro.util.FileUtil;
-import com.smpro.util.StringUtil;
+import com.smpro.util.*;
 import com.smpro.vo.FestivalVo;
 import com.smpro.vo.FilenameVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,22 +16,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+@Slf4j
 @Controller
 public class FestivalController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FestivalController.class);
-	
-	@Resource(name = "festivalService")
+
+	@Autowired
 	private FestivalService festivalService;
 
-	@Resource(name = "filenameService")
+	@Autowired
 	private FilenameService filenameService;
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
 	
 	/** 행사 리스트 */
@@ -251,7 +238,7 @@ public class FestivalController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			errMsg = errMsg + " [" + e.getMessage() + "]";			
+			errMsg = errMsg + " [" + e.getMessage() + "]";
 		}		
 		
 		model.addAttribute("message", errMsg);
@@ -274,7 +261,7 @@ public class FestivalController {
 		List<FilenameVo> fileList = filenameService.getList(map);
 		for(FilenameVo vo : fileList) {
 			String deletePath = request.getServletContext().getRealPath("/") + vo.getRealFilename();
-			LOGGER.info("file>>delete>> " + deletePath);
+			log.info("file>>delete>> " + deletePath);
 			new File(deletePath).delete();
 			filenameService.deleteVo(vo.getSeq());
 		}
@@ -290,7 +277,7 @@ public class FestivalController {
 			fileList = filenameService.getList(map);
 			for(FilenameVo vo : fileList) {
 				String deletePath = request.getServletContext().getRealPath("/") + vo.getRealFilename();
-				LOGGER.info("file>>delete>> " + deletePath);
+				log.info("file>>delete>> " + deletePath);
 				new File(deletePath).delete();
 				filenameService.deleteVo(vo.getSeq());
 			}
@@ -304,7 +291,7 @@ public class FestivalController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			errMsg = errMsg + " [" + e.getMessage() + "]";			
+			errMsg = errMsg + " [" + e.getMessage() + "]";
 		}		
 		
 		model.addAttribute("message", errMsg);
@@ -356,7 +343,7 @@ public class FestivalController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			errMsg = errMsg + " [" + e.getMessage() + "]";			
+			errMsg = errMsg + " [" + e.getMessage() + "]";
 		}		
 		
 		model.addAttribute("message", errMsg);
@@ -409,7 +396,7 @@ public class FestivalController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			errMsg = errMsg + " [" + e.getMessage() + "]";			
+			errMsg = errMsg + " [" + e.getMessage() + "]";
 		}		
 		
 		model.addAttribute("message", errMsg);
@@ -428,7 +415,7 @@ public class FestivalController {
 		List<FilenameVo> fileList = filenameService.getList(map);
 		for(FilenameVo vo : fileList) {
 			String deletePath = request.getServletContext().getRealPath("/") + vo.getRealFilename();
-			LOGGER.info("file>>delete>> " + deletePath);
+			log.info("file>>delete>> " + deletePath);
 			new File(deletePath).delete();
 			filenameService.deleteVo(vo.getSeq());
 		}
@@ -441,7 +428,7 @@ public class FestivalController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			errMsg = errMsg + " [" + e.getMessage() + "]";			
+			errMsg = errMsg + " [" + e.getMessage() + "]";
 		}		
 		
 		model.addAttribute("message", errMsg);
@@ -457,7 +444,7 @@ public class FestivalController {
 
 		// 파일을 삭제
 		try {
-			LOGGER.info("file>>delete>> " + deletePath);
+			log.info("file>>delete>> " + deletePath);
 			new File(deletePath).delete();
 			if(filenameService.deleteVo(fvo.getSeq())) {
 				model.addAttribute("callback", "FILE^파일이 삭제되었습니다.^"+fvo.getSeq());

@@ -134,7 +134,7 @@
 									</td>
 									<td>
 										${item.seq}
-										<div class="text-primary">									
+										<div class="text-primary">
 											<strong>
 												<a href="#" onclick="location.href='view/${item.seq}?search='+encodeURIComponent($('#searchForm').serialize());return false;">${item.name}</a>
 											</strong>
@@ -142,7 +142,7 @@
 									</td>
 									<td class="text-center">
 										<c:if test="${item.img1 ne ''}">
-											<img src="${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's206')}" alt="" style="width:60px;height:60px" />
+											<img src="/upload${fn:replace(item.img1, 'origin', 's206')}" alt="" style="width:60px;height:60px" />
 										</c:if>
 									</td>
 									<td class="text-right">

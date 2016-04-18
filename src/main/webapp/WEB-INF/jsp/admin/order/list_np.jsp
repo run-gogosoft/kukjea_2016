@@ -246,8 +246,8 @@
 										<div class="text-info">${fn:substring(item.npPayDate,0,10)}</div>
 									</td>
 									<td class="text-center" data-proc-btn="${item.orderSeq}">
-										<c:if test="${sessionScope.loginType eq 'A' and item.payPrice > 0 and !fn:contains(item.payMethod,'NP_CARD2')}">
-											<c:if test="${item.npPayFlag eq 'N'}">
+										<c:if test="${sessionScope.loginType eq 'A' and item.payPrice > 0 and !fn:contains(item.payMethod,'NP_CARD')}">
+										<c:if test="${item.npPayFlag eq 'N'}">
 											<button type="button" onclick="updateNpPayFlag(${item.orderSeq},'Y');" class="btn btn-xs btn-info">입금완료</button>
 											</c:if>
 											<c:if test="${item.npPayFlag eq 'Y'}">

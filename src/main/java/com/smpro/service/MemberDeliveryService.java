@@ -1,9 +1,11 @@
 package com.smpro.service;
 
 import com.smpro.vo.MemberDeliveryVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface MemberDeliveryService {
 	/** 등록 */
 	public boolean regData(MemberDeliveryVo vo) throws Exception;

@@ -4,14 +4,13 @@ import com.smpro.service.*;
 import com.smpro.util.Const;
 import com.smpro.vo.ItemVo;
 import com.smpro.vo.OrderVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.util.List;
 
@@ -21,26 +20,26 @@ import java.util.List;
  * Date: 2013. 12. 23.
  * Time: 오후 3:52
  */
+@Slf4j
 @Component
 public class BatchComponent {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BatchComponent.class);
-	
-	@Resource(name="adjustService")
+
+	@Autowired
 	private AdjustService adjustService;
-	
-	@Resource(name="cartService")
+
+	@Autowired
 	private CartService cartService;
-	
-	@Resource(name="itemService")
+
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name="orderService")
+	@Autowired
 	private OrderService orderService;
-	
-	@Resource(name="pointService")
+
+	@Autowired
 	private PointService pointService;
-	
-	@Resource(name="mailService")
+
+	@Autowired
 	private MailService mailService;
 	
 	/** 정산 확정 데이터 */
@@ -48,13 +47,13 @@ public class BatchComponent {
 	@Transactional(propagation= Propagation.REQUIRED, rollbackFor={Exception.class})
 	public void regAdjustData() throws Exception {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 정산 배치 시작 ###");
-			LOGGER.info("처리 건수: " + adjustService.regVo(adjustService.getListForAdjust()));
-			LOGGER.info("### 정산 배치 종료 ###");
+			log.info("### 정산 배치 시작 ###");
+			log.info("처리 건수: " + adjustService.regVo(adjustService.getListForAdjust()));
+			log.info("### 정산 배치 종료 ###");
 
-			LOGGER.info("### 취소 정산 배치 시작 ###");
-			LOGGER.info("처리 건수: " + adjustService.regVo(adjustService.getListForAdjustCancel()));
-			LOGGER.info("### 취소 정산 배치 종료 ###");
+			log.info("### 취소 정산 배치 시작 ###");
+			log.info("처리 건수: " + adjustService.regVo(adjustService.getListForAdjustCancel()));
+			log.info("### 취소 정산 배치 종료 ###");
 		}
 	}
 
@@ -69,13 +68,13 @@ public class BatchComponent {
 	@Transactional(propagation= Propagation.REQUIRED, rollbackFor={Exception.class})
 	public void updateOrderDeliveryFinish() throws Exception {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 배송완료 배치 시작 ###");
+			log.info("### 배송완료 배치 시작 ###");
 			List<OrderVo> list = orderService.getOrderDeliveryFinish();
 			int successCnt = 0;
 			if(list != null) {
 				for (int i = 0; i < list.size(); i++) {
 					OrderVo tmpVo = list.get(i);
-					LOGGER.info("### 상품 주문 번호 : " + tmpVo.getSeq() + " [" + orderService.updateDeliveryProc(tmpVo) + "]");
+					log.info("### 상품 주문 번호 : " + tmpVo.getSeq() + " [" + orderService.updateDeliveryProc(tmpVo) + "]");
 					successCnt++;
 				}
 
@@ -83,8 +82,8 @@ public class BatchComponent {
 					throw new Exception("배송완료 업데이트 건수 일치 하지 않음.");
 				}
 			}
-			LOGGER.info("### 처리건수 : " + successCnt);
-			LOGGER.info("### 배송완료 배치 종료 ###");
+			log.info("### 처리건수 : " + successCnt);
+			log.info("### 배송완료 배치 종료 ###");
 		}
 	}
 	/**
@@ -98,7 +97,7 @@ public class BatchComponent {
 	@Transactional(propagation= Propagation.REQUIRED, rollbackFor={Exception.class})
 	public void updateOrderConfirmForDate() throws Exception {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 구매확정 배치 시작 ###");
+			log.info("### 구매확정 배치 시작 ###");
 
 			List<OrderVo> list = orderService.getOrderConfirm();
 			int successCnt = 0;
@@ -107,7 +106,7 @@ public class BatchComponent {
 					OrderVo vo = list.get(i);
 					vo.setStatusCode("55");
 					if (orderService.updateStatus(vo)) {
-						LOGGER.info("### 상품 주문 번호 : " + vo.getSeq());
+						log.info("### 상품 주문 번호 : " + vo.getSeq());
 						successCnt++;
 					}
 				}
@@ -116,8 +115,8 @@ public class BatchComponent {
 					throw new Exception("구매확정 업데이트 건수 일치 하지 않음.");
 				}
 			}
-			LOGGER.info("### 처리건수 : " + successCnt);
-			LOGGER.info("### 구매확정 배치 종료 ###");
+			log.info("### 처리건수 : " + successCnt);
+			log.info("### 구매확정 배치 종료 ###");
 		}
 	}
 
@@ -127,9 +126,9 @@ public class BatchComponent {
 	@Scheduled(cron="0 0 2 * * *")
 	public void deleteItemLogBatch() {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 상품로그 삭제 배치 시작 ###");
-			LOGGER.info("### 처리건수 : " + itemService.deleteLogBatch());
-			LOGGER.info("### 상품로그 삭제 배치 종료 ###");
+			log.info("### 상품로그 삭제 배치 시작 ###");
+			log.info("### 처리건수 : " + itemService.deleteLogBatch());
+			log.info("### 상품로그 삭제 배치 종료 ###");
 		}
 	}
 	
@@ -139,9 +138,9 @@ public class BatchComponent {
 	@Scheduled(cron="0 30 2 * * *")
 	public void deleteCartBatch() {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 장바구니 목록 삭제 배치 시작 ###");
-			LOGGER.info("### 처리건수 : " + cartService.deleteBatch());
-			LOGGER.info("### 장바구니 목록 삭제 배치 종료 ###");
+			log.info("### 장바구니 목록 삭제 배치 시작 ###");
+			log.info("### 처리건수 : " + cartService.deleteBatch());
+			log.info("### 장바구니 목록 삭제 배치 종료 ###");
 		}
 	}
 	
@@ -152,7 +151,7 @@ public class BatchComponent {
 	@Transactional(propagation= Propagation.REQUIRED, rollbackFor={Exception.class})
 	public void updateOrderCancelForExpire() throws Exception {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 무통장입금 기한 지난 주문 건 취소 처리 배치 시작 ###");
+			log.info("### 무통장입금 기한 지난 주문 건 취소 처리 배치 시작 ###");
 			List<Integer> list = orderService.getListExpire();
 			int procCnt = 0;
 			if(list != null) {
@@ -161,7 +160,7 @@ public class BatchComponent {
 					vo.setSeq(orderDetailSeq);
 					vo.setStatusCode("99");
 					if(orderService.updateStatus(vo)) {
-						LOGGER.info("### 상품 주문 번호 : " + orderDetailSeq);
+						log.info("### 상품 주문 번호 : " + orderDetailSeq);
 						procCnt++;
 					}
 				}
@@ -170,8 +169,8 @@ public class BatchComponent {
 					throw new Exception("### 업데이트 건수 일치 하지 않음.");
 				}
 			}
-			LOGGER.info("### 처리건수 : " + procCnt);
-			LOGGER.info("### 무통장입금 기한 지난 주문 건 취소 처리 배치 종료 ###");
+			log.info("### 처리건수 : " + procCnt);
+			log.info("### 무통장입금 기한 지난 주문 건 취소 처리 배치 종료 ###");
 		}
 	}
 	
@@ -190,22 +189,22 @@ public class BatchComponent {
 			};
 			
 			for(File dir : dirs) {
-				LOGGER.info("### 임시 파일 삭제 시작 ###");
-				LOGGER.info("### 대상 디렉토리 : " + dir.getPath() + dir.getName());
+				log.info("### 임시 파일 삭제 시작 ###");
+				log.info("### 대상 디렉토리 : " + dir.getPath() + dir.getName());
 				delCnt = 0;
 				if(dir.isDirectory()) {
 					long curTime = System.currentTimeMillis();
 					for(File file: dir.listFiles()) {
 						//최근 수정일이 하루 이상 지난 파일만 삭제한다.(24시간 * 60분 * 60초 * 1000 = 86400000ms)
 						if(curTime - file.lastModified() > 86400000) {
-							LOGGER.info("### 삭제 파일 : " + file.getPath() + file.getName());
+							log.info("### 삭제 파일 : " + file.getPath() + file.getName());
 							file.delete();
 							delCnt++;
 						}
 					}
 				}
-				LOGGER.info("### 처리 건수 : " + delCnt);
-				LOGGER.info("### 임시 파일 삭제 종료 ###");
+				log.info("### 처리 건수 : " + delCnt);
+				log.info("### 임시 파일 삭제 종료 ###");
 			}
 		}
 	}
@@ -222,7 +221,7 @@ public class BatchComponent {
 	@Transactional(propagation= Propagation.REQUIRED, rollbackFor={Exception.class})
 	public void updatePointForEndDate() throws Exception {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 포인트 배치 시작 ###");
+			log.info("### 포인트 배치 시작 ###");
 			List<PointVo> list = pointService.getBatchPointForEndDate();
 
 			int successCnt = 0;
@@ -258,7 +257,7 @@ public class BatchComponent {
 				throw new Exception("포인트 업데이트 건수 일치 하지 않음.");
 			}
 
-			LOGGER.info("### 포인트 배치 종료 ###");
+			log.info("### 포인트 배치 종료 ###");
 		}
 	}*/
 	
@@ -266,7 +265,7 @@ public class BatchComponent {
 	@Scheduled(cron="0 0 4 * * *")
 	public void modItemStatusCode() {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 품절상품 상태변경 배치 시작 ###");
+			log.info("### 품절상품 상태변경 배치 시작 ###");
 			List<ItemVo> list = itemService.getSoldOutList();
 
 			for (ItemVo vo : list) {
@@ -278,12 +277,12 @@ public class BatchComponent {
 					flag = false;
 				}
 				if (flag) {
-					LOGGER.info("### 품절 상태 변경 성공 : 상품번호 [" + vo.getSeq() + "]");
+					log.info("### 품절 상태 변경 성공 : 상품번호 [" + vo.getSeq() + "]");
 				} else {
-					LOGGER.info("### 품절 상태 변경 실패 : 상품번호 [" + vo.getSeq() + "]");
+					log.info("### 품절 상태 변경 실패 : 상품번호 [" + vo.getSeq() + "]");
 				}
 			}
-			LOGGER.info("### 품절상품 상태변경 배치 종료 ###");
+			log.info("### 품절상품 상태변경 배치 종료 ###");
 		}
 	}
 	
@@ -291,13 +290,13 @@ public class BatchComponent {
 	@Scheduled(cron="0 0 5 * * *")
 	public void sendMailForPasswordNotice() {
 		if("service".equals(Const.LOCATION)) {
-			LOGGER.info("### 비밀번호 변경 안내 메일 발송 배치 시작 ###");
+			log.info("### 비밀번호 변경 안내 메일 발송 배치 시작 ###");
 			try {
 				mailService.sendMailToMemberForPasswordNotice();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			LOGGER.info("### 비밀번호 변경 안내 메일 발송 배치 종료 ###");
+			log.info("### 비밀번호 변경 안내 메일 발송 배치 종료 ###");
 		}
 	}
 }

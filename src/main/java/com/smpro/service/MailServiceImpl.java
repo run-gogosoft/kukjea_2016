@@ -7,14 +7,13 @@ import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.vo.MailVo;
 import com.smpro.vo.MemberVo;
 import com.smpro.vo.OrderVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
@@ -25,20 +24,19 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-@Service("mailService")
+@Slf4j
+@Service
 public class MailServiceImpl implements MailService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
-	
-	@Resource(name = "javaMailSender")
+	@Autowired
 	private JavaMailSender javaMailSender;
 
-	@Resource(name = "messageSource")
+	@Autowired
 	private MessageSource messageSource;
-	
-	@Resource(name = "orderDao")
+
+	@Autowired
 	private OrderDao orderDao;
-	
-	@Resource(name = "memberDao")
+
+	@Autowired
 	private MemberDao memberDao;
 
 	@Override
@@ -53,7 +51,7 @@ public class MailServiceImpl implements MailService {
 			messageHelper.setText(vo.getText(), true);
 			javaMailSender.send(message);
 		} catch (MessagingException e) {
-			LOGGER.error("mail-messaging-exception]" + e.getMessage());
+			log.error("mail-messaging-exception]" + e.getMessage());
 		}
 	}
 

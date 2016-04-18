@@ -389,7 +389,7 @@
 						$(objDeliSeq).focus();
 						flag = false;
 						return flag;
-					} else if($(objDeliSeq).val() !== "25" && $(objDeliNo).val() == "") {
+					} else if($(objDeliSeq).val() !== "19" && $(objDeliNo).val() == "") {
 						alert("송장 번호를 입력해 주세요.");
 						$(objDeliNo).focus();
 						flag = false;

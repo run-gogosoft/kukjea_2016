@@ -1,23 +1,23 @@
 package com.smpro.interceptor.shop;
 
-import java.net.URLEncoder;
-import java.util.Enumeration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.net.URLEncoder;
+import java.util.Enumeration;
 
+@Slf4j
+@Component
 public class SessionCheckShopInterceptorImpl extends HandlerInterceptorAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SessionCheckShopInterceptorImpl.class);
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		LOGGER.debug("interceptor--handler #3:" + handler);
-		LOGGER.info("interceptor--catched #3");
+		log.debug("interceptor--handler #3:" + handler);
+		log.info("interceptor--catched #3");
 	
 		HttpSession session = request.getSession(false);
 

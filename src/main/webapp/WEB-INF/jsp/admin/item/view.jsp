@@ -194,26 +194,26 @@
 									<td>
 										<div class="thumbimg">
 											<div>
-												<a href="${const.UPLOAD_PATH}${vo.img1}" target="_blank">
-													<img src="${const.UPLOAD_PATH}${vo.img1}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+												<a href="/upload${vo.img1}" target="_blank">
+													<img src="/upload${vo.img1}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 													<br/>원본
 												</a>
 											</div>
 											<div>
-												<a href="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's206')}" target="_blank">
-													<img src="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+												<a href="/upload${fn:replace(vo.img1, 'origin', 's206')}" target="_blank">
+													<img src="/upload${fn:replace(vo.img1, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 													<br/>206x206
 												</a>
 											</div>
 											<div>
-												<a href="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's270')}" target="_blank">
-													<img src="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+												<a href="/upload${fn:replace(vo.img1, 'origin', 's270')}" target="_blank">
+													<img src="/upload${fn:replace(vo.img1, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 													<br/>270x270
 												</a>
 											</div>
 											<div>
-												<a href="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's500')}" target="_blank">
-													<img src="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+												<a href="/upload${fn:replace(vo.img1, 'origin', 's500')}" target="_blank">
+													<img src="/upload${fn:replace(vo.img1, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 													<br/>500x500
 												</a>
 											</div>
@@ -226,26 +226,26 @@
 											<div class="clearfix"></div>
 											<div class="thumbimg">
 												<div>
-													<a href="${const.UPLOAD_PATH}${vo.img2}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${vo.img2}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${vo.img2}" target="_blank">
+														<img src="/upload${vo.img2}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>원본
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img2, 'origin', 's206')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img2, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img2, 'origin', 's206')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img2, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>206x206
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img2, 'origin', 's270')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img2, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img2, 'origin', 's270')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img2, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>270x270
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img2, 'origin', 's500')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img2, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img2, 'origin', 's500')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img2, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>500x500
 													</a>
 												</div>
@@ -256,26 +256,26 @@
 											<div class="clearfix"></div>
 											<div class="thumbimg">
 												<div>
-													<a href="${const.UPLOAD_PATH}${vo.img3}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${vo.img3}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${vo.img3}" target="_blank">
+														<img src="/upload${vo.img3}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>원본
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img3, 'origin', 's206')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img3, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img3, 'origin', 's206')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img3, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>206x206
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img3, 'origin', 's270')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img3, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img3, 'origin', 's270')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img3, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>270x270
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img3, 'origin', 's500')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img3, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img3, 'origin', 's500')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img3, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>500x500
 													</a>
 												</div>
@@ -286,26 +286,26 @@
 											<div class="clearfix"></div>
 											<div class="thumbimg">
 												<div>
-													<a href="${const.UPLOAD_PATH}${vo.img4}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${vo.img4}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${vo.img4}" target="_blank">
+														<img src="/upload${vo.img4}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>원본
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img4, 'origin', 's206')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img4, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img4, 'origin', 's206')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img4, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>206x206
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img4, 'origin', 's270')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img4, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img4, 'origin', 's270')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img4, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>270x270
 													</a>
 												</div>
 												<div>
-													<a href="${const.UPLOAD_PATH}${fn:replace(vo.img4, 'origin', 's500')}" target="_blank">
-														<img src="${const.UPLOAD_PATH}${fn:replace(vo.img4, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<a href="/upload${fn:replace(vo.img4, 'origin', 's500')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img4, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
 														<br/>500x500
 													</a>
 												</div>
@@ -409,15 +409,15 @@
 											${vo.content}
 										</c:if>
 										<c:if test="${vo.useCode eq 'I'}">
-											<c:if test="${vo.detailImg1 ne ''}"><img src="${const.UPLOAD_PATH}${vo.detailImg1}" alt="" /></c:if>
-											<c:if test="${vo.detailImg2 ne ''}"><img src="${const.UPLOAD_PATH}${vo.detailImg2}" alt="" /></c:if>
-											<c:if test="${vo.detailImg3 ne ''}"><img src="${const.UPLOAD_PATH}${vo.detailImg3}" alt="" /></c:if>
+											<c:if test="${vo.detailImg1 ne ''}"><img src="/upload${vo.detailImg1}" alt="" /></c:if>
+											<c:if test="${vo.detailImg2 ne ''}"><img src="/upload${vo.detailImg2}" alt="" /></c:if>
+											<c:if test="${vo.detailImg3 ne ''}"><img src="/upload${vo.detailImg3}" alt="" /></c:if>
 										</c:if>
 										--%>
 										${vo.content}
-										<c:if test="${vo.detailImg1 ne ''}"><img src="${const.UPLOAD_PATH}${vo.detailImg1}" alt="" /></c:if>
-										<c:if test="${vo.detailImg2 ne ''}"><img src="${const.UPLOAD_PATH}${vo.detailImg2}" alt="" /></c:if>
-										<c:if test="${vo.detailImg3 ne ''}"><img src="${const.UPLOAD_PATH}${vo.detailImg3}" alt="" /></c:if>
+										<c:if test="${vo.detailImg1 ne ''}"><img src="/upload${vo.detailImg1}" alt="" /></c:if>
+										<c:if test="${vo.detailImg2 ne ''}"><img src="/upload${vo.detailImg2}" alt="" /></c:if>
+										<c:if test="${vo.detailImg3 ne ''}"><img src="/upload${vo.detailImg3}" alt="" /></c:if>
 									</td>
 								</tr>
 							</tbody>

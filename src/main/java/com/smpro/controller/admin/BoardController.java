@@ -1,30 +1,14 @@
 package com.smpro.controller.admin;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.smpro.component.admin.annotation.CheckGrade;
-import com.smpro.service.FilenameService;
-import com.smpro.service.MallService;
-import com.smpro.service.MemberService;
-import com.smpro.service.SystemService;
+import com.smpro.service.*;
+import com.smpro.util.*;
+import com.smpro.vo.BoardVo;
 import com.smpro.vo.CommonVo;
 import com.smpro.vo.FilenameVo;
 import com.smpro.vo.MallVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,32 +17,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.smpro.service.BoardService;
-import com.smpro.util.CommonServletUtil;
-import com.smpro.util.Const;
-import com.smpro.util.EditorUtil;
-import com.smpro.util.FileDownloadUtil;
-import com.smpro.util.FileUploadUtil;
-import com.smpro.util.StringUtil;
-import com.smpro.vo.BoardVo;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+@Slf4j
 @Controller
 public class BoardController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BoardController.class);
-	
-	@Resource(name = "boardService")
+
+	@Autowired
 	private BoardService boardService;
 
-	@Resource(name = "memberService")
+	@Autowired
 	private MemberService memberService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
-	
-	@Resource(name = "filenameService")
+
+	@Autowired
 	private FilenameService filenameService;
-	
-	@Resource(name="systemService")
+
+	@Autowired
 	private SystemService systemService;
 
 	@CheckGrade(controllerName = "boardController", controllerMethod = "list")
@@ -227,7 +209,7 @@ public class BoardController {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
@@ -391,7 +373,7 @@ public class BoardController {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
@@ -600,7 +582,7 @@ public class BoardController {
 		response.setHeader("Content-Disposition", "attachment; filename=\""+ new String(fvo.getFilename().getBytes("utf-8"), "ISO-8859-1") +"\";");
 
 		// 바보같겠지만... upload하는 메서드를 수정하긴 너무 빡셌다. 리얼에서만 돌아가는 것을 확인
-		LOGGER.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
+		log.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		File file = new File(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		FileDownloadUtil.download(response, file);
 		return null;
@@ -637,11 +619,11 @@ public class BoardController {
 
 		// 파일을 삭제
 		try {
-			LOGGER.info("file>>delete>> " + deletePath);
+			log.info("file>>delete>> " + deletePath);
 			filenameService.deleteVo(fvo);
 			new File(deletePath).delete();
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			log.error(e.getMessage());
 		}
 
 		model.addAttribute("callback", new Integer(num));

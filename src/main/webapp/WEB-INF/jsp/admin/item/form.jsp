@@ -159,7 +159,7 @@
 								<div class="col-md-3">
 									<select class="form-control" id="lv4" name="cateLv4Seq"></select>
 								</div>
-							</div
+							</div>
 
 							</c:if>
 							<c:if test="${vo ne null}">
@@ -449,6 +449,28 @@
 										<img src="/front-assets/images/detail/auth_mark_${item.value}.png" alt="${item.name}">
 									</label>
 								</c:forEach>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-2 control-label">상품이미지 이벤트 배너 전시</label>
+								<div class="checkbox col-md-10">
+									<label style="margin-right:0">
+										<input type="checkbox" name="imgBannerCode" value="01" <c:if test="${fn:contains(vo.imgBannerCode,'01')}">checked</c:if>/>최대 ~30% 세일
+									</label>
+									<img src="/front-assets/images/common/img_banner_01.png" style="margin-right:30px"/>
+									<label style="margin-right:0">
+										<input type="checkbox" name="imgBannerCode" value="02" <c:if test="${fn:contains(vo.imgBannerCode,'02')}">checked</c:if>/>설명절 특가
+									</label>
+									<img src="/front-assets/images/common/img_banner_02.png" style="margin-right:30px"/>
+									<label style="margin-right:0">
+										<input type="checkbox" name="imgBannerCode" value="03" <c:if test="${fn:contains(vo.imgBannerCode,'03')}">checked</c:if>/>한정수량
+									</label>
+									<img src="/front-assets/images/common/img_banner_03.png" style="margin-right:30px"/>
+									<label style="margin-right:0">
+										<input type="checkbox" name="imgBannerCode" value="04" <c:if test="${fn:contains(vo.imgBannerCode,'04')}">checked</c:if>/>이번주 행사
+									</label>
+									<img src="/front-assets/images/common/img_banner_04.png" style="margin-right:30px"/>
 								</div>
 							</div>
 

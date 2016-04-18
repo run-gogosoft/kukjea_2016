@@ -4,9 +4,11 @@ import com.smpro.vo.CategoryVo;
 import com.smpro.vo.ItemVo;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class CategoryDaoImpl implements CategoryDao {
 	@Autowired
 	private SqlSession sqlSession;

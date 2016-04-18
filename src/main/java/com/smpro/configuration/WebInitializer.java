@@ -1,5 +1,7 @@
 package com.smpro.configuration;
 
+import com.smpro.configuration.admin.AdminWebAdapter;
+import com.smpro.configuration.shop.ShopWebAdapter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;

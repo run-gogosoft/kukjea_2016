@@ -1,273 +1,193 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<!--[if IE 7]><html class="ie ie7" lang="ko"><![endif]-->
+<!--[if IE 8]><html class="ie ie8" lang="ko"><![endif]-->
+<!--[if !(IE 7) | !(IE 8) ]><!--><html lang="ko"><!--<![endif]-->
 <head>
-	<%@ include file="/WEB-INF/jsp/shop/include/header.jsp" %>
-	<link href="/front-assets/css/category/lv1.css" type="text/css" rel="stylesheet">
-	<title>${title}</title>
-
-      <style type="text/css">
-            #popup-zone {
-                  margin-top:-4px;
-            }
-      </style>
+    <%@ include file="/WEB-INF/jsp/shop/include/head.jsp" %>
 </head>
 <body>
-	<%@ include file="/WEB-INF/jsp/shop/include/navigation.jsp" %>
+<input type="hidden" id="loginSeq" value="${loginSeq}"/>
+<div id="skip_navi">
+    <p><a href="#contents">본문바로가기</a></p>
+</div>
 
-      <div class="breadcrumb">
-            <div class="pull-left" style="margin:8px 10px 0 0;"><img src="/front-assets/images/detail/home.png" alt="홈"> 홈<span class="arrow">&gt;</span></div>
-            <form id="searchForm" method="get" class="pull-left" style="margin-top:8px;">
-                  <select name="cateLv1Seq" style="display:inline;width:155px;" onchange="submitCatagory(1, this, '');">
-                        <option value="">대분류</option>
-                        <c:forEach var="item" items="${cateLv1List}" varStatus="status" begin="0" step="1">
-                              <%--함께누리 측의 요청으로 공공기관에만 특별주문 카테고리를 노출한다.--%>
-                              <c:choose>
-                                    <c:when test="${sessionScope.loginMemberTypeCode eq 'P'}">
-                                          <option value="${item.seq}" <c:if test="${vo.seq eq (''+item.seq)}">selected="selected"</c:if>>${item.name}</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                          <c:if test="${item.seq ne 53}">
-                                                <option value="${item.seq}" <c:if test="${vo.seq eq (''+item.seq)}">selected="selected"</c:if>>${item.name}</option>
-                                          </c:if>
-                                    </c:otherwise>
-                              </c:choose>
+<div id="wrap" class="sub">
+    <%@ include file="/WEB-INF/jsp/shop/include/header.jsp" %>
+    <div id="container">
+        <div id="contents" class="sub_contents">
+            <div class="location_select">
+                <a href="/shop/main">홈</a>
+                    <span>
+                        <select title="상품 대분류" onchange="(this.value)&&(location.href='/shop/lv1/'+this.value);">
+                            <option value="">대분류</option>
+                            <c:forEach items="${cateLv1List}" var="item">
+                            <option value="${item.seq}" <c:if test="${vo.cateLv1Seq eq item.seq}">selected="selected"</c:if>>${item.name}</option>
+                            </c:forEach>
+                        </select>
+                    </span>
+                    <span>
+                    <select title="상품 중분류" onchange="location.href='/shop/lv'+(this.value==''?'1/${lv1.seq}':'2/'+this.value);">
+                        <option value="">중분류</option>
+                        <c:forEach items="${cateLv2List}" var="item">
+                        <option value="${item.seq}" <c:if test="${vo.cateLv2Seq eq item.seq}">selected="selected"</c:if>>${item.name}</option>
                         </c:forEach>
-                  </select>
-
-                  <c:if test="${fn:length(cateLv2List) ne 0}">
-                  <span class="arrow-sub">&gt;</span>
-                  <select name="cateLv2Seq" style="display:inline;width:155px;" onchange="submitCatagory(2, this, ${vo.seq});">
-                        <option value="">중분류(전체)</option>
-                        <c:forEach var="item" items="${cateLv2List}" varStatus="status" begin="0" step="1">
-                              <option value="${item.seq}">${item.name}</option>
-                        </c:forEach>
-                  </select>
-                  </c:if>
-            </form>
-      </div>
-
-	<div class="hero-wrap">
-		<script id="sideTitleTemplate" type="text/html">
-			<div class="lv2Title"><%="${categoryName}"%></div>
-			{{each lv2List}}
-				<ul id="subCategoryList">
-					<li onclick="location.href='/shop/lv2/<%="${seq}"%>'"><%="${categoryName}"%><i class="fa fa-angle-right fa-2x"></i></li>
-				</ul>
-			{{/each}}
-		</script>
-
-		<div class="side-nav">
-			<img src="${const.ASSETS_PATH}/front-assets/images/common/ajaxloader.gif" style="display:block;margin:230px auto 0 auto;" alt="" />
-		</div>
-
-            <%@ include file="/WEB-INF/jsp/shop/include/popup.jsp" %>
-
-		<div class="clearfix"></div>
-
-            <c:if test="${fn:length(gallery1) ne 0}">
-      		<%-- 히어로배너 영역 --%>
-      		<ul class="widget-3th-type">
-	            <c:forEach var="item" items="${gallery1}" varStatus="status" begin="0" step="1">
-	                  <c:if test="${status.index < item.limitCnt}">
-	      			<li>
-	      				<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's500')}" width="480" height="480" alt=""/></a>
-	      				<div class="item">
-	      					<span class="title"><a href="/shop/detail/${item.itemSeq}">${item.itemName}</a></span>
-	                         <c:choose>
-	                               <c:when test="${item.typeCode eq 'N'}">
-	                                     <span class="korea"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원</span></span>
-	                               </c:when>
-	                               <c:when test="${item.typeCode eq 'E'}">
-	                                    <span class="korea">견적요청</span>
-	                               </c:when>
-	                         </c:choose>
-	      				</div>
-	      			</li>
-	                  </c:if>
-	            </c:forEach>
-      		</ul>
-            </c:if>
-	</div>
-
-      <div class="clearfix"></div>
-
-      <c:if test="${fn:length(gallery2) ne 0}">
-      	<div class="widget-gallery-type">
-      		<dl>
-            <c:forEach var="item" items="${gallery2}" varStatus="status" begin="0" step="1">
-                <c:if test="${status.index < 2}">
-      			<%--up--%>
-      			<dd>
-                	<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's500')}" width="270" height="270" alt=""/></a>
-                </dd>
-      			<dt class="number${status.count}">
-      				<div class="up">
-      					<div class="name"><a href="/shop/detail/${item.itemSeq}">${item.itemName}</a></div>
-                         <span class="description">${item.originCountry} | ${item.brand}</span>
-                         <c:choose>
-                          <c:when test="${item.typeCode eq 'N'}">
-                                <div class="korea"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원</span></div>
-                          </c:when>
-                          <c:when test="${item.typeCode eq 'E'}">
-                                <div class="korea">견적요청</div>
-                          </c:when>
-                         </c:choose>
-      				</div>
-      			</dt>
-                </c:if>
-            </c:forEach>
-            <c:forEach var="item" items="${gallery2}" varStatus="status" begin="0" step="1">
-	            <c:if test="${status.index > 1 and status.index < 4}">
-	            <%--down--%>
-	            <dt class="number${status.count}">
-	             <div class="down">
-	                 <div class="name"><a href="/shop/detail/${item.itemSeq}">${item.itemName}</a></div>
-	                 <span class="description">${item.originCountry} | ${item.brand}</span>
-	                 <c:choose>
-	                     <c:when test="${item.typeCode eq 'N'}">
-	                           <div class="korea"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원</span></div>
-	                     </c:when>
-	                     <c:when test="${item.typeCode eq 'E'}">
-	                           <div class="korea">견적요청</div>
-	                     </c:when>
-	                 </c:choose>
-	             </div>
-	            </dt>
-	            <dd class="down-img-wrap">
-               		<a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's500')}" width="270" height="270" alt=""/></a>
-	            </dd>
-	            </c:if>
-            </c:forEach>
-      		</dl>
-      	</div>
-      </c:if>
-      <div class="clearfix"></div>
-
-	  <div id="anchor_list" class="search-bar-wrap" style="margin-top:40px">
-	      <div class="inner">
-	            <div class="item-count">등록제품 : <fmt:formatNumber value="${vo.totalRowCount}"/> 개</div>
-	            <ul class="search-list">
-	                <li class="regdate"><a href="/shop/lv1/${vo.cateLv1Seq}?orderType=regdate&anchor=anchor_list">신상품</a></li>
-	                <li class="lowprice"><a href="/shop/lv1/${vo.cateLv1Seq}?orderType=lowprice&anchor=anchor_list">낮은가격</a></li>
-	                <li class="highprice"><a href="/shop/lv1/${vo.cateLv1Seq}?orderType=highprice&anchor=anchor_list">높은가격</a></li>
-	            </ul>
-	      </div>
-	  </div>
-
-		<div class="ch-container" style="margin-top:0;">
-			<ul class="ch-3col lv1-3col">
-				<c:forEach var="item" items="${list}">
-				<li style="margin-top:23px;">
-					<div class="img">
-					      <a href="/shop/detail/${item.seq}"><img src="${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" <c:if test="${item.img2 ne ''}">data-src="${const.UPLOAD_PATH}${fn:replace(item.img2, 'origin', 's270')}"</c:if> alt="상품이미지"/></a>
-					</div>
-					<div class="info">
-						<div class="name"><a href="/shop/detail/${item.seq}">${item.name}</a></div>
-						<c:if test="${item.typeCode eq 'N'}">
-						<div class="price"><fmt:formatNumber value="${item.sellPrice}"/><span>원</span></div>
-						</c:if>
-						<c:if test="${item.typeCode eq 'E'}">
-						<div class="price" style="font-size:20px;">견적요청</div>
-						</c:if>
-					</div>
-				</li>
-				</c:forEach>
-			</ul>
-		</div>
-      <div class="clearfix"></div>
-      <div id="paging" style="text-align:center;margin-bottom:40px;">${paging}</div>
-
-     <!--  <c:if test="${fn:length(gallery3) ne 0}">
-            <div class="ch-container" style="margin-top:0;">
-                  <ul class="ch-3col lv1-3col">
-                        <c:forEach var="item" items="${gallery3}" varStatus="status" begin="0" step="1">
-                              <c:if test="${status.index < item.limitCnt}">
-                                    <li style="margin-top:23px;">
-                                    	<div class="img">
-                                                <a href="/shop/detail/${item.itemSeq}"><img src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}" <c:if test="${item.img2 ne ''}">data-src="${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img2, 'origin', 's270')}"</c:if>/></a>
-                                          </div>
-                                    	<div class="info">
-                                    		<div class="name"><a href="/shop/detail/${item.itemSeq}">${item.itemName}</a></div>
-                                                <c:choose>
-                                                      <c:when test="${item.typeCode eq 'N'}">
-                                                            <div class="price"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /><span>원<span></div>
-                                                      </c:when>
-                                                      <c:when test="${item.typeCode eq 'E'}">
-                                                            <div class="price" style="font-size:20px;">견적요청</div>
-                                                      </c:when>
-                                                </c:choose>
-                                    	</div>
-                                    </li>
-                              </c:if>
-                        </c:forEach>
-                  </ul>
+                    </select>
+                </span>
             </div>
-      </c:if> -->
-<div class="clearfix"></div>
-<%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
-<script type="text/javascript" src="/front-assets/js/category/lv1.js"></script>
-<script type="text/javascript" src="/front-assets/js/category/common.lv.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(".img img[data-src]").mouseover(function(){
-			if(typeof $(this).attr("data-swap") === "undefined") {
-				$(this).attr("data-swap", $(this).attr("src"));
-			}
-			$(this).attr("src", $(this).attr("data-src"));
-		}).mouseleave(function(){
-			$(this).attr("src", $(this).attr("data-swap"));
-	
-		});
-	
-		$(".widget-3th-type li").each(function(){
-			$(this).mouseover(function(){
-				$(this).find(".item").slideDown();
-			}).mouseleave(function(){
-				$(this).find(".item").stop().slideUp();
-			});
-		});
-		
-		CHSideNavUtil.render(${vo.cateLv1Seq});
-		
-		//페이징 네비게이션 이동시 상품리스트 영역 스크롤 유지
-		<c:if test="${anchor ne null}">
-			location.href = "#${anchor}";
-		</c:if>
-		
-		//정렬 버튼 css스타일
-		setStyleOrderBtn("${vo.orderType}");
-	});
-	
-	var goPage = function (page) {
-		location.href = location.pathname + "?pageNum=" + page + "&anchor=anchor_list&orderType=${vo.orderType}" + "&" + $("#searchForm").serialize();
-	};
-	
-	var submitCatagory = function (lvValue , obj, dataLv) {
-	      var urlDepth1 = '';
-	      var urlDepthEtc = '';
-	      //카테고리를 아무것도 선택하지 않았을 경우 상위 카테고리로 이동한다.
-	      if($(obj).val() === '') {
-	            if (lvValue === 1) {
-	                  urlDepth1 = "/shop/main";
-	            } else {
-	                  urlDepthEtc = "/shop/lv" + (lvValue - 1) + "/" + dataLv;
-	            }
-	      } else {
-	            urlDepthEtc = "/shop/lv"+lvValue+"/"+$(obj).val();
-	      }
-	
-	      $('#searchForm').attr('action', urlDepth1 !== '' ? urlDepth1 : urlDepthEtc); //urlDepth1이 null이 아니라면 urlDepth1이 실행될 것이다.
-	      $('#searchForm').submit();
-	};
-	
-	var setStyleOrderBtn = function(orderType) {
-		$('.regdate').removeClass('active');
-		$('.lowprice').removeClass('active');
-		$('.highprice').removeClass('active');
-		
-		$('.'+orderType).addClass('active');
-	};
-</script>
+
+            <div class="goods_catgory">
+                <table>
+                    <caption>상품 카테고리</caption>
+                    <tbody>
+                    <tr>
+                        <th scope="row"><a href="/shop/lv1/${lv1.seq}">${lv1.name}</a></th>
+                        <td>
+                            <ul>
+                                <c:forEach items="${cateLv2List}" var="item">
+                                <li <c:if test="${vo.cateLv2Seq eq item.seq}">class="on"</c:if>><a href="/shop/lv2/${item.seq}">${item.name}</a></li>
+                                </c:forEach>
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="goods_container">
+                <!-- 상품목록 -->
+                <div class="goods_list_wrap">
+                    <form name="searchForm">
+                        <div class="re_search">
+                            <label>결과 내 재검색</label>
+                            <input type="text" class="inp_txt w195" name="name" value="${vo.name}"/>
+                            <button type="submit" class="btn btn_gray btn_xs">검색</button>
+                        </div>
+
+                        <div class="board_option">
+                            <dl class="list_ctn">
+                                <dt>선택 상품 정렬</dt>
+                                <dd>
+                                    <a href="#" <c:if test="${vo.rowCount eq 9}">class="on"</c:if> onclick="changeRowCount(9);return false;">9개</a>
+                                    <a href="#" <c:if test="${vo.rowCount eq 10}">class="on"</c:if> onclick="changeRowCount(10);return false;">10개</a>
+                                    <a href="#" <c:if test="${vo.rowCount eq 12}">class="on"</c:if> onclick="changeRowCount(12);return false;">12개</a>
+                                    <a href="#" <c:if test="${vo.rowCount eq 15}">class="on"</c:if> onclick="changeRowCount(15);return false;">15개</a>
+                                </dd>
+                                <input type="hidden" name="rowCount" value="${vo.rowCount}" />
+                            </dl>
+
+                            <div class="list_type">
+                                <a href="#" class="type_img<c:if test="${vo.listStyle eq 'img'}"> on</c:if>" onclick="changeListStyle('img');return false;" title="이미지 타입으로 목록보기"><span class="hide">이미지 타입으로 목록보기</span></a>
+                                <a href="#" class="type_img_list<c:if test="${vo.listStyle eq 'all'}"> on</c:if>" onclick="changeListStyle('all');return false;" title="이미지+리스트 타입으로 목록보기"><span class="hide">이미지+리스트 타입으로 목록보기</span></a>
+                                <a href="#" class="type_list<c:if test="${vo.listStyle eq 'list'}"> on</c:if>" onclick="changeListStyle('list');return false;" title="리스트 타입으로 목록보기"><span class="hide">리스트 타입으로 목록보기</span></a>
+                            </div>
+                            <input type="hidden" name="listStyle" value="${vo.listStyle}" />
+                        </div>
+                    </form>
+
+                    <c:choose>
+                    <c:when test="${vo.listStyle eq 'img'}">
+                    <div class="goods_list img_list_type02">
+                        <ul>
+                            <c:forEach var="item" items="${list}">
+                            <li data-seq="${item.seq}"><!-- class="on" -->
+                                <input type="checkbox" class="check" title="상품 선택" />
+                                <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
+                                    <span class="thumb">
+                                        <img src="/upload${fn:replace(item.img1, 'origin', 's270')}" alt="" onerror="noImage(this)" />
+                                        <span class="icons">
+                                            <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
+                                            <%-- span class="icon icon_txt icon_txt_yellow">10+1</span>
+                                            <span class="icon icon_txt icon_txt_red">50%</span --%>
+                                        </span>
+                                    </span>
+                                    <span class="tit">${item.name}</span>
+                                    <span class="price">
+                                        <strong><fmt:formatNumber value="${item.sellPrice}"/></strong>원
+                                    </span>
+                                </a>
+                            </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                    </c:when>
+                    <c:otherwise>
+                    <div class="goods_list">
+                        <table class="data_type2">
+                            <caption>상품 목록</caption>
+                            <colgroup>
+                                <col style="width:25px" />
+                                <c:if test="${vo.listStyle eq 'all'}"><col style="width:70px" /></c:if>
+                                <col style="width:auto" />
+                                <col style="width:55px" />
+                                <col style="width:120px" />
+                                <col style="width:100px" />
+                                <col style="width:80px" />
+                            </colgroup>
+
+                            <thead>
+                            <tr>
+                                <th scope="col"><span class="hide">상품 선택</span></th>
+                                <c:if test="${vo.listStyle eq 'all'}">
+                                <th scope="col"><span class="hide">상품 이미지</span></th>
+                                </c:if>
+                                <th scope="col">상품명</th>
+                                <th scope="col"><span class="hide">프로모션 아이콘</span></th>
+                                <th scope="col">규격</th>
+                                <th scope="col">제조사</th>
+                                <th scope="col">가격</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="item" items="${list}">
+                            <tr data-seq="${item.seq}">
+                                <td><input type="checkbox" class="check" title="상품 선택" /></td>
+                                <c:if test="${vo.listStyle eq 'all'}"><td>
+                                    <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
+                                    <span class="thumb">
+                                        <img src="/upload${fn:replace(item.img1, 'origin', 's270')}" alt="" onerror="noImage(this)" />
+                                    </span>
+                                    </a>
+                                </td></c:if>
+                                <td class="lt">
+                                    <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
+                                    ${item.name}
+                                    </a>
+                                </td>
+                                <td>
+                                    <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
+                                    <%--span class="icon icon_txt icon_txt_yellow">10+1</span>
+                                    <span class="icon icon_txt icon_txt_red">50%</span --%>
+                                </td>
+                                <td></td>
+                                <td>${item.maker}</td>
+                                <td><em class="txt_accent"><fmt:formatNumber value="${item.sellPrice}"/></em>원</td>
+                            </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                    </c:otherwise>
+                    </c:choose>
+
+                    <div class="btn_action mt10">
+                        <button type="button" class="btn btn_default" onclick="alert('준비중입니다')">선택상품 비교</button>
+                    </div>
+                    <div class="board_action">${paging}</div>
+                </div>
+
+                <div id="DescBody" class="goods_view"></div>
+            </div>
+        </div>
+        <%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>
+    </div>
+
+    <div id="footer">
+        <%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
+    </div>
+</div>
+
+<%@ include file="/WEB-INF/jsp/shop/include/view_detail.jsp" %>
+
 </body>
 </html>

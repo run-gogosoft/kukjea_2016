@@ -5,22 +5,22 @@ import com.smpro.dao.UserDao;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Service("systemService")
+@Service
 public class SystemServiceImpl implements SystemService {
-	@Resource(name = "systemDao")
+	@Autowired
 	private SystemDao systemDao;
 
-	@Resource(name = "userDao")
+	@Autowired
 	private UserDao userDao;
 
 	public void setUserDao(UserDao userDao) {

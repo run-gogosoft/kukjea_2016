@@ -4,17 +4,17 @@ import com.smpro.dao.ItemDao;
 import com.smpro.dao.ItemOptionDao;
 import com.smpro.vo.ItemOptionVo;
 import com.smpro.vo.ItemVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("itemOptionService")
+@Service
 public class ItemOptionServiceImpl implements ItemOptionService {
-	@Resource(name = "itemOptionDao")
+	@Autowired
 	private ItemOptionDao itemOptionDao;
 
-	@Resource(name = "itemDao")
+	@Autowired
 	private ItemDao itemDao;
 
 	public List<ItemOptionVo> getList(Integer itemSeq) {

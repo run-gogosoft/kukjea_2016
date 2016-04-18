@@ -1,13 +1,15 @@
 package com.smpro.controller.admin;
 
 import com.smpro.component.admin.annotation.CheckGrade;
-import com.smpro.service.*;
+import com.smpro.service.CategoryService;
+import com.smpro.service.ItemOptionService;
+import com.smpro.service.ItemService;
+import com.smpro.service.SellerService;
 import com.smpro.util.*;
 import com.smpro.util.exception.ExcelOutOfBoundsException;
 import com.smpro.vo.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,21 +26,20 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+@Slf4j
 @Controller
 public class ItemExcelController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemExcelController.class);
-	
 
-	@Resource(name = "categoryService")
+	@Autowired
 	private CategoryService categoryService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name = "itemOptionService")
+	@Autowired
 	private ItemOptionService itemOptionService;
 
-	@Resource(name = "sellerService")
+	@Autowired
 	private SellerService sellerService;
 
 	@RequestMapping("/item/excel/list")
@@ -82,7 +81,7 @@ public class ItemExcelController {
 		try {
 			fileMap = itemService.uploadFilesByMap(request);
 		} catch (IOException ie) {
-			LOGGER.error(ie.getMessage());
+			log.error(ie.getMessage());
 			model.addAttribute("message", "서버상의 문제가 발생했습니다. 관리자에게 문의하여 주십시오.");
 			ie.printStackTrace();
 			return Const.ALERT_PAGE;
@@ -121,7 +120,7 @@ public class ItemExcelController {
 
 		// filepath에 ..을 포함하고 있다면 해킹의 가능성이 있다
 		if (filepath.indexOf("\\.\\.") > 0) {
-			LOGGER.warn("/item/excel/check ==> " + filepath);
+			log.warn("/item/excel/check ==> " + filepath);
 			errorList.add("파일명이 잘못 되었거나, 비정상적인 경로로 접근하고 있습니다");
 		}
 
@@ -131,7 +130,7 @@ public class ItemExcelController {
 		}
 
 		if (errorList.size() > 0) {
-			LOGGER.error(errorList.toString());
+			log.error(errorList.toString());
 			model.addAttribute("errorCount", new Integer(errorList.size()));
 			model.addAttribute("list", errorList);
 			return "/ajax/get-error-list.jsp";
@@ -171,7 +170,7 @@ public class ItemExcelController {
 		}
 
 		if (errorList.size() > 0) {
-			LOGGER.error(errorList.toString());
+			log.error(errorList.toString());
 
 			model.addAttribute("errorCount", new Integer(errorList.size()));
 			model.addAttribute("list", errorList);
@@ -185,7 +184,7 @@ public class ItemExcelController {
 		}
 
 		if (errorList.size() > 0) {
-			LOGGER.error(errorList.toString());
+			log.error(errorList.toString());
 
 			model.addAttribute("errorCount", new Integer(errorList.size()));
 			model.addAttribute("list", errorList);
@@ -217,7 +216,7 @@ public class ItemExcelController {
 				e.printStackTrace();
 				errorList.add("[" + (i + 1) + "] 번째 아이템을 매핑하던 도중 오류가 발생했습니다");
 				errorList.add(e.getMessage());
-				LOGGER.error(e.getMessage());
+				log.error(e.getMessage());
 			}
 		}
 
@@ -231,7 +230,7 @@ public class ItemExcelController {
 		// 외부 이미지를 불러와서 imagemagick으로 변환한다
 		for (int i = 0; i < list.size(); i++) {
 			if (errorList.size() > 0) {
-				LOGGER.error(errorList.toString());
+				log.error(errorList.toString());
 
 				model.addAttribute("errorCount", new Integer(errorList.size()));
 				model.addAttribute("list", errorList);
@@ -270,11 +269,11 @@ public class ItemExcelController {
 			}
 			statusMap.put("imageCount", new Integer(i + 1));
 			session.setAttribute("excelStatus", statusMap);
-			LOGGER.info(list.get(i).toString());
+			log.info(list.get(i).toString());
 		}
 
 		if (errorList.size() > 0) {
-			LOGGER.error(errorList.toString());
+			log.error(errorList.toString());
 
 			model.addAttribute("errorCount", new Integer(errorList.size()));
 			model.addAttribute("list", errorList);
@@ -324,7 +323,7 @@ public class ItemExcelController {
 		}
 
 		if (errorList.size() > 0) {
-			LOGGER.error(errorList.toString());
+			log.error(errorList.toString());
 
 			model.addAttribute("errorCount", new Integer(errorList.size()));
 			model.addAttribute("list", errorList);
@@ -354,14 +353,14 @@ public class ItemExcelController {
 		ImageDownloadUtil iu = new ImageDownloadUtil();
 		String tempFilename = UUID.randomUUID().toString();
 
-		LOGGER.debug("TRACE: tempExt --> " + tempExt);
-		LOGGER.debug("TRACE: tempFilename --> " + tempFilename);
+		log.debug("TRACE: tempExt --> " + tempExt);
+		log.debug("TRACE: tempFilename --> " + tempFilename);
 
 		BufferedImage b = iu.readImage(StringUtil.restoreClearXSS(imagePath));
 		ImageDownloadUtil.writeImage(b, realPath + "/item/temp/" + tempFilename + tempExt);
 		
 		if (errorList.size() > 0) {
-			LOGGER.error(errorList.toString());
+			log.error(errorList.toString());
 
 			model.addAttribute("errorCount", new Integer(errorList.size()));
 			model.addAttribute("list", errorList);
@@ -928,11 +927,11 @@ public class ItemExcelController {
 					ItemOptionVo ovo = new ItemOptionVo();
 					// 옵션명
 					ovo.setOptionName(("" + list.get(itemIndex++)).trim());
-					LOGGER.info("getOptionName=" + ovo.getOptionName());
+					log.info("getOptionName=" + ovo.getOptionName());
 
 					// 옵션항목
 					ovo.setValueName(("" + list.get(itemIndex++)).split(",")[i].trim());
-					LOGGER.info("getValueName=" + ovo.getValueName());
+					log.info("getValueName=" + ovo.getValueName());
 					// 추가가격
 					ovo.setOptionPrice(Integer.parseInt(("" + list.get(itemIndex++)).split(",")[i].trim()));
 					// 재고량
@@ -944,11 +943,11 @@ public class ItemExcelController {
 				ItemOptionVo ovo = new ItemOptionVo();
 				// 옵션명
 				ovo.setOptionName("옵션");
-				LOGGER.info("getOptionName=" + ovo.getOptionName());
+				log.info("getOptionName=" + ovo.getOptionName());
 
 				// 옵션항목
 				ovo.setValueName("기본");
-				LOGGER.info("getValueName=" + ovo.getValueName());
+				log.info("getValueName=" + ovo.getValueName());
 				// 추가가격
 				ovo.setOptionPrice(0);
 				// 재고량

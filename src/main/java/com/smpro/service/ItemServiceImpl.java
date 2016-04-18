@@ -4,9 +4,9 @@ import com.smpro.dao.ItemDao;
 import com.smpro.util.*;
 import com.smpro.util.exception.ImageIsNotAvailableException;
 import com.smpro.vo.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,18 +14,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-@Service("itemService")
+@Slf4j
+@Service
 public class ItemServiceImpl implements ItemService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceImpl.class);
-	
-	@Resource(name = "itemDao")
+
+	@Autowired
 	private ItemDao itemDao;
 
 	public List<ItemVo> getList(ItemVo vo) {
@@ -262,7 +261,7 @@ public class ItemServiceImpl implements ItemService {
 			new File(realPath + vo.getImg1().replaceAll("origin", "s206")).delete();
 			new File(realPath + vo.getImg1().replaceAll("origin", "s270")).delete();
 			new File(realPath + vo.getImg1().replaceAll("origin", "s500")).delete();
-			LOGGER.info("vo.getImg1 deleted --> " + vo.getImg1());
+			log.info("vo.getImg1 deleted --> " + vo.getImg1());
 		}
 		
 		if(!"/old/no_image1.jpg".equals(vo.getImg2())) {
@@ -270,27 +269,27 @@ public class ItemServiceImpl implements ItemService {
 			new File(realPath + vo.getImg2().replaceAll("origin", "s206")).delete();
 			new File(realPath + vo.getImg2().replaceAll("origin", "s270")).delete();
 			new File(realPath + vo.getImg2().replaceAll("origin", "s500")).delete();
-			LOGGER.info("vo.getImg2 deleted --> " + vo.getImg2());
+			log.info("vo.getImg2 deleted --> " + vo.getImg2());
 		}
 		
 		new File(realPath + vo.getImg3()).delete();
 		new File(realPath + vo.getImg3().replaceAll("origin", "s206")).delete();
 		new File(realPath + vo.getImg3().replaceAll("origin", "s270")).delete();
 		new File(realPath + vo.getImg3().replaceAll("origin", "s500")).delete();
-		LOGGER.info("vo.getImg3 deleted --> " + vo.getImg3());
+		log.info("vo.getImg3 deleted --> " + vo.getImg3());
 
 		new File(realPath + vo.getImg4()).delete();
 		new File(realPath + vo.getImg4().replaceAll("origin", "s206")).delete();
 		new File(realPath + vo.getImg4().replaceAll("origin", "s270")).delete();
 		new File(realPath + vo.getImg4().replaceAll("origin", "s500")).delete();
-		LOGGER.info("vo.getImg4 deleted --> " + vo.getImg4());
+		log.info("vo.getImg4 deleted --> " + vo.getImg4());
 
 		new File(realPath + vo.getDetailImg1()).delete();
-		LOGGER.info("vo.getDetailImg1 deleted --> " + vo.getDetailImg1());
+		log.info("vo.getDetailImg1 deleted --> " + vo.getDetailImg1());
 		new File(realPath + vo.getDetailImg2()).delete();
-		LOGGER.info("vo.getDetailImg2 deleted --> " + vo.getDetailImg2());
+		log.info("vo.getDetailImg2 deleted --> " + vo.getDetailImg2());
 		new File(realPath + vo.getDetailImg3()).delete();
-		LOGGER.info("vo.getDetailImg3 deleted --> " + vo.getDetailImg3());
+		log.info("vo.getDetailImg3 deleted --> " + vo.getDetailImg3());
 		
 		//에디터를 통해 업로드한 이미지 삭제
 		EditorUtil.deleteImage(seq, "item");
@@ -377,7 +376,7 @@ public class ItemServiceImpl implements ItemService {
 	public boolean updateInfo(ItemInfoNoticeVo vo) throws Exception {
 		List<String> tempPropValList = new ArrayList<>();
 		int result = itemDao.updateTypeCd(vo);
-		LOGGER.info("### service updateTypeCd result :::: [" + result + "]");
+		log.info("### service updateTypeCd result :::: [" + result + "]");
 		if (result > 0) {
 			for (int i = 0; i < 20; i++) {
 				// size() 는 배열의 총길이를 나타내고 i는0부터 시작하므로 size에서 1을 빼준다(빼주지 않으면
@@ -398,7 +397,7 @@ public class ItemServiceImpl implements ItemService {
 			} else {
 				result += itemDao.updateInfo(vo);
 			}
-			LOGGER.info(
+			log.info(
 					"### service updateInfo result :::: [" + result + "]");
 		}
 		// insert 결과가 2가 아닐경우 롤백

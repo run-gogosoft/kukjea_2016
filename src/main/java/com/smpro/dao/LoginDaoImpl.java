@@ -3,7 +3,9 @@ package com.smpro.dao;
 import com.smpro.vo.UserVo;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class LoginDaoImpl implements LoginDao {
 	@Autowired
 	private SqlSession sqlSession;

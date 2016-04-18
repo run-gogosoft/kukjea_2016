@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.smpro.vo.EstimateVo;
 import com.smpro.vo.ItemVo;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface EstimateService {
 	/* 견적 신청 */
 	public List<EstimateVo> getList(EstimateVo vo);

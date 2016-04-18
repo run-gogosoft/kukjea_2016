@@ -16,7 +16,7 @@ var Cart = {
 
 				if(Cart.list.length === 0) {
 					$('#allChk').prop('checked',false);
-					$("#cartBody").html("<tr><td class='text-center' style='padding:50px' colspan='10'>장바구니에 담긴 상품이 없습니다.</td></tr>");
+					$("#cartBody").html("<tr><td class='text-center' style='padding:50px' colspan='9'>장바구니에 담긴 상품이 없습니다.</td></tr>");
 				}
 
 				callback();
@@ -172,6 +172,7 @@ var CHProcess = {
 			, count:parseInt($(obj).parents('tr').find("input[name=count]").val(), 10)
 			, optionValueSeq:parseInt($(obj).parents('tr').find("input[name=optionValueSeq]").val(), 10)
 			, stockCount : parseInt($(obj).parents('tr').find("input[name=stockCount]").val(), 10)
+			, stockFlag : $(obj).parents('tr').find("input[name=stockFlag]").val()
 			, deliPrepaidFlag:''
 		};
 	}
@@ -179,8 +180,8 @@ var CHProcess = {
 		CHProcess.initVo(obj);
 		if(CHProcess.vo.optionValueSeq<=0 || CHProcess.vo.count<=0) {
 			return "허용되지 않은 접근입니다.";
-		} else if(CHProcess.stockCount < CHProcess.vo.count) {
-			return "재고가 없습니다.";
+		} else if(CHProcess.vo.stockFlag == "Y" && CHProcess.vo.stockCount < CHProcess.vo.count) {
+			return "재고가 없거나 수량이 부족합니다.";
 		}
 		return "";
 	}
@@ -232,10 +233,8 @@ $(document).ready(function(){
 	Cart.render(function(){
 		Cart.renderTotal();
 		if( $("#cartBody span[data-danger=true]").length > 0 ) {
-			$("#attentionModal").modal();
+			alert('장바구니 항목중에 재고가 없는 상품이 있습니다.\n품절 중인 상품을 삭제해주세요.');
 		}
 	});
-
-	$('.cart').find('img').attr("src", $('.cart').find('img').attr("src").replace("_off", "_on"));
 });
 

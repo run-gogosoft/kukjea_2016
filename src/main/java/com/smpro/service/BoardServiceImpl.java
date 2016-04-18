@@ -4,14 +4,14 @@ import com.smpro.dao.BoardDao;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.BoardVo;
 import com.smpro.vo.MemberVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("boardService")
+@Service
 public class BoardServiceImpl implements BoardService {
-	@Resource(name = "boardDao")
+	@Autowired
 	private BoardDao boardDao;
 
 	public List<BoardVo> getList(BoardVo vo) {

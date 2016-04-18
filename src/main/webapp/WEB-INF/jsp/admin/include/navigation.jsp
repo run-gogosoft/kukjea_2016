@@ -5,8 +5,8 @@
 	<header class="main-header">
 		<!-- Logo -->
 		<a href="/admin/index" class="logo"> <!-- mini logo for sidebar mini 50x50 pixels -->
-			<span class="logo-mini">함께누리몰</span> <!-- logo for regular state and mobile devices -->
-			<span class="logo-lg"><b>함께누리몰</b> 어드민</span>
+			<span class="logo-mini">국제몰</span> <!-- logo for regular state and mobile devices -->
+			<span class="logo-lg"><b>국제몰</b> 어드민</span>
 		</a>
 		<!-- Header Navbar: style can be found in header.less -->
 		<nav class="navbar navbar-static-top" role="navigation">

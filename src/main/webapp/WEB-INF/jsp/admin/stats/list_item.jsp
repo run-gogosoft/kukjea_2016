@@ -9,11 +9,11 @@
 <div class="content-wrapper">
 	<!-- 헤더 -->
 	<section class="content-header">
-		<h1>상품 누적 판매 수 <small></small></h1>
+		<h1>기간별 상품 판매 현황 <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li></li>
-			<li class="active"></li>
+			<li>통계</li>
+			<li class="active">기관별 상품 판매 현황</li>
 		</ol>
 	</section>
 	<section class="content">

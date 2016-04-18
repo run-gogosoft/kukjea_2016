@@ -1,10 +1,12 @@
 package com.smpro.service;
 
+import com.smpro.vo.FilenameVo;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 
-import com.smpro.vo.FilenameVo;
-
+@Service
 public interface FilenameService {
 	public FilenameVo getVo(Map<String, Object> map);
 	public FilenameVo getVo(Integer seq);

@@ -1,9 +1,11 @@
 package com.smpro.service;
 
 import com.smpro.vo.ItemVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface CartService {
 	public List<ItemVo> getList(ItemVo vo);
 

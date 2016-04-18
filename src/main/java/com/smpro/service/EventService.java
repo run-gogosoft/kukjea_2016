@@ -10,7 +10,9 @@ import com.smpro.util.exception.ImageIsNotAvailableException;
 import com.smpro.util.exception.ImageSizeException;
 import com.smpro.vo.BoardVo;
 import com.smpro.vo.EventVo;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface EventService {
 	public List<EventVo> getList(EventVo vo);
 

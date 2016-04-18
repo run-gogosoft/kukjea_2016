@@ -2,9 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
 <%@ taglib prefix="smp" tagdir="/WEB-INF/tags" %>
-<un:useConstants var="const" className="com.smpro.util.Const" />
 <% pageContext.setAttribute("newLine","\n"); %>
 <% pageContext.setAttribute("carriageReturn","\r"); %>
 {
@@ -18,8 +16,8 @@
 			, "name":"${item.name}"
 			, "typeCode":"${item.typeCode}"
 			, "sellPrice":"<fmt:formatNumber value="${item.sellPrice}" pattern="#,###" />"
-			, "img1":"<c:if test="${item.img1 ne ''}">${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}</c:if>"
-			, "img2":"<c:if test="${item.img2 ne ''}">${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img2, 'origin', 's270')}</c:if>"
+			, "img1":"<c:if test="${item.img1 ne ''}">/upload${fn:replace(item.img1, 'origin', 's270')}</c:if>"
+			, "img2":"<c:if test="${item.img2 ne ''}">/upload${fn:replace(item.img2, 'origin', 's270')}</c:if>"
 		}
 	</c:forEach>
 	],

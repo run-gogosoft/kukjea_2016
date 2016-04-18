@@ -3,19 +3,19 @@ package com.smpro.service;
 import com.smpro.dao.MallDao;
 import com.smpro.dao.UserDao;
 import com.smpro.vo.MallVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("mallService")
+@Service
 public class MallServiceImpl implements MallService {
-	@Resource(name = "mallDao")
+	@Autowired
 	private MallDao mallDao;
 
-	@Resource(name = "userDao")
+	@Autowired
 	private UserDao userDao;
 
 	public List<MallVo> getList(MallVo reqVo) {

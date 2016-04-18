@@ -161,7 +161,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label" for="answer">답변 <i class="fa fa-check"></i></label>
 								<div class="col-md-5">
-									<textarea class="form-control" rows="10" id="answer" name="answer" alt="답변"><c:if test="${vo.answer eq ''}">[함께누리를 이용해주셔서 감사합니다.]</c:if>${ vo.answer }</textarea>
+									<textarea class="form-control" rows="10" id="answer" name="answer" alt="답변"><c:if test="${vo.answer eq ''}">[국제몰을 이용해주셔서 감사합니다.]</c:if>${ vo.answer }</textarea>
 								</div>
 							</div>
 						</c:when>
@@ -218,7 +218,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">상품명</label>
 								<div class="col-md-10 form-control-static">
-									<img src="${const.UPLOAD_PATH}${fn:replace(vo.img1, 'origin', 's206')}" style="width:70px;"/>
+									<img src="/upload${fn:replace(vo.img1, 'origin', 's206')}" style="width:70px;"/>
 									<a href="/admin/item/view/${ vo.integrationSeq }" target="_blank">${vo.itemName}</a>
 								</div>
 							</div>
@@ -254,7 +254,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label" for="answer">답변 <i class="fa fa-check"></i></label>
 								<div class="col-md-5">
-									<textarea class="form-control" rows="10" id="answer" name="answer" alt="답변"><c:if test="${vo.answer eq ''}">[함께누리를 이용해주셔서 감사합니다.]</c:if>${ vo.answer }</textarea>
+									<textarea class="form-control" rows="10" id="answer" name="answer" alt="답변"><c:if test="${vo.answer eq ''}">[국제몰을 이용해주셔서 감사합니다.]</c:if>${ vo.answer }</textarea>
 								</div>
 							</div>
 						</c:when>

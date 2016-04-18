@@ -1,9 +1,11 @@
 package com.smpro.service;
 
 import com.smpro.vo.MenuVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface MenuService {
 	public List<MenuVo> getMainList();
 	public List<MenuVo> getSubList(Integer mainSeq);

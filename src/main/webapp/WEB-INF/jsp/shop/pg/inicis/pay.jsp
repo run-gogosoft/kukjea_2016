@@ -393,7 +393,7 @@ body, tr, td {font-size:10pt; font-family:굴림,verdana; color:#433F37; line-he
 table, img {border:none}
 
 /* Padding ******/ 
-.pl_01 {padding:1 10 0 10; line-height:19px;}
+.pl_01 {padding:1px 10px 0px 10px; line-height:19px;}
 .pl_03 {font-size:20pt; font-family:굴림,verdana; color:#FFFFFF; line-height:29px;}
 
 /* Link ******/ 

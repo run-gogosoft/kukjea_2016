@@ -4,14 +4,14 @@ import com.smpro.dao.ReviewDao;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.MemberVo;
 import com.smpro.vo.ReviewVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("reviewService")
+@Service
 public class ReviewServiceImpl implements ReviewService {
-	@Resource(name = "reviewDao")
+	@Autowired
 	private ReviewDao reviewDao;
 
 	public List<ReviewVo> getList(ReviewVo vo) {

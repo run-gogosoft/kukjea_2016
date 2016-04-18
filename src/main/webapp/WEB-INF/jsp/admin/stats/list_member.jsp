@@ -14,13 +14,13 @@
 		<h1>회원별 매출 현황 <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li></li>
-			<li class="active"></li>
+			<li>통계</li>
+			<li class="active">회원별 매출 현황</li>
 		</ol>
 	</section>
 	<section class="content">
 		<div class="row">
-			<div class="col-md-12">				
+			<div class="col-md-12">
 				<div class="box">
 					<!-- 소제목 -->
 					<!-- <div class="box-header"><h3 class="box-title"></h3></div> -->

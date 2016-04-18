@@ -12,8 +12,8 @@
 		<h1>입점업체 리스트 <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li></li>
-			<li class="active"></li>
+			<li>업체 관리</li>
+			<li class="active">입점업체 리스트</li>
 		</ol>
 	</section>
 	<section class="content">
@@ -119,18 +119,18 @@
 						<table class="table table-bordered table-striped">
 							<colgroup>
 								<col style="width:3%;"/>
-								<col style="width:10%;"/>
-								<col style="width:10%;"/>
-								<col style="width:7%"/>
+								<col style="width:8%;"/>
+								<col style="width:*;"/>
+								<col style="width:5%"/>
+								<col style="width:8%"/>
 								<col style="width:10%"/>
-								<col style="width:10%"/>
+								<col style="width:5%;"/>
+								<col style="width:10%;"/>
+								<col style="width:7%;"/>
+								<col style="width:10%;"/>
+								<col style="width:7%;"/>
 								<col style="width:6%;"/>
-								<col style="width:10%;"/>
-								<col style="width:9%;"/>
-								<col style="width:9%;"/>
-								<col style="width:9%;"/>
-								<col style="width:7%;"/>
-								<col style="width:7%;"/>
+								<col style="width:6%;"/>
 							</colgroup>
 							<thead>
 								<tr>

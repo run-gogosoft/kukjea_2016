@@ -454,10 +454,7 @@ var checkProc = function(obj) {
 
 var goPage = function (page) {
 	var lv1Value = parseInt($('#cateLv1Seq option:selected').val(),10) || 0;
-
-	getItemtList(page, (function () {
-		getItemListPaging(page);
-	})());
+	getItemtList(page);
 };
 
 var initSubPage = function(){
@@ -865,12 +862,16 @@ var getItemtList = function (pageNum, callback) {
 		dataType: "text",
 		data: {cateLv1Seq: $("select[name=cateLv1Seq]").val(), cateLv2Seq: $("select[name=cateLv2Seq]").val(), cateLv3Seq: $("select[name=cateLv3Seq]").val(), cateLv4Seq: $("select[name=cateLv4Seq]").val(), seq: $("#searchItemSeq").val(), name: $("#searchItemName").val(), pageNum: pageNum},
 		success: function (data) {
-			var list = $.parseJSON(data);
-			if (list.length != 0) {
-				$("#searchBoardTarget").html($("#trSearchTemplate").tmpl(list));
+			var vo = $.parseJSON(data);
+			if (vo.list.length != 0) {
+				$("#searchBoardTarget").html($("#trSearchTemplate").tmpl(vo.list));
 			} else {
 				$("#searchBoardTarget").html("<tr><td class='text-center' colspan='7'>등록된 내용이 없습니다.</td></tr>");
 			}
+
+			$("#paging").html(vo.paging);
+			$("#paging").addClass("pagination").addClass("alternate");
+
 			if (typeof callback === "function") {
 				callback();
 			}
@@ -881,22 +882,6 @@ var getItemtList = function (pageNum, callback) {
 	});
 };
 
-var getItemListPaging = function (pageNum) {
-	var memberTypeCode = $('#memberTypeList option:selected').val();
-	$.ajax({
-		type: "GET",
-		url: "/admin/system/tmpl/sub/item/list/paging",
-		dataType: "text",
-		data: {cateLv1Seq: $("select[name=cateLv1Seq]").val(), cateLv2Seq: $("select[name=cateLv2Seq]").val(), cateLv3Seq: $("select[name=cateLv3Seq]").val(), cateLv4Seq: $("select[name=cateLv4Seq]").val(), seq: $("#searchItemSeq").val(), name: $("#searchItemName").val(), pageNum: pageNum},
-		success: function (data) {
-			$("#paging").html(data);
-			$("#paging").addClass("pagination").addClass("alternate");
-		},
-		error: function (error) {
-			alert(error.status + ":" + error.statusText);
-		}
-	});
-};
 </script>
 </body>
 </html>

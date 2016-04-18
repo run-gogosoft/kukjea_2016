@@ -11,6 +11,7 @@ import com.smpro.util.StringUtil;
 import com.smpro.util.exception.ImageIsNotAvailableException;
 import com.smpro.vo.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -39,29 +40,29 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
+@Slf4j
 @Controller
 public class ItemController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
-	
-	@Resource(name = "orderService")
+
+	@Autowired
 	private OrderService orderService;
 
-	@Resource(name = "itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name = "sellerService")
+	@Autowired
 	private SellerService sellerService;
 
-	@Resource(name = "itemOptionService")
+	@Autowired
 	private ItemOptionService itemOptionService;
 
-	@Resource(name = "categoryService")
+	@Autowired
 	private CategoryService categoryService;
 
-	@Resource(name = "mallService")
+	@Autowired
 	private MallService mallService;
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
 	
 	@Autowired
@@ -446,7 +447,7 @@ public class ItemController {
 		} catch (Exception e) {
 			transactionManager.rollback(status);
 			model.addAttribute("message", "데이터 삽입 도중 오류가 발생했습니다 >>> " + e.getMessage());
-			LOGGER.error(e.getMessage());
+			log.error(e.getMessage());
 			return Const.REDIRECT_PAGE;
 		}
 
@@ -463,7 +464,7 @@ public class ItemController {
 		try {
 			fileMap = itemService.uploadImagesByMap(request);
 		} catch (IOException ie) {
-			LOGGER.error(ie.getMessage());
+			log.error(ie.getMessage());
 			model.addAttribute("message", "서버상의 문제가 발생했습니다. 관리자에게 문의하여 주십시오.");
 			ie.printStackTrace();
 			return Const.ALERT_PAGE;
@@ -561,8 +562,8 @@ public class ItemController {
 				String originUrl = "http://" + Const.DOMAIN+Const.UPLOAD_PATH + originDirName.replace(Const.UPLOAD_REAL_PATH, "") + "/" + originFileName;
 				String newUrl = "http://" + Const.DOMAIN+Const.UPLOAD_PATH + newDirName.replace(Const.UPLOAD_REAL_PATH, "") + "/" + newFileName; 
 				
-				LOGGER.debug("### originUrl : " + originUrl);
-				LOGGER.debug("### newUrl : " + newUrl);
+				log.debug("### originUrl : " + originUrl);
+				log.debug("### newUrl : " + newUrl);
 				newContent = newContent.replace(originUrl, newUrl);
 			}
 		}
@@ -579,7 +580,7 @@ public class ItemController {
 		try {
 			fileMap = itemService.uploadImagesByMap(request);
 		} catch (IOException ie) {
-			LOGGER.error(ie.getMessage());
+			log.error(ie.getMessage());
 			model.addAttribute("message", "서버상의 문제가 발생했습니다. 관리자에게 문의하여 주십시오.");
 			ie.printStackTrace();
 			return Const.ALERT_PAGE;
@@ -963,7 +964,7 @@ public class ItemController {
 		lvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		lvo.setLoginType("" + session.getAttribute("loginType"));
 
-		LOGGER.info("lvo" + lvo.toString());
+		log.info("lvo" + lvo.toString());
 
 		if (!itemService.insertLogVo(lvo)) {
 			model.addAttribute("message", "옵션 항목을 수정하던 도중 오류가 발생했습니다[2]");
@@ -1513,9 +1514,9 @@ public class ItemController {
 		vo.setItemSeq(itemSeq);
 		vo.setPropValList(propValList);
 		vo.setTypeCd(typeCd);
-		LOGGER.info("### itemSeq :::: [" + vo.getItemSeq() + "]");
-		//LOGGER.info("### propValList size :::: [" + propValList.size() + "]");
-		LOGGER.info("### typeCd :::: [" + typeCd + "]");
+		log.info("### itemSeq :::: [" + vo.getItemSeq() + "]");
+		//log.info("### propValList size :::: [" + propValList.size() + "]");
+		log.info("### typeCd :::: [" + typeCd + "]");
 
 		if (vo.getPropValList() == null) {
 			vo.setPropValList(new ArrayList<String>());
@@ -1525,7 +1526,7 @@ public class ItemController {
 		try {
 			list = itemService.getFilterList();
 		} catch (Exception e) {
-			LOGGER.info("### 필터정보를 불러오지 못하였습니다. [" + e.getMessage() + "]");
+			log.info("### 필터정보를 불러오지 못하였습니다. [" + e.getMessage() + "]");
 			model.addAttribute("message", "FILTERLIST");
 			return Const.AJAX_PAGE;
 		}
@@ -1544,7 +1545,7 @@ public class ItemController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.info("### 데이터를 삽입하던 도중, 오류가 발생했습니다. 상품 추가정보를 다시 수정해주세요. ["+ e.getMessage() + "]");
+			log.info("### 데이터를 삽입하던 도중, 오류가 발생했습니다. 상품 추가정보를 다시 수정해주세요. ["+ e.getMessage() + "]");
 		}
 
 		model.addAttribute("message", "OK");
@@ -1688,7 +1689,7 @@ public class ItemController {
 					&& !"<".equals(list.get(i).getFilterWord())
 					&& !">".equals(list.get(i).getFilterWord())) {
 				if (!(vo.getContent().toLowerCase().indexOf(list.get(i).getFilterWord().toLowerCase()) == -1)) {
-					LOGGER.info("#### 상세정보 : " + vo.getContent());
+					log.info("#### 상세정보 : " + vo.getContent());
 					return "상세정보에 금지어 " + list.get(i).getFilterWord() + "이 포함되어 있습니다.";
 				}
 			}

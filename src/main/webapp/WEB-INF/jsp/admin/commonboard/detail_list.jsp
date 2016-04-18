@@ -12,7 +12,7 @@
 		<h1>${title} 게시판<small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li>abount 사회적경제</li>
+			<li>about 사회적경제</li>
 			<li>게시판 관리</li>
 			<li class="active">${title} 게시판</li>
 		</ol>

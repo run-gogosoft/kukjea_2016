@@ -76,7 +76,12 @@ public class EventVo extends PagingVo {
 	
 	/** 현재날짜 */
 	private String curDate = "";
-	
+
+	/** 상품이미지내 이벤트 배너 전시 코드값(01:세일,02:특가,03:한정수량,04:행사) */
+	private String imgBannerCode = "";
+
+	private String maker = "";
+
 	@Override
 	public String getSearch() {
 		// TODO Auto-generated method stub
@@ -353,5 +358,21 @@ public class EventVo extends PagingVo {
 
 	public void setCurDate(String curDate) {
 		this.curDate = curDate;
+	}
+
+	public String getImgBannerCode() {
+		return imgBannerCode;
+	}
+
+	public void setImgBannerCode(String imgBannerCode) {
+		this.imgBannerCode = imgBannerCode;
+	}
+
+	public String getMaker() {
+		return maker;
+	}
+
+	public void setMaker(String maker) {
+		this.maker = maker;
 	}
 }

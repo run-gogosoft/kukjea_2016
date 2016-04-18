@@ -3,11 +3,11 @@ package com.smpro.service;
 import com.smpro.dao.CategoryDao;
 import com.smpro.vo.CategoryVo;
 import com.smpro.vo.ItemVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,40 +15,47 @@ import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
 
-@Service("categoryService")
-public class CategoryServiceImpl implements
-		CategoryService {
-	@Resource(name = "categoryDao")
+@Service
+public class CategoryServiceImpl implements CategoryService {
+	@Autowired
 	private CategoryDao categoryDao;
 
+	@Override
 	public List<CategoryVo> getList(CategoryVo vo) {
 		return categoryDao.getList(vo);
 	}
 
+	@Override
 	public List<CategoryVo> getListSimple(CategoryVo vo) {
 		return categoryDao.getListSimple(vo);
 	}
 
+	@Override
 	public List<CategoryVo> getListForSearch(ItemVo vo) {
 		return categoryDao.getListForSearch(vo);
 	}
 
+	@Override
 	public CategoryVo getVo(Integer seq) {
 		return categoryDao.getVo(seq);
 	}
 
+	@Override
 	public boolean insertVo(CategoryVo vo) {
 		return categoryDao.insertVo(vo) > 0;
 	}
 
+	@Override
 	public boolean updateVo(CategoryVo vo) {
 		return categoryDao.updateVo(vo) > 0;
 	}
 
+	@Override
 	public boolean updateOrderNo(CategoryVo vo) {
 		return categoryDao.updateOrderNo(vo) > 0;
 	}
 
+	@Override
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public boolean deleteVo(Integer seq) throws Exception {
 		/** 문제없이 잘 실행되나 매우 지저분해 보이는 로직이므로 리펙토링이 필요하다. (김찬호) */
@@ -96,6 +103,7 @@ public class CategoryServiceImpl implements
 		return true;
 	}
 
+	@Override
 	public String getFirstDepthSeq(CategoryVo vo) {
 		return categoryDao.getFirstDepthSeq(vo);
 	}
@@ -107,6 +115,7 @@ public class CategoryServiceImpl implements
 	 *            생성할 js 파일의 목적지
 	 * @throws Exception
 	 */
+	@Override
 	public void createJs(String targetPath) throws Exception {
 		// 먼저 파일을 없앤다
 		new File(targetPath).delete();
@@ -119,10 +128,12 @@ public class CategoryServiceImpl implements
 		ou.close();
 	}
 
+	@Override
 	public Integer getLv1Value(Integer seq) {
 		return categoryDao.getLv1Value(seq);
 	}
 
+	@Override
 	public Integer getLv2Value(Integer seq) {
 		return categoryDao.getLv2Value(seq);
 	}

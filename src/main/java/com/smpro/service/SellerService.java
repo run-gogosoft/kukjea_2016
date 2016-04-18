@@ -6,7 +6,9 @@ import com.smpro.vo.UserVo;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface SellerService {
 
 	public List<SellerVo> getList(SellerVo srchVo);

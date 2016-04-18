@@ -3,9 +3,11 @@ package com.smpro.service;
 import com.smpro.vo.AdjustVo;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface AdjustService {
 	/** 정산 대상 리스트 가져오기 */
 	public List<AdjustVo> getListForAdjust();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.smpro.dao.OrderPayDao">
+<mapper namespace="order_pay">
   <!-- PG결제내역 등록 -->
   <insert id="regOrderPay" parameterType="com.smpro.vo.OrderPayVo">
     INSERT INTO sm_order_pay (

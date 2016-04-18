@@ -2,15 +2,15 @@ package com.smpro.service;
 
 import com.smpro.dao.FilenameDao;
 import com.smpro.vo.FilenameVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-@Service("filenameService")
+@Service
 public class FilenameServiceImpl implements FilenameService {
-	@Resource(name = "filenameDao")
+	@Autowired
 	private FilenameDao filenameDao;
 
 	@Override

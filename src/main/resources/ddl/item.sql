@@ -40,9 +40,9 @@ CREATE TABLE sm_item (
   deli_package_flag   CHAR(1) NOT NULL                      COMMENT '상품 묶음배송 가능 여부 플래그(Y=가능, N=불가능)',
   type_cd             INT                                   COMMENT '상품 부가정보 분류 코드',
   auth_category       VARCHAR(50)                           COMMENT '인증구분(1:사회적기업제품, 2:사회적경제기업제품, 3:중증장애인생상품, 4:친환경상품)'
+  img_banner_code     VARCHAR(20)                           COMMENT '상품이미지내 이벤트 배너 전시 코드값(01:세일,02:특가,03:한정수량,04:행사)'
   mod_date            DATETIME                              COMMENT '변경일',
   reg_date            DATETIME NOT NULL                     COMMENT '등록일',
-  /*link_flag           CHAR(1) DEFAULT 'N' NOT NULL        COMMENT '외부 연동 여부(Y/N)',*/
   min_cnt             INT DEFAULT 1                         COMMENT '최소구매수량',
   max_cnt             INT                                   COMMENT '최대구매수량',
   CONSTRAINT pk_sm_item PRIMARY KEY (seq),

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.smpro.dao.WishDao">
+<mapper namespace="wish">
 	<!-- 리스트 -->
 	<select id="getList" parameterType="int" resultType="com.smpro.vo.ItemVo">
 		SELECT
@@ -11,6 +11,7 @@
 			w.deli_prepaid_flag AS deliPrepaidFlag,
 			(SELECT value_name FROM sm_item_option_value WHERE seq=w.option_value_seq) AS optionName,
 			(SELECT stock_cnt FROM sm_item_option_value WHERE seq=w.option_value_seq) AS stockCount,
+			(SELECT stock_flag FROM sm_item_option_value WHERE seq=w.option_value_seq) AS stockFlag,
 			w.reg_date AS regDate,
 			i.seq AS itemSeq,
 			i.name,

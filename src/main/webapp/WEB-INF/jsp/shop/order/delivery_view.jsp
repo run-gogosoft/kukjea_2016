@@ -12,27 +12,27 @@
 				<p id="deliveryTopTitle" style="margin:0;"></p>
 			</div>
 
-			<div class="pull-right" style="width:705px;">
-				<div class="input-group pull-right" style="width:230px;">
-					<input type="text" class="form-control" style="width:200px;height:30px;" placeholder="search" id="findword" name="findword" value="" disabled/>
-					<div class="input-group-btn">
-						<button type="button" class="btn btn-default btn-sm" onclick="CHDelivery.deliveryListShow()" style="height:30px;border-left:0;"><span class="glyphicon glyphicon-search"></span></button>
-					</div>
-				</div>
-				<div class="dropdown pull-right">
-					<button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="margin-right:3px;">
-						전체
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="searchProc(this);return false;" data-value="all" data-submit="">전체</a></li>
-						<li class="divider"></li>
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="searchProc(this);return false;" data-value="title" data-submit="">배송지이름</a></li>
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="searchProc(this);return false;" data-value="name" data-submit="">받는사람</a></li>
-					</ul>
-					<input type="hidden" name="deliverySearch" id="deliverySearch" value="" />
-				</div>
-			</div>
+			<%--<div class="pull-right" style="width:705px;">--%>
+				<%--<div class="input-group pull-right" style="width:230px;">--%>
+					<%--<input type="text" class="form-control" style="width:200px;height:30px;" placeholder="search" id="findword" name="findword" value="" disabled/>--%>
+					<%--<div class="input-group-btn">--%>
+						<%--<button type="button" class="btn btn-default btn-sm" onclick="CHDelivery.deliveryListShow()" style="height:30px;border-left:0;"><span class="glyphicon glyphicon-search"></span></button>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<%--<div class="dropdown pull-right">--%>
+					<%--<button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="margin-right:3px;">--%>
+						<%--전체--%>
+						<%--<span class="caret"></span>--%>
+					<%--</button>--%>
+					<%--<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">--%>
+						<%--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="searchProc(this);return false;" data-value="all" data-submit="">전체</a></li>--%>
+						<%--<li class="divider"></li>--%>
+						<%--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="searchProc(this);return false;" data-value="title" data-submit="">배송지이름</a></li>--%>
+						<%--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="searchProc(this);return false;" data-value="name" data-submit="">받는사람</a></li>--%>
+					<%--</ul>--%>
+					<%--<input type="hidden" name="deliverySearch" id="deliverySearch" value="" />--%>
+				<%--</div>--%>
+			<%--</div>--%>
 			<div class="clearfix"></div>
 		</div>
 		<div class="delivery-list-content" style="margin-top:10px;">
@@ -53,7 +53,7 @@
 			</script>
 			<%--배송지 등록--%>
 			<div id="deliveryForm" style="display:none">
-				<table class="order-info-table delivery-table">
+				<table class="order-info-table delivery-table" style="width:100%">
 					<colgroup>
 						<col width="20%"/>
 						<col width="80%"/>
@@ -128,7 +128,7 @@
 					</thead>
 					<tbody id="deliveryListTarget">
 						<tr>
-							<td class="text-center" style="vertical-align:middle" colspan="5">배송지 목록을 불러오고 있습니다..&nbsp;&nbsp;<img src="${const.ASSETS_PATH}/front-assets/images/common/ajaxloader.gif" alt="" />
+							<td class="text-center" style="vertical-align:middle" colspan="5">배송지 목록을 불러오고 있습니다..&nbsp;&nbsp;<img src="/front-assets/images/common/ajaxloader.gif" alt="" />
 							</td>
 						</tr>
 					</tbody>
@@ -138,14 +138,14 @@
 		<div class="delivery-list-footer">
 			<div class="">
 				<div class="pull-left" style="margin:0 23px 10px 0;">
-					<button type="button" onclick="CHDelivery.deliveryForm('insert')" class="btn btn-default btn-sm">배송지 추가</button>
-					<button type="button" onclick="CHDelivery.deliveryForm('update')"  class="btn btn-default btn-sm">수정</button>
-					<button type="button" onclick="CHDelivery.deliveryDelete()" class="btn btn-default btn-sm">삭제</button>
+					<button type="button" onclick="CHDelivery.deliveryForm('insert')" class="btn btn_default btn_sm">배송지 추가</button>
+					<button type="button" onclick="CHDelivery.deliveryForm('update')"  class="btn btn_default btn_sm">수정</button>
+					<button type="button" onclick="CHDelivery.deliveryDelete()" class="btn btn_default btn_sm">삭제</button>
 				</div>
 
 				<div class="pull-right" style="margin:0 0 10px 0;">
-					<button type="button" onclick="CHDelivery.deliveryListHide()" class="btn btn-default btn-sm">취소</button>
-					<button type="button" onclick="CHDelivery.deliverySelected()"  class="btn btn-info btn-sm">배송지로 선택</button>
+					<button type="button" onclick="CHDelivery.deliveryListHide()" class="btn btn_default btn_sm">취소</button>
+					<button type="button" onclick="CHDelivery.deliverySelected()"  class="btn btn_blue btn_sm">배송지로 선택</button>
 				</div>
 			</div>
 		</div>

@@ -9,13 +9,12 @@ import com.smpro.util.exception.ImageIsNotAvailableException;
 import com.smpro.util.exception.ImageSizeException;
 import com.smpro.vo.BoardVo;
 import com.smpro.vo.EventVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -24,11 +23,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("eventService")
+@Slf4j
+@Service
 public class EventServiceImpl implements EventService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
-	
-	@Resource(name = "eventDao")
+	@Autowired
 	private EventDao eventDao;
 
 	public List<EventVo> getList(EventVo vo) {
@@ -213,6 +211,6 @@ public class EventServiceImpl implements EventService {
 		paramVo.setSeq(seq);
 		EventVo vo = getVo(paramVo);
 		new File(realPath + vo.getThumbImg()).delete();
-		LOGGER.info("vo.getThumbImg deleted --> " + vo.getThumbImg());
+		log.info("vo.getThumbImg deleted --> " + vo.getThumbImg());
 	}
 }

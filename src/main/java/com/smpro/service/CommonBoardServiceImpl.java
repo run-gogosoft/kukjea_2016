@@ -3,14 +3,14 @@ package com.smpro.service;
 import com.smpro.dao.CommonBoardDao;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.CommonBoardVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("commonBoardService")
+@Service
 public class CommonBoardServiceImpl implements CommonBoardService {
-	@Resource(name = "commonBoardDao")
+	@Autowired
 	private CommonBoardDao commonBoardDao;
 	
 	@Override

@@ -1,20 +1,13 @@
 package com.smpro.controller.shop;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.smpro.service.FilenameService;
+import com.smpro.service.MemberService;
+import com.smpro.service.SellerService;
+import com.smpro.service.SystemService;
+import com.smpro.util.*;
+import com.smpro.vo.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,41 +17,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.smpro.service.FilenameService;
-import com.smpro.service.MemberService;
-import com.smpro.service.SellerService;
-import com.smpro.service.SystemService;
-import com.smpro.util.CommonServletUtil;
-import com.smpro.util.Const;
-import com.smpro.util.FileDownloadUtil;
-import com.smpro.util.FileUploadUtil;
-import com.smpro.util.StringUtil;
-import com.smpro.vo.CommonVo;
-import com.smpro.vo.FilenameVo;
-import com.smpro.vo.MemberVo;
-import com.smpro.vo.SellerVo;
-import com.smpro.vo.UserVo;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+@Slf4j
 @Controller
 public class SellerController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SellerController.class);
-	
-	@Resource(name="sellerService")
+
+	@Autowired
 	private SellerService sellerService;
-	
-	@Resource(name="systemService")
+
+	@Autowired
 	private SystemService systemService;
-	
-	@Resource(name = "memberService")
+
+	@Autowired
 	private MemberService memberService;
-	
-	@Resource(name = "filenameService")
+
+	@Autowired
 	private FilenameService filenameService;
-	
+
 	@RequestMapping("/seller/reg")
 	public String getList(Model model) {
 		model.addAttribute("title", "입점 신청");
-		
+
 		//자치구 코드
 		CommonVo cvo = new CommonVo();
 		cvo.setGroupCode(new Integer(29));
@@ -67,11 +51,11 @@ public class SellerController {
 		model.addAttribute("deliCompanyList", systemService.getDeliCompany());
 		return "/seller/form.jsp";
 	}
-	
+
 	@RequestMapping("/seller/mod")
 	public String getModForm(SellerVo svo, Model model) {
 		model.addAttribute("title", "입점신청 정보수정");
-		
+
 		/* 필수값 체크 */
 		if("".equals(svo.getId())) {
 			model.addAttribute("message", "아이디를 입력해 주세요.");
@@ -82,7 +66,7 @@ public class SellerController {
 			model.addAttribute("returnUrl", "/shop/seller/reg");
 			return Const.REDIRECT_PAGE;
 		}
-		
+
 		/* 입력받은 패스워드 암호화 */
 		try {
 			svo.setPassword(StringUtil.encryptSha2(svo.getPassword()));
@@ -92,15 +76,15 @@ public class SellerController {
 			model.addAttribute("returnUrl", "/shop/seller/reg");
 			return Const.REDIRECT_PAGE;
 		}
-		
+
 		UserVo rvo = sellerService.getShopSellerSeq(svo);
-		
+
 		if(rvo == null) {
 			model.addAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
 			model.addAttribute("returnUrl", "/shop/seller/reg");
 			return Const.REDIRECT_PAGE;
 		}
-		
+
 		/* 콤보박스 리스트 가져오기 */
 		CommonVo cvo = new CommonVo();
 		cvo.setGroupCode(new Integer(8));
@@ -121,7 +105,7 @@ public class SellerController {
 
 		model.addAttribute("deliCompanyList", systemService.getDeliCompany());
 		model.addAttribute("vo", vo);
-		
+
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentCode", "seller");
@@ -130,7 +114,7 @@ public class SellerController {
 		model.addAttribute("authCategoryList", systemService.getCommonListOrderByValue(new Integer(35)));
 		return "/seller/form.jsp";
 	}
-	
+
 	@RequestMapping(value = "/seller/reg/proc", method = RequestMethod.POST)
 	public String regData(HttpServletRequest request, String allCheckFlag, String code, Model model, String authCategory) {
 		boolean flag = false;
@@ -139,15 +123,15 @@ public class SellerController {
 		HashMap<String,Object> map = CommonServletUtil.getRequestParameterMap(request);
 		SellerVo vo = getSellerVo(map);
 		vo.setAuthCategory(authCategory);
-		
+
 		//약관 동의 체크
 		if(StringUtil.isBlank(allCheckFlag)) {
 			model.addAttribute("message", "약관에 모두 동의 해주세요");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		//파라메타 유효성 체크
-		String reqParamErrMsg = validCheck(vo, "REG"); 
+		String reqParamErrMsg = validCheck(vo, "REG");
 		if (reqParamErrMsg != null) {
 			model.addAttribute("message", reqParamErrMsg);
 			return Const.ALERT_PAGE;
@@ -155,7 +139,7 @@ public class SellerController {
 
 		vo.setStatusCode("H"); //상태 기본값 : 승인대기
 		vo.setTypeCode("S");
-		
+
 		Iterator<String> iter = mpRequest.getFileNames();
 		FileUploadUtil util = new FileUploadUtil();
 		List<FilenameVo> fileList = new ArrayList<>();
@@ -177,13 +161,13 @@ public class SellerController {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
 			}
 		}
-		
+
 		try {
 			//패스원드 암호화
 			if (!StringUtil.isBlank(vo.getPassword())) {
@@ -201,7 +185,7 @@ public class SellerController {
 				fvo.setParentSeq(vo.getSeq());
 				filenameService.replaceFilename(fvo);
 			}
-			
+
 			model.addAttribute("message", "입점 신청 완료");
 			model.addAttribute("returnUrl", "/shop/main");
 			return Const.REDIRECT_PAGE;
@@ -210,7 +194,7 @@ public class SellerController {
 		model.addAttribute("message", "입점 신청 실패");
 		return Const.ALERT_PAGE;
 	}
-	
+
 	/** 입점업체수정 */
 	@RequestMapping(value = "/seller/mod/{seq}/proc", method = RequestMethod.POST)
 	public String modData(@PathVariable Integer seq, HttpServletRequest request, String allCheckFlag, String code,  Model model,String authCategory) {
@@ -221,20 +205,20 @@ public class SellerController {
 		SellerVo vo = getSellerVo(map);
 		vo.setSeq(seq);
 		vo.setAuthCategory(authCategory);
-		
+
 		//약관 동의 체크
 		if(StringUtil.isBlank(allCheckFlag)) {
 			model.addAttribute("message", "약관에 모두 동의 해주세요");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		//파라메타 유효성 체크
-		String reqParamErrMsg = validCheck(vo, "MOD"); 
+		String reqParamErrMsg = validCheck(vo, "MOD");
 		if (reqParamErrMsg != null) {
 			model.addAttribute("message", reqParamErrMsg);
 			return Const.ALERT_PAGE;
 		}
-		
+
 		Iterator<String> iter = mpRequest.getFileNames();
 		FileUploadUtil util = new FileUploadUtil();
 		List<FilenameVo> fileList = new ArrayList<>();
@@ -257,13 +241,13 @@ public class SellerController {
 						fileList.add(fvo);
 					}
 				} catch(Exception e) {
-					LOGGER.error(e.getMessage());
+					log.error(e.getMessage());
 					model.addAttribute("message", "업로드에 실패했습니다");
 					return Const.ALERT_PAGE;
 				}
 			}
 		}
-		
+
 		try {
 			/* 입력받은 패스워드 암호화 */
 			if (!StringUtil.isBlank(vo.getPassword())) {
@@ -280,7 +264,7 @@ public class SellerController {
 			for(FilenameVo fvo : fileList) {
 				filenameService.replaceFilename(fvo);
 			}
-			
+
 			model.addAttribute("message", "수정 성공.");
 			model.addAttribute("returnUrl", "/shop/main");
 			return Const.REDIRECT_PAGE;
@@ -289,7 +273,7 @@ public class SellerController {
 		model.addAttribute("message", "수정 실패.");
 		return Const.ALERT_PAGE;
 	}
-	
+
 	@RequestMapping("/seller/file/delete/proc")
 	public String fileDelete(@RequestParam int seq, @RequestParam int num, HttpServletRequest request, Model model) throws Exception {
 		SellerVo vo = sellerService.getData(new Integer(seq));
@@ -308,17 +292,17 @@ public class SellerController {
 
 		// 파일을 삭제
 		try {
-			LOGGER.info("file>>delete>> " + deletePath);
+			log.info("file>>delete>> " + deletePath);
 			filenameService.deleteVo(fvo);
 			new File(deletePath).delete();
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			log.error(e.getMessage());
 		}
 
 		model.addAttribute("callback", new Integer(num));
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	@RequestMapping("/seller/file/download/proc")
 	public String download(@RequestParam int seq, @RequestParam int num, HttpServletResponse response) throws Exception {
 		SellerVo vo = sellerService.getData(new Integer(seq));
@@ -337,12 +321,12 @@ public class SellerController {
 		response.setHeader("Content-Disposition", "attachment; filename=\""+ new String(fvo.getFilename().getBytes("utf-8"), "ISO-8859-1") +"\";");
 
 		// 바보같겠지만... upload하는 메서드를 수정하긴 너무 빡셌다. 리얼에서만 돌아가는 것을 확인
-		LOGGER.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
+		log.info(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		File file = new File(Const.UPLOAD_REAL_PATH.replaceAll("(upload)$", "")+fvo.getRealFilename());
 		FileDownloadUtil.download(response, file);
 		return null;
 	}
-	
+
 	/**
 	 * 아이디 중복 체크
 	 */
@@ -381,7 +365,7 @@ public class SellerController {
 		return "/ajax/get-message-result.jsp";
 
 	}
-	
+
 	/**
 	 * 닉네임 체크
 	 */
@@ -410,7 +394,7 @@ public class SellerController {
 		return "/ajax/get-message-result.jsp";
 
 	}
-	
+
 	/** 사업자번호 체크 */
 	@RequestMapping("/seller/check/bizno/ajax")
 	public String checkBizNo(@RequestParam String bizNo, Model model) {
@@ -445,12 +429,12 @@ public class SellerController {
 		return "/ajax/get-message-result.jsp";
 
 	}
-	
+
 	private String validCheck(SellerVo vo, String typeCode) {
 		MemberVo mvo = new MemberVo();
 		mvo.setId(vo.getId());
 		mvo.setTypeCode("S");
-		
+
 		/* 유효성 검사 */
 		if ("REG".equals(typeCode)) {
 			if ("".equals(vo.getId())) {
@@ -478,7 +462,7 @@ public class SellerController {
 				return "이미 사용중인 사업자 번호 입니다 .";
 			}
 		}
-		
+
 		if (!"".equals(vo.getPassword())) {
 			if (StringUtil.getByteLength(vo.getPassword()) > 20) {
 				return "비밀번호를 20자 이하로 입력해주세요.";
@@ -517,10 +501,10 @@ public class SellerController {
 		} else if ("".equals(vo.getAuthCategory())) {
 			return "인증구분은 반드시 선택되어야 합니다";
 		}
-		
+
 		return null;
 	}
-	
+
 	private SellerVo getSellerVo(HashMap<String, Object> map) {
 		SellerVo vo = new SellerVo();
 		vo.setId((String)map.get("id") == null ? "" : (String)map.get("id"));

@@ -9,11 +9,11 @@
 <div class="content-wrapper">
 	<!-- 헤더 -->
 	<section class="content-header">
-		<h1>자치구별 상품 판매 수(${userType eq "seller" ? "입점업체":"공공기관"}) <small></small></h1>
+		<h1>기간별 상품 판매 현황(${userType eq "seller" ? "입점업체":"공공기관"}) <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li></li>
-			<li class="active"></li>
+			<li>통계</li>
+			<li class="active">기간별 상품 판매 현황(${userType eq "seller" ? "입점업체":"공공기관"})</li>
 		</ol>
 	</section>
 	<section class="content">

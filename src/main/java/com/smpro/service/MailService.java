@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.smpro.vo.MailVo;
 import com.smpro.vo.OrderVo;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface MailService {
 	
 	/** 메일 발송(공통) */

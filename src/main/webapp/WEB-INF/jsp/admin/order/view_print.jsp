@@ -80,14 +80,23 @@
 <div class="wrapper">
 	<!-- 헤더 -->
 	<section class="content-header">
-		<h3><span style="padding-left:5px;">함께 누리 주문서 <button type="button" onclick="window.print()" class="no-print">인쇄하기</button></span><hr/></h3>
+		<h3><span style="padding-left:5px;">주문서 <button type="button" onclick="window.print()" class="no-print">인쇄하기</button></span><hr/></h3>
 		<table class="table">
+			<c:if test="${sessionScope.loginType eq 'S'}">
+			<colgroup>
+				<col style="width:5%"/>
+				<col style="width:5%"/>
+				<col style="width:5%"/>
+				<col style="width:40%"/>
+			</colgroup>
+			</c:if>
 			<tbody>
 				<tr>
 					<td class="text-right">주문번호</td>
 					<td><strong>${vo.orderSeq}</strong></td>
 					<td class="text-right">주문일자</td>
 					<td><strong>${fn:substring(vo.regDate,0,19)}</strong></td>
+					<c:if test="${sessionScope.loginType eq 'A'}">
 					<td class="text-right">주문합계금액</td>
 					<td><strong><fmt:formatNumber value="${vo.totalPrice}"/></strong></td>
 					<td class="text-right">사용 포인트</td>
@@ -96,6 +105,7 @@
 					<td><strong><fmt:formatNumber value="${vo.payPrice}"/></strong></td>
 					<td class="text-right">결제 수단</td>
 					<td><strong>${vo.payMethodName}</strong></td>
+					</c:if>
 				</tr>
 			</tbody>
 		</table>

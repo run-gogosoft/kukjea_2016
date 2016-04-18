@@ -7,31 +7,28 @@ import com.smpro.service.SystemService;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.AdjustVo;
-
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 @Controller
 public class AdjustController {
-	//private static final Logger LOGGER = LoggerFactory.getLogger(AdjustController.class);
-	
-	@Resource(name = "orderService")
+
+	@Autowired
 	private OrderService orderService;
 
-	@Resource(name = "adjustService")
+	@Autowired
 	private AdjustService adjustService;
-	
-	@Resource(name = "systemService")
+
+	@Autowired
 	private SystemService systemService;
 
 	/** 정산 리스트 */

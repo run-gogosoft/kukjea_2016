@@ -3,19 +3,18 @@ package com.smpro.controller.shop;
 import com.smpro.service.OrderService;
 import com.smpro.service.PointService;
 import com.smpro.vo.OrderVo;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 @Component
 public abstract class MyPage {
-	@Resource(name="orderService")
+	@Autowired
 	private OrderService orderService;
 
-	@Resource(name="pointService")
+	@Autowired
 	private PointService pointService;
 	/**
 	 * 마이페이지 좌측 메뉴의 기본값을 설정한다

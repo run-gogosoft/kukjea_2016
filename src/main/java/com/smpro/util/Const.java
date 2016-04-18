@@ -42,31 +42,28 @@ public class Const {
 		// VM OPTION에 -DdetailedDebugMode=true로 설정하면 DEBUG모드로 진입한다
 		if ("true".equalsIgnoreCase(System.getProperties().getProperty("detailedDebugMode"))) {
 			// DEBUG MODE local
-			IMAGE_MAGICK_PATH = "C:\\Program Files\\ImageMagick-6.9.0-Q16\\convert.exe";
-			UPLOAD_PATH = "/upload";
-			UPLOAD_REAL_PATH = "C:\\dev\\eGovFrameDev-3.2.0-64bit\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hknuri\\upload";
-			WEBAPP_HOME_REAL_PATH = "C:\\dev\\eGovFrameDev-3.2.0-64bit\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hknuri";
-			DOMAIN = "localhost";
-			// DOMAIN = "192.168.3.9";
-			// DOMAIN = "localhost";
-			LOCATION = "test";
-			OS = "window";
-		} else if ("true2".equalsIgnoreCase(System.getProperties().getProperty("detailedDebugMode"))) {
-			// DEBUG MODE public
+//			IMAGE_MAGICK_PATH = "C:\\Program Files\\ImageMagick-6.9.0-Q16\\convert.exe";
+//			UPLOAD_PATH = "/upload";
+//			UPLOAD_REAL_PATH = "C:\\dev\\eGovFrameDev-3.2.0-64bit\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hknuri\\upload";
+//			WEBAPP_HOME_REAL_PATH = "C:\\dev\\eGovFrameDev-3.2.0-64bit\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hknuri";
+//			DOMAIN = "localhost";
+//			LOCATION = "test";
+//			OS = "window";
+
 			IMAGE_MAGICK_PATH = "convert";
 			UPLOAD_PATH = "/upload";
-			UPLOAD_REAL_PATH = "/web/out/hknuri/upload";
-			WEBAPP_HOME_REAL_PATH = "/web/out/hknuri/webapps/ROOT";
-			DOMAIN = "hknuri.sm-pro.co.kr";
+			UPLOAD_REAL_PATH = "/Users/EBvi/Desktop/Dev/workspace/kookje/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
+			WEBAPP_HOME_REAL_PATH = "/Users/EBvi/Desktop/Dev/workspace/kookje/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war";
+			DOMAIN = "localhost";
 			LOCATION = "test";
 			OS = "linux";
 		} else {
 			// PRODUCTION MODE
 			IMAGE_MAGICK_PATH = "convert";
 			UPLOAD_PATH = "/upload";
-			UPLOAD_REAL_PATH = "/web/out/hknuri/upload";
-			WEBAPP_HOME_REAL_PATH = "/web/out/hknuri/webapps/ROOT";
-			DOMAIN = "www.hknuri.co.kr";
+			UPLOAD_REAL_PATH = "/kookje/web/upload";
+			WEBAPP_HOME_REAL_PATH = "/kookje/apps/instance1/webapps/ROOT";
+			DOMAIN = "kookje.gogosoft.kr";
 			LOCATION = "service";
 			OS = "linux";
 		}

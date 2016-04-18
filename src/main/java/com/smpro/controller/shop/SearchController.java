@@ -1,34 +1,40 @@
 package com.smpro.controller.shop;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
 import com.smpro.service.CategoryService;
 import com.smpro.service.ItemService;
 import com.smpro.service.SystemService;
 import com.smpro.vo.CategoryVo;
-import com.smpro.vo.CommonVo;
 import com.smpro.vo.ItemVo;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class SearchController {
-	@Resource(name="categoryService")
+	@Autowired
 	private CategoryService categoryService;
 
-	@Resource(name="itemService")
+	@Autowired
 	private ItemService itemService;
 
-	@Resource(name="systemService")
+	@Autowired
 	private SystemService systemService;
 
 	@RequestMapping("/search")
-	public String search(ItemVo vo, HttpSession session, Model model) {
-		
-		model.addAttribute("title", "search");
+	public String search(ItemVo vo, HttpSession session, HttpServletRequest request, Model model) {
+
+		model.addAttribute("title", "검색");
+
+		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
+			vo.setRowCount(12);
+		}
+		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
+			vo.setListStyle("img");
+		}
 
 		// 카테고리를 가져온다
 		CategoryVo cvo = new CategoryVo();
@@ -84,21 +90,21 @@ public class SearchController {
 			model.addAttribute("lv3", lv3);
 			model.addAttribute("lv4", lv4);
 		}
-	
-		// 카테고리 검색 결과
-		if(vo.getRowCount()==20) {
-			vo.setRowCount(30);
-		}
-		
-		//자치구 코드가 00이라면 전체라는 의미로 사용하고 값을 초기화시킨다.
-		if("00".equals(vo.getJachiguCode())) {
-			vo.setJachiguCode("");
-		}
-				
+
+//		// 카테고리 검색 결과
+//		if(vo.getRowCount()==20) {
+//			vo.setRowCount(30);
+//		}
+
+//		//자치구 코드가 00이라면 전체라는 의미로 사용하고 값을 초기화시킨다.
+//		if("00".equals(vo.getJachiguCode())) {
+//			vo.setJachiguCode("");
+//		}
+
 		vo.setStatusCode("Y"); // 판매가 가능한 리스트만 보여야 한다
 		vo.setShowFlag("Y");   //카테고리가 노출
 		//함께누리 측의 요청으로 공공기관에만 특별주문 카테고리를 노출한다.
-		vo.setMemberTypeCode((String)session.getAttribute("loginMemberTypeCode"));
+//		vo.setMemberTypeCode((String)session.getAttribute("loginMemberTypeCode"));
 		model.addAttribute("categoryList", categoryService.getListForSearch(vo));
 
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
@@ -106,11 +112,13 @@ public class SearchController {
 		model.addAttribute("list", itemService.getListSimple(vo));
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
 		model.addAttribute("itemSearchVo", vo);
-		
+
 		//자치구 코드
-		CommonVo cjvo = new CommonVo();
-		cjvo.setGroupCode(new Integer(29));
-		model.addAttribute("jachiguList", systemService.getCommonList(cjvo));
+//		CommonVo cjvo = new CommonVo();
+//		cjvo.setGroupCode(new Integer(29));
+//		model.addAttribute("jachiguList", systemService.getCommonList(cjvo));
+
+
 		return "/search/search.jsp";
 	}
 }

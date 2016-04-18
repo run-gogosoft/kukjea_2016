@@ -3,7 +3,9 @@ package com.smpro.service;
 import java.util.List;
 
 import com.smpro.vo.ItemVo;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface WishService {
 	/** 리스트 */
 	public List<ItemVo> getList(ItemVo vo);

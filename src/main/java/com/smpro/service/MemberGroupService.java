@@ -1,7 +1,9 @@
 package com.smpro.service;
 
 import com.smpro.vo.MemberGroupVo;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface MemberGroupService {
 	/** 등록 */
 	public int regVo(MemberGroupVo vo);

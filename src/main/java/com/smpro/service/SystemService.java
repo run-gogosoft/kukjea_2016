@@ -6,9 +6,11 @@ import com.smpro.vo.DeliCompanyVo;
 import com.smpro.vo.MemberVo;
 import com.smpro.vo.NoticePopupVo;
 import com.smpro.vo.PaymethodVo;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface SystemService {
 
 	/** 관리자 리스트 */

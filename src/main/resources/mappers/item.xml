@@ -1,5 +1,5 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.smpro.dao.ItemDao">
+<mapper namespace="item">
 	<select id="getList" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
 		SELECT
 			A.seq,
@@ -377,7 +377,8 @@
 			G.return_cell AS returnCell,
 			A.auth_category AS authCategory,
 			c1.name AS statusName,
-			c2.name AS typeName
+			c2.name AS typeName,
+			A.img_banner_code AS imgBannerCode
 		FROM
 			sm_item A INNER JOIN 
 			sm_item_detail B ON A.seq=B.item_seq LEFT OUTER JOIN 
@@ -445,6 +446,7 @@
 			type_cd,
 			type_code,
 			auth_category,
+			img_banner_code,
 			mod_date,
 			reg_date
 		) VALUES (
@@ -491,6 +493,7 @@
 			#{typeCd},
 			#{typeCode},
 			#{authCategory},
+			#{imgBannerCode},
 			NOW(),
 			NOW()
 		)
@@ -910,6 +913,7 @@
 			i.img4 AS img4,
 			i.deli_type_code AS deliTypeCode,
 			i.deli_cost AS deliCost,
+			i.maker,
 			u.name AS sellerName,
 			u.nickname,
 			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = i.seq) AS itemGrade,

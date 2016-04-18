@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.smpro.dao.DisplayDao">
+<mapper namespace="display">
 	<select id="getVo" parameterType="com.smpro.vo.DisplayVo" resultType="com.smpro.vo.DisplayVo">
 		SELECT
 			seq,
@@ -97,7 +97,8 @@
 				WHEN i.status_code = 'Y' THEN '판매중'
 				WHEN i.status_code = 'N' THEN '판매중지'
 			END AS statusFlag,
-			di.limit_cnt AS limitCnt
+			di.limit_cnt AS limitCnt,
+			i.img_banner_code AS imgBannerCode
 		FROM
 			sm_display_item di LEFT OUTER JOIN
 			sm_display_item_list dl ON(di.seq = dl.display_seq) LEFT OUTER JOIN
