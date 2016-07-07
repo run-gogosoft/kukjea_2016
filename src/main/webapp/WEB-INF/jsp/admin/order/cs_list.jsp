@@ -38,7 +38,6 @@
 									<th>주문번호</th>
 									<th>주문상태</th>
 									<th>상품명</th>
-									<th>옵션</th>
 									<th>
 										판매단가
 										<div style="margin-top:5px;color:#6495ed">공급단가</div>
@@ -88,7 +87,6 @@
 										</p>
 											${item.itemName}
 									</td>
-									<td>${item.optionValue}</td>
 									<td class="text-right">
 										<fmt:formatNumber value="${item.sellPrice}"/>
 										<div style="margin-top:5px;color:#6495ed"><fmt:formatNumber value="${item.supplyPrice}"/></div>

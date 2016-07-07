@@ -17,7 +17,18 @@ public class ItemVo extends PagingVo {
 	/** 판매가 */
 	private int sellPrice;
 	private int tempSellPrice;
-	
+
+	/** 규격 */
+	private String type1 = "";
+	private String type2 = "";
+	private String type3 = "";
+	/** 보험코드 */
+	private String insuranceCode = "";
+
+	/** 진료과목 */
+	private String subjectType = "";
+
+
 	/** 총판공급가 */
 	private int supplyMasterPrice;
 	/** 입점업체공급가 */
@@ -433,6 +444,26 @@ public class ItemVo extends PagingVo {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public void setType1(String type){ this.type1 = type;}
+
+	public String getType1() { return type1;}
+
+	public void setType2(String type){ this.type2 = type;}
+
+	public String getType2() { return type2;}
+
+	public void setType3(String type){ this.type3 = type;}
+
+	public String getType3() { return type3;}
+
+	public void setInsuranceCode(String insurance){ this.insuranceCode = insurance;}
+
+	public String getInsuranceCode(){return insuranceCode;}
+
+	public void setSubjectType(String subject) {this.subjectType = subject;}
+
+	public String getSubjectType(){return subjectType;}
 
 	public String getNickname() {
 		return nickname;

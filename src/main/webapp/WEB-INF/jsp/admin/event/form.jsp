@@ -8,7 +8,7 @@
 	<style type="text/css">
 		.thumbViewimg {padding:0;}
 		.thumbViewimg div {float:left; text-align:center}
-		.thumbViewimg img {margin-right:5px; cursor:pointer; width:115px; height:240px}
+		.thumbViewimg img {margin-right:5px; cursor:pointer; width:342px; height:100px}
 		.detail-content {display:none}
 		.detail-image {display:none}
 	</style>
@@ -69,11 +69,7 @@
 								</div>
 								<div>
 									<button type="button" onclick="showUploadModal()" class="btn btn-info">업로드</button>
-									<%--
-									<c:if test="${vo ne null and vo.thumbImg ne ''}">
-										<button type="button" onclick="showDeleteModal('${vo.thumbImg}', ${vo.seq})" class="btn btn-danger">삭제</button>
-									</c:if>
-									--%>
+									<label class="col-md-4 control-label"> ! 이미지 크기 342 x 100 </label>
 								</div>
 							</div>
 							<div class="form-group">
@@ -105,6 +101,19 @@
 								<label class="col-md-2 control-label">대분류 선택</label>
 								<div class="col-md-10">
 									<script id="categoryTemplate" type="text/html">
+										<option value="">-카테고리 선택-</option>
+										{{each value}}
+										<option value="<%="${seq}"%>"><%="${name}"%></option>
+										{{/each}}
+									</script>
+								</div>
+							</div>
+							<div class="form-group" id="lv1Category">
+								<label class="col-md-2 control-label">상품코드 입력</label>
+								<div class="col-md-8">
+									<input class="form-control" type="text" id="event_items" name="title" value="" hint="등록할 상품코드를 입력해 주세요.(예 #1234 #222)" placeholder="상품코드를 입력해 주세요"  maxlength="60" alt="기획전/이벤트 상품코드"/>
+									<!--
+									<script id="categoryTemplate" type="text/html">
 											<option value="">-카테고리 선택-</option>
 											{{each value}}
 											<option value="<%="${seq}"%>"><%="${name}"%></option>
@@ -112,6 +121,7 @@
 										</script>
 
 									<select class="form-control" id="lv1Seq" name="lv1Seq"><option value="0">-- 대분류 카테고리선택 --</option></select>
+									-->
 								</div>
 							</div>
 						</div><!-- /.box-body -->
@@ -132,7 +142,7 @@
 		<form action="/admin/event/thumnail/upload" enctype="multipart/form-data" target="zeroframe" method="post">
 			<div class="modal-body">
 				<legend>이미지 업로드</legend>
-				<p>이미지 크기는 <strong>270*500</strong>으로 업로드해주시기 바랍니다</p>
+				<p>이미지 크기는 <strong> 342 x 100 </strong>으로 업로드해주시기 바랍니다</p>
 				<p>이미지가 아닐 경우 업로드 되지 않습니다</p>
 				<p>이미지는 jpg, jpeg 확장자만 가능합니다</p>
 			</div>
@@ -301,12 +311,12 @@
 	};
 
 	var imgProc = function(obj, size) {
-		if($(obj).width() === 115 && size !== 0) {
+		if($(obj).width() === 342 && size !== 0) {
 			$(obj).css({width:size, height:size});
 		} else if(size === 0 && $(obj).width() === 115 ) {
 			$(obj).css({width:"auto", height:"auto"});
 		} else {
-			$(obj).css({width:115, height:240});
+			$(obj).css({width:342, height:100});
 		}
 	};
 </script>

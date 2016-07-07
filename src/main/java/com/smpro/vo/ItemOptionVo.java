@@ -27,6 +27,18 @@ public class ItemOptionVo {
 	/** 추가 금액 */
 	private int optionPrice;
 
+	/** 할인 기간 */
+	private String salePeriod;
+
+	/** 할인 금액 */
+	private int salePrice;
+
+	/** 이벤트 추가 */
+	private String eventAdded;
+
+	/** 무료 배송 여부 */
+	private String freeDeli = "Y";
+
 	// ------- 추가 필드 ---------
 	private List<ItemOptionVo> valueList;
 	/** 수량 */
@@ -156,6 +168,36 @@ public class ItemOptionVo {
 		this.column = column;
 	}
 
+	public String getSalePeriod() {
+		return salePeriod;
+	}
+
+	public void setSalePeriod(String salePeriod) {
+		this.salePeriod = salePeriod;
+	}
+
+	public int getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(int salePrice) {
+		this.salePrice = salePrice;
+	}
+	public String getEventAdded() {
+		return eventAdded;
+	}
+
+	public void setEventAdded(String eventAdded) {
+		this.eventAdded = eventAdded;
+	}
+	public String getFreeDeli() {
+		return freeDeli;
+	}
+
+	public void setFreeDeli(String freeDeli) {
+		this.freeDeli = freeDeli;
+	}
+
 	@Override
 	public String toString() {
 		return "ItemOptionVo [seq=" + seq + ", itemSeq=" + itemSeq
@@ -163,7 +205,8 @@ public class ItemOptionVo {
 				+ ", modDate=" + modDate + ", regDate=" + regDate
 				+ ", optionSeq=" + optionSeq + ", valueName=" + valueName
 				+ ", stockCount=" + stockCount + ", stockFlag=" + stockFlag + ", optionPrice=" + optionPrice
-				+ ", valueList=" + valueList + ", count=" + count
+				+ ", salePrice=" + salePrice +", salePeriod=" + salePeriod + ", eventAdded="+ eventAdded
+				+ ", valueList=" + valueList + ", count=" + count +",freeDeli=" + freeDeli
 				+ ", modContent=" + modContent + ", column=" + column + "]";
 	}
 }

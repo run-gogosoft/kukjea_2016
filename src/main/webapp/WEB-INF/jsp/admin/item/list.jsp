@@ -52,52 +52,29 @@
 						<table id="list1" class="table table-bordered table-striped">
 							<colgroup>
 								<col style="width:2%"/>
-								<col style="width:*"/>
+								<col style="width:10%"/>
 								<col style="width:6%"/>
-								<col style="width:*"/>
-								<col style="width:*"/>
-								<col style="width:5%"/>
-								<col style="width:7%"/>
-								<col style="width:7%"/>
-								<col style="width:7%"/>
-								<col style="width:7%"/>
-								<col style="width:5%"/>
+								<col style="width:8%"/>
+								<col style="width:*%"/>
+								<col style="width:10%"/>
 								<col style="width:8%"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<th><input type="checkbox" onclick="checkProc(this)" /></th>
 									<th>카테고리</th>
+									<th>이미지</th>
+									<th>상품코드</th>
 									<th>
-										<a href="#" onclick="searchOrderBy('A.status_code','${vo.orderByType}'); return false;">판매상태</a>
-										<c:if test="${vo.orderByType eq 'ASC' or vo.orderByType eq 'DESC'}"> 
-											<span class="text-warning"><i class="fa fa-caret-${vo.orderByType eq 'ASC' ? "up":"down"}"></i></span>	
-										</c:if>
-									</th>
-									<th>
-										입점업체
-										<div class="text-warning">담당자 연락처</div>
-									</th>
-									<th>
-										상품코드
 										<div class="text-primary">상품명</div>
 									</th>
-									<th>이미지</th>
-									<th>판매가</th>
+									<th>제조사</th>
 									<th>
-										옵션명
-										<div class="text-warning">옵션항목</div>
+										<a href="#" onclick="searchOrderBy('A.status_code','${vo.orderByType}'); return false;">판매상태</a>
+										<c:if test="${vo.orderByType eq 'ASC' or vo.orderByType eq 'DESC'}">
+											<span class="text-warning"><i class="fa fa-caret-${vo.orderByType eq 'ASC' ? "up":"down"}"></i></span>
+										</c:if>
 									</th>
-									<th>
-										등록일자
-										<div class="text-warning">최근 수정일자</div>
-									</th>
-									<th>배송비</th>
-									<th>
-										부가세
-										<div class="text-warning">구분</div>
-									</th>
-									<th>인증구분</th>
 								</tr>
 							</thead>
 							<tbody id="itemList">
@@ -106,6 +83,7 @@
 									<td class="text-center">
 										<input type="checkbox" name="seq" value="${item.seq}" data-status-code-value="${item.statusCode}">
 									</td>
+
 									<td>
 									<c:if test="${item.cateLv1Seq ne null}">
 										<i class="fa fa-caret-right"></i> ${item.cateLv1Name}
@@ -121,19 +99,14 @@
 									</c:if>
 									</td>
 									<td class="text-center">
-									<c:choose>
-										<c:when test="${item.statusCode eq 'Y'}"><strong class="text-primary">${item.statusName}</strong></c:when>
-										<c:when test="${item.statusCode eq 'N'}"><strong class="text-danger">${item.statusName}</strong></c:when>
-										<c:when test="${item.statusCode eq 'S'}"><strong class="text-danger">${item.statusName}</strong></c:when>
-										<c:otherwise><span>${item.statusName}</span></c:otherwise>
-									</c:choose>
-									</td>
-									<td class="text-center">
-										${item.sellerName}
-										<div class="text-warning">${item.salesTel}</div>
+										<c:if test="${item.img1 ne ''}">
+											<img src="/upload${fn:replace(item.img1, 'origin', 's206')}" alt="" style="width:60px;height:60px" />
+										</c:if>
 									</td>
 									<td>
 										${item.seq}
+									</td>
+									<td>
 										<div class="text-primary">
 											<strong>
 												<a href="#" onclick="location.href='view/${item.seq}?search='+encodeURIComponent($('#searchForm').serialize());return false;">${item.name}</a>
@@ -141,38 +114,15 @@
 										</div>
 									</td>
 									<td class="text-center">
-										<c:if test="${item.img1 ne ''}">
-											<img src="/upload${fn:replace(item.img1, 'origin', 's206')}" alt="" style="width:60px;height:60px" />
-										</c:if>
-									</td>
-									<td class="text-right">
-										<c:choose>
-											<c:when test="${item.typeCode eq 'N'}"><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" /> 원</c:when>
-											<c:otherwise>견적가</c:otherwise>
-										</c:choose>
+										<div class="text-warning">${item.maker}</div>
 									</td>
 									<td class="text-center">
-										${item.optionName}
-										<div class="text-warning">${item.optionValues}</div>
-									</td>
-									<td class="text-center">
-										${fn:substring(item.regDate, 0, 10)}
-										<div class="text-warning">${fn:substring(item.modDate, 0, 10)}</div>
-									</td>
-									<td class="text-center">
-										<c:if test="${item.deliTypeCode eq '00'}">무료</c:if>
-										<c:if test="${item.deliTypeCode eq '10'}"><fmt:formatNumber value="${item.deliCost}" pattern="#,###" /> 원</c:if>
-									</td>
-									<td class="text-center">
-										${item.taxName}
-										<div class="text-warning">${item.typeName}</div>
-									</td>
-									<td>
-										<c:forEach var="vo" items="${authCategoryList}">
-											<c:if test="${fn:contains(item.authCategory,vo.value)}">
-												<div>${vo.name}</div>
-											</c:if>
-										</c:forEach>
+									<c:choose>
+										<c:when test="${item.statusCode eq 'Y'}"><strong class="text-primary">${item.statusName}</strong></c:when>
+										<c:when test="${item.statusCode eq 'N'}"><strong class="text-danger">${item.statusName}</strong></c:when>
+										<c:when test="${item.statusCode eq 'S'}"><strong class="text-danger">${item.statusName}</strong></c:when>
+										<c:otherwise><span>${item.statusName}</span></c:otherwise>
+									</c:choose>
 									</td>
 								</tr>
 							</c:forEach>
@@ -400,16 +350,6 @@
 						<label><input type="radio" name="deliPackageFlag" value="N" alt="묶음배송 여부"/> 불가능</label>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label">인증구분</label>
-					<div class="col-md-9">
-					<c:forEach var="item" items="${authCategoryList}">
-						<span style="display:inline-block;width:180px;margin-top:5px;">
-							<input type="checkbox" name="authCategory" value="${item.value}"/> ${item.name} <img src="/front-assets/images/detail/auth_mark_${item.value}.png" style="vertical-align:-4px;" alt="${item.name}">
-						</span>
-					</c:forEach>
-					</div>
-				</div>
 			</div>
 			<div class="modal-footer">
 				<a data-dismiss="modal" class="btn btn-default" href="#">close</a>
@@ -633,14 +573,7 @@
 	 
 	var CHExcelDownload = {
 		excelDownCheck:function() {
-			var searchDate1 = $("input[name=searchDate1]").val();
-			var searchDate2 = $("input[name=searchDate2]").val();
-			if(searchDate1 !== '' && searchDate2 === '' || searchDate1 === '' && searchDate2 !== '') {
-				alert("조회 일자를 입력해 주세요.");
-				$(searchDate1).focus();
-				return false;
-			}
-	
+
 			CHExcelDownload.excelDownAjax();
 		}
 		, excelDownAjax:function() {

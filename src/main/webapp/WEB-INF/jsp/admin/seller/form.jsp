@@ -217,35 +217,6 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label">회사 소속 <i class="fa fa-check"></i></label>
-								<div class="col-md-2">
-									<select class="form-control" id="jachiguSido" data-required-label="소속 자치구 시/도">
-										<option value="">--- 시/도 ---</option>
-										<option value="01">서울시</option>
-										<option value="99">기타</option>
-									</select>
-								</div>
-								<div class="col-md-2">
-									<select class="form-control" id="jachiguCode" name="jachiguCode" style="display:none;" data-required-label="자치구">
-										<option value="">--- 자치구 ---</option>
-										<c:forEach var="item" items="${jachiguList}">
-											<option value="${item.value}" <c:if test="${vo.jachiguCode eq item.value}">selected</c:if>>${item.name}</option>
-										</c:forEach>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">인증구분 <i class="fa fa-check"></i></label>
-								<div class="checkbox col-md-10">
-								<c:forEach var="item" items="${authCategoryList}" begin="0" step="1" varStatus="status">
-									<label>
-										<input type="checkbox" name="authCategory" value="${item.value}" <c:if test="${fn:indexOf(vo.authCategory,item.value) >= 0}">checked</c:if>/>${item.name}
-										<img src="/front-assets/images/detail/auth_mark_${item.value}.png" alt="${item.name}">
-									</label>
-								</c:forEach>
-								</div>
-							</div>
-							<div class="form-group">
 								<label class="col-md-2 control-label" for="addr2">회사 주소 <i class="fa fa-check"></i></label>
 								<div class="col-md-1">
 									<input type="text" class="form-control" id="postcode" name="postcode" value="${vo.postcode}" maxlength="5" data-required-label="우편번호" alt="우편번호" readonly />
@@ -375,6 +346,7 @@
 									<input class="form-control" type="text" name="returnAddr2" value="${vo.returnAddr2}" maxlength="100" placeholder="반품 상세 주소"/>
 								</div>
 							</div>
+							<!--
 							<div><hr style="margin:0"/><h4>기타 정보</h4><hr style="margin:0 0 15px 0"/></div>
 							<div class="form-group">
 								<label class="col-md-2 control-label">공급사 소개</label>
@@ -394,7 +366,7 @@
 									<textarea class="form-control" name="socialActivity" rows="8">${vo.socialActivity}</textarea>
 								</div>
 							</div>
-							
+							-->
 							<div><hr style="margin:0"/><span style="font-size:18px; color:inherit">파일 첨부</span><span style="margin-left:10px; font-size:12px; color:#A94442">최대 250MB까지 업로드하실 수 있습니다</span><hr style="margin:0 0 15px 0"/></div>
 							<div class="form-group">
 								<label class="col-md-2 control-label">파일 첨부</label>
@@ -569,11 +541,11 @@ var callbackProc = function(msg) {
 			 	}
 			 } */
 			
-		 	if((typeof $('input[name=authCategory]:checked').val()) === 'undefined') {
+		 	/*if((typeof $('input[name=authCategory]:checked').val()) === 'undefined') {
 				alert('인증 구분을 선택해 주세요.');
 				$('input[name=authCategory]')[0].focus();
 				return false;
-			}
+			}*/
 
 			var seq = "${vo.seq}";
 			if( seq == null || $.trim(seq) == "" ) {

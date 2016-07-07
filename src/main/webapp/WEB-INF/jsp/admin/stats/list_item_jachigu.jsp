@@ -9,24 +9,21 @@
 <div class="content-wrapper">
 	<!-- 헤더 -->
 	<section class="content-header">
-		<h1>기간별 상품 판매 현황(${userType eq "seller" ? "입점업체":"공공기관"}) <small></small></h1>
+		<h1>공급사 판매 현황 <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
 			<li>통계</li>
-			<li class="active">기간별 상품 판매 현황(${userType eq "seller" ? "입점업체":"공공기관"})</li>
+			<li class="active">공급사 판매 현황</li>
 		</ol>
 	</section>
 	<section class="content">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="box">
-					<!-- 소제목 -->
-					<!-- <div class="box-header"><h3 class="box-title"></h3></div> -->
-					<!-- 내용 -->
 					<form  class="form-horizontal" id="searchForm">
 						<div class="box-body">
 							<div class="form-group">
-								<label class="col-md-2 control-label">결제일자</label>
+								<label class="col-md-2 control-label">검색일자</label>
 								<div class="col-md-4">
 									<div class="input-group">
 										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
@@ -36,7 +33,7 @@
 										<input class="form-control datepicker" type="text" id="searchDate2" name="searchDate2" value="${vo.searchDate2}">
 									</div>
 								</div>
-								<div class="col-md-3 form-control-static">
+								<div class="col-md-6 form-control-static">
 									<button type="button" onclick="calcDate(0)" class="btn btn-success btn-xs">오늘</button>
 									<button type="button" onclick="calcDate(7)" class="btn btn-default btn-xs">1주일</button>
 									<button type="button" onclick="calcDate(30)" class="btn btn-default btn-xs">1개월</button>
@@ -57,57 +54,51 @@
 				</div>
 			</div>
 		</div>
-		
-			<c:forEach var="list" items="${lists}" varStatus="listStatus">
-				<c:if test="${listStatus.index == 0 or (listStatus.index+1) % 4 == 1}">
+
+
 		<div class="row">
-				</c:if>
-			<div class="col-md-3">
+			<div class="col-md-12">
 				<div class="box box-warning box-solid">
-					<!-- 소제목 -->
-					<div class="box-header">
-						<div class="pull-left"><h3 class="box-title">${cList[listStatus.index].name}</h3></div>
-						<div class="pull-right"><fmt:formatNumber value="${sLists[listStatus.index].sumPrice}"/></div>
-					</div>
 					<!-- 내용 -->
 					<div class="box-body">
 						<table class="table table-bordered table-striped">
 							<colgroup>
 								<col style="width:10%;"/>
 								<col style="width:*;"/>
-								<col style="width:15%;"/>
+
 								<col style="width:20%;"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<th>No.</th>
-									<th>상품명</th>
-									<th>수량</th>
-									<th>금액</th>
+									<th>공급사명</th>
+									<th>매출금액 (${vo.searchDate1} - ${vo.searchDate2})</th>
 								</tr>
 							</thead>
 							<tbody>
-							<c:forEach var="item" items="${list}" varStatus="status">
-								<tr>
-									<td class="text-center">${status.index + 1}</td>
-									<td>${item.itemName}</td>
-									<td class="text-right"><fmt:formatNumber value="${item.orderCnt}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${item.sumPrice}"/></td>
-								</tr>
+							<!--
+							<c:forEach var="list" items="${lists}" varStatus="listStatus">
+									<tr>
+										<td class="text-center">${status.index + 1}</td>
+										<td>${cList[listStatus.index].name}</td>
+										<td class="text-right"><fmt:formatNumber value="${sLists[listStatus.index].sumPrice}"/></td>
+									</tr>
+
 							</c:forEach>
-							<c:if test="${ fn:length(list)==0 }">
+							-->
+							<!--:if test="${ fn:length(lists)==0 }"-->
 								<tr><td class="text-center" colspan="4">조회된 데이터가 없습니다.</td></tr>
-							</c:if>
+							<!--/c:if-->
 							</tbody>
 						</table>
 						<%-- <div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div> --%>
 					</div>
 				</div>
 			</div>
-				<c:if test="${listStatus.index > 0 and (listStatus.index+1) % 4 == 0}">
+
 		</div>
-				</c:if>
-			</c:forEach>
+
+
 	</section>
 </div>
 

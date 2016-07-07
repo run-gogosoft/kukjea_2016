@@ -3,7 +3,7 @@
 	    <div class="pull-right hidden-xs">
 	      <b>Version</b> 1.0
 	    </div>
-    	<strong>Copyright &copy; 2015 international SHOP.</strong> All rights reserved.
+    	<strong>Copyright &copy; 2016 KukjeMall  </strong> All rights reserved.
   	</footer>
 </div><!-- ./wrapper -->
 

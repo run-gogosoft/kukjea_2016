@@ -29,6 +29,11 @@
 			A.img2 AS img2,
 			A.img3 AS img3,
 			A.img4 AS img4,
+		    A.type1 AS type1,
+		    A.type2 AS type2,
+			A.type3 AS type3,
+			A.insurance_code AS insuranceCode,
+			A.subject_type AS subjectType,
 			A.deli_type_code AS deliTypeCode,
 			A.deli_cost AS deliCost,
 			A.deli_free_amount AS deliFreeAmount,
@@ -66,14 +71,13 @@
 			sm_common c3 ON (c3.group_code=5 AND A.tax_code=c3.value)
 		WHERE 1=1
 		<choose>
+			<!--
 			<when test="loginType == 'S'.toString()">
-				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
 				AND A.seller_seq=#{loginSeq}
 			</when>
 			<when test="loginType == 'D'.toString()">
-				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
 				AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-			</when>
+			</when>-->
 		</choose>
 		<if test="cateLv1Seq != null">
 			<choose>
@@ -171,15 +175,15 @@
 			sm_seller F ON A.seller_seq=F.seq LEFT OUTER JOIN 
 			sm_user G ON F.master_seq=G.seq
 		WHERE 1=1
+
 		<choose>
+			<!--
 			<when test="loginType == 'S'.toString()">
-				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
 				AND A.seller_seq=#{loginSeq}
 			</when>
 			<when test="loginType == 'D'.toString()">
-				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
 				AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-			</when>
+			</when>-->
 		</choose>
 		<if test="cateLv1Seq != null">
 			<choose>
@@ -348,6 +352,11 @@
 			A.img2 AS img2,
 			A.img3 AS img3,
 			A.img4 AS img4,
+			A.type1 AS type1,
+		    A.type2 AS type2,
+			A.type3 AS type3,
+			A.insurance_code AS insuranceCode,
+			A.subject_type AS subjectType,
 			A.tax_code AS taxCode,
 			A.mod_date AS modDate,
 			A.reg_date AS regDate,
@@ -800,9 +809,10 @@
 		WHERE 1=1
 		AND i.status_code = 'Y'
 		AND DATE_FORMAT( i.reg_date, '%Y-%m-%d' ) >= DATE_FORMAT( DATE_ADD( NOW(), INTERVAL -7 DAY ), '%Y-%m-%d' )
+		<!--
 		<if test="loginType == 'S'.toString() || loginType == 'D'.toString()">
 			AND	i.seller_seq = #{seq}
-		</if>
+		</if>-->
 	</select>
 
 	<!--상품의 판매자 시퀀스 읽어오기-->
@@ -911,6 +921,11 @@
 			i.img2 AS img2,
 			i.img3 AS img3,
 			i.img4 AS img4,
+			i.type1 AS type1,
+			i.type2 AS type2,
+			i.type3 AS type3,
+			i.insurance_code AS insuranceCode,
+			i.subject_type AS subjectType,
 			i.deli_type_code AS deliTypeCode,
 			i.deli_cost AS deliCost,
 			i.maker,
@@ -938,14 +953,14 @@
 			sm_seller s ON(i.seller_seq=s.seq)
 		WHERE 1=1
 		<choose>
+			<!--
 			<when test="loginType eq 'S'.toString()">
-				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
+
 				AND i.seller_seq=#{loginSeq}
 			</when>
 			<when test="loginType eq 'D'.toString()">
-				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
 				AND i.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-			</when>
+			</when>-->
 		</choose>
 		<if test="cateLv1Seq != null">
 			AND i.cate_lv1_seq=#{cateLv1Seq}
@@ -980,11 +995,12 @@
  		<if test="sellerSeq != null">
 			AND i.seller_seq=#{sellerSeq}
  		</if>
+		<!--
  		<if test="loginType != 'A'.toString()">
  			<if test="memberTypeCode != 'P'.toString()">
 				AND i.cate_lv1_seq != 53
 			</if>
-		</if>
+		</if>-->
 		<choose>
 			<when test="startPrice == 0 and endPrice == 0">
 			</when>
@@ -1021,17 +1037,16 @@
 			sm_user u	ON i.seller_seq=u.seq LEFT OUTER JOIN
 			sm_seller s ON(i.seller_seq=s.seq)
 		WHERE 1=1
+
 		<choose>
+			<!--
 			<when test="loginType eq 'S'.toString()">
-				<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
 				AND i.seller_seq=#{loginSeq}
 			</when>
 			<when test="loginType eq 'D'.toString()">
-				<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
 				AND i.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-			</when>
+			</when>-->
 		</choose>
-
 		<if test="cateLv1Seq != null">
 			AND i.cate_lv1_seq=#{cateLv1Seq}
 		</if>
@@ -1066,11 +1081,12 @@
  		<if test="sellerSeq != null">
 			AND i.seller_seq=#{sellerSeq}
  		</if>
+		<!--
  		<if test="loginType != 'A'.toString()">
  			<if test="memberTypeCode != 'P'.toString()">
 				AND i.cate_lv1_seq != 53
 			</if>
-		</if>
+		</if>-->
 		<choose>
 			<when test="startPrice == 0 and endPrice == 0">
 			</when>
@@ -1150,6 +1166,11 @@
 			A.img2 AS img2,
 			A.img3 AS img3,
 			A.img4 AS img4,
+			A.type1 AS type1,
+			A.type2 AS type2,
+			A.type3 AS type3,
+			A.insurance_code AS insuranceCode,
+			A.subject_type AS subjectType,
 			A.deli_type_code AS deliTypeCode,
 			A.deli_cost AS deliCost,
 			A.deli_free_amount AS deliFreeAmount,
@@ -1182,14 +1203,13 @@
 			sm_item_detail I ON I.item_seq=A.seq
 		WHERE 1=1
 			<choose>
+				<!--
 				<when test="loginType eq 'S'.toString()">
-					<!-- 판매자 로그인 : 해당 판매자가 등록한 상품만 보여준다-->
 					AND A.seller_seq=#{loginSeq}
 				</when>
 				<when test="loginType eq 'D'.toString()">
-					<!-- 총판 로그인 : 해당 총판의 하위 판매자들이 등록한 상품만 보여준다-->
 					AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-				</when>
+				</when>-->
 			</choose>
 			<if test="cateLv1Seq != null">
 				AND A.cate_lv1_seq=#{cateLv1Seq}

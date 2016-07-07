@@ -24,7 +24,12 @@ public class SmsDaoImpl implements SmsDao {
 
 	@Override
 	public int getLogListCount(SmsVo vo) {
-		return ((Integer) sqlSession.selectOne("sms.getLogListCount", vo)).intValue();
+		try {
+			return ((Integer) sqlSession.selectOne("sms.getLogListCount", vo)).intValue();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	@Override

@@ -67,19 +67,14 @@
 								</div>
 							</div>
 						</c:if>
-						<%--관리자일 경우에만 입점업체를 선택한다.--%>
+						<%--관리자일 경우에만 입점업체를 선택한다.--
 						<c:if test="${sessionScope.loginType eq 'A'}">
 							<div class="form-group">
 								<label class="col-md-2 control-label">입점업체 선택</label>
 								<div class="col-md-2">
 									<input type="text" class="form-control" name="sellerSeq" value="${vo.sellerSeq}" readonly="readonly" alt="입점업체" />
 								</div>
-								<div class="col-md-1">
-									<select id="search" name="search" class="form-control">
-										<option value="name">업체명</option>
-										<option value="id">아이디</option>
-									</select>
-								</div>
+
 								<div class="col-md-2">
 									<input type="text" class="form-control" name="seller" value="" onkeydown="enterSearch();" placeholder="입점업체 검색" />
 								</div>
@@ -126,6 +121,7 @@
 								</div>
 							</div>
 						</c:if>
+						--%>
 							<script id="lvTemplate" type="text/html">
 								<option value="">분류를 선택해주세요</option>
 								{{each list}}
@@ -195,43 +191,70 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-md-2 control-label">입점업체 상품코드</label>
+								<label class="col-md-2 control-label">규격1</label>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="sellerItemCode" value="${vo.sellerItemCode}" maxlength="16" />
+									<input type="text" class="form-control" name="type1" value="${vo.type1}" maxlength="16" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">규격2</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" name="type2" value="${vo.type2}" maxlength="16" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">규격3</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" name="type3" value="${vo.type3}" maxlength="16" />
 								</div>
 							</div>
 
+							<div class="form-group">
+								<label class="col-md-2 control-label">보험 코드</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" name="insuranceCode" value="${vo.insuranceCode}" maxlength="16" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-2 control-label">진료 과목</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" name="subejectType" value="${vo.subjectType}" maxlength="16" />
+								</div>
+							</div>
+
+<%--
 							<div class="form-group">
 								<label class="col-md-2 control-label">제조사 <i class="fa fa-check"></i></label>
 								<div class="col-md-3">
-									<%--입점업체 상품 등록시에는 입점업체명을 기본값으로 넣는다.--%>
+									<--입점업체 상품 등록시에는 입점업체명을 기본값으로 넣는다.-->
 									<input type="text" class="form-control" id="maker" name="maker" value="${vo eq null && sessionScope.loginType eq 'S' ? sessionScope.loginName : vo.maker}" maxlength="26" alt="제조사"/>
 								</div>
 							</div>
-
+--%>
 							<div class="form-group">
-								<label class="col-md-2 control-label">브랜드 </label>
+								<label class="col-md-2 control-label">발주처 </label>
 								<div class="col-md-3">
 									<input type="text" class="form-control" name="brand" value="${vo.brand}" maxlength="45"/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-md-2 control-label">모델명 </label>
+								<label class="col-md-2 control-label">기준재고 </label>
 								<div class="col-md-3">
 									<input type="text" class="form-control" name="modelName" value="${vo.modelName}" maxlength="45"/>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-md-2 control-label">원산지</label>
+								<label class="col-md-2 control-label">단위</label>
 								<div class="col-md-3">
 									<input type="text" class="form-control" name="originCountry" value="${vo.originCountry}" maxlength="26" />
 								</div>
 							</div>
 
 							<div class="form-group hide">
-								<label class="col-md-2 control-label">최소구매 수량</label>
+								<label class="col-md-2 control-label">자동발주량</label>
 								<div class="col-md-2">
 									<div class="input-group">
 										<input type="text" class="form-control text-right" name="minCnt" value="${vo.minCnt}" onblur="numberCheck(this);" maxlength="3" disabled="true"/>
@@ -240,99 +263,8 @@
 
 								</div>
 							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">제조일자 </label>
-								<div class="col-md-2">
-									<div class="input-group">
-										<input type="text" class="form-control datepicker" name="makeDate" value="${vo.makeDate}" maxlength="8"/>
-										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">유효일자</label>
-								<div class="col-md-2">
-									<div class="input-group">
-										<input type="text" class="form-control datepicker" name="expireDate" value="${vo.expireDate}" maxlength="8" />
-										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">부가세 <i class="fa fa-check"></i></label>
-								<div class="radio">
-									<label><input id="tax" type="radio" name="taxCode" value="1" <c:if test="${vo.taxCode eq 1}">checked="checked"</c:if> />과세</label>
-									<label><input id="duty" type="radio" name="taxCode" value="2" <c:if test="${vo.taxCode eq 2}">checked="checked"</c:if> />면세</label>
-								</div>
-							</div>
-
-							<div class="form-group hide">
-								<label class="col-md-2 control-label">미성년자 구매 <i class="fa fa-check"></i></label>
-								<div class="radio">
-									<label><input type="radio" name="adultFlag" value="N" <c:if test="${vo eq null or vo.adultFlag eq 'N'}">checked="checked"</c:if> />가능</label>
-									<label><input type="radio" name="adultFlag" value="Y" <c:if test="${vo.adultFlag eq 'Y'}">checked="checked"</c:if> />불가능</label>
-									<span class="text-danger"><i class="fa fa-info"></i> 성인용품은 만 19세 미만의 미성년자가 구매할 수 없습니다</span>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">A/S 가능여부 <i class="fa fa-check"></i></label>
-								<div class="radio">
-									<label><input type="radio" name="asFlag" value="Y" <c:if test="${vo.asFlag eq 'Y'}">checked="checked"</c:if> />가능</label>
-									<label><input type="radio" name="asFlag" value="N" <c:if test="${vo.asFlag eq 'N'}">checked="checked"</c:if> />불가능</label>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">A/S 전화번호</label>
-								<div class="col-md-3">
-									<div class="input-group">
-										<input type="text" class="form-control" name="asTel1" value="${vo.asTel1}" maxlength="4" onblur="numberCheck(this);"/>
-										<div class="input-group-addon" style="border:0">-</div>
-										<input type="text" class="form-control" name="asTel2" value="${vo.asTel2}" maxlength="4" onblur="numberCheck(this);"/>
-										<div class="input-group-addon" style="border:0">-</div>
-										<input type="text" class="form-control" name="asTel3" value="${vo.asTel3}" maxlength="4" onblur="numberCheck(this);"/>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">판매가 <i class="fa fa-check"></i></label>
-								<div class="col-md-2">
-									<input type="hidden" name="tempSellPrice" value="${vo eq null ? 0 : vo.sellPrice}" maxlength="10" />
-									<div class="input-group">
-										<input type="text" class="form-control text-right" id="sellPrice" name="sellPrice" value="${vo.sellPrice}" onblur="numberCheck(this);" maxlength="10" alt="판매가" />
-										<div class="input-group-addon">원</div>
-									</div>
-								</div>
-							</div>
-
 							<%--입점업체의 경우 총판 공급가 숨김--%>
 							<input type="hidden" name="supplyMasterPrice" value="${vo.supplyMasterPrice}" maxlength="10" disabled/>
-
-							<div class="form-group" style="display:none;">
-								<label class="col-md-2 control-label">공급가 <i class="fa fa-check"></i></label>
-								<div class="col-md-2">
-									<div class="input-group">
-										<input type="text" class="form-control text-right" id="supply_price" name="supply_price" value="${vo.supplyPrice}" onblur="numberCheck(this);" maxlength="10"/>
-										<div class="input-group-addon">원</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">시중가</label>
-								<div class="col-md-2">
-									<div class="input-group">
-										<input type="text" class="form-control text-right" name="marketPrice" value="${vo eq null ? 0 : vo.marketPrice}" onblur="numberCheck(this);" maxlength="10"/>
-										<div class="input-group-addon">원</div>
-									</div>
-								</div>
-								<div class="col-md-3 form-control-static"><span class="text-info"><i class="fa fa-info"></i> 시중가는 단순 표기용으로 0으로 입력하면 노출되지 않습니다.</span></div>
-							</div>
 
 							<div class="form-group">
 								<label class="col-md-2 control-label">대표 이미지<c:if test="${vo eq null}"> <i class="fa fa-check"></i></c:if></label>
@@ -390,139 +322,6 @@
 									</c:if>
 								</div>
 							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">배송구분 <i class="fa fa-check"></i></label>
-								<div class="radio">
-									<label><input type="radio" name="deliTypeCode" value="00" onclick="deliTypeCodeChange()" <c:if test="${vo eq null or vo.deliTypeCode eq '00'}">checked="checked"</c:if> />무료</label>
-									<label><input type="radio" name="deliTypeCode" value="10" onclick="deliTypeCodeChange()" <c:if test="${vo.deliTypeCode eq '10'}">checked="checked"</c:if>/> 유료</label>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">배송비</label>
-								<div class="col-md-2">
-									<div class="input-group">
-										<input type="text" class="form-control text-right" name="deliCost" value="${vo.deliCost}" onblur="numberCheck(this);" maxlength="10"/>
-										<div class="input-group-addon">원</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">무료배송 조건금액</label>
-								<div class="col-md-4">
-									<div class="input-group">
-										<div class="input-group-addon" style="border:0">이 상품을</div>
-										<input type="text" class="form-control text-right" name="deliFreeAmount" value="${vo.deliFreeAmount}" onblur="numberCheck(this);" maxlength="10"/>
-										<div class="input-group-addon" style="border:0">원 이상 주문시 무료 배송</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">선결제 여부</label>
-								<div class="col-md-2">
-									<select class="form-control" id="deliPrepaidFlag" name="deliPrepaidFlag">
-										<option value="" <c:if test="${vo.deliPrepaidFlag eq ''}">selected</c:if>>선결제/착불 선택가능</option>
-										<option value="Y" <c:if test="${vo.deliPrepaidFlag eq 'Y'}">selected</c:if>>선결제 필수</option>
-										<option value="N" <c:if test="${vo.deliPrepaidFlag eq 'N'}">selected</c:if>>선결제 불가</option>
-									</select>
-									<%--<p class="text-info">배송구분이 유료배송 일 경우 선결제 여부는 기본으로 착불/선결제 가능이 선택됩니다!</p>--%>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">묶음배송 여부 <i class="fa fa-check"></i></label>
-								<div class="radio">
-									<label><input type="radio" name="deliPackageFlag" value="Y" <c:if test="${vo.deliPackageFlag eq 'Y'}">checked="checked"</c:if> />가능</label>
-									<label><input type="radio" name="deliPackageFlag" value="N" <c:if test="${vo.deliPackageFlag eq 'N'}">checked="checked"</c:if> /> 불가능</label>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">인증구분 <i class="fa fa-check"></i></label>
-								<div class="checkbox col-md-10">
-								<c:forEach var="item" items="${authCategoryList}">
-									<label>
-										<input type="checkbox" name="authCategory" value="${item.value}" <c:if test="${fn:indexOf(vo.authCategory,item.value) >= 0}">checked</c:if>/>${item.name}
-										<img src="/front-assets/images/detail/auth_mark_${item.value}.png" alt="${item.name}">
-									</label>
-								</c:forEach>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">상품이미지 이벤트 배너 전시</label>
-								<div class="checkbox col-md-10">
-									<label style="margin-right:0">
-										<input type="checkbox" name="imgBannerCode" value="01" <c:if test="${fn:contains(vo.imgBannerCode,'01')}">checked</c:if>/>최대 ~30% 세일
-									</label>
-									<img src="/front-assets/images/common/img_banner_01.png" style="margin-right:30px"/>
-									<label style="margin-right:0">
-										<input type="checkbox" name="imgBannerCode" value="02" <c:if test="${fn:contains(vo.imgBannerCode,'02')}">checked</c:if>/>설명절 특가
-									</label>
-									<img src="/front-assets/images/common/img_banner_02.png" style="margin-right:30px"/>
-									<label style="margin-right:0">
-										<input type="checkbox" name="imgBannerCode" value="03" <c:if test="${fn:contains(vo.imgBannerCode,'03')}">checked</c:if>/>한정수량
-									</label>
-									<img src="/front-assets/images/common/img_banner_03.png" style="margin-right:30px"/>
-									<label style="margin-right:0">
-										<input type="checkbox" name="imgBannerCode" value="04" <c:if test="${fn:contains(vo.imgBannerCode,'04')}">checked</c:if>/>이번주 행사
-									</label>
-									<img src="/front-assets/images/common/img_banner_04.png" style="margin-right:30px"/>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-2 control-label">상품 추가정보 <i class="fa fa-check"></i></label>
-								<div class="col-md-4">
-									<c:if test="${vo ne null}">
-										<input type="hidden" id="regDate" value="${fn:substring(regDate,0,10)}"/>
-									</c:if>
-									<select class="form-control" id="typeCd" name="typeCd" onchange="CHItemPropInfo.selectInfo(this, <c:if test="${vo eq null}">'reg'</c:if><c:if test="${vo ne null}">'mod'</c:if>)" alt="상품 추가정보">
-										<option value="">-- 상품군을 선택하세요. --</option>
-										<c:forEach var="item" items="${typeInfoList}">
-											<option value="${item.typeCd}" <c:if test="${vo.typeCd eq item.typeCd}">selected</c:if>>${item.typeCd}. ${item.typeNm}</option>
-										</c:forEach>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<div class="col-md-2"></div>
-								<div class="col-md-10">
-									<c:if test="${vo ne null}">
-										<div class="form-control-static">
-											<span class="text-warning">※ 상품 추가정보 수정은 해당 내용 수정 후 우측 [상품 추가정보 수정] 버튼을 클릭하셔야 수정됩니다.</span>
-											<button type="button" onclick="CHItemPropInfo.propUpdate()" class="btn btn-sm btn-info pull-right" style="margin-bottom:5px;">상품 추가정보 수정</button>
-										</div>
-									</c:if>
-									<table class="table table-bordered">
-										<colgroup>
-											<col style="width:30%;"/>
-											<col width="*"/>
-										</colgroup>
-										<thead>
-										<tr>
-											<th colspan="2">상품 추가정보</th>
-										</tr>
-										</thead>
-										<tbody id="ch-info-list">
-											<tr><td class="muted text-center" colspan="2">
-												상품군을 선택해 주세요.
-											</td></tr>
-										</tbody>
-									</table>
-
-									<%-- 상품 추가정보가 등록되었을시 값들을 매핑하기 위해서 input태그를 만든다(원래는 javascript단에서 된다면 좋지만 map받는 것을 여러방면으로 해보았으나 되지 않았으므로 우선 이렇게 해둔다.) --%>
-									<c:forEach begin="1" end="20" varStatus="status">
-										<c:set var="tempPropVal" value="prop_val${status.count}"/>
-										<input type="hidden" class="prop_val${status.count}" value="${propInfo[tempPropVal]}"/>
-									</c:forEach>
-								</div>
-							</div>
-
 							<div class="form-group">
 								<label class="col-md-2 control-label">상세 정보 <i class="fa fa-check"></i></label>
 								<div class="radio">
@@ -602,21 +401,8 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-md-2 control-label">옵션 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label"></label>
 								<div class="col-md-10">
-									<div class="alert alert-info">
-										<ol>
-											<li>옵션 항목은 추가/삭제 버튼으로 추가/삭제할 수 있습니다</li>
-											<li>옵션 항목당 한가지 옵션으로 작성하는 것을 원칙으로 합니다</li>
-											<li>가급적 옵션 항목은 '가나다'순 또는 'ABC'순, 숫자일 경우는 오름차순으로 작성하시기 바랍니다</li>
-											<li>옵션을 변경하시고 변경 완료 버튼을 눌러주시기 바랍니다</li>
-											<li>예시) 색상-레드,블루 사이즈-95,100,105 일때 레드95,레드100,레드105,블루95,블루100,블루 105로 명기</li>
-											<li class="text-warning">상품 외부 연동시 문제가 생길 수 있으므로 옵션 삭제를 제한합니다</li>
-											<li class="text-warning">옵션항목이 품절이거나 존재하지 않아 삭제를 하고 싶으시면 재고량을 0으로 수정 바랍니다.</li>
-											<li class="text-warning">옵션이 없는 경우 상품옵션명, 옵션항목 기본셋팅값은 수정하지마세요 재고량만 입력하시면 됩니다.</li>
-										</ol>
-									</div>
-
 									<script id="optionTemplate" type="text/html">
 										<tr class="parent" data-pk="<%="${idx}"%>">
 											<td class="text-center">
@@ -630,6 +416,9 @@
 											</td>
 											<td></td>
 											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
 											<td class="text-center">
 												<!--<button type="button" onclick="EBOption.remove(this)" class="btn btn-sm btn-danger">삭제</button>-->
 											</td>
@@ -637,17 +426,35 @@
 									</script>
 									<script id="optionChildTemplate" type="text/html">
 										<tr class="child" data-pk="<%="${idx}"%>">
-											<td></td>
-											<td><input type="text" class="form-control" name="valueName" value="기본" alt="옵션항목명" maxlength="33" /></td>
+											<th class="text-center">
+												병원몰
+												<input type="hidden" name="optionName" value="병원몰"/>
+												<input type="hidden" name="showFlag" value="Y"/>
+											</th>
+											<th class="text-center">
+												<%="${sessionScope.loginNam}"%>
+												<input type="hidden" name="valueName" value="<%="${sessionScope.loginNam}"%>"/>
+											</th>
 											<td class="text-center">
 												<div class="input-group">
-													<input type="text" class="form-control text-right" name="optionPrice" value="0" alt="추가가격" onblur="numberCheck(this);" maxlength="11" />
+													<input type="text" class="form-control text-right" name="optionPrice" value="0" alt="판매가격" onblur="numberCheck(this);" maxlength="11" />
 													<div class="input-group-addon">원</div>
 												</div>
 											</td>
 											<td class="text-center">
 												<div class="input-group">
-													<input type="text" class="form-control text-right" id="stockCount" maxlength="5" name="stockCount" onblur="numberCheck(this)" value="999" alt="재고수량" maxlength="6" />
+													<input type="text" class="form-control text-right" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);" maxlength="11" />
+													<div class="input-group-addon">원</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<div class="input-group">
+													<input type="text" class="form-control text-right" name="salePeriod" value="0" alt="할인기간" onblur="numberCheck(this);" maxlength="11" />
+												</div>
+											</td>
+											<td class="text-center">
+												<div class="input-group">
+													<input type="text" class="form-control text-right" id="stockCount" maxlength="5" name="재고량" onblur="numberCheck(this)" value="999" alt="재고수량" maxlength="6" />
 													<div class="input-group-addon">개</div>
 												</div>
 											</td>
@@ -656,38 +463,18 @@
 													<label><input type="checkbox" name="stockFlag" value="N"/> 재고관리 안함</label>
 												</div>
 											</td>
-											<td class="text-center">
-												<button type="button" onclick="EBOption.remove(this)" class="btn btn-sm btn-danger">삭제</button>
-											</td>
+											<td></td>
 										</tr>
+
 									</script>
 									<script id="optionEditTemplate" type="text/html">
-										<tr class="parent" data-pk="<%="${idx}"%>">
+										{{each list}}
+										<tr class="child" data-pk="<%="${idx}"%>">
 											<td class="text-center">
 												<%="${optionName}"%>
 												<input type="hidden" name="optionName" value="<%="${optionName}"%>"/>
 												<input type="hidden" name="showFlag" value="Y"/>
 											</td>
-											<td class="text-center">
-												<button class="btn btn-sm btn-default" type="button" onclick="EBOption.showAddValueModal(this, <%="${seq}"%>)">
-													항목 추가 <i class="fa fa-fw fa-plus"></i>
-												</button>
-											</td>
-											<td></td>
-											<%--<td class="text-center">--%>
-												<%--<%--{{if showFlag=="Y"}}판매{{/if}}--%>--%>
-												<%--<%--{{if showFlag=="N"}}숨김{{/if}}--%>--%>
-											<%--</td>--%>
-											<td></td>
-											<td></td>
-											<td class="text-center">
-												<button type="button" class="btn btn-sm btn-default" onclick="EBOption.showUpdateOptionModal(this, <%="${seq}"%>)">수정</button>
-												<%-- <button type="button" class="btn btn-sm btn-danger" onclick="EBOption.showDeleteOptionModal(this, <%="${seq}"%>)">삭제</button> --%>
-											</td>
-										</tr>
-										{{each list}}
-										<tr class="child" data-pk="<%="${idx}"%>">
-											<td></td>
 											<td class="text-center">
 												<%="${valueName}"%>
 												<input type="hidden" name="valueName" value="<%="${valueName}"%>"/>
@@ -695,6 +482,14 @@
 											<td class="text-center">
 												<%="${numeral(optionPrice).format('0,0')}"%> 원
 												<input type="hidden" name="optionPrice" value="<%="${optionPrice}"%>"/>
+											</td>
+											<td class="text-center">
+												0 원
+												<input type="hidden" name="salePrice" value="0"/>
+											</td>
+											<td class="text-center">
+												2016-7-31
+												<input type="hidden" name="salePeriod" value="2016-7-31"/>
 											</td>
 											<td class="text-center">
 												<%="${numeral(stockCount).format('0,0')}"%>
@@ -715,41 +510,44 @@
 										</tr>
 										{{/each}}
 									</script>
+
+
 									<table class="table table-bordered">
 										<colgroup>
-											<col style="width:20%;"/>
+											<col style="width:15%;"/>
 											<col style="width:*"/>
-											<col style="width:12%;"/>
-											<col style="width:12%;"/>
 											<col style="width:10%;"/>
-											<col style="width:10%"/>
+											<col style="width:10%;"/>
+											<col style="width:10%;"/>
+											<col style="width:15%;"/>
+											<col style="width:10%;"/>
+											<col style="width:10%;"/>
 										</colgroup>
 										<thead>
 										<tr>
-											<th>상품옵션명</th>
-											<th>옵션항목</th>
-											<th>추가가격</th>
+											<th>쇼핑몰</th>
+											<th>공급사</th>
+											<th>가격</th>
+											<th>할인가격</th>
+											<th>할인기간</th>
 											<th>재고량</th>
 											<th>재고관리</th>
-											<th></th>
+											<th>${fn:length(optionList)}</th>
 										</tr>
 										</thead>
 										<tbody id="eb-option-list">
 										<c:if test="${vo eq null}">
 											<tr><td class="muted text-center" colspan="5">
-												옵션을 추가해주세요
+												가격을 추가해주세요
 											</td></tr>
 										</c:if>
 										<c:if test="${vo ne null}">
-											<tr><td class="muted text-center" colspan="5">
+											<tr><td class="muted text-center" colspan="7">
 												데이터를 불러오고 있습니다 <img src="/assets/img/common/ajaxloader.gif" alt="" />
 											</td></tr>
 										</c:if>
 										</tbody>
 									</table>
-									<c:if test="${vo eq null}">
-										<button type="button" onclick="EBOption.add()" class="btn btn-info pull-right">옵션추가</button>
-									</c:if>
 									<c:if test="${vo ne null}">
 										<button type="button" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품옵션추가</button>
 									</c:if>
@@ -828,14 +626,14 @@
 	<div class="modal-content">
 		<form class="form-horizontal" onsubmit="return false">
 		<div class="modal-body">
-			<legend>상품옵션 추가</legend>
+			<legend>상품가격 추가</legend>
 			<div class="alert alert-danger">
 				이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다
 			</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">상품옵션명</label>
+					<label class="col-md-3 control-label">쇼핑몰명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="optionName" value="" alt="상품옵션명" />
+						<input type="text" class="form-control" name="optionName" value="" alt="쇼핑몰명" />
 						<input type="hidden" name="showFlag" value="Y" />
 					</div>
 				</div>
@@ -850,15 +648,27 @@
 			<%--</div>--%>
 				<hr/>
 				<div class="form-group">
-					<label class="col-md-3 control-label">옵션항목명</label>
+					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="valueName" value="" alt="옵션항목명" />
+						<input type="text" class="form-control" name="valueName" value="" alt="공급자명" />
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">추가가격</label>
+					<label class="col-md-3 control-label">상품 가격</label>
 					<div class="col-md-9">
 						<input type="text" class="form-control" name="optionPrice" value="0" alt="추가금액" onblur="numberCheck(this);"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">할인 가격</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">할인 기간</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="salePeriod" value="0" alt="할인기간" onblur="numberCheck(this);"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -867,7 +677,7 @@
 						<input type="text" class="form-control" name="stockCount" maxlength="5" value="0" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
 					</div>
 				</div>
-			<i class="icon icon-info-sign"></i>옵션항목은 1개씩만 등록됩니다
+			<i class="icon icon-info-sign"></i>쇼핑몰 항목은 1개씩만 등록됩니다.
 		</div>
 		<div class="modal-footer">
 			<a data-dismiss="modal" class="btn" href="#">close</a>
@@ -877,20 +687,21 @@
 	</div>
 <div>
 </script>
+
 <script id="optionValueAddTemplate" type="text/html">
 
 	<div class="modal-dialog">
 		<div class="modal-content">
 		<div class="modal-header">
-			<h3 class="modal-title">옵션항목 추가</h3>
+			<h3 class="modal-title">상품가격 추가</h3>
 		</div>
 		<form class="form-horizontal" onsubmit="return false">
 			<div class="modal-body">
 				<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">옵션항목명</label>
+					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="valueName" value="" alt="옵션항목명" />
+						<input type="text" class="form-control" name="valueName" value="" alt="고급자명" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -960,13 +771,13 @@
 				<legend>"<%="${valueName}"%>" 항목 수정하기</legend>
 				<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">옵션항목명</label>
+					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>" alt="옵션항목명" />
+						<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>" alt="공급자명" />
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">추가가격</label>
+					<label class="col-md-3 control-label">가격</label>
 					<div class="col-md-9">
 						<input type="text" class="form-control" name="optionPrice" value="<%="${optionPrice}"%>" alt="추가금액" onblur="numberCheck(this);"/>
 					</div>
@@ -995,10 +806,9 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-body">
-				<legend>정말로 "<%="${optionName}"%><%="${valueName}"%>" 옵션을 삭제하시겠습니까?</legend>
+				<legend>정말로 "<%="${optionName}"%><%="${valueName}"%>" 공급자 가격을 삭제하시겠습니까?</legend>
 				<p>이 작업은 (수정버튼을 누르지 않아도) <strong>바로 데이터베이스에 적용</strong>됩니다</p>
-				<p class="text-info">옵션이 1개일 경우에는 상품옵션도 삭제됩니다</p>
-				<p>이 옵션 항목과 관련있는 데이터가 유실될 수 있습니다</p>
+				<p>이 쇼핑몰 항목과 관련있는 데이터가 유실될 수 있습니다</p>
 			</div>
 			<div class="modal-footer">
 				<a data-dismiss="modal" class="btn" href="#">취소</a>
@@ -1246,7 +1056,7 @@
 		</c:forEach>
 		
 		
-		if(flag && $.trim(obj.marketPrice.value) == "") {
+		/*if(flag && $.trim(obj.marketPrice.value) == "") {
 			obj.marketPrice.value = "0";
 		} else {
 			var marketPrice = parseInt(obj.marketPrice.value,10);
@@ -1260,7 +1070,7 @@
 				alert('시중가는 판매가보다 작게 입력 될 수 없습니다');
 				$('input[name=marketPrice]').focus();
 			}
-		} 
+		} */
 		
 		if(flag && $('input[name=deliTypeCode]:checked').val() === '10' && (parseInt($('input[name=deliCost]').val(),10) || 0) === 0){
 			flag = false;
@@ -1273,37 +1083,6 @@
 			$('input[name=deliFreeAmount]').val(0);
 		}
 
-		if(flag && (typeof $('input[name=taxCode]:checked').val()) === 'undefined'){
-			alert('부가세 여부를 선택해 주세요.');
-			flag = false;
-			$('input[name=taxCode]').focus();
-		}
-		
-		if(flag && (typeof $('input[name=asFlag]:checked').val()) === 'undefined'){
-			alert('A/S 가능여부는 반드시 선택되어야 합니다.');
-			flag = false;
-			$('input[name=asFlag]').focus();
-		}
-
-		if(flag && (typeof $('input[name=deliPackageFlag]:checked').val()) === 'undefined'){
-			alert('묶음배송 여부는 반드시 선택되어야 합니다.');
-			flag = false;
-			$('input[name=deliPackageFlag]').focus();
-		}
-		
-		if(flag && (typeof $('input[name=authCategory]:checked').val()) === 'undefined'){
-			alert('인증 구분을 선택해 주세요.');
-			flag = false;
-			$('input[name=authCategory]')[0].focus();
-		}
-
-		//옵션 검증
-		<c:if test="${vo eq null}">
-		if(flag && ($("#eb-option-list .parent").length === 0 || $("#eb-option-list .child").length === 0)) {
-			alert("반드시 옵션이 있어야 합니다");
-			flag = false;
-		}
-		</c:if>
 
 		if(flag) {
 			// 더블클릭 방지

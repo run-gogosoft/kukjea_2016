@@ -31,7 +31,6 @@
 							<ul class="nav nav-tabs">
 								<li><a href="/admin/sms/list">SMS 관리 리스트</a></li>
 								<li class="active"><a href="/admin/sms/log/list">SMS 발송내역 리스트</a></li>
-								<li><a href="/admin/sms/send">SMS 발송하기</a></li>
 							</ul>
 						</ul>
 

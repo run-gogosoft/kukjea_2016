@@ -73,7 +73,7 @@
 									<select class="form-control" id="search" name="search">
 										<option value="id"   <c:if test="${pvo.search eq 'id'}">selected</c:if>>아이디</option>
 										<option value="name" <c:if test="${pvo.search eq 'name' or pvo.search eq ''}">selected</c:if>>이름</option>
-										<option value="groupName" <c:if test="${pvo.search eq 'groupName'}">selected</c:if>>기관(기업/시설/단체)명</option>
+										<option value="groupName" <c:if test="${pvo.search eq 'groupName'}">selected</c:if>>업체명</option>
 										<option value="email" <c:if test="${pvo.search eq 'email'}">selected</c:if>>이메일</option>
 									</select>
 								</div>
@@ -131,9 +131,7 @@
 					<!-- 내용 -->
 					<div class="box-body">
 						<ul class="nav nav-tabs" style="border-bottom:0">
-							<li <c:if test="${pvo.memberTypeCode eq 'C'}">class="active"</c:if>><a href="#" onclick="memberType('C');">개인회원</a></li>
-							<li <c:if test="${pvo.memberTypeCode eq 'O'}">class="active"</c:if>><a href="#" onclick="memberType('O');">기업/시설/단체</a></li>
-							<li <c:if test="${pvo.memberTypeCode eq 'P'}">class="active"</c:if>><a href="#" onclick="memberType('P');">공공기관회원</a></li>
+							<li <c:if test="${pvo.memberTypeCode eq 'C'}">class="active"</c:if>><a href="#" onclick="memberType('C');">일반회원</a></li>
 						</ul>
 						<table class="table table-bordered table-striped">
 							<!-- <colgroup>
@@ -150,7 +148,7 @@
 							<tr>
 								<th>No.</th>
 								<th>회원 구분</th>
-								<th>기관(기업/시설/단체)명</th>
+								<th>업체명</th>
 								<th>아이디</th>
 								<th>이름(담당자)</th>
 								<th>부서/직책</th>
@@ -169,7 +167,7 @@
 									<td class="text-center">
 										${item.groupName eq "" ? "-":item.groupName}
 									<c:if test="${item.investFlag eq 'Y'}">
-										<div class="text-warning">투자출연기관</div>
+										<div class="text-warning">투자출연업체</div>
 									</c:if>
 									</td>
 									<td>

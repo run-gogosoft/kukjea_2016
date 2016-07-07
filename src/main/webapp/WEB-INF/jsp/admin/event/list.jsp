@@ -117,14 +117,11 @@
 									<th>구분</th>
 									<th>쇼핑몰</th>
 									<th>카테고리</th>
-									<th>기획전/이벤트 명(댓글)</th>
+									<th>기획전/이벤트 명</th>
 									<th>상태</th>
 									<th>노출<br/>여부</th>
 									<th>배너<br/>구분</th>
 									<th>종료 예정일</th>
-									<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3)}">
-										<th>기획전<br/>댓글</th>
-									</c:if>
 									<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3)}">
 										<th></th>
 									</c:if>
@@ -177,17 +174,10 @@
 									<td style="width:5%;" class="text-center">
 											${ item.mainSection }
 									</td>
-									<td style="width:7%;" class="text-center">
+									<td style="width:15%;" class="text-center">
 										<fmt:parseDate value="${item.endDate}" var="endDate" pattern="yyyymmdd"/>
 										<fmt:formatDate value="${endDate}" pattern="yyyy-mm-dd"/>
 									</td>
-									<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3)}">
-										<td style="width:5%;" class="text-center">
-											<c:if test="${item.typeCode == '1'}">
-												<a href="/admin/event/comment?seq=${item.seq}" data-toggle="tooltip" title="댓글보기"><i class="fa fa-commenting fa-2x"></i></a>
-											</c:if>
-										</td>
-									</c:if>
 									<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3)}">
 									<td style="width:10%;" class="text-center">
 										<c:choose>
@@ -205,7 +195,7 @@
 									<%--<td style="width:7%;" class="text-center"><a href="/shop/event/plan/plansub/${item.seq}" target="_blank" class="btn btn-mini"><i class="icon-search"></i></a></td>--%>
 
 									<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
-									<td style="width:12%;" class="text-center">
+									<td style="width:7%;" class="text-center">
 										<div onclick="veiwModal('${ item.seq }')" role="button" class="btn btn-sm btn-default" data-toggle="modal"><i class="fa fa-remove"></i></div>
 									</td>
 									</c:if>

@@ -59,7 +59,7 @@ public class FileUploadUtil {
 	 * @throws ImageIsNotAvailableException
 	 *             (이미지가 아닐 경우 발생하는 예외)
 	 * @throws ImageSizeException
-	 *             (이미지가 사이즈가 270x500이 아닐경우 발생하는 예외)
+	 *             (이미지가 사이즈가 342x100 아닐경우 발생하는 예외)
 	 */
 	public String uploadEventImageFile(MultipartFile formFile, String realPath) throws IOException, ImageIsNotAvailableException, ImageSizeException {
 		// 랜덤으로 생성된 이미지에 확장자를 붙인다
@@ -71,7 +71,7 @@ public class FileUploadUtil {
 		if (ii.getIconWidth() == -1 && ii.getIconHeight() == -1) {
 			new File(realPath + "/" + fileName).delete();
 			throw new ImageIsNotAvailableException();
-		} else if(ii.getIconWidth() > 270 || ii.getIconWidth() < 270 && ii.getIconHeight() > 500 || ii.getIconHeight() < 500) {
+		} else if(ii.getIconWidth() > 342 || ii.getIconWidth() < 342 && ii.getIconHeight() > 100 || ii.getIconHeight() < 100) {
 			new File(realPath + "/" + fileName).delete();
 			throw new ImageSizeException();
 		}

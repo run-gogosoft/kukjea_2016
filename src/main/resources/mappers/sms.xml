@@ -39,7 +39,7 @@
 			, tr_etc6 AS trEtc6
 			, tr_realsenddate AS trRealSendDate
 			, tr_routeid AS trRouteid
-		FROM SC_LOG_${logDate}
+		FROM sc_tran
 		WHERE 1=1
 			<if test="search != '' and findword != ''">
 				AND ${search} LIKE CONCAT('%',#{findword},'%')
@@ -50,7 +50,7 @@
 	<select id="getLogListCount" parameterType="com.smpro.vo.SmsVo" resultType="int">
 		SELECT
 			COUNT(*) AS cnt
-		FROM SC_LOG_${logDate}
+		FROM sc_tran
 		WHERE 1=1
 			<if test="search != '' and findword != ''">
 				AND ${search} LIKE CONCAT('%',#{findword},'%')

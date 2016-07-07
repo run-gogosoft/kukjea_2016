@@ -29,6 +29,7 @@ public class ExcelUtil {
 		int rows = sheet.getPhysicalNumberOfRows();
 		for (int r = 0; r < rows; r++) {
 			row = sheet.getRow(r);
+			if(row == null) continue;
 			ar = new ArrayList<>();
 			int cells = row.getLastCellNum();
 

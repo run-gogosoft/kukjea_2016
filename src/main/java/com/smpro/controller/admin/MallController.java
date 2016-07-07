@@ -251,7 +251,7 @@ public class MallController {
 		return errMsg;
 	}
 	
-	/** 함께누리몰 기주문정보 암호화 작업 */
+	/** 주문정보 암호화 작업 */
 	@RequestMapping("/mall/order/encrypt")
 	public String orderEncrypt(Model model) {
 		List<OrderVo> list = orderService.getListForEncrypt();
@@ -271,7 +271,7 @@ public class MallController {
 		return Const.ALERT_PAGE;
 	}
 	
-	/** 함께누리몰 기회원 개인정보 암호화 작업 */
+	/** 회원 개인정보 암호화 작업 */
 	@RequestMapping("/mall/member/encrypt")
 	public String memberEncrypt(Model model) {
 		List<MemberVo> list = memberService.getListForEncrypt();
@@ -292,7 +292,7 @@ public class MallController {
 		return Const.REDIRECT_PAGE;
 	}
 	
-	/** 함께누리몰 기회원,입점업체 패스워드 암호화 작업 */
+	/** 회원,입점업체 패스워드 암호화 작업 */
 	@RequestMapping("/mall/user/encrypt/password/{typeCode}")
 	public String userEncryptPassword(@PathVariable String typeCode, Model model) {
 		List<UserVo> list = memberService.getUserListForEncrypt(typeCode);

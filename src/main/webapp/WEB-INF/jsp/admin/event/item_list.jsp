@@ -25,14 +25,16 @@
 					<!-- 제목 -->
 					<div class="box-header with-border">
 						<h3 class="box-title">${planTitle}</h3>
-						<select alt="몰 리스트" id="mallList" onchange="CHPlan.mallSelect(this)">
-							<c:forEach var="item" items="${mallList}">
-								<option value="${item.seq}" ${mallSeq eq item.seq  ? "selected" : ""}>${item.name}</option>
-							</c:forEach>
-						</select>
-						<select alt="기획전 리스트" id="planList" style="margin-left:5px" onchange="CHPlan.planSelect(this)">
-							<option value="0">-- 기획전 선택 --</option>
-						</select>
+						<div class="="pull-center">
+							<select alt="몰 리스트" id="mallList" onchange="CHPlan.mallSelect(this)">
+								<c:forEach var="item" items="${mallList}">
+									<option value="${item.seq}" ${mallSeq eq item.seq  ? "selected" : ""}>${item.name}</option>
+								</c:forEach>
+							</select>
+							<select alt="기획전 리스트" id="planList" style="margin-left:5px" onchange="CHPlan.planSelect(this)">
+								<option value="0">-- 기획전 선택 --</option>
+							</select>
+						</div>
 						<div class="pull-right">
 							<button class="btn btn-sm btn-default" onClick="goCancel()">목록</button>
 							<div onclick="viewInsertItemModal()" role="button" class="btn btn-sm" data-toggle="modal"><i class="fa fa-plus"></i></div>

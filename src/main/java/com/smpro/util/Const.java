@@ -26,6 +26,8 @@ public class Const {
 	/** 반품수령 */
 	public static final String RECEIVE_REQUEST_CODE = "71";
 
+	public static final String ITEM_IMAGE_PATH = "http://kookje.gogosoft.kr/upload/item/item_img/";
+
 	/** static resource path */
 	public static final String UPLOAD_PATH;
 	public static final String UPLOAD_REAL_PATH;
@@ -52,8 +54,8 @@ public class Const {
 
 			IMAGE_MAGICK_PATH = "convert";
 			UPLOAD_PATH = "/upload";
-			UPLOAD_REAL_PATH = "/Users/EBvi/Desktop/Dev/workspace/kookje/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
-			WEBAPP_HOME_REAL_PATH = "/Users/EBvi/Desktop/Dev/workspace/kookje/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war";
+			UPLOAD_REAL_PATH =      "/Users/aubergine/Documents/kookje_dev/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
+			WEBAPP_HOME_REAL_PATH = "/Users/aubergine/Documents/kookje_dev/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war";
 			DOMAIN = "localhost";
 			LOCATION = "test";
 			OS = "linux";

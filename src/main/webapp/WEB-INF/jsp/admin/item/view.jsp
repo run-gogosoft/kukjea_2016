@@ -58,18 +58,6 @@
 							</colgroup>
 							<tbody>
 								<tr>
-									<th>상품 구분</th>
-									<td>${vo.typeName}</td>
-								</tr>
-								<tr>
-									<th>판매 상태</th>
-									<td>${vo.statusName}</td>
-								</tr>
-								<tr>
-									<th>입점업체</th>
-									<td>${vo.sellerName}</td>
-								</tr>
-								<tr>
 									<th>카테고리</th>
 									<td>
 										${vo.cateLv1Name}
@@ -85,109 +73,56 @@
 									</td>
 								</tr>
 								<tr>
-									<th>상품 코드</th>
-									<td>${vo.seq}</td>
+									<th>상품 구분</th>
+									<td>${vo.typeName}</td>
+								</tr>
+								<tr>
+									<th>판매 상태</th>
+									<td>${vo.statusName}</td>
 								</tr>
 								<tr>
 									<th>상품명</th>
 									<td>${vo.name}</td>
 								</tr>
 								<tr>
-									<th>입점업체 상품코드</th>
-									<td>${vo.sellerItemCode}</td>
-								</tr>
-								<tr>
 									<th>제조사</th>
 									<td>${vo.maker}</td>
 								</tr>
 								<tr>
-									<th>브랜드</th>
+									<th>규격1</th>
+									<td>${vo.type1}</td>
+								</tr>
+								<tr>
+									<th>규격2</th>
+									<td>${vo.type2}</td>
+								</tr>
+								<tr>
+									<th>규격3</th>
+									<td>${vo.type3}</td>
+								</tr>
+								<tr>
+									<th>진료과목</th>
+									<td>${vo.subjectType}</td>
+								</tr>
+								<tr>
+									<th>보험코드</th>
+									<td>${vo.insuranceCode}</td>
+								</tr>
+								<tr>
+									<th>발주처</th>
 									<td>${vo.brand}</td>
 								</tr>
 								<tr>
-									<th>모델명</th>
+									<th>단위</th>
+									<td>${vo.originCountry}</td>
+								</tr>
+								<tr>
+									<th>기준재고</th>
 									<td>${vo.modelName}</td>
 								</tr>
 								<tr>
-									<th>원산지</th>
-									<td>${vo.originCountry}</td>
-								</tr>
-								<%--최소구매수량은 사용하지 않는다.--%>
-								<!-- <tr>
-									<th>최소구매 수량</th>
+									<th>자동발주량</th>
 									<td>${vo.minCnt}</td>
-								 </tr>-->
-								<tr>
-									<th>제조일자</th>
-									<td>${vo.makeDate}</td>
-								</tr>
-								<tr>
-									<th>유효일자</th>
-									<td>${vo.expireDate}</td>
-								</tr>
-								<tr>
-									<th>부가세</th>
-									<td>
-										<c:if test="${vo eq null or vo.taxCode eq 1}">과세</c:if>
-										<c:if test="${vo.taxCode eq 2}">면세</c:if>
-									</td>
-								</tr>
-								<tr class="hide">
-									<th>미성년자 구매</th>
-									<td>
-										<c:if test="${vo eq null or vo.adultFlag eq 'N'}">가능</c:if>
-										<c:if test="${vo.adultFlag eq 'Y'}">불가능</c:if>
-									</td>
-								</tr>
-								<tr>
-									<th>A/S 정보</th>
-									<td>
-										A/S 가능여부: ${vo.asFlag eq "Y" ? "가능" : "불가능"}<br/> 
-										A/S 전화번호: ${vo.asTel}
-										<br/>
-										<%--<span class="label">A/S 안내</span>--%>
-										<%--<div>--%>
-											<%--${vo.asContent}--%>
-										<%--</div>--%>
-									</td>
-								</tr>
-								<tr>
-									<th>판매가</th>
-									<td>
-										<c:choose>
-											<c:when test="${vo.typeCode eq 'N'}"><fmt:formatNumber value="${vo.sellPrice}" pattern="#,###" /> 원</c:when>
-											<c:otherwise>견적가</c:otherwise>
-										</c:choose>
-										
-										<c:choose>
-											<%--과세--%>
-											<c:when test="${vo.taxCode eq 1}">
-												<c:set var="sellPercent" value="${((vo.sellPrice-(vo.supplyPrice*1.1))/vo.sellPrice)*100}" />
-											</c:when>
-											<%--면세--%>
-											<c:when test="${vo.taxCode eq 2 or vo.taxCode eq 3}">
-												<c:set var="sellPercent" value="${((vo.sellPrice-vo.supplyPrice)/vo.sellPrice)*100}" />
-											</c:when>
-										</c:choose>
-										<span id="mallFee" class="text-info hide" style="margin-left: 5px;">(매익율: <fmt:formatNumber value="${sellPercent}" pattern="##.#"/> %)</span>
-									</td>
-								</tr>
-								<%--입점업체일 경우 총판 공급가 숨김--%>
-								<c:if test="${sessionScope.loginType ne 'S'}">
-								<%--<tr>--%>
-									<%--<th>총판 공급가</th>--%>
-									<%--<td>--%>
-										<%--<fmt:formatNumber value="${vo.supplyMasterPrice}" pattern="#,###" /> 원--%>
-									<%--</td>--%>
-								<%--</tr>--%>
-								</c:if>
-								<tr class="hide">
-									<th>입점업체 공급가</th>
-									<td><fmt:formatNumber value="${vo.supplyPrice}" pattern="#,###" /> 원</td>
-								</tr>
-								<tr>
-									<th>시중가</th>
-									<td><fmt:formatNumber value="${vo.marketPrice}" pattern="#,###" /> 원</td>
 								</tr>
 								<tr>
 									<th>상품 이미지</th>
@@ -315,50 +250,6 @@
 									</td>
 								</tr>
 								<tr>
-									<th>배송구분</th>
-									<td>
-										<c:if test="${vo.deliTypeCode eq '00'}">무료</c:if>
-										<c:if test="${vo.deliTypeCode eq '10' and vo.deliFreeAmount eq 0}">유료</c:if>
-										<c:if test="${vo.deliTypeCode eq '10' and vo.deliFreeAmount > 0}">조건부 무료</c:if>
-									</td>
-								</tr>
-								<%-- 배송금액 정보는 착불일떄만 보여준다.  --%>
-								<c:if test="${vo.deliTypeCode eq '10'}">
-									<tr>
-										<th>배송비</th>
-										<td><fmt:formatNumber value="${vo.deliCost}" pattern="#,###" /> 원</td>
-									</tr>
-									<tr>
-										<th>무료배송 조건금액</th>
-										<td><fmt:formatNumber value="${vo.deliFreeAmount}" pattern="#,###" /> 원</td>
-									</tr>
-									<tr>
-										<th>선결제 여부</th>
-										<td>
-											<c:if test="${vo.deliPrepaidFlag eq ''}">착불/선결제 선택가능</c:if>
-											<c:if test="${vo.deliPrepaidFlag eq 'Y'}">선결제 필수</c:if>
-											<c:if test="${vo.deliPrepaidFlag eq 'N'}">선결제 불가</c:if>
-										</td>
-									</tr>
-								</c:if>
-								<tr>
-									<th>묶음배송 여부</th>
-									<td>
-										<c:if test="${vo.deliPackageFlag eq 'Y'}">가능</c:if>
-										<c:if test="${vo.deliPackageFlag eq 'N'}">불가능</c:if>
-									</td>
-								</tr>
-								<tr>
-									<th>인증구분</th>
-									<td>
-										<c:forEach var="item" items="${authCategoryList}">
-											<c:if test="${fn:indexOf(vo.authCategory,item.value) >= 0}">
-												<span style="margin-right:50px;">${item.name}<img src="/front-assets/images/detail/auth_mark_${item.value}.png" style="margin-left:5px;vertical-align:-4px;" alt="${item.name}"></span>
-											</c:if>
-										</c:forEach>
-									</td>
-								</tr>
-								<tr>
 									<th>상품 추가 정보</th>
 									<td>
 										<table class="table table-bordered">
@@ -403,17 +294,6 @@
 								<tr>
 									<th>상품 상세정보</th>
 									<td>
-										<%-- 기존방식 --%>
-										<%--
-										<c:if test="${vo.useCode eq 'C'}">
-											${vo.content}
-										</c:if>
-										<c:if test="${vo.useCode eq 'I'}">
-											<c:if test="${vo.detailImg1 ne ''}"><img src="/upload${vo.detailImg1}" alt="" /></c:if>
-											<c:if test="${vo.detailImg2 ne ''}"><img src="/upload${vo.detailImg2}" alt="" /></c:if>
-											<c:if test="${vo.detailImg3 ne ''}"><img src="/upload${vo.detailImg3}" alt="" /></c:if>
-										</c:if>
-										--%>
 										${vo.content}
 										<c:if test="${vo.detailImg1 ne ''}"><img src="/upload${vo.detailImg1}" alt="" /></c:if>
 										<c:if test="${vo.detailImg2 ne ''}"><img src="/upload${vo.detailImg2}" alt="" /></c:if>
@@ -425,44 +305,48 @@
 					</div>
 				</div>
 				<div class="box">
-					<!-- 제목 -->
 					<div class="box-header with-border">
-						<h3 class="box-title">옵션 정보</h3>
+						<h3 class="box-title">상품 가격 / 재고량 정보 </h3>
 					</div>
 					<!-- 내용 -->
 					<div class="box-body">
 						<table class="table table-striped table-bordered">
 							<colgroup>
-								<col style="width:20%;"/>
-								<col style="width:20%;"/>
-								<col style="width:20%;"/>
-								<col style="width:20%;"/>
-								<col style="width:20%;"/>
+								<col style="width:15%;"/>
+								<col style="width:*;"/>
+								<col style="width:15%;"/>
+								<col style="width:15%;"/>
+								<col style="width:15%;"/>
+								<col style="width:15%;"/>
+								<col style="width:10%;"/>
+
 							</colgroup>
 							<thead>
-								<tr>
-									<th>상품옵션명</th>
-									<th>옵션항목</th>
-									<th>추가가격</th>
-									<th>재고량</th>
-									<th>재고관리</th>
-								</tr>
+							<tr>
+								<th>쇼핑몰</th>
+								<th>판매자</th>
+								<th>판매가격</th>
+								<th>할인가격</th>
+								<th>할인기간</th>
+								<th>재고량</th>
+								<th>재고관리</th>
+							</tr>
 							</thead>
 							<tbody>
 							<c:forEach var="item" items="${optionList}" varStatus="status" begin="0" step="1">
 								<tr>
-									<td class="text-center">
-										<c:if test="${status.index eq 0 or optionSeq ne item.optionSeq}">
-											${item.optionName}
-										</c:if>
-										<c:set var="optionSeq" value="${item.optionSeq}"></c:set>
-									</td>
+									<td class="text-center">${item.optionName}</td>
 									<td class="text-center">${item.valueName}</td>
 									<td class="text-center"><fmt:formatNumber value="${item.optionPrice}" pattern="#,###" /> 원</td>
+									<td class="text-center"><fmt:formatNumber value="${item.salePrice}" pattern="#,###" /> 원</td>
+									<td class="text-center"><fmt:formatDate value="${item.salePeriod}" pattern="####-##-##" /></td>
 									<td class="text-center">${item.stockCount}</td>
 									<td class="text-center">${item.stockFlag eq "Y" ? "재고관리":"재고관리 안함" }</td>
 								</tr>
 							</c:forEach>
+							<c:if test="${ fn:length(optionList)==0 }">
+								<tr><td class="text-center" colspan="5">조회된 데이터가 없습니다.</td></tr>
+							</c:if>
 							</tbody>
 						</table>
 					</div>

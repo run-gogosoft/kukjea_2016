@@ -38,7 +38,7 @@
 	<!-- 콘텐츠 -->
 	<section class="content">
 		<div class="row">
-			<div class="col-md-${sessionScope.loginType eq 'A' ? "4":"6"}">
+			<div class="col-md-${sessionScope.loginType eq 'A' ? "6":"12"}">
 			<div class="box box-warning">
 					<div class="box-header">
 						<h3 class="box-title">공지사항</h3>
@@ -51,13 +51,14 @@
 						<c:forEach var="item" items="${noticeList}">
 							<tr>
 								<td><a href="/admin/board/view/notice/${item.seq}">${item.title}</a></td>
-								<td class="text-center" style="width:20%;">${fn:substring(item.regDate,0,10)}</td>
+								<td class="text-center" >${fn:substring(item.regDate,0,10)}</td>
 							</tr>
 						</c:forEach>
 						</table>
 					</div>
 				</div>
 			</div>
+			<!--
 			<div class="col-md-${sessionScope.loginType eq 'A' ? "4":"6"}">
 			<div class="box box-warning">
 					<div class="box-header">
@@ -78,12 +79,13 @@
 					</div>
 				</div>
 			</div>
+			-->
 			<c:if test="${sessionScope.loginType eq 'A'}">
 			<!-- 관리자에게만 보여준다. -->
-			<div class="col-md-4">
+			<div class="col-md-6">
 				<div class="box box-warning">
 					<div class="box-header">
-						<h3 class="box-title">미답변 1:1 문의</h3>
+						<h3 class="box-title">미답변 Q&A</h3>
 						<div class="pull-right">
 							<a href="/admin/board/list/one?answerFlag=2">more <i class="fa fa-plus"></i></a>
 						</div>
@@ -93,7 +95,7 @@
 						<c:forEach var="item" items="${oneList}">
 							<tr>
 								<td><a href="/admin/board/view/one/${item.seq}">${item.title}</a></td>
-								<td class="text-center" style="width:20%;">${fn:substring(item.regDate,0,10)}</td>
+								<td class="text-center">${fn:substring(item.regDate,0,10)}</td>
 							</tr>
 						</c:forEach>
 						</table>
@@ -199,10 +201,12 @@
 									<td class="text-center"><a href="#" onclick="goDetailPage('boardDirect')">1:1 문의</a></td>
 									<td class="text-right">${directBoardWeekList}개</td>
 								</tr>
+									<!--
 								<tr>
 									<td class="text-center"><a href="#" onclick="goDetailPage('boardQNA')">상품 Q&A</a></td>
 									<td class="text-right">${itemqnaBoardWeekList}개</td>
 								</tr>
+									-->
 								<tr>
 									<td class="text-center"><a href="#" onclick="goDetailPage('boardReview')">고객 상품평</a></td>
 									<td class="text-right">${reviewBoardWeekList}개</td>

@@ -182,10 +182,10 @@ public class EventController {
 			return Const.ALERT_PAGE;
 		}
 		if ("1".equals(vo.getTypeCode())) {
-			if (StringUtil.isBlank("" + vo.getLv1Seq())) {
-				model.addAttribute("message", "대분류 카테고리가 선택되지 않았습니다.");
-				return Const.ALERT_PAGE;
-			}
+			//if (StringUtil.isBlank("" + vo.getLv1Seq())) {
+			//	model.addAttribute("message", "대분류 카테고리가 선택되지 않았습니다.");
+			//	return Const.ALERT_PAGE;
+			//}
 			if (StringUtil.isBlank(vo.getShowFlag())) {
 				model.addAttribute("message", "노출 여부가 선택되지 않았습니다.");
 				return Const.ALERT_PAGE;

@@ -31,8 +31,8 @@
 					<div class="box-body">
 						<ul class="nav nav-tabs">
 							<li class="active"><a href="/admin/sms/list">발송 메세지 리스트</a></li>
-							<li><a href="/admin/sms/log/list">발송내역 리스트</a></li>
-							<li><a href="/admin/sms/send">SMS 발송하기</a></li>
+							<li><a href="/admin/sms/log/list">발송내역 리스트</li>
+							<!--<li><a href="/admin/sms/send">SMS 발송하기</a></li>-->
 						</ul>
 						<table id="list1" class="table table-bordered table-striped">
 							<thead>

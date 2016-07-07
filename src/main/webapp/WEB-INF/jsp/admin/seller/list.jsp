@@ -9,11 +9,11 @@
 <div class="content-wrapper">
 	<!-- 헤더 -->
 	<section class="content-header">
-		<h1>입점업체 리스트 <small></small></h1>
+		<h1>공급사 리스트 <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li>업체 관리</li>
-			<li class="active">입점업체 리스트</li>
+			<li>공급사 관리</li>
+			<li class="active">공급사 리스트</li>
 		</ol>
 	</section>
 	<section class="content">
@@ -67,7 +67,7 @@
 									<input class="form-control" type="text" id="findword" name="findword" value="${pvo.findword}" maxlength="20"/>
 								</div>
 							</div>
-							
+							<!--
 							<div class="form-group">
 								<label class="col-md-2 control-label">인증구분</label>
 								<div class="checkbox col-md-10">
@@ -79,7 +79,7 @@
 								</c:forEach>
 								</div>
 							</div>
-							
+							-->
 							<div class="form-group">
 								<label class="col-md-2 control-label" for="statusCode">지역</label>
 								<div class="col-md-2">
@@ -199,7 +199,7 @@
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">
-								<tr><td class="text-center" colspan="12">등록된 입점업체가 없습니다.</td></tr>
+								<tr><td class="text-center" colspan="12">등록된 공급사가 없습니다.</td></tr>
 							</c:if>
 							</tbody>
 						</table>
@@ -270,7 +270,7 @@
 	};
 	
 	var deleteProc = function(seq) {
-		if(confirm('승인대기 중인 입점업체만 삭제할 수 있습니다\n정말로 삭제하시겠습니까?\n이 과정은 복구하실 수 없습니다')) {
+		if(confirm('승인대기 중인 공급사만 삭제할 수 있습니다\n정말로 삭제하시겠습니까?\n이 과정은 복구하실 수 없습니다')) {
 			$('#zeroframe').attr('src', '/admin/seller/delete?seq='+seq);
 		}
 	};

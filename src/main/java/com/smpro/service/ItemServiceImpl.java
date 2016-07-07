@@ -423,84 +423,41 @@ public class ItemServiceImpl implements ItemService {
 		Workbook wb;
 		String loginType = (String) session.getAttribute("loginType");
 
-		int arrSize = 37;
-		if ("A".equals(loginType)) {
-			arrSize = 48;
-		}
+		int arrSize = 22;
 
 		/* 타이틀 항목 생성 */
 		String[] strTitle = new String[arrSize];
 		int idx = 0;
 		strTitle[idx++] = "상품코드";
 		strTitle[idx++] = "대분류";
-		if ("A".equals(loginType)) {
+		//if ("A".equals(loginType)) {
 			strTitle[idx++] = "대분류코드";
-		}
+		//}
 		strTitle[idx++] = "중분류";
-		if ("A".equals(loginType)) {
+		//if ("A".equals(loginType)) {
 			strTitle[idx++] = "중분류코드";
-		}
+		//}
 		strTitle[idx++] = "소분류";
-		if ("A".equals(loginType)) {
+		//if ("A".equals(loginType)) {
 			strTitle[idx++] = "소분류코드";
-		}
+		//}
 		strTitle[idx++] = "세분류";
-		if ("A".equals(loginType)) {
+		//if ("A".equals(loginType)) {
 			strTitle[idx++] = "세분류코드";
-		}
-		strTitle[idx++] = "상품타입\n(N:일반상품 E:견적상품)";
+		//}
+		strTitle[idx++] = "진료과목";
 		strTitle[idx++] = "상품명";
 		strTitle[idx++] = "판매상태";
-		if ("A".equals(loginType)) {
-			strTitle[idx++] = "판매상태코드\n(Y:판매중 N:판매중지 E:대량등록\nH:가승인 S:품절)";
-		}
-		strTitle[idx++] = "입점업체상품코드";
-		strTitle[idx++] = "공급사명";
+		strTitle[idx++] = "판매상태코드\n(Y:판매중 N:판매중지 E:대량등록\nH:가승인 S:품절)";
+		strTitle[idx++] = "규격 1";
+		strTitle[idx++] = "규격 2";
+		strTitle[idx++] = "규격 3";
+		strTitle[idx++] = "보험코드";
 		strTitle[idx++] = "제조사";
-		strTitle[idx++] = "브랜드";
-		strTitle[idx++] = "모델명";
-		strTitle[idx++] = "원산지";
-		strTitle[idx++] = "최소구매수량";
-		strTitle[idx++] = "제조일자";
-		strTitle[idx++] = "유효일자";
-		strTitle[idx++] = "부가세";
-		if ("A".equals(loginType)) {
-			strTitle[idx++] = "부가세코드\n(1:과세 2:면세)";
-		}
-		strTitle[idx++] = "성인용품";
-		if ("A".equals(loginType)) {
-			strTitle[idx++] = "성인용품코드\n(Y:성인 용품 N:불가능)";
-		}
-		strTitle[idx++] = "A/S가능여부";
-		if ("A".equals(loginType)) {
-			strTitle[idx++] = "A/S가능여부코드\n(Y:가능 N:불가능)";
-		}
-		strTitle[idx++] = "A/S전화번호";
-		strTitle[idx++] = "판매가";
-		strTitle[idx++] = "공급가";
-		strTitle[idx++] = "시중가";
+		strTitle[idx++] = "단위";
+		strTitle[idx++] = "기준재고";
 		strTitle[idx++] = "상품이미지1";
 		strTitle[idx++] = "상품이미지2";
-		strTitle[idx++] = "배송비구분";
-		if ("A".equals(loginType)) {
-			strTitle[idx++] = "배송비구분코드\n(00:무료배송 10:유료배송)";
-		}
-		strTitle[idx++] = "배송비";
-		strTitle[idx++] = "무료배송 조건 금액";
-		strTitle[idx++] = "선결제여부";
-		if ("A".equals(loginType)) {
-			strTitle[idx++] = "선결제여부코드\n(Y:선결제 필수 N:선결제 불가 미입력:선결제/착불 선택)";
-		}
-		strTitle[idx++] = "묶음배송";
-		if ("A".equals(loginType)) {
-			strTitle[idx++] = "묶음배송코드\n(Y:가능 N:불가능)";
-		}
-		strTitle[idx++] = "옵션명";
-		strTitle[idx++] = "옵션항목";
-		strTitle[idx++] = "추가가격";
-		strTitle[idx++] = "재고량";
-		strTitle[idx++] = "등록일자";
-		strTitle[idx++] = "수정일자";
 
 		/* 상품리스트 */
 		vo.setLoginType((String) session.getAttribute("loginType"));
@@ -516,23 +473,23 @@ public class ItemServiceImpl implements ItemService {
 				ArrayList<Object> cell = new ArrayList<>(arrSize);
 				cell.add(ivo.getSeq());
 				cell.add(ivo.getCateLv1Name());
-				if ("A".equals(loginType)) {
+				//if ("A".equals(loginType)) {
 					cell.add(ivo.getCateLv1Seq());
-				}
+				//}
 				cell.add(ivo.getCateLv2Name());
-				if ("A".equals(loginType)) {
+				//if ("A".equals(loginType)) {
 					cell.add(ivo.getCateLv2Seq());
-				}
+				//}
 				cell.add(ivo.getCateLv3Name());
-				if ("A".equals(loginType)) {
+				//if ("A".equals(loginType)) {
 					cell.add(ivo.getCateLv3Seq());
-				}
+				//}
 				cell.add(ivo.getCateLv4Name());
-				if ("A".equals(loginType)) {
+				//if ("A".equals(loginType)) {
 					cell.add(ivo.getCateLv4Seq());
-				}
-				cell.add(ivo.getTypeCode());
-				cell.add(ivo.getName());
+				//}
+				cell.add(ivo.getSubjectType());//진료과목
+				cell.add(ivo.getName());//상품명
 
 				String statusText = "";
 				if ("E".equals(ivo.getStatusCode())) {
@@ -544,116 +501,25 @@ public class ItemServiceImpl implements ItemService {
 				} else if ("N".equals(ivo.getStatusCode())) {
 					statusText = "판매중지";
 				}
-				cell.add(statusText);
-				if ("A".equals(loginType)) {
-					cell.add(ivo.getStatusCode());
-				}
+				cell.add(statusText);//판매상태
+				//if ("A".equals(loginType)) {
+					cell.add(ivo.getStatusCode());//판매상태코드
+				//}
+				cell.add(ivo.getType1());//규격 1
+				cell.add(ivo.getType2());//규격 2
+				cell.add(ivo.getType3());//규격 3
+				cell.add(ivo.getInsuranceCode());//보험코드
+				cell.add(ivo.getSellerName());//제조사
+				cell.add(ivo.getOriginCountry());//단위
+				cell.add(ivo.getModelName());//기준재고
 
-				cell.add(ivo.getSellerItemCode());
-				cell.add(ivo.getSellerName());
-				cell.add(ivo.getMaker());
-				cell.add(ivo.getBrand());
-				cell.add(ivo.getModelName());
-				cell.add(ivo.getOriginCountry());
-				cell.add(new Integer(ivo.getMinCnt()));
-				cell.add(ivo.getMakeDate());
-				cell.add(ivo.getExpireDate());
-
-				// 과세여부 (1=과세, 2=면세, 3=영세)
-				String taxText = "";
-				if ("1".equals(ivo.getTaxCode())) {
-					taxText = "과세";
-				} else if ("2".equals(ivo.getTaxCode())) {
-					taxText = "면세";
-				} else if ("3".equals(ivo.getTaxCode())) {
-					taxText = "영세";
-				}
-				cell.add(taxText);
-				if ("A".equals(loginType)) {
-					cell.add(ivo.getTaxCode());
-				}
-
-				// 성인 여부 (Y=성인만이용가능, N=모두이용가능)
-				String adultText = "";
-				if ("Y".equals(ivo.getAdultFlag())) {
-					adultText = "성인상품";
-				} else if ("N".equals(ivo.getAdultFlag())) {
-					adultText = "일반상품";
-				}
-				cell.add(adultText);
-				if ("A".equals(loginType)) {
-					cell.add(ivo.getAdultFlag());
-				}
-
-				// A/S 가능여부 (Y=가능, N=불가능)
-				String asText = "";
-				if ("Y".equals(ivo.getAsFlag())) {
-					asText = "가능";
-				} else if ("N".equals(ivo.getAsFlag())) {
-					asText = "불가능";
-				}
-				cell.add(asText);
-				if ("A".equals(loginType)) {
-					cell.add(ivo.getAsFlag());
-				}
-
-				cell.add(ivo.getAsTel());
-				cell.add(StringUtil.formatAmount(ivo.getSellPrice()));
-				cell.add(StringUtil.formatAmount(ivo.getSupplyPrice()));
-				cell.add(StringUtil.formatAmount(ivo.getMarketPrice()));
-				cell.add("http://" + Const.DOMAIN + "/upload" + ivo.getImg1());
+				cell.add("http://" + Const.DOMAIN + "/upload" + ivo.getImg1());//상품이미지1
 				if (StringUtil.isBlank(ivo.getImg2())) {
 					cell.add(ivo.getImg2());
 				} else {
 					cell.add("http://" + Const.DOMAIN + "/upload" + ivo.getImg2());
 				}
-				// 배송비 구분(00:무료배송, 10:착불)
-				String deliMsg = "";
-				if ("00".equals(ivo.getDeliTypeCode())) {
-					deliMsg = "무료";
-				} else if ("10".equals(ivo.getDeliTypeCode())) {
-					deliMsg = "착불";
-				}
-				cell.add(deliMsg);
-				if ("A".equals(loginType)) {
-					cell.add(ivo.getDeliTypeCode());
-				}
 
-				cell.add(StringUtil.formatAmount(ivo.getDeliCost()));
-				cell.add(StringUtil.formatAmount(ivo.getDeliFreeAmount()));
-
-				// 선결제 구분(null:착불/선결제 선택가능, Y:선결제 필수, N:선결제 불가)
-				String prePaidText = "";
-				if ("Y".equals(ivo.getDeliPrepaidFlag())) {
-					prePaidText = "선결제 필수";
-				} else if ("N".equals(ivo.getDeliPrepaidFlag())) {
-					prePaidText = "선결제 불가";
-				} else {
-					prePaidText = "선결제/착불선택";
-				}
-				cell.add(prePaidText);
-				if ("A".equals(loginType)) {
-					cell.add(ivo.getDeliPrepaidFlag());
-				}
-
-				//
-				String packageText = "";
-				if ("Y".equals(ivo.getDeliPackageFlag())) {
-					packageText = "무료";
-				} else if ("N".equals(ivo.getDeliPackageFlag())) {
-					packageText = "착불";
-				}
-				cell.add(packageText);
-				if ("A".equals(loginType)) {
-					cell.add(ivo.getDeliPackageFlag());
-				}
-
-				cell.add(ivo.getOptionName());
-				cell.add(ivo.getOptionValues());
-				cell.add(ivo.getOptionPrices());
-				cell.add(ivo.getStockCounts());
-				cell.add(ivo.getRegDate().substring(0, 10));
-				cell.add(ivo.getModDate().substring(0, 10));
 				row.add(cell);
 			}
 		}

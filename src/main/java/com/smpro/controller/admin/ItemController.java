@@ -85,7 +85,7 @@ public class ItemController {
 		// 상품 소유자 체크
 		String loginType = (String) session.getAttribute("loginType");
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
-
+/*
 		if ("S".equals(loginType)) {
 			if (!itemService.diffSellerSeq(seq, loginSeq)) {
 				model.addAttribute("message", "잘못된 접근입니다.");
@@ -99,6 +99,7 @@ public class ItemController {
 				return Const.REDIRECT_PAGE;
 			}
 		}
+		*/
 		ItemVo vo = itemService.getVo(seq);
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("title", "상품");
@@ -243,7 +244,7 @@ public class ItemController {
 		// 상품 소유자 체크
 		String loginType = (String) session.getAttribute("loginType");
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
-
+/*
 		if ("S".equals(loginType)) {
 			if (!itemService.diffSellerSeq(seq, loginSeq)) {
 				model.addAttribute("message", "잘못된 접근입니다.");
@@ -255,7 +256,7 @@ public class ItemController {
 			model.addAttribute("returnUrl", "/admin/item/list");
 			return Const.REDIRECT_PAGE;
 		}
-
+*/
 		model.addAttribute("pageNum", pageNum);
 		// todo : 아이템을 수정할 수 있는 권한이 있는지 검사하여야 함
 		model.addAttribute("title", "상품 수정");
@@ -281,14 +282,14 @@ public class ItemController {
 		
 		//판매상태 기본 승인 대기
 		vo.setStatusCode("H");
-		
+		/*
 		if(!"copy".equals(vo.getUpdateType())) {
 			if (vo.getTypeCd() == null) {
 				model.addAttribute("message", "상품 추가정보는 반드시 입력되어야 합니다");
 				return Const.ALERT_PAGE;
 			}
 		}
-
+		*/
 		// 복사할 대상 상품의 데이터를 가지고 오기 위해 새로운 시퀀스를 생성해서 seq변수에 적용하기전 form으로부터 넘겨받은
 		// seq값을 임시 저장한다.
 		Integer originSeq = vo.getSeq();
@@ -1595,12 +1596,6 @@ public class ItemController {
 	@RequestMapping("/item/list/download/excel/check")
 	public String writeExcelCheck(ItemVo vo, HttpSession session, Model model) {
 		/* 상품리스트 */
-		if (StringUtil.isBlank(vo.getSearchDate1())	|| StringUtil.isBlank(vo.getSearchDate2())) {
-			model.addAttribute("result", "false");
-			model.addAttribute("message", "조회 일자를 입력해 주세요.");
-			return "/ajax/get-message-result.jsp";
-		}
-
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		if (itemService.getListTotalCount(vo) > 1000) {
@@ -1757,6 +1752,51 @@ public class ItemController {
 			message += " 제조사=" + vo.getMaker();
 			column += " 제조사";
 		}
+
+		if(!vo.getType1().equals(vo.getType1()) && "" != vo.getType1()){
+			if(message !=""){
+				message +=",";
+			}
+			if(column !=""){
+				column += ",";
+			}
+			message += " 규격1=" + vo.getType1();
+			column += " 규격1";
+		}
+		if(!vo.getType2().equals(vo.getType2()) && "" != vo.getType2()){
+			if(message !=""){
+				message +=",";
+			}
+			if(column !=""){
+				column += ",";
+			}
+			message += " 규격2=" + vo.getType2();
+			column += " 규격2";
+		}
+
+		if(!vo.getSubjectType().equals(vo.getSubjectType()) && "" != vo.getSubjectType()){
+			if(message !=""){
+				message +=",";
+			}
+			if(column !=""){
+				column += ",";
+			}
+			message += " 진료과목=" + vo.getSubjectType();
+			column += " 진료과목";
+		}
+
+		if(!vo.getInsuranceCode().equals(vo.getInsuranceCode()) && "" != vo.getInsuranceCode()){
+			if(message !=""){
+				message +=",";
+			}
+			if(column !=""){
+				column += ",";
+			}
+			message += " 보험코드=" + vo.getInsuranceCode();
+			column += " 보험코드";
+		}
+
+
 		if (!ivo.getOriginCountry().equals(vo.getOriginCountry()) && "" != vo.getOriginCountry()) {
 			if (message != "") {
 				message += ",";
@@ -1764,8 +1804,8 @@ public class ItemController {
 			if (column != "") {
 				column += ",";
 			}
-			message += " 원산지=" + vo.getOriginCountry();
-			column += " 원산진";
+			message += " 단위=" + vo.getOriginCountry();
+			column += " 단위";
 		}
 		if (ivo.getMinCnt() != vo.getMinCnt()) {
 			if (message != "") {
@@ -1774,10 +1814,10 @@ public class ItemController {
 			if (column != "") {
 				column += ",";
 			}
-			message += " 최소구매수량=" + vo.getMinCnt();
-			column += " 최소구매수량";
+			message += " 자동발주량=" + vo.getMinCnt();
+			column += " 자동발주량";
 		}
-		if (!ivo.getSellerSeq().equals(vo.getSellerSeq()) && null != vo.getSellerSeq()) {
+		if (null != vo.getSellerSeq() && !ivo.getSellerSeq().equals(vo.getSellerSeq()) ) {
 			if (message != "") {
 				message += ",";
 			}
@@ -1845,15 +1885,15 @@ public class ItemController {
 				column += " 세분류 카테고리";
 			}
 		}
-		if (!ivo.getBrand().equals(vo.getBrand()) && vo.getBrand() != null) {
+		if (vo.getBrand() != null && !ivo.getBrand().equals(vo.getBrand()) ) {
 			if (message != "") {
 				message += ",";
 			}
 			if (column != "") {
 				column += ",";
 			}
-			message += " 브랜드=" + vo.getBrand();
-			column += " 브랜드";
+			message += " 발주처=" + vo.getBrand();
+			column += " 발주처";
 		}
 		if (!ivo.getModelName().equals(vo.getModelName()) && "" != vo.getModelName()) {
 			if (message != "") {
@@ -1862,8 +1902,8 @@ public class ItemController {
 			if (column != "") {
 				column += ",";
 			}
-			message += " 모델명=" + vo.getModelName();
-			column += " 모델명";
+			message += " 기준재고=" + vo.getModelName();
+			column += " 기준재고";
 		}
 		if (!ivo.getMakeDate().equals(vo.getMakeDate()) && "" != vo.getMakeDate()) {
 			if (message != "") {
@@ -2142,14 +2182,14 @@ public class ItemController {
 			/*vo.setMaker((String)session.getAttribute("loginName"));*/
 		}
 		
-		if(vo.getSellerSeq() == null) {
-			return "입점업체가 선택되지 않았습니다.";
-		}
+		///if(vo.getSellerSeq() == null) {
+		//	return "입점업체가 선택되지 않았습니다.";
+		//}
 		
-		SellerVo seller = sellerService.getVoSimple(vo.getSellerSeq());
-		if(seller == null) {
-			return "입점업체가 존재하지 않습니다.";
-		}
+		//SellerVo seller = sellerService.getVoSimple(vo.getSellerSeq());
+		//if(seller == null) {
+		//	return "입점업체가 존재하지 않습니다.";
+		//}
 		
 		/* 기본값 설정 */
 		//함께누리몰은 공급가가 존재하지 않으므로 판매가와 동일하게 설정한다.
@@ -2165,7 +2205,7 @@ public class ItemController {
 		}
 		
 		/* 필수값 체크 */
-		if ("".equals(vo.getTypeCode())) {
+		/*if ("".equals(vo.getTypeCode())) {
 			return "상품타입은 반드시 입력되어야 합니다";
 		} else if ("".equals(vo.getName())) {
 			return "상품명은 반드시 입력되어야 합니다";
@@ -2188,14 +2228,14 @@ public class ItemController {
 		} else if ("".equals(vo.getAuthCategory())) {
 			return "인증구분은 반드시 선택되어야 합니다.";
 		}
-		
+		*/
 		/* 금액 체크 */
 		if (vo.getMarketPrice() < 0) {
 			return "시중가는 음수 값이 될 수 없습니다";
 		} 
-		if (vo.getSellPrice() <= 0) {
-			return "판매가는 0원 이하가 될 수 없습니다";
-		} 
+		//if (vo.getSellPrice() <= 0) {
+		//	return "판매가는 0원 이하가 될 수 없습니다";
+		//}
 		if (vo.getMarketPrice() > 0 && vo.getMarketPrice() < vo.getSellPrice()) {
 			return "시중가는 판매가보다 작을 수 없습니다.";
 		}

@@ -24,12 +24,12 @@
 					<!-- 소제목 -->
 					<div class="box-header with-border">
 						<h3 class="box-title"><i class="fa fa-list-ul"></i> 쇼핑몰 리스트</h3>
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0)}">
-							<c:if test="${ fn:length(list)==0 }">
+						<c:if test="${sessionScope.loginType eq 'A'}">
+
 						<div class="pull-right">
 							<a href="/admin/mall/form" class="btn btn-info btn-sm">쇼핑몰 신규 등록</a>
 						</div>
-							</c:if>
+
 						</c:if>
 					</div>
 					<!-- 내용 -->

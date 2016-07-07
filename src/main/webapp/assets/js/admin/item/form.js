@@ -200,7 +200,7 @@ var callbackProc = function(msg) {
 		var itemSeq = parseInt(msg.split(":")[1], 10) || 0;
 		var current = 1;
 		//상품 추가 정보 모달
-//		$("#okPropModal").modal().find(".bar").width(0); //이벤트 모달 임시로 주석처리.
+		$("#okPropModal").modal().find(".bar").width(0); //이벤트 모달 임시로 주석처리.
 		var propLength = $("#ch-info-list tr.prop").length;
 
 		//disable되어 있는 prop 필드를 sable시킨다.
@@ -404,7 +404,7 @@ var EBOption = {
 		// 옵션을 하나로만 제한한다
 		// 설계상 무제한대로 옵션을 넣을 수 있도록 설계되어 있지만, 실장님이 사용자가 헷갈려할 것이라고 옵션을 하나로만 제한한다.
 		// 현재 설계는 2depth가 가능하다. 하지만 1depth의 조합형을 추후 지원하도록 할 것이라고 한다.
-		if($("#eb-option-list tr").length > 1) {
+		if($("#eb-option-list tr").length > 4) {
 			alert("옵션은 하나만 생성할 수 있습니다");
 			return;
 		}
@@ -418,7 +418,7 @@ var EBOption = {
 			return current + 1;
 		})();
 		$("#eb-option-list .muted").remove();
-		$("#eb-option-list").append( $("#optionTemplate").tmpl({idx:maxCount}) );
+		//$("#eb-option-list").append( $("#optionTemplate").tmpl({idx:maxCount}) );
 		$("#eb-option-list tr:last-child .icon-plus").parent("button").click();
 	}
 	/** 옵션항목 row를 추가하는 메서드 */
@@ -472,7 +472,7 @@ var EBOption = {
 			dataType:"text",
 			success:function(data) {
 				var list = $.parseJSON(data);
-				$("#eb-option-list").html( $("#optionEditTemplate").tmpl(list) );
+				$("#eb-option-list").html($("#optionEditTemplate").tmpl(list));
 			},
 			error:function(error) {
 				alert( error.status + ":" +error.statusText );
@@ -555,8 +555,8 @@ var EBOption = {
 		// 옵션을 하나로만 제한한다
 		// 설계상 무제한대로 옵션을 넣을 수 있도록 설계되어 있지만, 실장님이 사용자가 헷갈려할 것이라고 옵션을 하나로만 제한한다.
 		// 현재 설계는 2depth가 가능하다. 하지만 1depth의 조합형을 추후 지원하도록 할 것이라고 한다.
-		if($("#eb-option-list tr").length > 1) {
-			alert("옵션은 하나만 생성할 수 있습니다");
+		if($("#eb-option-list tr").length > 4) {
+			alert("더이상 추가할 수 없습니다.");
 			return;
 		}
 

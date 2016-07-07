@@ -19,11 +19,12 @@ public class ImageDownloadUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageDownloadUtil.class);
 	
 	public BufferedImage readImage(String urlString) throws ImageDownloadException {
+		String realUrl = Const.ITEM_IMAGE_PATH +urlString;
 		BufferedImage originImage = null;
 		DataInputStream dis = null;
 		boolean hasError = false;
 		try {
-			dis = new DataInputStream(new URL(urlString).openConnection().getInputStream());
+			dis = new DataInputStream(new URL(realUrl).openConnection().getInputStream());
 			originImage = ImageIO.read(dis);
 			dis.close();
 		} catch (Exception e) {

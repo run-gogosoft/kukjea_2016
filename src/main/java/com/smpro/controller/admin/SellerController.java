@@ -69,9 +69,9 @@ public class SellerController {
 		model.addAttribute("jachiguList", systemService.getCommonList(cvo));
 		
 		// 인증구분
-		if(pvo.getAuthCategory() != null && !"".equals(pvo.getAuthCategory()) ) {
-			pvo.setAuthCategoryArr( pvo.getAuthCategory().split(",") );
-		}
+		//if(pvo.getAuthCategory() != null && !"".equals(pvo.getAuthCategory()) ) {
+		//	pvo.setAuthCategoryArr( pvo.getAuthCategory().split(",") );
+		//}
 
 		pvo.setLoginSeq(loginSeq);
 		pvo.setLoginType((String) session.getAttribute("loginType"));
@@ -601,9 +601,9 @@ public class SellerController {
 			return "매출액은 반드시 입력되어야 합니다";
 		} else if ("".equals(vo.getAmountOfWorker())) {
 			return "종업원수는 반드시 입력되어야 합니다";
-		} else if ("".equals(vo.getAuthCategory())) {
-			return "인증구분은 반드시 선택되어야 합니다";
-		}
+		} //else if ("".equals(vo.getAuthCategory())) {
+			//return "인증구분은 반드시 선택되어야 합니다";
+		//}
 		
 		return null;
 	}
