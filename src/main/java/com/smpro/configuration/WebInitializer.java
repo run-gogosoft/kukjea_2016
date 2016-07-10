@@ -2,6 +2,7 @@ package com.smpro.configuration;
 
 import com.smpro.configuration.admin.AdminWebAdapter;
 import com.smpro.configuration.shop.ShopWebAdapter;
+import com.smpro.util.Const;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -34,7 +35,7 @@ public class WebInitializer implements WebApplicationInitializer {
 		shopDispatcher.addMapping("/shop/*");
 
 		shopDispatcher.setMultipartConfig(
-			new MultipartConfigElement("/tmp", MAX_FILE_SIZE, MAX_REQUEST_SIZE, FILE_THRESHOLD)
+			new MultipartConfigElement(Const.TEMP_DIR, MAX_FILE_SIZE, MAX_REQUEST_SIZE, FILE_THRESHOLD)
 		);
 
 		ServletRegistration.Dynamic adminDispatcher;
@@ -42,7 +43,7 @@ public class WebInitializer implements WebApplicationInitializer {
 		adminDispatcher.addMapping("/admin/*");
 
 		adminDispatcher.setMultipartConfig(
-			new MultipartConfigElement("/tmp", MAX_FILE_SIZE, MAX_REQUEST_SIZE, FILE_THRESHOLD)
+			new MultipartConfigElement(Const.TEMP_DIR, MAX_FILE_SIZE, MAX_REQUEST_SIZE, FILE_THRESHOLD)
 		);
 
 		addUtf8CharacterEncodingFilter(context);

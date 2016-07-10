@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import com.smpro.util.exception.ImageIsNotAvailableException;
 import com.smpro.util.exception.ImageSizeException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
@@ -113,8 +114,9 @@ public class FileUploadUtil {
 		bos.close();
 		stream.close();
 	}
-	
+
 	public String upload(String path, String realPath, MultipartFile file) throws IOException {
+
 		String fileName = UUID.randomUUID().toString();
 		File tempDir = new File(realPath);
 		if(!tempDir.exists()) {

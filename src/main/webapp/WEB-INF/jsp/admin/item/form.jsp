@@ -549,7 +549,7 @@
 										</tbody>
 									</table>
 									<c:if test="${vo ne null}">
-										<button type="button" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품옵션추가</button>
+										<button type="button" id="OptionAddBtn" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품옵션추가</button>
 									</c:if>
 								</div>
 							</div>
@@ -650,7 +650,7 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="valueName" value="" alt="공급자명" />
+						<input type="text" class="form-control" name="valueName" value="${sessionScope.loginId}" alt="공급자명" readonly="readonly" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -773,7 +773,7 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>" alt="공급자명" />
+						<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>" alt="공급자명" readonly="readonly" />
 					</div>
 				</div>
 				<div class="form-group">

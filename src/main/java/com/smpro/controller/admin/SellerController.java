@@ -595,8 +595,6 @@ public class SellerController {
 			return "담당자 전화번호는 반드시 입력되어야 합니다";
 		} else if ("".equals(vo.getSalesCell())) {
 			return "담당자 휴대폰번호는 반드시 입력되어야 합니다";
-		} else if(!vo.getJachiguCode().matches("^\\d{2}$")) {
-			return "자치구가 선택되지 않았습니다.";
 		} else if ("".equals(vo.getTotalSales())) {
 			return "매출액은 반드시 입력되어야 합니다";
 		} else if ("".equals(vo.getAmountOfWorker())) {
@@ -645,7 +643,6 @@ public class SellerController {
 		vo.setBizKind((String)map.get("bizKind") == null ? "" : (String)map.get("bizKind"));
 		vo.setTel((String)map.get("tel") == null ? "" : (String)map.get("tel"));
 		vo.setFax((String)map.get("fax") == null ? "" : (String)map.get("fax"));
-		vo.setJachiguCode((String)map.get("jachiguCode") == null ? "" : (String)map.get("jachiguCode"));
 		vo.setPostcode((String)map.get("postcode") == null ? "" : (String)map.get("postcode"));
 		vo.setAddr1((String)map.get("addr1") == null ? "" : (String)map.get("addr1"));
 		vo.setAddr2((String)map.get("addr2") == null ? "" : (String)map.get("addr2"));

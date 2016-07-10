@@ -5,12 +5,15 @@ import com.smpro.vo.ItemVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface ItemOptionService {
 	public List<ItemOptionVo> getList(Integer itemSeq);
 
 	public List<ItemOptionVo> getOptionList(Integer itemSeq);
+
+	List<ItemOptionVo> getValueListForSeller(Map map);
 
 	public List<ItemOptionVo> getValueList(Integer optionSeq);
 

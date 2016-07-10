@@ -1,5 +1,8 @@
 package com.smpro.util;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Const {
 	/** 경고창만 뜨는 페이지 */
 	public final static String ALERT_PAGE = "/_proc/alert.jsp";
@@ -37,6 +40,7 @@ public class Const {
 	public static final String LOCATION;
 	// 웹서비스 OS
 	public static final String OS;
+	public static final String TEMP_DIR;
 
 	/* 도메인 */
 	public static final String DOMAIN;
@@ -56,15 +60,28 @@ public class Const {
 			UPLOAD_PATH = "/upload";
 			UPLOAD_REAL_PATH =      "/Users/aubergine/Documents/kookje_dev/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
 			WEBAPP_HOME_REAL_PATH = "/Users/aubergine/Documents/kookje_dev/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war";
+			TEMP_DIR = "/tmp";
 			DOMAIN = "localhost";
 			LOCATION = "test";
 			OS = "linux";
-		} else {
+		}
+		else if ("win".equalsIgnoreCase(System.getProperties().getProperty("detailedDebugMode"))) {
+			IMAGE_MAGICK_PATH = "convert";
+			UPLOAD_PATH = "/upload";
+			UPLOAD_REAL_PATH =      "C:\\Users\\USER\\IdeaProjects\\kookjea\\out\\artifacts\\kookje\\exploded\\kookje-1.0-SNAPSHOT.war\\upload";
+			WEBAPP_HOME_REAL_PATH = "C:\\Users\\USER\\IdeaProjects\\kookjea\\out\\artifacts\\kookje\\exploded\\kookje-1.0-SNAPSHOT.war";
+			TEMP_DIR = "c:\\tmp";
+			DOMAIN = "localhost";
+			LOCATION = "test";
+			OS = "windows";
+		}
+		else {
 			// PRODUCTION MODE
 			IMAGE_MAGICK_PATH = "convert";
 			UPLOAD_PATH = "/upload";
 			UPLOAD_REAL_PATH = "/kookje/web/upload";
 			WEBAPP_HOME_REAL_PATH = "/kookje/apps/instance1/webapps/ROOT";
+			TEMP_DIR = "/tmp";
 			DOMAIN = "kookje.gogosoft.kr";
 			LOCATION = "service";
 			OS = "linux";

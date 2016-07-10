@@ -6,7 +6,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ItemOptionDaoImpl implements ItemOptionDao {
@@ -21,6 +23,11 @@ public class ItemOptionDaoImpl implements ItemOptionDao {
 	@Override
 	public List<ItemOptionVo> getOptionList(Integer itemSeq) {
 		return sqlSession.selectList("option.getOptionList", itemSeq);
+	}
+
+	@Override
+	public List<ItemOptionVo> getValueListForSeller(Map map) {
+		return sqlSession.selectList("option.getValueListForSeller", map);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.smpro.configuration.admin;
 
 import com.smpro.component.admin.BatchComponent;
 import com.smpro.interceptor.admin.LoginCheckAdminInterceptorImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -37,9 +38,12 @@ public class AdminWebAdapter extends WebMvcConfigurerAdapter {
 		return new StandardServletMultipartResolver();
 	}
 
+	@Autowired
+	private LoginCheckAdminInterceptorImpl loginCheckAdminInterceptor;
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new LoginCheckAdminInterceptorImpl())
+		registry.addInterceptor(loginCheckAdminInterceptor)
 				.addPathPatterns("/index")
 				.addPathPatterns("/main/**")
 				.addPathPatterns("/display/**")

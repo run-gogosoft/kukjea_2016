@@ -45,6 +45,9 @@ import java.util.*;
 public class ItemController {
 
 	@Autowired
+	private MemberService memberService;
+
+	@Autowired
 	private OrderService orderService;
 
 	@Autowired
@@ -1053,11 +1056,30 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/item/option/json/{seq}")
-	public String getOptionList(@PathVariable Integer seq, Model model) {
+	public String getOptionList(@PathVariable Integer seq, Model model, HttpSession session) throws  Exception {
+
+		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
+		if (loginSeq == null) {
+			throw new Exception("비정상적인 접근입니다");
+		}
+		MemberVo memberVo = memberService.getData(loginSeq);
+		if (memberVo == null) {
+			throw new Exception("비정상적인 접근입니다");
+		}
 
 		List<ItemOptionVo> list = itemOptionService.getOptionList(seq);
-		for (ItemOptionVo vo : list) {
-			vo.setValueList(itemOptionService.getValueList(vo.getSeq()));
+
+		if ("A".equals(memberVo.getTypeCode())) {
+			for (ItemOptionVo vo : list) {
+				vo.setValueList(itemOptionService.getValueList(vo.getSeq()));
+			}
+		} else {
+			for (ItemOptionVo vo : list) {
+				Map map = new HashMap();
+				map.put("seq", vo.getSeq());
+				map.put("loginId", memberVo.getId());
+				vo.setValueList(itemOptionService.getValueListForSeller(map));
+			}
 		}
 		model.addAttribute("list", list);
 

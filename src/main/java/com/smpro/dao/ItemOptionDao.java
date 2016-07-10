@@ -5,6 +5,7 @@ import com.smpro.vo.ItemVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ItemOptionDao {
@@ -15,6 +16,8 @@ public interface ItemOptionDao {
 	public ItemOptionVo getValueVo(Integer seq);
 
 	public List<ItemOptionVo> getOptionList(Integer itemSeq);
+
+	List<ItemOptionVo> getValueListForSeller(Map map);
 
 	public List<ItemOptionVo> getValueList(Integer optionSeq);
 

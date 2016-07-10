@@ -335,6 +335,7 @@ var callbackProc = function(msg) {
 	} else if(msg === "OPTION") {
 		EBOption.renderList($("#seq").val());
 		$("#optionModal").modal("hide");
+		$('#OptionAddBtn').show();
 	} else if(msg.split(":")[0] === "DETAIL") {
 		uploadDetailProc(msg.split(":")[1], msg.split(":")[2]);
 	} else if(msg.split("^")[0] === "EDITOR") {
@@ -472,6 +473,13 @@ var EBOption = {
 			dataType:"text",
 			success:function(data) {
 				var list = $.parseJSON(data);
+				for(var idx in list) {
+					if (list[idx].list && list[idx].list.length > 0) {
+						$('#OptionAddBtn').hide();
+						break;
+					}
+				}
+
 				$("#eb-option-list").html($("#optionEditTemplate").tmpl(list));
 			},
 			error:function(error) {

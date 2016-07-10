@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ItemOptionServiceImpl implements ItemOptionService {
@@ -23,6 +24,11 @@ public class ItemOptionServiceImpl implements ItemOptionService {
 
 	public List<ItemOptionVo> getOptionList(Integer itemSeq) {
 		return itemOptionDao.getOptionList(itemSeq);
+	}
+
+	@Override
+	public List<ItemOptionVo> getValueListForSeller(Map map) {
+		return itemOptionDao.getValueListForSeller(map);
 	}
 
 	public List<ItemOptionVo> getValueList(Integer optionSeq) {
