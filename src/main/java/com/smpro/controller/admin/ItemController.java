@@ -1528,7 +1528,8 @@ public class ItemController {
 
 		}
 		model.addAttribute("message", "OK");
-		return Const.AJAX_PAGE;
+		//return Const.AJAX_PAGE;
+		return Const.REDIRECT_PAGE;
 	}
 
 	@RequestMapping("/item/prop/mod")
@@ -1796,6 +1797,17 @@ public class ItemController {
 			column += " 규격2";
 		}
 
+		if(!vo.getType3().equals(vo.getType3()) && "" != vo.getType3()){
+			if(message !=""){
+				message +=",";
+			}
+			if(column !=""){
+				column += ",";
+			}
+			message += " 규격3=" + vo.getType3();
+			column += " 규격3";
+		}
+
 		if(!vo.getSubjectType().equals(vo.getSubjectType()) && "" != vo.getSubjectType()){
 			if(message !=""){
 				message +=",";
@@ -1839,7 +1851,7 @@ public class ItemController {
 			message += " 자동발주량=" + vo.getMinCnt();
 			column += " 자동발주량";
 		}
-		if (null != vo.getSellerSeq() && !ivo.getSellerSeq().equals(vo.getSellerSeq()) ) {
+		/*if (null != vo.getSellerSeq() && !ivo.getSellerSeq().equals(vo.getSellerSeq()) ) {
 			if (message != "") {
 				message += ",";
 			}
@@ -1848,7 +1860,7 @@ public class ItemController {
 			}
 			message += " 입점업체번호=" + vo.getSellerSeq();
 			column += " 입점업체번호";
-		}
+		}*/
 		if (!ivo.getSellerItemCode().equals(vo.getSellerItemCode()) && "" != vo.getSellerItemCode()) {
 			if (message != "") {
 				message += ",";

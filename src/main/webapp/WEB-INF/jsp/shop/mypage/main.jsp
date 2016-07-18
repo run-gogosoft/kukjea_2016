@@ -108,7 +108,7 @@
                             </td>
                             <td>
                                 <c:if test="${vo.img1 ne ''}">
-                                    <a href="/shop/search?seq=${vo.itemSeq}"><img src="/upload${fn:replace(vo.img1, '/origin/', '/s206/')}" onerror="noImage(this)" style="width:70px;height:70px;border:1px solid #d7d7d7;" alt="" /></a>
+                                    <a href="/shop/search?seq=${vo.itemSeq}"><img src="/upload${fn:replace(vo.img1, '/origin/', '/s60/')}" onerror="noImage(this)" style="width:70px;height:70px;border:1px solid #d7d7d7;" alt="" /></a>
                                 </c:if>
                             </td>
                             <td class="text-left item-name">

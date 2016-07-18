@@ -181,21 +181,21 @@ public class ItemServiceImpl implements ItemService {
 		FileUtil.mkdir(new File(realPath + "/origin/"));
 		FileUtil.mkdir(new File(realPath + "/origin/" + perSeq + "/"));
 		FileUtil.mkdir(new File(realPath + "/origin/" + perSeq + "/" + idx + "/"));
-		FileUtil.mkdir(new File(realPath + "/s206/"));
-		FileUtil.mkdir(new File(realPath + "/s206/" + perSeq + "/"));
-		FileUtil.mkdir(new File(realPath + "/s206/" + perSeq + "/" + idx + "/"));
-		FileUtil.mkdir(new File(realPath + "/s270/"));
-		FileUtil.mkdir(new File(realPath + "/s270/" + perSeq + "/"));
-		FileUtil.mkdir(new File(realPath + "/s270/" + perSeq + "/" + idx + "/"));
-		FileUtil.mkdir(new File(realPath + "/s500/"));
-		FileUtil.mkdir(new File(realPath + "/s500/" + perSeq + "/"));
-		FileUtil.mkdir(new File(realPath + "/s500/" + perSeq + "/" + idx + "/"));
+		FileUtil.mkdir(new File(realPath + "/s60/"));
+		FileUtil.mkdir(new File(realPath + "/s60/" + perSeq + "/"));
+		FileUtil.mkdir(new File(realPath + "/s60/" + perSeq + "/" + idx + "/"));
+		FileUtil.mkdir(new File(realPath + "/s110/"));
+		FileUtil.mkdir(new File(realPath + "/s110/" + perSeq + "/"));
+		FileUtil.mkdir(new File(realPath + "/s110/" + perSeq + "/" + idx + "/"));
+		FileUtil.mkdir(new File(realPath + "/s170/"));
+		FileUtil.mkdir(new File(realPath + "/s170/" + perSeq + "/"));
+		FileUtil.mkdir(new File(realPath + "/s170/" + perSeq + "/" + idx + "/"));
 
 		// 파일이 존재한다면 미리 삭제해야 한다
 		FileUtil.move(new File(realPath + "/temp/" + filename), new File(realPath + "/origin/" + perSeq + "/" + idx + "/" + seq + ext));
-		FileUtil.move(new File(realPath + "/temp/" + filename.replace(".", "_206.")), new File(realPath + "/s206/" + perSeq + "/" + idx + "/" + seq	+ ext));
-		FileUtil.move(new File(realPath + "/temp/" + filename.replace(".", "_270.")), new File(realPath + "/s270/" + perSeq + "/" + idx + "/" + seq	+ ext));
-		FileUtil.move(new File(realPath + "/temp/" + filename.replace(".", "_500.")), new File(realPath + "/s500/" + perSeq + "/" + idx + "/" + seq	+ ext));
+		FileUtil.move(new File(realPath + "/temp/" + filename.replace(".", "_60.")), new File(realPath + "/s60/" + perSeq + "/" + idx + "/" + seq	+ ext));
+		FileUtil.move(new File(realPath + "/temp/" + filename.replace(".", "_110.")), new File(realPath + "/s110/" + perSeq + "/" + idx + "/" + seq	+ ext));
+		FileUtil.move(new File(realPath + "/temp/" + filename.replace(".", "_170.")), new File(realPath + "/s170/" + perSeq + "/" + idx + "/" + seq	+ ext));
 
 		return "/item/origin/" + perSeq + "/" + idx + "/" + seq + ext;
 	}
@@ -258,30 +258,30 @@ public class ItemServiceImpl implements ItemService {
 		ItemVo vo = getVo(seq);
 		if(!"/old/no_image1.jpg".equals(vo.getImg1())) {
 			new File(realPath + vo.getImg1()).delete();
-			new File(realPath + vo.getImg1().replaceAll("origin", "s206")).delete();
-			new File(realPath + vo.getImg1().replaceAll("origin", "s270")).delete();
-			new File(realPath + vo.getImg1().replaceAll("origin", "s500")).delete();
+			new File(realPath + vo.getImg1().replaceAll("origin", "s60")).delete();
+			new File(realPath + vo.getImg1().replaceAll("origin", "s110")).delete();
+			new File(realPath + vo.getImg1().replaceAll("origin", "s170")).delete();
 			log.info("vo.getImg1 deleted --> " + vo.getImg1());
 		}
 		
 		if(!"/old/no_image1.jpg".equals(vo.getImg2())) {
 			new File(realPath + vo.getImg2()).delete();
-			new File(realPath + vo.getImg2().replaceAll("origin", "s206")).delete();
-			new File(realPath + vo.getImg2().replaceAll("origin", "s270")).delete();
-			new File(realPath + vo.getImg2().replaceAll("origin", "s500")).delete();
+			new File(realPath + vo.getImg2().replaceAll("origin", "s60")).delete();
+			new File(realPath + vo.getImg2().replaceAll("origin", "s110")).delete();
+			new File(realPath + vo.getImg2().replaceAll("origin", "s170")).delete();
 			log.info("vo.getImg2 deleted --> " + vo.getImg2());
 		}
 		
 		new File(realPath + vo.getImg3()).delete();
-		new File(realPath + vo.getImg3().replaceAll("origin", "s206")).delete();
-		new File(realPath + vo.getImg3().replaceAll("origin", "s270")).delete();
-		new File(realPath + vo.getImg3().replaceAll("origin", "s500")).delete();
+		new File(realPath + vo.getImg3().replaceAll("origin", "s60")).delete();
+		new File(realPath + vo.getImg3().replaceAll("origin", "s110")).delete();
+		new File(realPath + vo.getImg3().replaceAll("origin", "s170")).delete();
 		log.info("vo.getImg3 deleted --> " + vo.getImg3());
 
 		new File(realPath + vo.getImg4()).delete();
-		new File(realPath + vo.getImg4().replaceAll("origin", "s206")).delete();
-		new File(realPath + vo.getImg4().replaceAll("origin", "s270")).delete();
-		new File(realPath + vo.getImg4().replaceAll("origin", "s500")).delete();
+		new File(realPath + vo.getImg4().replaceAll("origin", "s60")).delete();
+		new File(realPath + vo.getImg4().replaceAll("origin", "s110")).delete();
+		new File(realPath + vo.getImg4().replaceAll("origin", "s170")).delete();
 		log.info("vo.getImg4 deleted --> " + vo.getImg4());
 
 		new File(realPath + vo.getDetailImg1()).delete();
@@ -488,7 +488,6 @@ public class ItemServiceImpl implements ItemService {
 				//if ("A".equals(loginType)) {
 					cell.add(ivo.getCateLv4Seq());
 				//}
-				cell.add(ivo.getSubjectType());//진료과목
 				cell.add(ivo.getName());//상품명
 
 				String statusText = "";
@@ -508,6 +507,8 @@ public class ItemServiceImpl implements ItemService {
 				cell.add(ivo.getType1());//규격 1
 				cell.add(ivo.getType2());//규격 2
 				cell.add(ivo.getType3());//규격 3
+				System.out.print("ivo.getSubjectType():"+ivo.getSubjectType());
+				cell.add(ivo.getSubjectType());//진료과목
 				cell.add(ivo.getInsuranceCode());//보험코드
 				cell.add(ivo.getSellerName());//제조사
 				cell.add(ivo.getOriginCountry());//단위
@@ -568,7 +569,7 @@ public class ItemServiceImpl implements ItemService {
 
 	public boolean imgDelete(int idx, String imgPath, Model model) {
 		boolean result = true;
-		String[] itemImageSize = { "origin", "s206", "s270", "s500" };
+		String[] itemImageSize = { "origin", "s60", "s110", "s170" };
 		String groupNumber = imgPath.split("/")[3];
 		String fileName = imgPath.split("/")[5];
 		

@@ -200,7 +200,7 @@ var callbackProc = function(msg) {
 		var itemSeq = parseInt(msg.split(":")[1], 10) || 0;
 		var current = 1;
 		//상품 추가 정보 모달
-		$("#okPropModal").modal().find(".bar").width(0); //이벤트 모달 임시로 주석처리.
+		//$("#okPropModal").modal().find(".bar").width(0); //이벤트 모달 임시로 주석처리.
 		var propLength = $("#ch-info-list tr.prop").length;
 
 		//disable되어 있는 prop 필드를 sable시킨다.
@@ -237,7 +237,6 @@ var callbackProc = function(msg) {
 				alert( error.status + ":" +error.statusText );
 			}
 		});
-
 		//disable되어 있는 option 필드를 sable시킨다.
 		EBOption.sableOptionField();
 		CHItemPropInfo.sablePropInfoField();
@@ -249,14 +248,13 @@ var callbackProc = function(msg) {
 		}
 
 		current = 1; //1로 초기화
-//		var itemSeq = parseInt(msg.split(":")[1], 10) || 0;
+		//var itemSeq = parseInt(msg.split(":")[1], 10) || 0;
 		var length = $("#eb-option-list tr.child").length;
 
 		// 먼저 부모를 돌면서 옵션을 추가시킨다
 		$("#eb-option-list tr.parent").each(function(){
 			var vo = EBOption.getVo(this);
 			vo.itemSeq = itemSeq;
-
 			$.ajax({
 				url:"/admin/item/option/new",
 				type:"post",
@@ -309,12 +307,12 @@ var callbackProc = function(msg) {
 									returnOption = false;
 								} else {
 									$("#okModal").find(".bar").width((current++/length*100)+"%");
-									if(current >= length) {
+									//if(current >= length) {
 										setTimeout(function(){
 											$("#okModal p").html("정상적으로 등록되었습니다").addClass("text-success");
 											top.location.href="/admin/item/list";
 										}, 800);
-									}
+									//}
 								}
 							},
 							error:function(error) {
@@ -351,16 +349,16 @@ var uploadProc = function(idx, filename) {
 	if(filename.indexOf("/origin/") > 0){
 		// 수정하기
 		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>원본</div>";
-		html += "<div><img src='"+ filename.replace("/origin/", "/s206/") +"' class='img-polaroid' /><br/>206x206</div>";
-		html += "<div><img src='"+ filename.replace("/origin/", "/s270/") +"' class='img-polaroid' onclick='imgProc(this, 270)' /><br/>270x270</div>";
-		html += "<div><img src='"+ filename.replace("/origin/", "/s500/") +"' class='img-polaroid' onclick='imgProc(this, 500)' /><br/>500x500</div>";
+		html += "<div><img src='"+ filename.replace("/origin/", "/s60/") +"' class='img-polaroid' /><br/>60x60</div>";
+		html += "<div><img src='"+ filename.replace("/origin/", "/s110/") +"' class='img-polaroid' onclick='imgProc(this, 110)' /><br/>110x110</div>";
+		html += "<div><img src='"+ filename.replace("/origin/", "/s170/") +"' class='img-polaroid' onclick='imgProc(this, 170)' /><br/>170x170</div>";
 		filename = ""; // 파일명을 초기화해야 데이터가 날라가지 않는다
 	} else {
 		// 새로운 상품
 		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>원본</div>";
-		html += "<div><img src='"+ filename.replace(".", "_206.") +"' class='img-polaroid' /><br/>206x206</div>";
-		html += "<div><img src='"+ filename.replace(".", "_270.") +"' class='img-polaroid' onclick='imgProc(this, 270)' /><br/>270x270</div>";
-		html += "<div><img src='"+ filename.replace(".", "_500.") +"' class='img-polaroid' onclick='imgProc(this, 500)' /><br/>500x500</div>";
+		html += "<div><img src='"+ filename.replace(".", "_60.") +"' class='img-polaroid' /><br/>60x60</div>";
+		html += "<div><img src='"+ filename.replace(".", "_110.") +"' class='img-polaroid' onclick='imgProc(this, 110)' /><br/>110x110</div>";
+		html += "<div><img src='"+ filename.replace(".", "_170.") +"' class='img-polaroid' onclick='imgProc(this, 170)' /><br/>170x170</div>";
 	}
 
 	$("input[name=img"+idx+"]").val(filename).parents(".form-group").find(".thumbimg").html(html);
@@ -575,14 +573,16 @@ var EBOption = {
 		vo.itemSeq = seq;
 
 		if($.trim(vo.optionName) === "") {
-			alert("상품옵션은 반드시 입력되어야 합니다");
+			alert("쇼핑몰은 반드시 입력되어야 합니다");
 			return;
 		} else if($.trim(vo.valueName) === "") {
-			alert("옵션항목은 반드시 입력되어야 합니다");
+			alert("공급자명은 반드시 입력되어야 합니다");
 			return;
 		} else if($.trim(vo.stockCount) === "0") {
 			alert("재고수량을 1이상 입력해주세요.");
 			return;
+		} else  if($.trim(vo.optionPrice) == "0") {
+			alert("제품 가격을 입력해주세요")
 		}
 
 			for(var i=0; i<$('#filterCount').val(); i++){

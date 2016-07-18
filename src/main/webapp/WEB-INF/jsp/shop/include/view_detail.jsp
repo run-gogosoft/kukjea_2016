@@ -80,7 +80,7 @@
                         <caption>상품 기본 설명</caption>
                         <colgroup>
                             <col style="width:75px" />
-                            <col style="width:auto" />
+                            <col style="width:175px" />
                         </colgroup>
                         <tbody>
                         <tr>
@@ -88,7 +88,18 @@
                             <td><%="${vo.name}"%></td>
                         </tr>
                         <tr>
-                            <th scope="row"><p>규 격</p></th>
+                            <th scope="row"><p>규 격 1</p></th>
+                            <td><%="${vo.type1}"%></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><p>규 격 2</p></th>
+                            <td><%="${vo.type2}"%></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><p>규 격 3</p></th>
+                            <td><%="${vo.type3}"%></td>
                             <td></td>
                         </tr>
                         <tr>
@@ -97,14 +108,15 @@
                         </tr>
                         <tr>
                             <th scope="row"><p>단 위</p></th>
-                            <td>1개</td>
+                            <td><%="${vo.originCountry}"%></td>
                         </tr>
                         <tr>
-                            <th scope="row"><p>가 격</p></th>
-                            <td><%="${ebFormatNumber(vo.sellPrice)}"%>원</td>
+                            <th scope="row"><p>진 료 과 목</p></th>
+                            <td><%="${vo.subjectType}"%>원</td>
                         </tr>
                         <tr>
                             <th scope="row"><p>보 험 코 드</p></th>
+                            <td><%="${vo.insuranceCode}"%>원</td>
                             <td></td>
                         </tr>
                         </tbody>
@@ -129,7 +141,7 @@
     <li>
         <a href="/shop/detail/<%="${seq}"%>" onclick="view(<%="${seq}"%>);return false;" title="<%="${name}"%>">
         <span class="thumb">
-            <img src="/upload<%="${img1}"%>" alt="" onerror="noImage(this)" />
+            <img src="<%="${img1}"%>" alt="" onerror="noImage(this)" />
         </span>
         <span class="icons">
             <%-- span class="icon icon_txt icon_txt_gray">무료배송</span>

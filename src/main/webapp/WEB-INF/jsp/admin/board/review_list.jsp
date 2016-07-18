@@ -65,7 +65,7 @@
 										${ item.itemSeq }
 									</td>
 									<td class="text-center">
-										<img src="/upload${fn:replace(item.img1, 'origin', 's206')}" style="width:70px;" alt=""/>
+										<img src="/upload${fn:replace(item.img1, 'origin', 's60')}" style="width:70px;" alt=""/>
 									</td>
 									<td class="text-center">
 										${ item.itemName }

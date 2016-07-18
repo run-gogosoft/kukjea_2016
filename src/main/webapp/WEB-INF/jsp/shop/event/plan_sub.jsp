@@ -46,7 +46,7 @@
                             <c:if test="${groupList.eventGroupSeq == itemList.groupSeq }">
                             <div class="item col_lt" onclick="location.href='/shop/search?seq=${itemList.itemSeq}';" style="cursor:pointer">
                                 <div class="thumb">
-                                    <img src=/upload${fn:replace(itemList.img1, 'origin', 's270')}" onerror="noImage(this)" alt="">
+                                    <img src=/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="">
                                 </div>
                                 <table class="default">
                                     <caption>상품 기본 설명</caption>

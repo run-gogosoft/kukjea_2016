@@ -396,78 +396,97 @@ public class ItemExcelController {
 
 		int index = 0;
 		// 1대분류 코드(필수)
+		Map map = new HashMap();
+
 		CategoryVo lv1 = null;
-		if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
-			errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 대분류 코드는 숫자만 허용됩니다.");
-		} else {
-			lv1 = categoryService.getVo(Integer.valueOf(""+list.get(index)));
+		//if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
+		//	errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 대분류 코드는 숫자만 허용됩니다.");
+		//} else {
+		map.put("seq", 0);
+		map.put("name", String.valueOf(list.get(index)));
+		lv1 = categoryService.getVoByName(map);
+
 			if (lv1 == null) {
-				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 대분류 코드가 존재하지 않습니다.");
+				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 대분류 이름 ("+String.valueOf(list.get(index))+") 이  존재하지 않습니다.");
 			} else {
 				if (lv1.getDepth() != 1) {
-					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 대분류 코드가 아닙니다.");
+					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 대분류 이름("+String.valueOf(list.get(index))+") 이 아닙니다.");
 				}
 			}
-		}	
+		//}
 		index++;
+		map.clear();
 		//2 중분류 코드(선택)
 		CategoryVo lv2 = null;
 		if(!StringUtil.isBlank(""+list.get(index))) {
-			if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
-				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 코드는 숫자만 허용됩니다.");
+			//if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
+			//	errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 코드는 숫자만 허용됩니다.");
+			//}
+			if(lv1 != null) {
+				map.put("seq", lv1.getSeq());
+				map.put("name", String.valueOf(list.get(index)));
+				lv2 = categoryService.getVoByName(map);
 			}
-			
-			lv2 = categoryService.getVo(Integer.valueOf(""+list.get(index)));
 			if (lv2 == null) {
-				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 코드가 존재하지 않습니다.");
+				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 이름("+String.valueOf(list.get(index))+") 이 존재하지 않습니다.");
 			} else if (lv1 != null) {
 				if (lv1.getSeq().intValue() != lv2.getParentSeq().intValue()) {
-					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 코드가 대분류 코드에 맞지 않습니다.");
+					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 이름("+String.valueOf(list.get(index))+") 이 대분류 코드에 맞지 않습니다.");
 				} else if (lv2.getDepth() != 2) {
-					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 코드가 아닙니다.");
+					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 중분류 이름("+String.valueOf(list.get(index))+") 이 아닙니다.");
 				}
 			}
 		}
 		index++;
+		map.clear();
 		// 3소분류 코드(선택)
 		CategoryVo lv3 = null;
 		if(!StringUtil.isBlank(""+list.get(index))) {
-			if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
-				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 코드는 숫자만 허용됩니다.");
+			//if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
+			//	errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 코드는 숫자만 허용됩니다.");
+			//}
+			if(lv2 !=null) {
+				map.put("seq", lv2.getSeq());
+				map.put("name", String.valueOf(list.get(index)));
+				lv3 = categoryService.getVoByName(map);
 			}
-			
-			lv3 = categoryService.getVo(Integer.valueOf(""+list.get(index)));
 			if (lv3 == null) {
-				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 코드가 존재하지 않습니다.");
+				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 이름("+String.valueOf(list.get(index))+") 이 존재하지 않습니다.");
 			} else if (lv2 != null) {
 				if (lv3.getParentSeq().intValue() != lv2.getSeq().intValue()) {
-					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 코드가 중분류 코드에 맞지 않습니다.");
+					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 이름이("+String.valueOf(list.get(index))+")  중분류 코드에 맞지 않습니다.");
 				}
 				if (lv3.getDepth() != 3) {
-					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 코드가 아닙니다.");
+					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 소분류 이름("+String.valueOf(list.get(index))+") 이 아닙니다.");
 				}
 			}
 		}
 		index++;
+		map.clear();
 		// 4세분류 코드(선택)
+		CategoryVo lv4 = null;
 		if(!StringUtil.isBlank(""+list.get(index))) {
-			if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
-				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 코드는 숫자만 허용됩니다.");
+			//if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
+			//	errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 코드는 숫자만 허용됩니다.");
+			//}
+			if(lv3 != null) {
+				map.put("seq", lv3.getSeq());
+				map.put("name", String.valueOf(list.get(index)));
+				lv4 = categoryService.getVoByName(map);
 			}
-			
-			CategoryVo lv4 = categoryService.getVo(Integer.valueOf(""+list.get(index)));
 		
 			if (lv4 == null) {
-				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 코드가 존재하지 않습니다.");
+				errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 이름("+String.valueOf(list.get(index))+") 이 존재하지 않습니다.");
 			} else if (lv3 != null) {
 				if (lv4.getParentSeq().intValue() != lv3.getSeq().intValue()) {
-					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 코드가 소분류 코드에 맞지 않습니다.");
+					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 이름("+String.valueOf(list.get(index))+") 이 소분류 코드에 맞지 않습니다.");
 				}
 				if (lv4.getDepth() != 4) {
-					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 코드가 아닙니다.");
+					errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 세분류 이름("+String.valueOf(list.get(index))+") 이 아닙니다.");
 				}
 			}
 		}
+
 		index++;
 		//5 진료과목//(필수)
 		//if (StringUtil.isBlank((String)list.get(index))) {
@@ -678,25 +697,46 @@ public class ItemExcelController {
 	}
 
 	private ItemVo itemMapper(ArrayList<Object> list, int LIST_SIZE) throws ExcelOutOfBoundsException {
+
 		ItemVo vo = new ItemVo();
 		int index = 0;
 		// 1대분류 코드
-		vo.setCateLv1Seq(Integer.valueOf(""+list.get(index++)));
+		Map map = new HashMap();
+
+
+
+		map.put("seq", 0);
+		map.put("name", String.valueOf(list.get(index++)));
+
+		CategoryVo category = categoryService.getVoByName(map);
+		vo.setCateLv1Seq(category.getSeq());
 		//2 중분류 코드
 		if (!StringUtil.isBlank(String.valueOf(list.get(index)))) {
-			vo.setCateLv2Seq(Integer.valueOf(""+list.get(index++)));
+			map.clear();
+			map.put("seq", category.getSeq());
+			map.put("name", String.valueOf(list.get(index++)));
+			category = categoryService.getVoByName(map);
+			vo.setCateLv2Seq(category.getSeq());
 		} else {
 			index++;
 		}
 		//3 소분류 코드
 		if (!StringUtil.isBlank(String.valueOf(list.get(index)))) {
-			vo.setCateLv3Seq(Integer.valueOf(""+list.get(index++)));
+			map.clear();
+			map.put("seq", category.getSeq());
+			map.put("name", String.valueOf(list.get(index++)));
+			category = categoryService.getVoByName(map);
+			vo.setCateLv3Seq(category.getSeq());
 		} else {
 			index++;
 		}
 		//4 세분류 코드
 		if (!StringUtil.isBlank(String.valueOf(list.get(index)))) {
-			vo.setCateLv4Seq(Integer.valueOf(""+list.get(index++)));
+			map.clear();
+			map.put("seq", category.getSeq());
+			map.put("name", String.valueOf(list.get(index++)));
+			category = categoryService.getVoByName(map);
+			vo.setCateLv4Seq(category.getSeq());
 		} else {
 			index++;
 		}
@@ -714,35 +754,35 @@ public class ItemExcelController {
 		}
 		//7. 규격1
 		if(!StringUtil.isBlank(String.valueOf(list.get(index)))) {
-			System.out.println("규격1:"+String.valueOf(list.get(index)));
 			vo.setType1(String.valueOf(list.get(index++)));
 		}else {
 			index++;
 		}
 		//8 규격2
 		if(!StringUtil.isBlank(String.valueOf(list.get(index)))) {
-			System.out.println("규격2:"+String.valueOf(list.get(index)));
 			vo.setType2(String.valueOf(list.get(index++)));
 		}else {
 			index++;
 		}
 		//9. 규격3
 		if(!StringUtil.isBlank(String.valueOf(list.get(index)))) {
-			System.out.println("규격3:"+String.valueOf(list.get(index)));
 			vo.setType3(String.valueOf(list.get(index++)));
 		}else {
 			index++;
 		}
 		//보험코드
 		if(!StringUtil.isBlank(String.valueOf(list.get(index)))) {
-			System.out.println("보험코드:"+String.valueOf(list.get(index)));
 			vo.setInsuranceCode(String.valueOf(list.get(index++)));
 		}else {
 			index++;
 		}
 
 		//10 제조사
-		index++;
+		if(!StringUtil.isBlank(String.valueOf(list.get(index)))) {
+			vo.setMaker(String.valueOf(list.get(index++)));
+		}else {
+			index++;
+		}
 		//11 단위
 		vo.setOriginCountry(String.valueOf(list.get(index++)));
 		//12 기준재고

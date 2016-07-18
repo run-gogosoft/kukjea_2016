@@ -501,11 +501,11 @@ public class SellerController {
 	@RequestMapping("/seller/check/bizno/ajax")
 	public String checkBizNo(@RequestParam String bizNo, Model model) {
 		/* 필수 값 체크 */
-		if (StringUtil.isBlank(bizNo)) {
+		/*if (StringUtil.isBlank(bizNo)) {
 			model.addAttribute("result", "false");
 			model.addAttribute("message", "사업자 번호를 입력해주세요.");
 			return "/ajax/get-message-result.jsp";
-		}
+		}*/
 		/* 숫자 체크 */
 		if (!StringUtil.isNum(bizNo)) {
 			model.addAttribute("result", "false");
@@ -556,8 +556,6 @@ public class SellerController {
 				return "비밀번호를 20자 이하로 입력해주세요.";
 			} else if (StringUtil.getByteLength(vo.getPassword()) < 8) {
 				return "비밀번호를 8자 이상 입력해주세요.";
-			} else if ("".equals(vo.getBizNo1()) || "".equals(vo.getBizNo2()) || "".equals(vo.getBizNo3())) {
-				return "사업자번호는 반드시 입력되어야 합니다";
 			} else if (StringUtil.getByteLength(vo.getBizNo1()+vo.getBizNo2()+vo.getBizNo3()) > 10) {
 				return "사업자번호가 10Bytes를 초과하였습니다.";
 			} else if (sellerService.getBizNoCnt(vo.getBizNo1()+vo.getBizNo2()+vo.getBizNo3()) != 0) {
@@ -574,7 +572,7 @@ public class SellerController {
 				return "비밀번호는 영문/숫자/특수문자만 가능 합니다.";
 			}
 		}
-		
+		/*
 		if ("".equals(vo.getCeoName())) {
 			return "대표자명은 반드시 입력되어야 합니다";
 		} else if ("".equals(vo.getBizType())) {
@@ -602,7 +600,7 @@ public class SellerController {
 		} //else if ("".equals(vo.getAuthCategory())) {
 			//return "인증구분은 반드시 선택되어야 합니다";
 		//}
-		
+		*/
 		return null;
 	}
 

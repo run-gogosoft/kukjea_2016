@@ -16,8 +16,8 @@
 			, "name":"${item.name}"
 			, "typeCode":"${item.typeCode}"
 			, "sellPrice":"<fmt:formatNumber value="${item.sellPrice}" pattern="#,###" />"
-			, "img1":"<c:if test="${item.img1 ne ''}">/upload${fn:replace(item.img1, 'origin', 's270')}</c:if>"
-			, "img2":"<c:if test="${item.img2 ne ''}">/upload${fn:replace(item.img2, 'origin', 's270')}</c:if>"
+			, "img1":"<c:if test="${item.img1 ne ''}">/upload${fn:replace(item.img1, 'origin', 's110')}</c:if>"
+			, "img2":"<c:if test="${item.img2 ne ''}">/upload${fn:replace(item.img2, 'origin', 's110')}</c:if>"
 		}
 	</c:forEach>
 	],

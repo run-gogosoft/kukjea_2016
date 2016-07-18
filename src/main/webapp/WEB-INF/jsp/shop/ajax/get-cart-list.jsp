@@ -12,7 +12,7 @@
 		"minCnt":"${item.minCnt}"
 		, "maxCnt":"${item.maxCnt}"
 		, "seq":"${item.seq}"
-		, "img1":"/upload${fn:replace(item.img1, 'origin', 's206')}"
+		, "img1":"/upload${fn:replace(item.img1, 'origin', 's60')}"
 		, "itemSeq":"${item.itemSeq}"
 		, "name":"${item.name}"
 		<%--

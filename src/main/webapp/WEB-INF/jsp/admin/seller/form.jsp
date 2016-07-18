@@ -81,7 +81,7 @@
 							<%--수정일 경우에만 표시한다. --%>
 							<div class="form-group">
 								<label class="col-md-2 control-label">상태</label>
-								<div class="col-md-2 form-control-static">
+								<div class="col-md-4 form-control-static">
 									${vo.statusText} &nbsp;
 									<c:if test="${sessionScope.loginType eq 'A'}">
 										<%-- 관리자일 경우 상태 변경 버튼 노출 --%>
@@ -122,17 +122,6 @@
 								</div>
 							</c:if>
 						</c:if>
-							<!-- <div class="form-group">
-								<label class="col-md-2 control-label" for="nickname">상점명 <i class="fa fa-check"></i></label>
-								<div class="col-md-2">
-									<input type="hidden" id="nick_check_flag" value="N"/>
-									<input type="hidden" id="validNickName" name="validNickName" />
-									<input class="form-control" type="text" id="nickname" name="nickname" value="${vo.nickname}" maxlength="30" data-required-label="상점명"/>
-								</div>
-								<div class="col-md-1 form-control-static">
-									<button type="button" onclick="checkNickname()" class="btn btn-xs btn-warning">중복 확인</button>
-								</div>
-							</div> -->
 							
 							<div class="form-group">
 								<label class="col-md-2 control-label">면세업체구분</i></label>
@@ -146,18 +135,18 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="bizNo1">사업자 번호 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="bizNo1">사업자 번호</label>
 							<c:choose>
 								<c:when test="${vo eq null or (vo ne null and sessionScope.loginType eq 'A')}">
 								<%-- 등록일 경우, 또는 관리자 수정일 경우에만 입력 폼 --%>
 								<div class="col-md-4">
 									<input type="hidden" id="bizno_check_flag" value="N"/>
 									<div class="input-group">
-										<input class="form-control" type="text" id="bizNo1" name="bizNo1" value="${vo.bizNo1}" maxlength="3" onblur="numberCheck(this);" data-required-label="사업자 번호"/>
+										<input class="form-control" type="text" id="bizNo1" name="bizNo1" value="${vo.bizNo1}" maxlength="3" onblur="numberCheck(this);" />
 										<div class="input-group-addon" style="border:0"><strong>-</strong></div>
-										<input class="form-control" type="text" id="bizNo2" name="bizNo2" value="${vo.bizNo2}" maxlength="2" onblur="numberCheck(this);" data-required-label="사업자 번호"/>
+										<input class="form-control" type="text" id="bizNo2" name="bizNo2" value="${vo.bizNo2}" maxlength="2" onblur="numberCheck(this);" />
 										<div class="input-group-addon" style="border:0"><strong>-</strong></div>
-										<input class="form-control" type="text" id="bizNo3" name="bizNo3" value="${vo.bizNo3}" maxlength="5" onblur="numberCheck(this);" data-required-label="사업자 번호"/>
+										<input class="form-control" type="text" id="bizNo3" name="bizNo3" value="${vo.bizNo3}" maxlength="5" onblur="numberCheck(this);" />
 									</div>
 								</div>
 								<div class="col-md-1 form-control-static">
@@ -172,41 +161,41 @@
 							</c:choose>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="ceoName">대표자명 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="ceoName">대표자명</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="ceoName" name="ceoName" value="${vo.ceoName}" maxlength="10" data-required-label="대표자명"/>
+									<input class="form-control" type="text" id="ceoName" name="ceoName" value="${vo.ceoName}" maxlength="10" />
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="bizType">업태 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="bizType">업태</label>
 								<div class="col-md-3">
-									<input class="form-control" type="text" id="bizType" name="bizType" value="${vo.bizType}" maxlength="30" data-required-label="업태"/>
+									<input class="form-control" type="text" id="bizType" name="bizType" value="${vo.bizType}" maxlength="30" />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="bizKind">업종 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="bizKind">업종</label>
 								<div class="col-md-3">
-									<input class="form-control" type="text" id="bizKind" name="bizKind" value="${vo.bizKind}" maxlength="30" data-required-label="업종"/>
+									<input class="form-control" type="text" id="bizKind" name="bizKind" value="${vo.bizKind}" maxlength="30" />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="totalSales">매출액 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="totalSales">매출액</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="totalSales" name="totalSales" value="${vo.totalSales}" maxlength="20" data-required-label="매출액"/>
+									<input class="form-control" type="text" id="totalSales" name="totalSales" value="${vo.totalSales}" maxlength="20" />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="amountOfWorker">종업원수 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="amountOfWorker">종업원수</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="amountOfWorker" name="amountOfWorker" value="${vo.amountOfWorker}" maxlength="20" data-required-label="종업원수"/>
+									<input class="form-control" type="text" id="amountOfWorker" name="amountOfWorker" value="${vo.amountOfWorker}" maxlength="20" />
 								</div>
 							</div>
 
 							<div id="normalBox" class="form-group">
-								<label class="col-md-2 control-label" for="tel">대표 전화 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="tel">대표 전화</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="tel" name="tel" value="${vo.tel}" maxlength="30" data-required-label="대표 전화" placeholder="- 포함하여 입력"/>
+									<input class="form-control" type="text" id="tel" name="tel" value="${vo.tel}" maxlength="30"  placeholder="- 포함하여 입력"/>
 								</div>
 							</div>
 							<div class="form-group">
@@ -217,9 +206,9 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="addr2">회사 주소 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="addr2">회사 주소</label>
 								<div class="col-md-1">
-									<input type="text" class="form-control" id="postcode" name="postcode" value="${vo.postcode}" maxlength="5" data-required-label="우편번호" alt="우편번호" readonly />
+									<input type="text" class="form-control" id="postcode" name="postcode" value="${vo.postcode}" maxlength="5" alt="우편번호" readonly />
 								</div>
 								<div class="col-md-1 form-control-static">
 									<a href="#" onclick="CHPostCodeUtil.postWindow('open' , '#normalBox');" class="btn btn-xs btn-primary">우편번호검색</a>
@@ -228,39 +217,39 @@
 							<div class="form-group">
 								<div class="col-md-2"></div>
 								<div class="col-md-4">
-									<input class="form-control" type="text" id="addr1" name="addr1" value="${vo.addr1}" maxlength="100" placeholder="주소" data-required-label="주소" readonly/>
+									<input class="form-control" type="text" id="addr1" name="addr1" value="${vo.addr1}" maxlength="100" placeholder="주소"  readonly/>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-md-2"></div>
 								<div class="col-md-4">
-									<input class="form-control" type="text" id="addr2" name="addr2" value="${vo.addr2}" maxlength="100" placeholder="상세 주소" data-required-label="상세 주소"/>
+									<input class="form-control" type="text" id="addr2" name="addr2" value="${vo.addr2}" maxlength="100" placeholder="상세 주소" />
 								</div>
 							</div>
 							<div><hr style="margin:0"/><h4>담당자 정보</h4><hr style="margin:0 0 15px 0"/></div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="salesName">담당자명 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="salesName">담당자명</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="salesName" name="salesName" value="${vo.salesName}" maxlength="30" data-required-label="담당자명"/>
+									<input class="form-control" type="text" id="salesName" name="salesName" value="${vo.salesName}" maxlength="30" />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="salesEmail">담당자 이메일 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="salesEmail">담당자 이메일</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="salesEmail" name="salesEmail" value="${vo.salesEmail}" maxlength="100" data-required-label="담당자 이메일"/>
+									<input class="form-control" type="text" id="salesEmail" name="salesEmail" value="${vo.salesEmail}" maxlength="100" />
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="salesTel1">담당자 전화번호 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="salesTel1">담당자 전화번호</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="salesTel1" name="salesTel" value="${vo.salesTel}" maxlength="30" data-required-label="담당자 전화번호" placeholder="- 포함하여 입력"/>
+									<input class="form-control" type="text" id="salesTel1" name="salesTel" value="${vo.salesTel}" maxlength="30"  placeholder="- 포함하여 입력"/>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label" for="salesCell1">담당자 휴대폰번호 <i class="fa fa-check"></i></label>
+								<label class="col-md-2 control-label" for="salesCell1">담당자 휴대폰번호</label>
 								<div class="col-md-2">
-									<input class="form-control" type="text" id="salesCell1" name="salesCell" value="${vo.salesCell}" maxlength="30" data-required-label="담당자 휴대폰번호" placeholder="- 포함하여 입력"/>
+									<input class="form-control" type="text" id="salesCell1" name="salesCell" value="${vo.salesCell}" maxlength="30"  placeholder="- 포함하여 입력"/>
 								</div>
 							</div>
 							<div><hr style="margin:0"/><h4>정산 정보</h4><hr style="margin:0 0 15px 0"/></div>
@@ -346,68 +335,6 @@
 									<input class="form-control" type="text" name="returnAddr2" value="${vo.returnAddr2}" maxlength="100" placeholder="반품 상세 주소"/>
 								</div>
 							</div>
-							<!--
-							<div><hr style="margin:0"/><h4>기타 정보</h4><hr style="margin:0 0 15px 0"/></div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">공급사 소개</label>
-								<div class="col-md-5">
-									<textarea class="form-control" name="intro" rows="8">${vo.intro}</textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">주요 취급상품</label>
-								<div class="col-md-5">
-									<textarea class="form-control" name="mainItem" rows="8">${vo.mainItem}</textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">사회적 경제활동</label>
-								<div class="col-md-5">
-									<textarea class="form-control" name="socialActivity" rows="8">${vo.socialActivity}</textarea>
-								</div>
-							</div>
-							-->
-							<div><hr style="margin:0"/><span style="font-size:18px; color:inherit">파일 첨부</span><span style="margin-left:10px; font-size:12px; color:#A94442">최대 250MB까지 업로드하실 수 있습니다</span><hr style="margin:0 0 15px 0"/></div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">파일 첨부</label>
-								<div class="col-md-5">
-									<div id="fileDiv">
-				            <div id="FileList" style="padding-left: 15px;">
-				                <c:if test="${vo eq null}">
-				                    <div>
-				                        <div class="form-group">
-				                            <label></label>
-				                            <i class="fa fa-2x fa-cloud-upload text-muted" style="float:left; margin-top:10px;"></i>&nbsp;
-				                            <input type="file" onchange="checkFileSize(this);" id="file1" name="file1" class="text-muted" style="display:inline-block; width:262px;height: auto;padding: 6px 16px; border: 3px #ddd dotted;border-radius:10px;"/>
-				                        </div>
-				                    </div>
-				                </c:if>
-				                <c:if test="${vo ne null}">
-				                    <c:forEach var="item" items="${file}">
-				                        <div class="file-wrap${item.num}">
-				                            <div class="form-group">
-				                                <span class="btn btn-default btn-file">
-				                                    <i class="fa fa-2x fa-cloud-upload text-muted" style="float:left; margin-top:10px;"></i>&nbsp;
-				                                    <input type="file" onchange="checkFileSize(this);" id="file${item.num}" name="file${item.num}" class="text-muted" style="display:inline-block; width:262px; height: auto;padding: 6px 16px; border: 3px #ddd dotted;border-radius:10px;"/>
-				                                </span>
-				                                <label></label>
-				                                <p class="help-block" style="padding-left: 40px">
-				                                        ${item.filename} 파일이 등록되어 있습니다
-					                                  <a href="/admin/seller/file/download/proc?seq=${vo.seq}&num=${item.num}" target="zeroframe">[다운로드]</a>
-				                                    <a href="/admin/seller/file/delete/proc?seq=${vo.seq}&num=${item.num}" onclick="return confirm('정말로 이 파일을 삭제하시겠습니까?');" target="zeroframe" class="text-danger">[삭제]</a>
-				                                </p>
-				                            </div>
-				                        </div>
-				                    </c:forEach>
-				                </c:if>
-				            </div>
-				            <div>
-				                <button type="button" onclick="addFilePane()" class="btn btn-link btn-sm"><i class="fa fa-plus"></i> 항목 더 추가하기</button>
-				            </div>
-					      </div>
-							</div>
-						</div>
-
 						<div class="box-footer text-center">
 							<button type="submit" class="btn btn-info">${vo eq null ? '등록하기':'수정하기'}</button>
 							<button type="button" class="btn btn-default" onclick="location.href='/admin/seller/list/S'">목록보기</button>
@@ -557,7 +484,11 @@ var callbackProc = function(msg) {
 					return false;
 				}
 				// 사업자 중복 체크
-				if($("#bizno_check_flag").val() != "Y") {
+				var bizNo1 = $.trim($("#bizNo1").val());
+				var bizNo2 = $.trim($("#bizNo2").val());
+				var bizNo3 = $.trim($("#bizNo3").val());
+
+				if(!(bizNo1 == "" || bizNo2 == "" || bizNo3 == "") && ($("#bizno_check_flag").val() != "Y") ){
 					$.msgbox("사업자번호 중복 확인 바랍니다.");
 					return false;
 				}

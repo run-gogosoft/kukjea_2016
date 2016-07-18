@@ -13,7 +13,7 @@
 			"seq":"${item.seq}",
 			"itemSeq":"${item.itemSeq}",
 			"itemName":"${item.itemName}",
-			"img1":"/upload${fn:replace(item.img1, 'origin', 's206')}",
+			"img1":"/upload${fn:replace(item.img1, 'origin', 's60')}",
 			"mallName":"${item.mallName}",
 			"review":"${item.review}",
 			"goodGrade":"<smp:reviewStar max="5" value="${item.goodGrade}" />",

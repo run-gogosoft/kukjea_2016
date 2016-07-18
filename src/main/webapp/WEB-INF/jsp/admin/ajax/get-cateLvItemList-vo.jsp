@@ -11,7 +11,7 @@
 	{
 	"seq":"${item.seq}"
 	, "itemSeq":"${item.itemSeq}"
-	, "img1":"<c:if test="${item.img1 ne ''}">/upload${fn:replace(item.img1, 'origin', 's206')}</c:if>"
+	, "img1":"<c:if test="${item.img1 ne ''}">/upload${fn:replace(item.img1, 'origin', 's60')}</c:if>"
 	, "displaySeq":"${item.displaySeq}"
 	, "listTitle":"${ item.listTitle }"
 	, "orderNo":"${item.orderNo}"

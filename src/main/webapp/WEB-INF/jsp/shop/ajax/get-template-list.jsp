@@ -15,7 +15,7 @@
 		, "itemName":"${item.itemName}"
 		, "typeCode":"${item.typeCode}"
 		, "sellPrice":"<fmt:formatNumber value="${item.sellPrice}" pattern="#,###" />"
-		, "img1":"<c:if test="${item.img1 ne ''}">${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's270')}</c:if>"
+		, "img1":"<c:if test="${item.img1 ne ''}">${const.IMG_DOMAIN}${const.UPLOAD_PATH}${fn:replace(item.img1, 'origin', 's110')}</c:if>"
 		, "limitCnt":"${item.limitCnt}"
 		, "index":"${status.index}"
 		, "itemCount":"${status.index}"

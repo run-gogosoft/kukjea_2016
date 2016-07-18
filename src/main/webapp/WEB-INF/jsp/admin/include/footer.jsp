@@ -10,7 +10,7 @@
 <iframe id="zeroframe" name="zeroframe" width="0" height="0" style="display:none"></iframe>
 
 <!-- jQuery 2.1.4 -->
-<script src="/assets/admin_lte2/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script src="/assets/admin_lte2/plugins/jQuery/jquery-1.12.4.min.js"></script>
 <!-- jQuery templete -->
 <script src="/assets/js/libs/jquery.tmpl.js"></script>
 <!-- jQuery UI 1.11.4 -->

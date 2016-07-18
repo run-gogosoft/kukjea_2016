@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -39,6 +40,9 @@ public class CategoryServiceImpl implements CategoryService {
 	public CategoryVo getVo(Integer seq) {
 		return categoryDao.getVo(seq);
 	}
+
+	@Override
+	public CategoryVo getVoByName(Map name) { return categoryDao.getVoByName(name);}
 
 	@Override
 	public boolean insertVo(CategoryVo vo) {

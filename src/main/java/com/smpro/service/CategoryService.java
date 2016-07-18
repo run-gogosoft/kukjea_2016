@@ -5,6 +5,7 @@ import com.smpro.vo.ItemVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface CategoryService {
@@ -15,6 +16,8 @@ public interface CategoryService {
 	public List<CategoryVo> getListForSearch(ItemVo vo);
 
 	public CategoryVo getVo(Integer seq);
+
+	public CategoryVo getVoByName(Map name);
 
 	public boolean insertVo(CategoryVo vo);
 

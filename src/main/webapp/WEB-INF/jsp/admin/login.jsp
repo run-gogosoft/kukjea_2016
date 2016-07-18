@@ -57,16 +57,14 @@
 				</div>
 				<button type="submit" class="btn btn-primary btn-flat col-xs-5 btn-login">Login</button>
 				<div class="row text-center">
-					<div class="col-xs-7">
+					<div class="col-xs-6">
 						<div class="checkbox icheck">
-							<label class="pull-left"><input type="checkbox" id="rememberLoginId" name="rememberLoginId"/> 아이디 기억하기</label>
+							<label ><input type="checkbox" id="rememberLoginId" name="rememberLoginId"/> 아이디 기억하기</label>
 						</div>
 					</div>
-					<div class="col-xs-5">
+					<div class="col-xs-6">
 						<div class="checkbox icheck">
-							<label class="text-muted" onclick="CHFindPassUtil.IdWriteButton();">
-								아이디/비밀번호 찾기
-							</label>
+							<label class="text-muted" onclick="CHFindPassUtil.IdWriteButton();">아이디/비밀번호 찾기</label>
 						</div>
 					</div>
 				</div>
@@ -176,8 +174,8 @@
 <!--제로프레임 -->
 <iframe id="zeroframe" name="zeroframe" width="0" height="0" frameborder="0"></iframe>
 
-<!-- jQuery 2.1.4 -->
-<script src="/assets/admin_lte2/plugins/jQuery/jQuery-2.1.4.min.js" type="text/javascript"></script>
+<!-- jQuery 1.12.4 -->
+<script src="/assets/admin_lte2/plugins/jQuery/jQuery-1.12.4.min.js" type="text/javascript"></script>
 <!-- Bootstrap 3.3.2 JS -->
 <script src="/assets/admin_lte2/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <!-- iCheck -->

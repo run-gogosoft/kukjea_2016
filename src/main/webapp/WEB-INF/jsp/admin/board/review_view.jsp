@@ -50,7 +50,7 @@
 									</tr>
 									<tr>
 										<th>상품번호</th>
-										<td><div style="float:left;"><img src="/upload${fn:replace(vo.img1, 'origin', 's206')}" style="width:70px;" alt=""/></div><div style="float:left;width:430px;padding:12px 0 0 10px;">${vo.itemSeq}<br/>${vo.itemName}</div></td>
+										<td><div style="float:left;"><img src="/upload${fn:replace(vo.img1, 'origin', 's60')}" style="width:70px;" alt=""/></div><div style="float:left;width:430px;padding:12px 0 0 10px;">${vo.itemSeq}<br/>${vo.itemName}</div></td>
 									</tr>
 									<tr>
 										<th>쇼핑몰</th>

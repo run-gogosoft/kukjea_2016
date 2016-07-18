@@ -581,10 +581,10 @@
   });
   
   $(function() {
-    if (parseFloat($.fn.jquery) > 1.2) {
+    //if (parseFloat($.fn.jquery) > 1.2) {
       $.MsgBoxObject.create();
-    } else {
-      throw "The jQuery version that was loaded is too old. MsgBox requires jQuery 1.3+";
-    }
+    //} else {
+    //  throw "The jQuery version that was loaded is too old. MsgBox requires jQuery 1.3+";
+    //}
   });
 })(jQuery);

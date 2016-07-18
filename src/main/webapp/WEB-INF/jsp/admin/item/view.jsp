@@ -135,21 +135,21 @@
 												</a>
 											</div>
 											<div>
-												<a href="/upload${fn:replace(vo.img1, 'origin', 's206')}" target="_blank">
-													<img src="/upload${fn:replace(vo.img1, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-													<br/>206x206
+												<a href="/upload${fn:replace(vo.img1, 'origin', 's60')}" target="_blank">
+													<img src="/upload${fn:replace(vo.img1, 'origin', 's60')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<br/>60x60
 												</a>
 											</div>
 											<div>
-												<a href="/upload${fn:replace(vo.img1, 'origin', 's270')}" target="_blank">
-													<img src="/upload${fn:replace(vo.img1, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-													<br/>270x270
+												<a href="/upload${fn:replace(vo.img1, 'origin', 's110')}" target="_blank">
+													<img src="/upload${fn:replace(vo.img1, 'origin', 's110')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<br/>110x110
 												</a>
 											</div>
 											<div>
-												<a href="/upload${fn:replace(vo.img1, 'origin', 's500')}" target="_blank">
-													<img src="/upload${fn:replace(vo.img1, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-													<br/>500x500
+												<a href="/upload${fn:replace(vo.img1, 'origin', 's170')}" target="_blank">
+													<img src="/upload${fn:replace(vo.img1, 'origin', 's170')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+													<br/>170x170
 												</a>
 											</div>
 											<div style="margin-left:20px;">
@@ -167,21 +167,21 @@
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img2, 'origin', 's206')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img2, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>206x206
+													<a href="/upload${fn:replace(vo.img2, 'origin', 's60')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img2, 'origin', 's60')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>60x60
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img2, 'origin', 's270')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img2, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>270x270
+													<a href="/upload${fn:replace(vo.img2, 'origin', 's110')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img2, 'origin', 's110')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>110x110
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img2, 'origin', 's500')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img2, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>500x500
+													<a href="/upload${fn:replace(vo.img2, 'origin', 's170')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img2, 'origin', 's170')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>170x170
 													</a>
 												</div>
 												<div><button type="button" class="btn btn-default" onclick="convertAgain('${vo.img2}')">이미지 다시 변환하기</button></div>
@@ -197,21 +197,21 @@
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img3, 'origin', 's206')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img3, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>206x206
+													<a href="/upload${fn:replace(vo.img3, 'origin', 's60')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img3, 'origin', 's60')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>60x60
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img3, 'origin', 's270')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img3, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>270x270
+													<a href="/upload${fn:replace(vo.img3, 'origin', 's110')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img3, 'origin', 's110')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>110x110
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img3, 'origin', 's500')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img3, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>500x500
+													<a href="/upload${fn:replace(vo.img3, 'origin', 's170')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img3, 'origin', 's170')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>170x170
 													</a>
 												</div>
 												<div><button type="button" class="btn btn-default" onclick="convertAgain('${vo.img3}')">이미지 다시 변환하기</button></div>
@@ -227,21 +227,21 @@
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img4, 'origin', 's206')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img4, 'origin', 's206')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>206x206
+													<a href="/upload${fn:replace(vo.img4, 'origin', 's60')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img4, 'origin', 's60')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>60x60
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img4, 'origin', 's270')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img4, 'origin', 's270')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>270x270
+													<a href="/upload${fn:replace(vo.img4, 'origin', 's110')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img4, 'origin', 's110')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>110x110
 													</a>
 												</div>
 												<div>
-													<a href="/upload${fn:replace(vo.img4, 'origin', 's500')}" target="_blank">
-														<img src="/upload${fn:replace(vo.img4, 'origin', 's500')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
-														<br/>500x500
+													<a href="/upload${fn:replace(vo.img4, 'origin', 's170')}" target="_blank">
+														<img src="/upload${fn:replace(vo.img4, 'origin', 's170')}" alt="" width="120px" height="120px" style="width:120px;height:120px;margin-right:5px;"/>
+														<br/>170x170
 													</a>
 												</div>
 												<div><button type="button" class="btn btn-default" onclick="convertAgain('${vo.img4}')">이미지 다시 변환하기</button></div>
@@ -345,7 +345,7 @@
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(optionList)==0 }">
-								<tr><td class="text-center" colspan="5">조회된 데이터가 없습니다.</td></tr>
+								<tr><td class="text-center" colspan="7">조회된 데이터가 없습니다.</td></tr>
 							</c:if>
 							</tbody>
 						</table>

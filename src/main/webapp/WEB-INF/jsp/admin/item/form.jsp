@@ -180,7 +180,6 @@
 								<label class="col-md-2 control-label">상품 구분 <i class="fa fa-check"></i></label>
 								<div class="radio">
 									<label><input type="radio" onclick="setTypeCode()" name="typeCode" value="N" ${vo eq null or vo.typeCode eq 'N' ? "checked":""} alt="상품 구분" /> 일반 상품</label>
-									<label><input type="radio" onclick="setTypeCode()" name="typeCode" value="E" ${vo.typeCode eq 'E' ? "checked":""} alt="상품 구분" /> 견적 상품</label>
 								</div>
 							</div>
 							<div class="form-group">
@@ -217,9 +216,16 @@
 							</div>
 
 							<div class="form-group">
+								<label class="col-md-2 control-label">제조사</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" name="maker" value="${vo.maker}" maxlength="16" />
+								</div>
+							</div>
+
+							<div class="form-group">
 								<label class="col-md-2 control-label">진료 과목</label>
 								<div class="col-md-3">
-									<input type="text" class="form-control" name="subejectType" value="${vo.subjectType}" maxlength="16" />
+									<input type="text" class="form-control" name="subjectType" value="${vo.subjectType}" maxlength="16" />
 								</div>
 							</div>
 
@@ -399,7 +405,7 @@
 									<input type="text" class="form-control" name="detailAlt3" value="${vo.detailAlt3}"/>
 								</div>
 							</div>
-
+							<c:if test="${sessionScope.loginType ne 'A'}">
 							<div class="form-group">
 								<label class="col-md-2 control-label"></label>
 								<div class="col-md-10">
@@ -428,7 +434,7 @@
 										<tr class="child" data-pk="<%="${idx}"%>">
 											<th class="text-center">
 												병원몰
-												<input type="hidden" name="optionName" value="병원몰"/>
+												<input type="hidden" name="optionName" value="병원몰" readonly="readonly"/>
 												<input type="hidden" name="showFlag" value="Y"/>
 											</th>
 											<th class="text-center">
@@ -484,11 +490,11 @@
 												<input type="hidden" name="optionPrice" value="<%="${optionPrice}"%>"/>
 											</td>
 											<td class="text-center">
-												0 원
+												<%="${salePrice}"%> 원
 												<input type="hidden" name="salePrice" value="0"/>
 											</td>
 											<td class="text-center">
-												2016-7-31
+												<%="${salePeriod}"%>
 												<input type="hidden" name="salePeriod" value="2016-7-31"/>
 											</td>
 											<td class="text-center">
@@ -511,7 +517,7 @@
 										{{/each}}
 									</script>
 
-
+									<c:if test="${vo ne null}">
 									<table class="table table-bordered">
 										<colgroup>
 											<col style="width:15%;"/>
@@ -532,27 +538,25 @@
 											<th>할인기간</th>
 											<th>재고량</th>
 											<th>재고관리</th>
-											<th>${fn:length(optionList)}</th>
+											<th></th>
 										</tr>
 										</thead>
 										<tbody id="eb-option-list">
-										<c:if test="${vo eq null}">
-											<tr><td class="muted text-center" colspan="5">
-												가격을 추가해주세요
-											</td></tr>
-										</c:if>
-										<c:if test="${vo ne null}">
-											<tr><td class="muted text-center" colspan="7">
-												데이터를 불러오고 있습니다 <img src="/assets/img/common/ajaxloader.gif" alt="" />
-											</td></tr>
-										</c:if>
+
+
+										<tr><td class="muted text-center" colspan="7">
+											데이터를 불러오고 있습니다 <img src="/assets/img/common/ajaxloader.gif" alt="" />
+										</td></tr>
+
 										</tbody>
 									</table>
+									</c:if>
 									<c:if test="${vo ne null}">
 										<button type="button" id="OptionAddBtn" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품옵션추가</button>
 									</c:if>
 								</div>
 							</div>
+							</c:if>
 						</div><!-- /.box-body -->
 						<div id="submitButtons" class="box-footer text-center">
 							<c:if test="${vo eq null}">
@@ -560,8 +564,6 @@
 							</c:if>
 							<c:if test="${vo ne null}">
 								<button type="button" class="btn btn-primary" id="mod" onclick="doSubmit(this)">수정하기</button>
-								&nbsp;&nbsp;
-								<button type="button" class="btn btn-info" id="copyBtn" onclick="doSubmit(this)">상품 복사하기</button>
 							</c:if>
 							&nbsp;&nbsp;
 							<button type="button" class="btn btn-default" onclick="history.go(-2)">목록보기</button>
@@ -633,7 +635,7 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">쇼핑몰명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="optionName" value="" alt="쇼핑몰명" />
+						<input type="text" class="form-control" name="optionName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
 						<input type="hidden" name="showFlag" value="Y" />
 					</div>
 				</div>
@@ -656,7 +658,7 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">상품 가격</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="optionPrice" value="0" alt="추가금액" onblur="numberCheck(this);"/>
+						<input type="text" class="form-control" name="optionPrice" value="0" alt="금액" onblur="numberCheck(this);"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -665,10 +667,14 @@
 						<input type="text" class="form-control" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);"/>
 					</div>
 				</div>
+
 				<div class="form-group">
 					<label class="col-md-3 control-label">할인 기간</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="salePeriod" value="0" alt="할인기간" onblur="numberCheck(this);"/>
+						<div class="input-group">
+							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							<input class="form-control datepicker"  name="salePeriod" value="${salePeriod}" >
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
@@ -699,15 +705,41 @@
 			<div class="modal-body">
 				<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
 				<div class="form-group">
+					<label class="col-md-3 control-label">쇼핑몰명</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="valueName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+					</div>
+				</div>
+
+				<div class="form-group">
 					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="valueName" value="" alt="고급자명" />
+						<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>"  alt="고급자명"  readonly="readonly"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">추가가격</label>
+					<label class="col-md-3 control-label">상품 가격</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="optionPrice" value="0" alt="추가금액" onblur="numberCheck(this);"/>
+						<input type="text" class="form-control" name="optionPrice" value="0" alt="금액" onblur="numberCheck(this);"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">할인 가격</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">할인 기간</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="salePeriod" value="0" alt="할인기간" onblur="numberCheck(this);"/>
+					</div>
+
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							<input class="form-control datepicker" type="text" id="salePeriod" name="salePeriod" value="${salePeriod}">
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
@@ -737,6 +769,11 @@
 			<div class="modal-body">
 				<legend>"<%="${optionName}"%>" 수정하기</legend>
 				<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
+				<label class="col-md-3 control-label">쇼핑몰명</label>
+				<div class="col-md-9">
+					<input type="text" class="form-control" name="optionName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+					<input type="hidden" name="showFlag" value="Y" />
+				</div>
 				<div class="form-group">
 					<label class="col-md-3 control-label">상품옵션명</label>
 					<div class="col-md-9">
@@ -770,6 +807,15 @@
 			<div class="modal-body">
 				<legend>"<%="${valueName}"%>" 항목 수정하기</legend>
 				<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
+
+
+				<div class="form-group">
+					<label class="col-md-3 control-label">쇼핑몰명</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="optionName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+					</div>
+				</div>
+
 				<div class="form-group">
 					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
@@ -777,9 +823,25 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">가격</label>
+					<label class="col-md-3 control-label">상품 가격</label>
 					<div class="col-md-9">
 						<input type="text" class="form-control" name="optionPrice" value="<%="${optionPrice}"%>" alt="추가금액" onblur="numberCheck(this);"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">할인 가격</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="salePrice" value="<%="${salePrice}"%>" alt="할인가격" onblur="numberCheck(this);"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">할인 기간</label>
+					<div class="col-md-4">
+						<div class="input-group">
+							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							<input class="form-control datepicker" type="text"  name="salePeriod" value="<%="${optionPeriod}"%>" >
+
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
@@ -870,11 +932,11 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-body">
-				<legend>저장하고 있습니다</legend>
+				<legend>저장이 완료되었습니다.</legend>
 				<div class="progress progress-striped active">
 					<div class="bar" style="width:0%;"></div>
 				</div>
-				<p class="text-right">작업이 끝날 때까지 조금만 기다려 주세요</p>
+				<p class="text-right"><a href="/admin/item/list">리스트 페이지로 이동하기</a></p>
 			</div>
 		</div>
 	</div>
@@ -1016,7 +1078,7 @@
 		copyBtnId = $(obj).attr('id');
 		$('#validation-form').submit();
 	}
-	
+
 	var submitProc = function(obj) {		
 		var flag = true;
 		<c:if test="${vo eq null}">

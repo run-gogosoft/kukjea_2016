@@ -170,8 +170,8 @@
 					<form id="validation-form" method="post" action="/admin/item/excel/upload" target="zeroframe" class="form-horizontal" onsubmit="return submitProc(this)" enctype="multipart/form-data">
 						<div class="box-body">
 					<c:choose>
-						<c:when test="${sessionScope.loginType eq 'S'}">
-						<input type="hidden" name="sellerSeq" value="${sessionScope.loginSeq}" readonly="readonly" alt="입점업체" />
+						<c:when test="${sessionScope.loginType eq 'A'}">
+						<input type="hidden" name="sellerSeq" value="${sessionScope.loginSeq}" readonly="readonly" alt="관리자" />
 						<div class="form-group">
 							<label class="col-md-2 control-label">샘플 다운로드</label>
 							<div class="col-md-10">
@@ -239,7 +239,11 @@
 								<input style="height:30px;width:400px;" type="file" name="file[0]" onchange="checkFileSize(this)" alt="엑셀 파일 업로드">
 								<input type="hidden" name="idx" value="1" />
 							</div>
-							<div class="col-md-2">
+
+						</div>
+						<div class="form-group">
+							<label class="col-md-2 control-label"></label>
+							<div class="col-md-3">
 								<button type="button" class="btn btn-sm btn-success fileinput-button" onclick="doSubmit();">
 									<i class="fa fa-fw fa-plus"></i>
 									<span>엑셀 파일 업로드하기...</span>

@@ -89,7 +89,7 @@
 							<li>
 								<a href="/shop/search?seq=${itemList.itemSeq}">
 									<span class="thumb">
-										<img src="/upload${fn:replace(itemList.img1, 'origin', 's270')}" onerror="noImage(this)" alt="" />
+										<img src="/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="" />
 										<%-- span class="icons">
 											<span class="icon icon_txt icon_txt_gray">무료배송</span>
 											<span class="icon icon_txt icon_txt_yellow">10+1</span>
@@ -113,7 +113,7 @@
 							<li>
 								<a href="/shop/search?seq=${itemList.seq}">
 									<span class="thumb">
-										<img src="/upload${fn:replace(itemList.img1, 'origin', 's270')}" onerror="noImage(this)" alt="" />
+										<img src="/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="" />
 										<%-- span class="icons">
 											<span class="icon icon_txt icon_txt_gray">무료배송</span>
 											<span class="icon icon_txt icon_txt_yellow">10+1</span>
@@ -213,96 +213,7 @@
 								<th scope="col" class="col9"><div><input type="checkbox" title="상품 전체 선택" class="check" /></div></th>
 							</tr>
 							</thead>
-							<tbody>
-							<tr>
-								<td class="col1"><div>2015-09-01</div></td>
-								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
-								<td class="col3"><div>1cc 26G</div></td>
-								<td class="col4"><div>한국백신</div></td>
-								<td class="col5"><div>100ea</div></td>
-								<td class="col6"><div>1</div></td>
-								<td class="col7"><div>5,000원</div></td>
-								<td class="col8"><div>길동메디칼</div></td>
-								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
-							</tr>
-							<tr>
-								<td class="col1"><div>2015-09-01</div></td>
-								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
-								<td class="col3"><div>1cc 26G</div></td>
-								<td class="col4"><div>한국백신</div></td>
-								<td class="col5"><div>100ea</div></td>
-								<td class="col6"><div>1</div></td>
-								<td class="col7"><div>5,000원</div></td>
-								<td class="col8"><div>길동메디칼</div></td>
-								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
-							</tr>
-							<tr>
-								<td class="col1"><div>2015-09-01</div></td>
-								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
-								<td class="col3"><div>1cc 26G</div></td>
-								<td class="col4"><div>한국백신</div></td>
-								<td class="col5"><div>100ea</div></td>
-								<td class="col6"><div>1</div></td>
-								<td class="col7"><div>5,000원</div></td>
-								<td class="col8"><div>길동메디칼</div></td>
-								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
-							</tr>
-							<tr>
-								<td class="col1"><div>2015-09-01</div></td>
-								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
-								<td class="col3"><div>1cc 26G</div></td>
-								<td class="col4"><div>한국백신</div></td>
-								<td class="col5"><div>100ea</div></td>
-								<td class="col6"><div>1</div></td>
-								<td class="col7"><div>5,000원</div></td>
-								<td class="col8"><div>길동메디칼</div></td>
-								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
-							</tr>
-							<tr>
-								<td class="col1"><div>2015-09-01</div></td>
-								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
-								<td class="col3"><div>1cc 26G</div></td>
-								<td class="col4"><div>한국백신</div></td>
-								<td class="col5"><div>100ea</div></td>
-								<td class="col6"><div>1</div></td>
-								<td class="col7"><div>5,000원</div></td>
-								<td class="col8"><div>길동메디칼</div></td>
-								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
-							</tr>
-							<tr>
-								<td class="col1"><div>2015-09-01</div></td>
-								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
-								<td class="col3"><div>1cc 26G</div></td>
-								<td class="col4"><div>한국백신</div></td>
-								<td class="col5"><div>100ea</div></td>
-								<td class="col6"><div>1</div></td>
-								<td class="col7"><div>5,000원</div></td>
-								<td class="col8"><div>길동메디칼</div></td>
-								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
-							</tr>
-							<tr>
-								<td class="col1"><div>2015-09-01</div></td>
-								<td class="col2"><div><a href="#">일회용주사기</a></div></td>
-								<td class="col3"><div>1cc 26G</div></td>
-								<td class="col4"><div>한국백신</div></td>
-								<td class="col5"><div>100ea</div></td>
-								<td class="col6"><div>1</div></td>
-								<td class="col7"><div>5,000원</div></td>
-								<td class="col8"><div>길동메디칼</div></td>
-								<td class="col9"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
-							</tr>
-							<tr>
-								<td class="col1"><div>&nbsp;</div></td>
-								<td class="col2"><div>&nbsp;</div></td>
-								<td class="col3"><div>&nbsp;</div></td>
-								<td class="col4"><div>&nbsp;</div></td>
-								<td class="col5"><div>&nbsp;</div></td>
-								<td class="col6"><div>&nbsp;</div></td>
-								<td class="col7"><div>&nbsp;</div></td>
-								<td class="col8"><div>&nbsp;</div></td>
-								<td class="col9"><div>&nbsp;</div></td>
-							</tr>
-							</tbody>
+							<tbody></tbody>
 						</table>
 					</div>
 				</div>

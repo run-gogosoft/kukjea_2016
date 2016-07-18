@@ -142,7 +142,7 @@
                             <tr>
                                 <td>
                                     <c:if test="${item.img1 ne ''}">
-                                        <a href="/shop/search?seq=${item.itemSeq}"><img src="/upload${fn:replace(item.img1, 'origin', 's206')}" style="width:70px;height:70px;border:1px solid #d7d7d7;" alt="${item.itemName}" onerror="noImage(this)" /></a>
+                                        <a href="/shop/search?seq=${item.itemSeq}"><img src="/upload${fn:replace(item.img1, 'origin', 's60')}" style="width:70px;height:70px;border:1px solid #d7d7d7;" alt="${item.itemName}" onerror="noImage(this)" /></a>
                                     </c:if>
                                 </td>
                                 <td class="text-left item-name">

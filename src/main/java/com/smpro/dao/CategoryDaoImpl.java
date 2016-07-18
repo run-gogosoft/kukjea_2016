@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CategoryDaoImpl implements CategoryDao {
@@ -31,6 +32,11 @@ public class CategoryDaoImpl implements CategoryDao {
 	@Override
 	public CategoryVo getVo(Integer seq) {
 		return sqlSession.selectOne("category.getVo", seq);
+	}
+
+	@Override
+	public CategoryVo getVoByName(Map name) {
+		return sqlSession.selectOne("category.getVoByName", name);
 	}
 
 	@Override

@@ -5,6 +5,6 @@
 <% pageContext.setAttribute("newLine","\n"); %>
 <% pageContext.setAttribute("carriageReturn","\r"); %>
 {
-	"img1" : "/upload${fn:replace(vo.img1, '/origin/', '/s270/')}"
+	"img1" : "/upload${fn:replace(vo.img1, '/origin/', '/s110/')}"
 	, "name" : "${vo.name}"
 }

@@ -94,7 +94,7 @@
                                 <input type="checkbox" class="check" title="상품 선택" />
                                 <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
                                     <span class="thumb">
-                                        <img src="/upload${fn:replace(item.img1, 'origin', 's270')}" alt="" onerror="noImage(this)" />
+                                        <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
                                         <span class="icons">
                                             <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
                                             <%-- span class="icon icon_txt icon_txt_yellow">10+1</span>
@@ -145,7 +145,7 @@
                                 <c:if test="${vo.listStyle eq 'all'}"><td>
                                     <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
                                     <span class="thumb">
-                                        <img src="/upload${fn:replace(item.img1, 'origin', 's270')}" alt="" onerror="noImage(this)" />
+                                        <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
                                     </span>
                                     </a>
                                 </td></c:if>

@@ -100,7 +100,7 @@
 									</td>
 									<td class="text-center">
 										<c:if test="${item.img1 ne ''}">
-											<img src="/upload${fn:replace(item.img1, 'origin', 's206')}" alt="" style="width:60px;height:60px" />
+											<img src="/upload${fn:replace(item.img1, 'origin', 's60')}" alt="" style="width:60px;height:60px" />
 										</c:if>
 									</td>
 									<td>

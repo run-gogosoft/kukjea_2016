@@ -16,7 +16,7 @@ public class Const {
 	public final static String AJAX_PAGE = "/_proc/ajax_message.jsp";
 
 	/** 이미지 매직으로 변환하는 이미지 사이즈들 */
-	public static final int[] ITEM_IMAGE_SIZE = { 206, 270, 500 };
+	public static final int[] ITEM_IMAGE_SIZE = { 60, 110, 170 };
 	/** 이미지 매직 경로 */
 	public static final String IMAGE_MAGICK_PATH;
 	/** 장바구니와 주문 최고 수량 */

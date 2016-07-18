@@ -51,6 +51,23 @@
 		FROM sm_item_category
 		WHERE seq=#{value}
 	</select>
+
+	<select id="getVoByName" parameterType="Map" resultType="com.smpro.vo.CategoryVo">
+		SELECT
+		seq
+		, parent_seq AS parentSeq
+		, cate_name AS name
+		, order_no AS orderNo
+		, depth
+		, show_flag AS showFlag
+		, mod_date AS modDate
+		, reg_date AS regDate
+		FROM sm_item_category
+		WHERE
+			cate_name=#{name}
+			AND parent_seq=#{seq}
+	</select>
+
 	<select id="getLv1Value" parameterType="int" resultType="int">
 		SELECT
 			COUNT(*)

@@ -252,7 +252,7 @@
                                         <%--<a href="/shop/detail/${item.integrationSeq}" target="_blank" class="btn btn-mini" data-toggle="tooltip" title="미리보기"><i class="icon-search"></i></a>--%>
 									</td>
 									<td style="width:5%; border-right: none;" class="text-center">
-										<img src="/upload${fn:replace(item.img1, 'origin', 's206')}" style="width:70px;" alt=""/>
+										<img src="/upload${fn:replace(item.img1, 'origin', 's60')}" style="width:70px;" alt=""/>
 									</td>
 									<td style="width:20%;" class="text-center">${ item.itemName }</td>
 									<td class="text-center" ${fn:length(mallList) <= 1 ? "style='display:none'":""}>${item.mallName}</td>

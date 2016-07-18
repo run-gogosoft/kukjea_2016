@@ -5,6 +5,7 @@ import com.smpro.vo.ItemVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface CategoryDao {
@@ -15,6 +16,8 @@ public interface CategoryDao {
 	public List<CategoryVo> getListForSearch(ItemVo vo);
 
 	public CategoryVo getVo(Integer seq);
+
+	public CategoryVo getVoByName(Map name);
 
 	public int insertVo(CategoryVo vo);
 

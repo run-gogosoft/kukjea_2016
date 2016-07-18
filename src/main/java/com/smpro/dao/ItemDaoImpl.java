@@ -40,7 +40,8 @@ public class ItemDaoImpl implements ItemDao {
 
 	@Override
 	public OrderVo getVoForOrderReg(ItemVo vo) {
-		return sqlSession.selectOne("item.getVoForOrderReg", vo);
+		return sqlSession.selectOne("item.getVoFo, mod_date\n" +
+				"\t\t\t, reg_daterOrderReg", vo);
 	}
 
 	@Override

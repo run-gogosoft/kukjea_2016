@@ -218,7 +218,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">상품명</label>
 								<div class="col-md-10 form-control-static">
-									<img src="/upload${fn:replace(vo.img1, 'origin', 's206')}" style="width:70px;"/>
+									<img src="/upload${fn:replace(vo.img1, 'origin', 's60')}" style="width:70px;"/>
 									<a href="/admin/item/view/${ vo.integrationSeq }" target="_blank">${vo.itemName}</a>
 								</div>
 							</div>

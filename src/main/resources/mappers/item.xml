@@ -456,6 +456,11 @@
 			type_code,
 			auth_category,
 			img_banner_code,
+		    type1,
+			type2,
+			type3,
+			subject_type,
+			insurance_code,
 			mod_date,
 			reg_date
 		) VALUES (
@@ -503,6 +508,11 @@
 			#{typeCode},
 			#{authCategory},
 			#{imgBannerCode},
+			#{type1},
+			#{type2},
+			#{type3},
+			#{subjectType},
+			#{insuranceCode},
 			NOW(),
 			NOW()
 		)
@@ -522,6 +532,11 @@
 			, detail2_alt
 			, detail3_alt
 			, use_code
+		    , type1
+			, type2
+			, type3
+			, subject_type
+			, insurance_code
 			, mod_date
 			, reg_date
 		) VALUES (
@@ -537,6 +552,11 @@
 			, #{detailAlt2}
 			, #{detailAlt3}
 			, #{useCode}
+			, #{type1}
+			, #{type2}
+			, #{type3}
+			, #{subjectType}
+			, #{insuranceCode}
 			, NOW()
 			, NOW()
 		)
@@ -600,6 +620,11 @@
 			, img4=#{img4}
 		</if>
 		, tax_code=#{taxCode}
+		, type1=#{type1}
+		, type2=#{type2}
+		, type3=#{type3}
+		, subject_type=#{subjectType}
+		, insurance_code=#{insuranceCode}
 		, deli_type_code=#{deliTypeCode}
 		, deli_cost=#{deliCost}
 		, deli_free_amount=#{deliFreeAmount}
@@ -638,6 +663,11 @@
 		, use_code=#{useCode}
 		</if>
 		, content=#{content}
+		, type1=#{type1}
+		, type2=#{type2}
+		, type3=#{type3}
+		, subject_type=#{subjectType}
+		, insurance_code=#{insuranceCode}
 		, mod_date=NOW()
 		WHERE item_seq=#{seq}
 	</update>

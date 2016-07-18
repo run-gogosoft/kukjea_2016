@@ -71,7 +71,7 @@
                                         <input type="hidden" name="detailSeq" value="${vo.seq}"/>
 
                                         <div class="ch-writebox-item-info">
-                                            <img src="/upload${fn:replace(vo.img1, '/origin/', '/s206/')}" style="display:inline-block;width:70px;height:70px;border:1px solid #CCC;" alt="" />
+                                            <img src="/upload${fn:replace(vo.img1, '/origin/', '/s60/')}" style="display:inline-block;width:70px;height:70px;border:1px solid #CCC;" alt="" />
                                             <div style="height:120px;display:inline-block;margin-left:18px;">
                                                 <span class="ch-item-name">${vo.itemName}</span><br/>
                                                 <span class="ch-item-value-name">
@@ -162,7 +162,7 @@
                             </td>
                             <td>
                                 <c:if test="${vo.img1 ne ''}">
-                                    <a href="/shop/search?seq=${vo.itemSeq}"><img src="/upload${fn:replace(vo.img1, '/origin/', '/s206/')}" onerror="noImage(this)" style="width:70px;height:70px;border:1px solid #d7d7d7;" alt="" /></a>
+                                    <a href="/shop/search?seq=${vo.itemSeq}"><img src="/upload${fn:replace(vo.img1, '/origin/', '/s60/')}" onerror="noImage(this)" style="width:70px;height:70px;border:1px solid #d7d7d7;" alt="" /></a>
                                 </c:if>
                             </td>
                             <td class="text-left item-name">

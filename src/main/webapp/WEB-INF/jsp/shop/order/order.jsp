@@ -55,7 +55,7 @@
                             <tr>
                                 <td>
                                     <c:if test="${item.img1 ne ''}">
-                                        <img src="/upload${fn:replace(item.img1, '/origin/', '/s206/')}" style="width:70px;border:1px solid #d7d7d7;" width="70px" onerror="noImage(this)" alt="" />
+                                        <img src="/upload${fn:replace(item.img1, '/origin/', '/s60/')}" style="width:70px;border:1px solid #d7d7d7;" width="70px" onerror="noImage(this)" alt="" />
                                     </c:if>
                                 </td>
                                 <td class="text-left item-name">
