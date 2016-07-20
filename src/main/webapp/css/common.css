@@ -1195,6 +1195,7 @@ table.purchase_cancel_list tr.detail table td.goods_name {padding-left:40px;}
 .ie7 .txtarea textarea, .ie7 textarea.intxt {padding:0;}
 .ie7 table.board_write td {padding-right:3px;} 
 .ie7 .cols {width:100%;}
+.ie7 .total_menu_list {width:1016px;}
 .ie7 button.btn {overflow:visible;}
 .ie7 dl.attention dt, .ie7 dl.attention dd {display:inline; zoom:1;}
 .ie7 .board_tit h4 {display:inline; zoom:1;}
