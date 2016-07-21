@@ -65,7 +65,7 @@
 		, stock_cnt AS stockCount
 		, stock_flag AS stockFlag
 		, option_price AS optionPrice
-		, sale_price AS salePeriod
+		, sale_price AS salePrice
 		, sale_period AS salePeriod
 		, mod_date AS modDate
 		, reg_date AS regDate
@@ -141,7 +141,9 @@
 			stock_flag,
 			option_price,
 			sale_price,
-			sale_period,
+			<if test="salePeriod != ''">
+				sale_period,
+			</if>
 			mod_date,
 			reg_date
 		) VALUES (
@@ -151,7 +153,9 @@
 			#{stockFlag},
 			#{optionPrice},
 			#{salePrice},
-			#{salePeriod},
+			<if test="salePeriod != ''">
+				#{salePeriod},
+			</if>
 			NOW(),
 			NOW()
 		)
@@ -173,7 +177,9 @@
 			, stock_flag=#{stockFlag}
 			, option_price=#{optionPrice}
 			, sale_price=#{salePrice}
-			, sale_period=#{salePeriod}
+			<if test="salePeriod != ''">
+				,sale_period=#{salePeriod}
+			</if>
 			, mod_date=NOW()
 		WHERE 1=1
 		AND seq=#{seq}

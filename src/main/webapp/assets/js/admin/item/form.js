@@ -423,6 +423,7 @@ var EBOption = {
 	/** 옵션항목 row를 추가하는 메서드 */
 	, addChild:function(obj) {
 		$(obj).parents("tr").after( $("#optionChildTemplate").tmpl({idx:$(obj).parents("tr").attr("data-pk")}) );
+		showDatepicker("yyyymmdd");
 	}
 	/** 옵션항목 또는 부모 옵션을 삭제하는 메서드. 부모가 삭제될 경우 모든 자식도 삭제된다 */
 	, remove:function(obj) {
@@ -457,6 +458,8 @@ var EBOption = {
 			, showFlag:(validShowFlag === undefined) ? $(obj).find("input[name=showFlag]").val() : validShowFlag//input태그는 상품복사시 필요
 			, valueName:$(obj).find("input[name=valueName]").val()
 			, optionPrice: parseInt($(obj).find("input[name=optionPrice]").val(), 10) || 0
+			, salePrice: parseInt($(obj).find("input[name=salePrice]").val(), 10) || 0
+			, salePeriod: parseInt($(obj).find("input[name=salePeriod]").val(), 10) || 0
 			, stockCount:parseInt($(obj).find("input[name=stockCount]").val(), 10) || 0
 			, stockFlag:$(obj).find("input[name=stockFlag]:checked").val()
 		};
@@ -479,6 +482,7 @@ var EBOption = {
 				}
 
 				$("#eb-option-list").html($("#optionEditTemplate").tmpl(list));
+				showDatepicker("yyyymmdd");
 			},
 			error:function(error) {
 				alert( error.status + ":" +error.statusText );
@@ -533,6 +537,7 @@ var EBOption = {
 				vo.action = "/admin/item/option/update";
 				$("#optionModal").modal().html( $("#optionUpdateTemplate").tmpl(vo) );
 				$(obj).prop("disabled", false);
+				showDatepicker("yyyymmdd");
 			},
 			error:function(error) {
 				alert( error.status + ":" +error.statusText );
@@ -551,6 +556,7 @@ var EBOption = {
 				vo.action = "/admin/item/option/value/update";
 				$("#optionModal").modal().html( $("#optionValueUpdateTemplate").tmpl(vo) );
 				$(obj).prop("disabled", false);
+				showDatepicker("yyyymmdd");
 			},
 			error:function(error) {
 				alert( error.status + ":" +error.statusText );
@@ -567,6 +573,7 @@ var EBOption = {
 		}
 
 		$("#optionModal").modal().html( $("#optionAddTemplate").tmpl({seq:seq}) );
+		showDatepicker("yyyymmdd");
 	}
 	, submitAddProc:function(seq, obj) {
 		var vo = EBOption.getVo( $(obj).parents("div.modal") );
@@ -647,11 +654,11 @@ var EBOption = {
 	}
 	, showAddValueModal:function(obj, optionSeq) {
 		$("#optionModal").modal().html( $("#optionValueAddTemplate").tmpl({optionSeq:optionSeq}) );
+		showDatepicker("yyyy-mm-dd");
 	}
 	, submitAddValueProc:function(seq, obj) {
 		var vo = EBOption.getVo( $(obj).parents("div.modal") );
 		vo.optionSeq = seq;
-
 		if($.trim(vo.valueName) === "") {
 			alert("옵션항목은 반드시 입력되어야 합니다");
 			return;
@@ -707,6 +714,8 @@ var EBOption = {
 		$("#eb-option-list tr.child").each(function(){
 			$(this).find("input[name=valueName]").prop('disabled',true);
 			$(this).find("input[name=optionPrice]").prop('disabled',true);
+			$(this).find("input[name=salePrice]").prop('disabled',true);
+			$(this).find("input[name=salePeriod]").prop('disabled',true);
 			$(this).find("input[name=stockCount]").prop('disabled',true);
 			$(this).find("input[name=stockFlag]").prop('disabled',true);
 		});
@@ -721,6 +730,8 @@ var EBOption = {
 		$("#eb-option-list tr.child").each(function(){
 			$(this).find("input[name=valueName]").prop('disabled',false);
 			$(this).find("input[name=optionPrice]").prop('disabled',false);
+			$(this).find("input[name=salePrice]").prop('disabled',true);
+			$(this).find("input[name=salePeriod]").prop('disabled',true);
 			$(this).find("input[name=stockCount]").prop('disabled',false);
 			$(this).find("input[name=stockFlag]").prop('disabled',false);
 		});
@@ -970,7 +981,7 @@ var showCode = function() {
 
 $(document).ready(function(){
 	$(".datepicker").datepicker({
-		dateFormat:"yymmdd"
+		dateFormat:"yyyymmdd"
 	});
 
 	showCode();

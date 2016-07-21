@@ -25,6 +25,7 @@
 			c.reg_date AS regDate,
 			ov.value_name AS valueName,
 			ov.option_price AS optionPrice,
+			ov.sale_price AS salePrice,
 			ov.stock_cnt AS stockCount,
 			ov.stock_flag AS stockFlag,
 			o.option_name AS optionName,

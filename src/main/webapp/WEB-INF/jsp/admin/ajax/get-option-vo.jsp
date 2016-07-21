@@ -15,5 +15,7 @@
 	, "valueName":"${item.valueName}"
 	, "stockCount":"${item.stockCount}"
 	, "stockFlag":"${item.stockFlag}"
+	, "salePrice":"${item.salePrice}"
+	, "salePeriod":"${item.salePeriod}"
 	, "optionPrice":"${item.optionPrice}"
 }

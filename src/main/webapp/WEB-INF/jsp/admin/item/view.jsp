@@ -339,7 +339,7 @@
 									<td class="text-center">${item.valueName}</td>
 									<td class="text-center"><fmt:formatNumber value="${item.optionPrice}" pattern="#,###" /> 원</td>
 									<td class="text-center"><fmt:formatNumber value="${item.salePrice}" pattern="#,###" /> 원</td>
-									<td class="text-center"><fmt:formatDate value="${item.salePeriod}" pattern="####-##-##" /></td>
+									<td class="text-center">${item.salePeriod}</td>
 									<td class="text-center">${item.stockCount}</td>
 									<td class="text-center">${item.stockFlag eq "Y" ? "재고관리":"재고관리 안함" }</td>
 								</tr>

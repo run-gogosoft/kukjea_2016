@@ -157,48 +157,7 @@
 			sm_member m ON (m.seq=u.seq) LEFT OUTER JOIN
 			sm_member_group g ON (m.group_seq=g.seq) 
 		WHERE u.type_code='C'
-		<if test="searchDate1 != '' and searchDate2 != ''">
-			AND DATE_FORMAT(u.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
-		</if>
-		<if test="statusCode != ''">
-			AND u.status_code = #{statusCode}
-		</if>
-		<if test="gradeCode != null">
-			AND u.grade_code = #{gradeCode}
-		</if>
-		<if test="mallSeq != null">
-			AND m.mall_seq = #{mallSeq}
-		</if>
-		<if test="memberTypeCode != ''">
-			AND m.member_type_code = #{memberTypeCode}
-		</if>
-		<if test="emailFlag != ''">
-			AND m.email_flag = #{emailFlag}
-		</if>
-		<if test="smsFlag != ''">
-			AND m.sms_flag = #{smsFlag}
-		</if>
-		<if test="findword != ''">
-			<choose>
-				<when test="search eq 'id'">AND u.id LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'name'">AND u.name LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'groupName'">AND g.name LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'nickname'">AND u.nickname LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'email'">AND m.email LIKE CONCAT('%',#{findword},'%')</when>
-			</choose>
-		</if>
-		<!-- 1년이상 장기 미접속자와 조회 분리 -->
-		<choose>
-			<when test="longTermNotLoginFlag eq 'Y'.toString()">
-				<!-- 현재 시점에서 마지막 접속일이 1년이상 지난 건 -->
-				AND DATE_ADD(now(), INTERVAL -365 DAY) > u.last_date
-			</when>
-			<otherwise>
-				AND (u.last_date IS NULL OR u.last_date >= DATE_ADD(now(), INTERVAL -365 DAY))
-			</otherwise>
-		</choose>
-		ORDER BY u.seq DESC
-		LIMIT ${pageNum * rowCount}, ${rowCount}
+
 	</select>
 	<select id="getListCount" parameterType="com.smpro.vo.MemberVo" resultType="int">
 		SELECT
@@ -208,46 +167,7 @@
 		  	sm_member m ON(m.seq=u.seq) LEFT OUTER JOIN
 			sm_member_group g ON(m.group_seq=g.seq) 
 		WHERE u.type_code='C'
-		<if test="searchDate1 != '' and searchDate2 != ''">
-			AND DATE_FORMAT(u.reg_date,'%Y-%m-%d') BETWEEN #{searchDate1} AND #{searchDate2}
-		</if>
-		<if test="statusCode != ''">
-			AND u.status_code = #{statusCode}
-		</if>
-		<if test="gradeCode != null">
-			AND u.grade_code = #{gradeCode}
-		</if>
-		<if test="mallSeq != null">
-			AND m.mall_seq = #{mallSeq}
-		</if>
-		<if test="memberTypeCode != ''">
-			AND m.member_type_code = #{memberTypeCode}
-		</if>
-		<if test="emailFlag != ''">
-			AND m.email_flag = #{emailFlag}
-		</if>
-		<if test="smsFlag != ''">
-			AND m.sms_flag = #{smsFlag}
-		</if>
-		<if test="findword != ''">
-			<choose>
-				<when test="search eq 'id'">AND u.id LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'name'">AND u.name LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'groupName'">AND g.name LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'nickname'">AND u.nickname LIKE CONCAT('%',#{findword},'%')</when>
-				<when test="search eq 'email'">AND m.email LIKE CONCAT('%',#{findword},'%')</when>
-			</choose>
-		</if>
-		<!-- 1년이상 장기 미접속자와 조회 분리 -->
-		<choose>
-			<when test="longTermNotLoginFlag eq 'Y'.toString()">
-				<!-- 현재 시점에서 마지막 접속일이 1년이상 지난 건 -->
-				AND DATE_ADD(now(), INTERVAL -365 DAY) > u.last_date
-			</when>
-			<otherwise>
-				AND (u.last_date IS NULL OR u.last_date >= DATE_ADD(now(), INTERVAL -365 DAY))
-			</otherwise>
-		</choose>
+
 	</select>
 
 	<!--비밀변경 안내 메일 발송 대상자 리스트-->

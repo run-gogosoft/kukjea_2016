@@ -8,7 +8,7 @@
             <p class="mt5"><%="${vo.maker}"%></p>
             <div class="price_info">
                 <span class="price_label">해당 상품 최저가</span>
-                <span class="price"><strong><%="${ebFormatNumber(vo.sellPrice)}"%></strong>원</span>
+                <span class="price"><strong><%="${ebFormatNumber(vo.optionPrice)}"%></strong>원</span>
                 <a href="#" class="btn btn_gray btn_xs" onclick="alert('준비중입니다');return false;">가격제안</a>
             </div>
         </div>
@@ -112,11 +112,11 @@
                         </tr>
                         <tr>
                             <th scope="row"><p>진 료 과 목</p></th>
-                            <td><%="${vo.subjectType}"%>원</td>
+                            <td><%="${vo.subjectType}"%></td>
                         </tr>
                         <tr>
                             <th scope="row"><p>보 험 코 드</p></th>
-                            <td><%="${vo.insuranceCode}"%>원</td>
+                            <td><%="${vo.insuranceCode}"%></td>
                             <td></td>
                         </tr>
                         </tbody>

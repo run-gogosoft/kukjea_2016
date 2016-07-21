@@ -172,7 +172,7 @@
 									</td>
 									<td>
 										<c:choose>
-											<c:when test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 5)}">
+											<c:when test="${sessionScope.loginType eq 'A'}">
 												<a href="/admin/member/view/${item.seq}">${item.id}</a>
 											</c:when>
 											<c:otherwise>

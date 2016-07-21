@@ -24,6 +24,8 @@
 				, "valueName":"${value.valueName}"
 				, "stockCount":"${value.stockCount}"
 				, "stockFlag":"${value.stockFlag}"
+				, "salePrice":"${value.salePrice}"
+				, "salePeriod":"${value.salePeriod}"
 				, "optionPrice":"${value.optionPrice}"
 			}
 			</c:forEach>

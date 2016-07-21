@@ -121,9 +121,7 @@
                                         </span>
                                     </span>
                                                 <span class="tit">${item.name}</span>
-                                    <span class="price">
-                                        <strong><fmt:formatNumber value="${item.sellPrice}"/></strong>원
-                                    </span>
+
                                             </a>
                                         </li>
                                     </c:forEach>
@@ -180,7 +178,7 @@
                                             </td>
                                             <td></td>
                                             <td>${item.maker}</td>
-                                            <td><em class="txt_accent"><fmt:formatNumber value="${item.sellPrice}"/></em>원</td>
+                                           <!-- <td><em class="txt_accent"><fmt:formatNumber value="${item.sellPrice}"/></em>원</td>-->
                                         </tr>
                                     </c:forEach>
                                     </tbody>

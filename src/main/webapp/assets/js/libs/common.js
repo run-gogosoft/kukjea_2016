@@ -27,7 +27,7 @@ var showDatepicker = function(format) {
 		//changeYear: false,
 		showButtonPanel: true,
         //currentText: '오늘 날짜',
-        closeText: 'Close'
+        closeText: 'Close',
 		//dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
         //dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'],
         //monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],

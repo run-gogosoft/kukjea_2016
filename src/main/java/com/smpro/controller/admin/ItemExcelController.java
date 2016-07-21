@@ -816,7 +816,7 @@ public class ItemExcelController {
 			if ("Y".equals(optionFlag)) {
 				int length = ("" + list.get(index + 2)).split(",").length;
 				for (int i = 0; i < length; i++) {
-					int itemIndex = index; // 여기서 index를 고정시킨다 (option항목은 돌아가면서 인덱스를 변경할 것이다)
+					int itemIndex = index; // 여기서 index를 고정시킨다 (option항목은 돌아  가면서 인덱스를 변경할 것이다)
 					ItemOptionVo ovo = new ItemOptionVo();
 					// 옵션명
 					ovo.setOptionName(("" + list.get(itemIndex++)).trim());

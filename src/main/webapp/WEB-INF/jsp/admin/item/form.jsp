@@ -455,7 +455,7 @@
 											</td>
 											<td class="text-center">
 												<div class="input-group">
-													<input type="text" class="form-control text-right" name="salePeriod" value="0" alt="할인기간" onblur="numberCheck(this);" maxlength="11" />
+													<input type="text" class="form-control text-right" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" alt="제조일자" placeholder="- 을 제외하고 입력하세요. ex)20150101"/>
 												</div>
 											</td>
 											<td class="text-center">
@@ -491,11 +491,11 @@
 											</td>
 											<td class="text-center">
 												<%="${salePrice}"%> 원
-												<input type="hidden" name="salePrice" value="0"/>
+												<input type="hidden" name="salePrice" value="<%="${salePrice}"%>"/>
 											</td>
 											<td class="text-center">
 												<%="${salePeriod}"%>
-												<input type="hidden" name="salePeriod" value="2016-7-31"/>
+												<input type="hidden" name="salePeriod" value="<%="${salePeriod}"%>" />
 											</td>
 											<td class="text-center">
 												<%="${numeral(stockCount).format('0,0')}"%>
@@ -667,13 +667,12 @@
 						<input type="text" class="form-control" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);"/>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label class="col-md-3 control-label">할인 기간</label>
 					<div class="col-md-9">
 						<div class="input-group">
+							<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" alt="제조일자" placeholder="- 을 제외하고 입력하세요. ex)20150101"/>
 							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-							<input class="form-control datepicker"  name="salePeriod" value="${salePeriod}" >
 						</div>
 					</div>
 				</div>
@@ -732,13 +731,9 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">할인 기간</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="salePeriod" value="0" alt="할인기간" onblur="numberCheck(this);"/>
-					</div>
-
-					<div class="col-md-9">
 						<div class="input-group">
+							<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" alt="제조일자" placeholder="- 을 제외하고 입력하세요. ex)20150101"/>
 							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-							<input class="form-control datepicker" type="text" id="salePeriod" name="salePeriod" value="${salePeriod}">
 						</div>
 					</div>
 				</div>
@@ -836,11 +831,10 @@
 				</div>
 				<div class="form-group">
 					<label class="col-md-3 control-label">할인 기간</label>
-					<div class="col-md-4">
+					<div class="col-md-9">
 						<div class="input-group">
+							<input type="text" class="form-control datepicker" name="salePeriod" value="<%="${salePeriod}"%>" maxlength="8"/>
 							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-							<input class="form-control datepicker" type="text"  name="salePeriod" value="<%="${optionPeriod}"%>" >
-
 						</div>
 					</div>
 				</div>
@@ -1064,6 +1058,7 @@
 		return true;
 	};
 
+
 	var enterSearch = function() {
 		var evt_code = (window.netscape) ? event.which : event.keyCode;
 		if (evt_code == 13) {
@@ -1200,9 +1195,7 @@
 	};
 	
 	$(document).ready(function () {
-		/* 날짜 검색 달력 기능 */
-		showDatepicker("yy-mm-dd");
-		
+		showDatepicker("yyyy-mm-dd");
 		/* 견적상품일 경우 판매가를 숨긴다 */
 		setTypeCode();
 

@@ -133,6 +133,8 @@ public class ItemVo extends PagingVo {
 	/** 옵션 가격 */
 	private int optionPrice;
 	private String optionPrices = "";
+	private int salePrice;
+	private String salePrices = "";
 	/** 수량 */
 	private int count;
 	/** 견적 수량 */
@@ -314,6 +316,22 @@ public class ItemVo extends PagingVo {
 
 	public void setOptionPrices(String optionPrices) {
 		this.optionPrices = optionPrices;
+	}
+
+	public int getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(int salePrice) {
+		this.salePrice = salePrice;
+	}
+
+	public String getSalePrices() {
+		return salePrices;
+	}
+
+	public void setSalePrices(String salePrices) {
+		this.salePrices = salePrices;
 	}
 
 	public String getOptionName() {
@@ -1200,7 +1218,8 @@ public class ItemVo extends PagingVo {
 				+ optionSeq + ", optionValueSeq=" + optionValueSeq
 				+ ", optionName=" + optionName + ", valueName=" + valueName
 				+ ", optionValues=" + optionValues + ", optionPrice="
-				+ optionPrice + ", optionPrices=" + optionPrices + ", count="
+				+ optionPrice + ", optionPrices=" + optionPrices + ", salePrice="
+				+ salePrice + ", salePrices=" + salePrices + ", count="
 				+ count + ", optionCount=" + optionCount + ", directFlag="
 				+ directFlag + ", stockCount=" + stockCount + ", stockCounts="
 				+ stockCounts + ", reviewGrade=" + reviewGrade

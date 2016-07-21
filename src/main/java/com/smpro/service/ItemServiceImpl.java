@@ -423,7 +423,7 @@ public class ItemServiceImpl implements ItemService {
 		Workbook wb;
 		String loginType = (String) session.getAttribute("loginType");
 
-		int arrSize = 22;
+		int arrSize = 24;
 
 		/* 타이틀 항목 생성 */
 		String[] strTitle = new String[arrSize];
@@ -448,7 +448,6 @@ public class ItemServiceImpl implements ItemService {
 		strTitle[idx++] = "진료과목";
 		strTitle[idx++] = "상품명";
 		strTitle[idx++] = "판매상태";
-		strTitle[idx++] = "판매상태코드\n(Y:판매중 N:판매중지 E:대량등록\nH:가승인 S:품절)";
 		strTitle[idx++] = "규격 1";
 		strTitle[idx++] = "규격 2";
 		strTitle[idx++] = "규격 3";
@@ -456,8 +455,11 @@ public class ItemServiceImpl implements ItemService {
 		strTitle[idx++] = "제조사";
 		strTitle[idx++] = "단위";
 		strTitle[idx++] = "기준재고";
+		strTitle[idx++] = "발주처";
+		strTitle[idx++] = "자동발주량";
 		strTitle[idx++] = "상품이미지1";
 		strTitle[idx++] = "상품이미지2";
+		strTitle[idx++] = "상세정보";
 
 		/* 상품리스트 */
 		vo.setLoginType((String) session.getAttribute("loginType"));
@@ -488,31 +490,19 @@ public class ItemServiceImpl implements ItemService {
 				//if ("A".equals(loginType)) {
 					cell.add(ivo.getCateLv4Seq());
 				//}
+				cell.add(ivo.getSubjectType());//진료과목
 				cell.add(ivo.getName());//상품명
+				cell.add(ivo.getStatusCode());//판매상태
 
-				String statusText = "";
-				if ("E".equals(ivo.getStatusCode())) {
-					statusText = "대량등록";
-				} else if ("H".equals(ivo.getStatusCode())) {
-					statusText = "가승인";
-				} else if ("Y".equals(ivo.getStatusCode())) {
-					statusText = "판매중";
-				} else if ("N".equals(ivo.getStatusCode())) {
-					statusText = "판매중지";
-				}
-				cell.add(statusText);//판매상태
-				//if ("A".equals(loginType)) {
-					cell.add(ivo.getStatusCode());//판매상태코드
-				//}
 				cell.add(ivo.getType1());//규격 1
 				cell.add(ivo.getType2());//규격 2
 				cell.add(ivo.getType3());//규격 3
-				System.out.print("ivo.getSubjectType():"+ivo.getSubjectType());
-				cell.add(ivo.getSubjectType());//진료과목
 				cell.add(ivo.getInsuranceCode());//보험코드
 				cell.add(ivo.getSellerName());//제조사
 				cell.add(ivo.getOriginCountry());//단위
 				cell.add(ivo.getModelName());//기준재고
+				cell.add(ivo.getBrand());//발주처
+				cell.add(ivo.getMinCnt());//자동발주량
 
 				cell.add("http://" + Const.DOMAIN + "/upload" + ivo.getImg1());//상품이미지1
 				if (StringUtil.isBlank(ivo.getImg2())) {
@@ -521,6 +511,7 @@ public class ItemServiceImpl implements ItemService {
 					cell.add("http://" + Const.DOMAIN + "/upload" + ivo.getImg2());
 				}
 
+				cell.add(ivo.getContent());
 				row.add(cell);
 			}
 		}
