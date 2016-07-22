@@ -5,7 +5,6 @@
 			A.seq,
 			A.name,
 			A.status_code AS statusCode,
-			A.sell_price AS sellPrice,
 			A.supply_master_price AS supplyMasterPrice,
 			A.supply_price AS supplyPrice,
 			A.market_price AS marketPrice,
@@ -48,6 +47,7 @@
 			J.cate_name AS cateLv4Name,
 			E.name AS sellerName,
 			IFNULL(F.sales_tel,F.sales_cell) AS salesTel,
+		    (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS sellPrice,
 			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = A.seq) AS itemGrade,
 			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq = A.seq) AS reviewCount,
 			(SELECT MAX(option_name) FROM sm_item_option WHERE item_seq = A.seq) AS optionName,
@@ -268,7 +268,6 @@
 		SELECT
 			a.seq AS itemSeq
 			, a.name AS itemName
-			, a.sell_price AS sellPrice
 			, a.supply_price AS supplyPrice
 			, a.supply_master_price AS supplyMasterPrice
 			, a.seller_seq AS sellerSeq
@@ -281,6 +280,7 @@
 			, (SELECT option_price FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS optionPrice
 			, (SELECT sale_price FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS salePrice
 			, (SELECT stock_cnt FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS stockCount
+			, (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq) AS sellPrice,
 		FROM
 			sm_item a LEFT OUTER JOIN
 			sm_item_option o on(a.seq=o.item_seq) LEFT OUTER JOIN
@@ -294,7 +294,6 @@
 		SELECT
 			i.seq
 			, i.name
-			, i.sell_price AS sellPrice
 			, i.market_price AS marketPrice
 			, i.brand
 			, i.model_name AS modelName
@@ -304,6 +303,7 @@
 			, i.type_code AS typeCode
 			, (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = i.seq) AS itemGrade
 			, (SELECT COUNT(*) FROM sm_item_review WHERE item_seq = i.seq) AS reviewCount
+			  , (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS sellPrice,
 		FROM
 			sm_item i LEFT OUTER JOIN (
 				SELECT
@@ -324,7 +324,7 @@
 
 	<select id="getVo" parameterType="java.lang.Integer" resultType="com.smpro.vo.ItemVo">
 		SELECT
-			A.sell_price AS sellPrice,
+			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS sellPrice,
 			A.status_code AS statusCode,
 			A.cate_lv1_seq AS cateLv1Seq,
 			A.cate_lv2_seq AS cateLv2Seq,
@@ -936,7 +936,7 @@
 
 	<select id="getListSimple" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
 		SELECT
-			i.sell_price AS sellPrice,
+			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS sellPrice,
 			(SELECT cate_name FROM sm_item_category A WHERE A.seq=i.cate_lv1_seq) AS cateLv1Name,
 			(SELECT cate_name FROM sm_item_category B WHERE B.seq=i.cate_lv2_seq) AS cateLv2Name,
 			(SELECT cate_name FROM sm_item_category C WHERE C.seq=i.cate_lv3_seq) AS cateLv3Name,
@@ -983,16 +983,7 @@
 			) o ON o.item_seq=i.seq LEFT OUTER JOIN
 			sm_seller s ON(i.seller_seq=s.seq)
 		WHERE 1=1
-		<choose>
-			<!--
-			<when test="loginType eq 'S'.toString()">
 
-				AND i.seller_seq=#{loginSeq}
-			</when>
-			<when test="loginType eq 'D'.toString()">
-				AND i.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-			</when>-->
-		</choose>
 		<if test="cateLv1Seq != null">
 			AND i.cate_lv1_seq=#{cateLv1Seq}
 		</if>
@@ -1069,15 +1060,6 @@
 			sm_seller s ON(i.seller_seq=s.seq)
 		WHERE 1=1
 
-		<choose>
-			<!--
-			<when test="loginType eq 'S'.toString()">
-				AND i.seller_seq=#{loginSeq}
-			</when>
-			<when test="loginType eq 'D'.toString()">
-				AND i.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-			</when>-->
-		</choose>
 		<if test="cateLv1Seq != null">
 			AND i.cate_lv1_seq=#{cateLv1Seq}
 		</if>
@@ -1173,7 +1155,7 @@
 			A.seq,
 			A.name,
 			A.status_code AS statusCode,
-			A.sell_price AS sellPrice,
+			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS sellPrice,
 			A.supply_master_price AS supplyMasterPrice,
 			A.supply_price AS supplyPrice,
 			A.market_price AS marketPrice,

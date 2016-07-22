@@ -43,7 +43,7 @@
 							<input class="form-control" type="hidden" name="seq" id="seq" value="${ vo.seq }"/>
 							<div class="form-group">
 								<label class="col-md-2 control-label" for="title">등록일</label>
-								<div class="col-md-1 form-control-static">
+								<div class="col-md-8 form-control-static">
 									<fmt:parseDate value="${ vo.regDate }" var="regDate" pattern="yyyy-mm-dd"/>
 									<fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
 								</div>
@@ -106,22 +106,8 @@
 										<option value="<%="${seq}"%>"><%="${name}"%></option>
 										{{/each}}
 									</script>
-								</div>
-							</div>
-							<div class="form-group" id="lv1Category">
-								<label class="col-md-2 control-label">상품코드 입력</label>
-								<div class="col-md-8">
-									<input class="form-control" type="text" id="event_items" name="title" value="" hint="등록할 상품코드를 입력해 주세요.(예 #1234 #222)" placeholder="상품코드를 입력해 주세요"  maxlength="60" alt="기획전/이벤트 상품코드"/>
-									<!--
-									<script id="categoryTemplate" type="text/html">
-											<option value="">-카테고리 선택-</option>
-											{{each value}}
-											<option value="<%="${seq}"%>"><%="${name}"%></option>
-											{{/each}}
-										</script>
 
 									<select class="form-control" id="lv1Seq" name="lv1Seq"><option value="0">-- 대분류 카테고리선택 --</option></select>
-									-->
 								</div>
 							</div>
 						</div><!-- /.box-body -->

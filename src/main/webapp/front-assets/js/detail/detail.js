@@ -239,10 +239,12 @@ var EBProcess = {
 	}
 	, addCart:function(loginSeq,itemSeq){
 		// $('#guestCartModal').modal('hide');
-		if(loginSeq == "null"){
-			alert("로그인을 하셔야 합니다.");
+		if(loginSeq === '' || loginSeq =="null") {
+			alert("회원 로그인 후 이용하시기 바랍니다.");
 			location.href="/shop/login?DirectURL=/shop/detail/"+itemSeq;
+			return;
 		}
+
 		var message = EBProcess.checkVo();
 		if(message !== "") {
 			alert(message);

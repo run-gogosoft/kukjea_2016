@@ -106,11 +106,11 @@ public class ItemExcelController {
 	@RequestMapping("/item/excel/check")
 	public String checkExcel(@RequestParam String filepath, @RequestParam(required=false) Integer sellerSeq, HttpServletRequest request, Model model) {
 		/** 엑셀 컬럼 개수 */
-		int LIST_SIZE = 18;
-		if(sellerSeq == null) {
+		int LIST_SIZE = 17;
+		//if(sellerSeq == null) {
 			//데이터 이관을 위한 대량등록일 경우 입점업체매칭을 위한 셀 하나가 더 추가된다.
-			LIST_SIZE = LIST_SIZE+1;
-		}
+		//	LIST_SIZE = LIST_SIZE+1;
+		//}
 		
 		HttpSession session = request.getSession(false);
 
@@ -287,14 +287,28 @@ public class ItemExcelController {
 		// DB에 저장한다
 		// todo : commit과 rollback이 되어야 한다
 		for (int i = 0; i < list.size(); i++) {
-			itemService.insertVo(list.get(i));
-			itemService.insertDetailVo(list.get(i));
 
-			// 로그 (이력)
-			lvo.setAction("등록");
-			lvo.setItemSeq(list.get(i).getSeq());
-			lvo.setContent(list.get(i).toString());
-			itemService.insertLogVo(lvo);
+			//if(list.get(i).getSeq()<=0) {
+				itemService.insertVo(list.get(i));
+				itemService.insertDetailVo(list.get(i));
+
+				// 로그 (이력)
+				lvo.setAction("등록");
+				lvo.setItemSeq(list.get(i).getSeq());
+				lvo.setContent(list.get(i).toString());
+				itemService.insertLogVo(lvo);
+			/*}
+			else {
+				// 존재하는 아이템인 경우.
+				itemService.updateVo(list.get(i));
+				itemService.updateDetailVo(list.get(i));
+
+				// 로그 (이력)
+				lvo.setAction("수정");
+				lvo.setItemSeq(list.get(i).getSeq());
+				lvo.setContent(list.get(i).toString());
+				itemService.insertLogVo(lvo);
+			}*/
 
 			// 옵션 등록
 			/*List<ItemOptionVo> opList = list.get(i).getOptionList();
@@ -394,7 +408,7 @@ public class ItemExcelController {
 			return errorList;
 		}
 
-		int index = 0;
+		int index = 0;//index 0 = item_seq
 		// 1대분류 코드(필수)
 		Map map = new HashMap();
 
@@ -602,7 +616,6 @@ public class ItemExcelController {
 				}
 			}
 		}*/
-		index++;
 		/*
 		// 옵션여부(필수)
 		if (!(String.valueOf(list.get(index)).matches("^[YN]$"))) {
@@ -703,7 +716,7 @@ public class ItemExcelController {
 		// 1대분류 코드
 		Map map = new HashMap();
 
-
+		//vo.setSeq((Integer.valueOf(""+list.get(index++))).intValue());//item seq
 
 		map.put("seq", 0);
 		map.put("name", String.valueOf(list.get(index++)));
@@ -808,8 +821,8 @@ public class ItemExcelController {
 		// 17 상품이미지2
 		vo.setImg2(encodeHttpURL(String.valueOf(list.get(index++))));
 		// 18 상세정보
-		vo.setContent(StringUtil.clearXSS((String)list.get(index++)));
-		List<ItemOptionVo> optionList = new ArrayList<>();
+		//vo.setContent(StringUtil.clearXSS((String)list.get(index++)));
+		//List<ItemOptionVo> optionList = new ArrayList<>();
 
 		/*String optionFlag = String.valueOf(list.get(index++));
 		try {
@@ -858,9 +871,9 @@ public class ItemExcelController {
 		// 사용 코드 C=컨텐츠
 		vo.setUseCode("C");
 			
-		if(LIST_SIZE == 19) {
-			vo.setOldSellerSeq(Integer.valueOf(String.valueOf(list.get(index+4))));
-		}
+		//if(LIST_SIZE == 18) {
+		//	vo.setOldSellerSeq(Integer.valueOf(String.valueOf(list.get(index+4))));
+		//}
 		return vo;
 	}
 	

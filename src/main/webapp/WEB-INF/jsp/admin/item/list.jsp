@@ -588,6 +588,9 @@
 						if(data.message !== '') {
 							alert(data.message);
 						}
+						else {
+							alert("파일을 다운로드 합니다.....");
+						}
 	
 						CHExcelDownload.downloadExcel('Y');
 					} else {

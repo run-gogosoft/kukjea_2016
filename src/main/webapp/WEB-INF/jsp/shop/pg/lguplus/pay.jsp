@@ -21,15 +21,15 @@
      * 기본정보를 변경하여 주시기 바랍니다.(파라미터 전달시 POST를 사용하세요)
      */
     String CST_PLATFORM         = Const.LOCATION;                                                                               //LG유플러스 결제서비스 선택(test:테스트, service:서비스)
-    String CST_MID              = "nointinf".equals(vo.getNointinf()) ? "gsretail1234_8" : mallVo.getPgId();                    //LG유플러스으로 부터 발급받으신 상점아이디를 입력하세요.
+    String CST_MID              = "tkukjemedi";// : mallVo.getPgCode();                    //LG유플러스으로 부터 발급받으신 상점아이디를 입력하세요.
     String LGD_MID              = ("test".equals(CST_PLATFORM.trim())?"t":"")+CST_MID;                                          //테스트 아이디는 't'를 제외하고 입력하세요.
                                                                                                                                 //상점아이디(자동생성)
     String LGD_OID              = String.valueOf(vo.getOrderSeq());                                                             //주문번호(상점정의 유니크한 주문번호를 입력하세요)
     String LGD_AMOUNT           = String.valueOf(vo.getPayPrice());                                                             //결제금액("," 를 제외한 결제금액을 입력하세요)
-    String LGD_MERTKEY          = "nointinf".equals(vo.getNointinf()) ? "367ff60e288d37a25cfd30ab6cc37bcc" : mallVo.getPgKey(); //상점MertKey(mertkey는 상점관리자 -> 계약정보 -> 상점정보관리에서 확인하실수 있습니다)
+    String LGD_MERTKEY          =  "cdca9f29d6411811c53c2887bb94d582" ;//: mallVo.getPgKey(); //상점MertKey(mertkey는 상점관리자 -> 계약정보 -> 상점정보관리에서 확인하실수 있습니다)
 	String LGD_BUYER            = vo.getMemberName();                                                                           //구매자명
     String LGD_PRODUCTINFO      = vo.getItemName();                                                                             //상품명
-    String LGD_BUYEREMAIL       = vo.getBuyerEmail();                                                                           //구매자 이메일
+    String LGD_BUYEREMAIL       = vo.getMemberEmail();                                                                           //구매자 이메일
     String LGD_TIMESTAMP        = StringUtil.getDate(0, "yyyyMMddhhmmss");                                                      //타임스탬프
     String LGD_CUSTOM_SKIN      = "red";                                                                                        //상점정의 결제창 스킨(red, purple, yellow)
     String LGD_WINDOW_VER       = "2.5";                                                                                        //결제창 버젼정보
@@ -46,7 +46,7 @@
     /*
      * 가상계좌(무통장) 결제 연동을 하시는 경우 아래 LGD_CASNOTEURL 을 설정하여 주시기 바랍니다. 
      */    
-    String LGD_CASNOTEURL		= "http://상점URL/cas_noteurl.jsp";    
+    String LGD_CASNOTEURL		= "http://locahost:8080/cas_noteurl.jsp";
 
     /*
      *************************************************

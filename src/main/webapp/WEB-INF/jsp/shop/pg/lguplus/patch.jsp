@@ -21,7 +21,7 @@
         return;
     }
     String LGD_MID      = ("test".equals(CST_PLATFORM.trim())?"t":"")+CST_MID;    
-
+¿œ
     XPayClient xpay = new XPayClient();
     xpay.Init(configPath, CST_PLATFORM);
     xpay.Init_TX(LGD_MID);

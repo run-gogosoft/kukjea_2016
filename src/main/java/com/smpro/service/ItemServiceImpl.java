@@ -423,31 +423,18 @@ public class ItemServiceImpl implements ItemService {
 		Workbook wb;
 		String loginType = (String) session.getAttribute("loginType");
 
-		int arrSize = 24;
+		int arrSize = 18;
 
 		/* 타이틀 항목 생성 */
 		String[] strTitle = new String[arrSize];
 		int idx = 0;
 		strTitle[idx++] = "상품코드";
 		strTitle[idx++] = "대분류";
-		//if ("A".equals(loginType)) {
-			strTitle[idx++] = "대분류코드";
-		//}
 		strTitle[idx++] = "중분류";
-		//if ("A".equals(loginType)) {
-			strTitle[idx++] = "중분류코드";
-		//}
 		strTitle[idx++] = "소분류";
-		//if ("A".equals(loginType)) {
-			strTitle[idx++] = "소분류코드";
-		//}
 		strTitle[idx++] = "세분류";
-		//if ("A".equals(loginType)) {
-			strTitle[idx++] = "세분류코드";
-		//}
 		strTitle[idx++] = "진료과목";
 		strTitle[idx++] = "상품명";
-		strTitle[idx++] = "판매상태";
 		strTitle[idx++] = "규격 1";
 		strTitle[idx++] = "규격 2";
 		strTitle[idx++] = "규격 3";
@@ -459,7 +446,6 @@ public class ItemServiceImpl implements ItemService {
 		strTitle[idx++] = "자동발주량";
 		strTitle[idx++] = "상품이미지1";
 		strTitle[idx++] = "상품이미지2";
-		strTitle[idx++] = "상세정보";
 
 		/* 상품리스트 */
 		vo.setLoginType((String) session.getAttribute("loginType"));
@@ -475,43 +461,27 @@ public class ItemServiceImpl implements ItemService {
 				ArrayList<Object> cell = new ArrayList<>(arrSize);
 				cell.add(ivo.getSeq());
 				cell.add(ivo.getCateLv1Name());
-				//if ("A".equals(loginType)) {
-					cell.add(ivo.getCateLv1Seq());
-				//}
 				cell.add(ivo.getCateLv2Name());
-				//if ("A".equals(loginType)) {
-					cell.add(ivo.getCateLv2Seq());
-				//}
 				cell.add(ivo.getCateLv3Name());
-				//if ("A".equals(loginType)) {
-					cell.add(ivo.getCateLv3Seq());
-				//}
 				cell.add(ivo.getCateLv4Name());
-				//if ("A".equals(loginType)) {
-					cell.add(ivo.getCateLv4Seq());
-				//}
 				cell.add(ivo.getSubjectType());//진료과목
 				cell.add(ivo.getName());//상품명
-				cell.add(ivo.getStatusCode());//판매상태
-
 				cell.add(ivo.getType1());//규격 1
 				cell.add(ivo.getType2());//규격 2
 				cell.add(ivo.getType3());//규격 3
 				cell.add(ivo.getInsuranceCode());//보험코드
-				cell.add(ivo.getSellerName());//제조사
+				cell.add(ivo.getMaker());//제조사
 				cell.add(ivo.getOriginCountry());//단위
 				cell.add(ivo.getModelName());//기준재고
 				cell.add(ivo.getBrand());//발주처
 				cell.add(ivo.getMinCnt());//자동발주량
 
-				cell.add("http://" + Const.DOMAIN + "/upload" + ivo.getImg1());//상품이미지1
+				cell.add(ivo.getImg1());//상품이미지1
 				if (StringUtil.isBlank(ivo.getImg2())) {
 					cell.add(ivo.getImg2());
 				} else {
-					cell.add("http://" + Const.DOMAIN + "/upload" + ivo.getImg2());
+					cell.add(ivo.getImg2());
 				}
-
-				cell.add(ivo.getContent());
 				row.add(cell);
 			}
 		}

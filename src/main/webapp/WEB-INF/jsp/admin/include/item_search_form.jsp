@@ -88,7 +88,7 @@
 			<div class="pull-left">! 총 <b style="color:#00acd6;"><fmt:formatNumber value="${vo.totalRowCount}"/></b> 건이 조회 되었습니다.</div>
 			<div class="pull-right">
 				<button type="submit" class="btn btn-sm btn-default">검색하기</button>
-				<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2) or sessionScope.loginType eq 'S'}">
+				<c:if test="${sessionScope.loginType eq 'A'  or sessionScope.loginType eq 'S'}">
 					<button type="button" onclick="CHExcelDownload.excelDownCheck()" class="btn btn-success btn-sm">엑셀다운</button>
 				</c:if>
 				<button type="button" onclick="location.href='/admin/item/list'" class="btn btn-sm btn-warning">검색초기화</button>

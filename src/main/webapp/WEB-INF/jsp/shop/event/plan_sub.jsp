@@ -21,7 +21,7 @@
                 <%@ include file="/WEB-INF/jsp/shop/include/hotzone_anchor.jsp" %>
                 <div class="event_detail">
                     <div class="subject">
-                        <em>${vo.title}</em>
+
                         <span class="date">
                             <fmt:parseDate value="${vo.regDate}" var="regDate" pattern="yyyy-mm-dd"/>
                             <fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
@@ -46,7 +46,7 @@
                             <c:if test="${groupList.eventGroupSeq == itemList.groupSeq }">
                             <div class="item col_lt" onclick="location.href='/shop/search?seq=${itemList.itemSeq}';" style="cursor:pointer">
                                 <div class="thumb">
-                                    <img src=/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="">
+                                    <img src="/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="">
                                 </div>
                                 <table class="default">
                                     <caption>상품 기본 설명</caption>
@@ -61,7 +61,6 @@
                                     </tr>
                                     <tr>
                                         <th scope="row"><p>규 격</p></th>
-                                        <td></td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><p>제 조 사</p></th>

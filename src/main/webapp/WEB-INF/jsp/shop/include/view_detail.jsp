@@ -4,11 +4,11 @@
 <script id="DescTemplate" type="text/html">
     <div>
         <div class="box_sty1">
-            <p><%="${vo.name}"%></p>
+            <p>><strong><%="${vo.name}"%></strong></p>
             <p class="mt5"><%="${vo.maker}"%></p>
             <div class="price_info">
                 <span class="price_label">해당 상품 최저가</span>
-                <span class="price"><strong><%="${ebFormatNumber(vo.optionPrice)}"%></strong>원</span>
+                <span class="price"><strong><%="${ebFormatNumber(vo.sellPrice)}"%></strong>원</span>
                 <a href="#" class="btn btn_gray btn_xs" onclick="alert('준비중입니다');return false;">가격제안</a>
             </div>
         </div>
@@ -37,10 +37,10 @@
                 <td>
                     <input type="radio" class="radio" title="상품 선택" name="goods" value="<%="${optionSeq}"%>" onclick="PriceLB.changeProc(this);PriceLB.calcOrderAmt();" data-option-value="<%="${seq}"%>" data-option-price="<%="${optionPrice}"%>" data-stock-count="<%="${stockCount}"%>" data-stock-flag="<%="${stockFlag}"%>"/>
                 </td>
-                <td class="lt"><%="${valueName}"%></td>
+                <td class="lt" ><%="${valueName}"%></td>
                 <td>
                     <em class="txt_point">
-                        <%="${ebFormatNumber(vo.sellPrice + optionPrice)}"%>
+                        <strong><%="${ebFormatNumber(optionPrice)}"%></strong>
                     </em>원
                 </td>
                 <td><%="${stockCount}"%></td>
@@ -88,17 +88,17 @@
                             <td><%="${vo.name}"%></td>
                         </tr>
                         <tr>
-                            <th scope="row"><p>규 격 1</p></th>
-                            <td><%="${vo.type1}"%></td>
+                            <th scope="row"><p>규 격 </p></th>
+                            <td><%="${vo.type1}"%> , </td>
                             <td></td>
                         </tr>
                         <tr>
-                            <th scope="row"><p>규 격 2</p></th>
-                            <td><%="${vo.type2}"%></td>
+                            <th scope="row"><p></p></th>
+                            <td><%="${vo.type2}"%> , </td>
                             <td></td>
                         </tr>
                         <tr>
-                            <th scope="row"><p>규 격 3</p></th>
+                            <th scope="row"><p></p></th>
                             <td><%="${vo.type3}"%></td>
                             <td></td>
                         </tr>
@@ -149,7 +149,7 @@
             <span class="icon icon_txt icon_txt_red">50%</span --%>
         </span>
             <span class="tit"><%="${name}"%></span>
-            <span class="price"><%="${sellPrice}"%>원</span>
+            <span class="price"><strong><%="${sellPrice}"%>원</strong></span>
         </a>
     </li>
 </script>

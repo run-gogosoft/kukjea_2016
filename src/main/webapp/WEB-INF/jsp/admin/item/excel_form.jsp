@@ -171,13 +171,13 @@
 						<div class="box-body">
 					<c:choose>
 						<c:when test="${sessionScope.loginType eq 'A'}">
-						<input type="hidden" name="sellerSeq" value="${sessionScope.loginSeq}" readonly="readonly" alt="관리자" />
-						<div class="form-group">
-							<label class="col-md-2 control-label">샘플 다운로드</label>
-							<div class="col-md-10">
-								<a href="/assets/xls/sample_item_list.xls" target="_blank" class="btn btn-sm btn-success">샘플 파일 다운로드 (sample_item_list.xls)</a>
+							<input type="hidden" name="sellerSeq" value="${sessionScope.loginSeq}" readonly="readonly" alt="관리자" />
+							<div class="form-group">
+								<label class="col-md-2 control-label">샘플 다운로드</label>
+								<div class="col-md-10">
+									<a href="/assets/xls/sample_item_list.xls" target="_blank" class="btn btn-sm btn-success">샘플 파일 다운로드 (sample_item_list.xls)</a>
+								</div>
 							</div>
-						</div>
 						</c:when>
 						<c:otherwise>
 
@@ -334,6 +334,7 @@
 </div>
 <%@ include file="/WEB-INF/jsp/admin/include/footer.jsp" %>
 <script type="text/javascript">
+
 
 	var getStatusProc = function() {
 		$.ajax({

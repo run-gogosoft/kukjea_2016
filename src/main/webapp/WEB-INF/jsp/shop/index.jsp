@@ -192,7 +192,7 @@
 			<!-- //공지사항/공급자몰 -->
 			<%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>
 		</div>
-		<!-- 반복 주문 상품 -->
+		<!-- 반복 주문 상품
 		<div class="repeat_order">
 			<div class="layout_inner">
 				<h2>반복 주문 상품</h2>

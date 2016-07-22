@@ -1598,7 +1598,7 @@ public class ItemController {
 		// 세션
 		String loginId = String.valueOf(session.getAttribute("loginId"));
 		// 엑셀 파일명
-		response.setHeader("Content-Disposition", "attachment; filename = item_list_" + loginId + "_" + StringUtil.getDate(0, "yyyyMMdd") + ".xls");
+		response.setHeader("Content-Disposition", "attachment; filename = item_list_" + StringUtil.getDate(0, "yyyyMMdd") + ".xls");
 		// 워크북
 		Workbook wb = itemService.writeExcelItemList(vo, "xls", session);
 		// 파일스트림
@@ -1613,7 +1613,6 @@ public class ItemController {
 			fileOut.flush();
 			fileOut.close();
 		}
-
 	}
 
 	@RequestMapping("/item/list/download/excel/check")

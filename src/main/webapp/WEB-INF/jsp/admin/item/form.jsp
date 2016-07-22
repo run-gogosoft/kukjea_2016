@@ -482,24 +482,23 @@
 												<input type="hidden" name="showFlag" value="Y"/>
 											</td>
 											<td class="text-center">
-												<%="${valueName}"%>
-												<input type="hidden" name="valueName" value="<%="${valueName}"%>"/>
+
+												<input type="text" name="valueName" value="<%="${valueName}"%>"/>
 											</td>
 											<td class="text-center">
-												<%="${numeral(optionPrice).format('0,0')}"%> 원
-												<input type="hidden" name="optionPrice" value="<%="${optionPrice}"%>"/>
+
+												<input type="text" name="optionPrice" value="<%="${optionPrice}"%>"/> 원
 											</td>
 											<td class="text-center">
-												<%="${salePrice}"%> 원
-												<input type="hidden" name="salePrice" value="<%="${salePrice}"%>"/>
+
+												<input type="text" name="salePrice" value="<%="${salePrice}"%>"/> 원
 											</td>
 											<td class="text-center">
-												<%="${salePeriod}"%>
-												<input type="hidden" name="salePeriod" value="<%="${salePeriod}"%>" />
+												<input type="text" class="form-control datepicker" name="salePeriod" value="<%="${salePeriod}"%>" maxlength="8" onblur="numberCheck(this);" alt="제조일자"/>
+												<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
 											</td>
 											<td class="text-center">
-												<%="${numeral(stockCount).format('0,0')}"%>
-												<input type="hidden" name="stockCount" value="<%="${stockCount}"%>"/>
+												<input type="text" name="stockCount" value="<%="${stockCount}"%>"/>
 											</td>
 											<td class="text-center">
 												{{if stockFlag == 'Y'}}
