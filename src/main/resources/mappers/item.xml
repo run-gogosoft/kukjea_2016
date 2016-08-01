@@ -973,13 +973,13 @@
 			sm_item_category c ON(i.cate_lv1_seq=c.seq) LEFT OUTER JOIN
 			sm_user u	ON i.seller_seq=u.seq	LEFT OUTER JOIN (
 				SELECT
-					o.item_seq, o.seq AS optionSeq, SUM(ov.stock_cnt) AS stockCount, MIN(o.option_name) AS optionName
+					o.item_seq, o.seq AS optionSeq, MAX(ov.stock_cnt) AS stockCount, MIN(o.option_name) AS optionName
 				FROM
 					sm_item_option o	INNER JOIN
 					sm_item_option_value ov ON o.seq=ov.option_seq
 				WHERE show_flag='Y'
 
-				GROUP BY item_seq, o.seq
+				GROUP BY item_seq
 			) o ON o.item_seq=i.seq LEFT OUTER JOIN
 			sm_seller s ON(i.seller_seq=s.seq)
 		WHERE 1=1

@@ -15,7 +15,7 @@
 			w.reg_date AS regDate,
 			i.seq AS itemSeq,
 			i.name,
-			i.sell_price AS sellPrice,
+			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS sellPrice,
 			i.deli_cost AS deliCost,
 			i.deli_type_code AS deliTypeCode,
 			i.deli_free_amount AS deliFreeAmount,

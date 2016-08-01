@@ -29,8 +29,8 @@
                             <col width="10%"/>
                             <col width="10%"/>
                             <col width="10%"/>
-                            <col width="10%"/>
-                            <col width="10%"/>
+                            <col width="15%"/>
+                            <col width="8%"/>
                         </colgroup>
                         <thead>
                         <tr>
@@ -59,7 +59,7 @@
                                 </td>
                                 <td>
                                     <c:if test="${item.img1 ne ''}">
-                                        <img src="/upload${fn:replace(item.img1, '/origin/', '/s260/')}"
+                                        <img src="/upload${fn:replace(item.img1, '/origin/', '/s110/')}"
                                              style="width:70px;border:1px solid #d7d7d7;" width="70px" onerror="noImage(this)" alt="상품이미지"/>
                                     </c:if>
                                 </td>

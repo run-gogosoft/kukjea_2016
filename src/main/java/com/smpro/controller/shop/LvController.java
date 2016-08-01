@@ -104,10 +104,10 @@ public class LvController {
 		vo.setCateLv1Seq(seq);
 		vo.setStatusCode("Y");
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
-			vo.setRowCount(12);
+			vo.setRowCount(10);
 		}
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
-			vo.setListStyle("img");
+			vo.setListStyle("all");
 		}
 		vo.setSeq(null); // 이래야 검색이 제대로 된다
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
@@ -160,10 +160,10 @@ public class LvController {
 		vo.setCateLv2Seq(seq);
 		vo.setStatusCode("Y");
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
-			vo.setRowCount(12);
+			vo.setRowCount(10);
 		}
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
-			vo.setListStyle("img");
+			vo.setListStyle("all");
 		}
 		vo.setSeq(null); // 이래야 검색이 제대로 된다
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));

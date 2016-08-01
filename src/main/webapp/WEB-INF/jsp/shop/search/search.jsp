@@ -87,10 +87,9 @@
                             <dl class="list_ctn">
                                 <dt>선택 상품 정렬</dt>
                                 <dd>
-                                    <a href="#" <c:if test="${itemSearchVo.rowCount eq 9}">class="on"</c:if> onclick="changeRowCount(9);return false;">9개</a>
                                     <a href="#" <c:if test="${itemSearchVo.rowCount eq 10}">class="on"</c:if> onclick="changeRowCount(10);return false;">10개</a>
-                                    <a href="#" <c:if test="${itemSearchVo.rowCount eq 12}">class="on"</c:if> onclick="changeRowCount(12);return false;">12개</a>
-                                    <a href="#" <c:if test="${itemSearchVo.rowCount eq 15}">class="on"</c:if> onclick="changeRowCount(15);return false;">15개</a>
+                                    <a href="#" <c:if test="${itemSearchVo.rowCount eq 12}">class="on"</c:if> onclick="changeRowCount(20);return false;">20개</a>
+                                    <a href="#" <c:if test="${itemSearchVo.rowCount eq 15}">class="on"</c:if> onclick="changeRowCount(30);return false;">30개</a>
                                 </dd>
                                 <input type="hidden" name="rowCount" value="${itemSearchVo.rowCount}" />
                             </dl>
@@ -112,14 +111,16 @@
                                         <li data-seq="${item.seq}"><!-- class="on" -->
                                             <input type="checkbox" class="check" title="상품 선택" />
                                             <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
-                                    <span class="thumb">
-                                        <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
-                                        <span class="icons">
-                                            <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
-                                            <%-- span class="icon icon_txt icon_txt_yellow">10+1</span>
-                                            <span class="icon icon_txt icon_txt_red">50%</span --%>
-                                        </span>
-                                    </span>
+                                            <span class="thumb">
+                                                <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
+                                                <span class="icons">
+                                                    <c:if test="${item.deliCost eq 0}">
+                                                        <span class="icon icon_txt icon_txt_gray">무료배송</span>
+                                                    </c:if>
+                                                    <!--span class="icon icon_txt icon_txt_yellow">10+1</span>
+                                                    <span class="icon icon_txt icon_txt_red">50%</span-->
+                                                </span>
+                                            </span>
                                                 <span class="tit">${item.name}</span>
 
                                             </a>
@@ -136,10 +137,8 @@
                                         <col style="width:25px" />
                                         <c:if test="${itemSearchVo.listStyle eq 'all'}"><col style="width:70px" /></c:if>
                                         <col style="width:auto" />
-                                        <col style="width:55px" />
-                                        <col style="width:120px" />
                                         <col style="width:100px" />
-                                        <col style="width:80px" />
+                                        <col style="width:100px" />
                                     </colgroup>
 
                                     <thead>
@@ -149,10 +148,8 @@
                                             <th scope="col"><span class="hide">상품 이미지</span></th>
                                         </c:if>
                                         <th scope="col">상품명</th>
-                                        <th scope="col"><span class="hide">프로모션 아이콘</span></th>
-                                        <th scope="col">규격</th>
+                                        <th scope="col">프로모션 아이콘</th>
                                         <th scope="col">제조사</th>
-                                        <th scope="col">가격</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -176,9 +173,7 @@
                                                 <%--span class="icon icon_txt icon_txt_yellow">10+1</span>
                                                 <span class="icon icon_txt icon_txt_red">50%</span --%>
                                             </td>
-                                            <td></td>
                                             <td>${item.maker}</td>
-                                           <!-- <td><em class="txt_accent"><fmt:formatNumber value="${item.sellPrice}"/></em>원</td>-->
                                         </tr>
                                     </c:forEach>
                                     </tbody>

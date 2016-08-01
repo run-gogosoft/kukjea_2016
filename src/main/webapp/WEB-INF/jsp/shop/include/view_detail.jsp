@@ -4,7 +4,7 @@
 <script id="DescTemplate" type="text/html">
     <div>
         <div class="box_sty1">
-            <p>><strong><%="${vo.name}"%></strong></p>
+            <p><strong><%="${vo.name}"%></strong></p>
             <p class="mt5"><%="${vo.maker}"%></p>
             <div class="price_info">
                 <span class="price_label">해당 상품 최저가</span>
@@ -24,7 +24,7 @@
             </colgroup>
             <thead>
             <tr>
-                <th scope="col">수량</th>
+                <th scope="col">선택</th>
                 <th scope="col">공급사</th>
                 <th scope="col">공급가</th>
                 <th scope="col">재고</th>
@@ -68,7 +68,7 @@
 
         <div class="goods_desc">
             <dl>
-                <dt>상품설명</dt>
+                <dt>상품요약</dt>
                 <dd>
                     <div class="thumb">
                         <img src="/upload<%="${vo.img1}"%>" alt="" onerror="noImage(this)"/>
@@ -89,30 +89,30 @@
                         </tr>
                         <tr>
                             <th scope="row"><p>규 격 </p></th>
-                            <td><%="${vo.type1}"%> , </td>
+                            <td><%="${vo.type1}"%></td>
                             <td></td>
                         </tr>
+                        {{if vo.type2}}
                         <tr>
                             <th scope="row"><p></p></th>
-                            <td><%="${vo.type2}"%> , </td>
+                            <td><%="${vo.type2}"%></td>
                             <td></td>
                         </tr>
+                        {{/if}}
+                        {{if vo.type3}}
                         <tr>
                             <th scope="row"><p></p></th>
                             <td><%="${vo.type3}"%></td>
                             <td></td>
                         </tr>
-                        <tr>
-                            <th scope="row"><p>제 조 사</p></th>
-                            <td><%="${vo.maker}"%></td>
-                        </tr>
+                        {{/if}}
                         <tr>
                             <th scope="row"><p>단 위</p></th>
                             <td><%="${vo.originCountry}"%></td>
                         </tr>
                         <tr>
-                            <th scope="row"><p>진 료 과 목</p></th>
-                            <td><%="${vo.subjectType}"%></td>
+                            <th scope="row"><p>제 조 사</p></th>
+                            <td><%="${vo.maker}"%></td>
                         </tr>
                         <tr>
                             <th scope="row"><p>보 험 코 드</p></th>
@@ -122,15 +122,16 @@
                         </tbody>
                     </table>
                 </dd>
-                <dt>연계상품</dt>
-                <dd class="rel_goods">
-                    <ul id="RelationBody"></ul>
-                </dd>
-                <dt class="goods_detail">요약정보
+                <dt class="goods_detail">상세정보
                     <button type="button" class="btn_summary_showhide">펼쳐보기</button>
                 </dt>
                 <dd class="goods_detail">
                     {{html vo.content}}
+                </dd>
+
+                <dt>연계상품</dt>
+                <dd class="rel_goods">
+                    <ul id="RelationBody"></ul>
                 </dd>
             </dl>
         </div>

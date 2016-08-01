@@ -30,10 +30,10 @@ public class SearchController {
 		model.addAttribute("title", "검색");
 
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
-			vo.setRowCount(12);
+			vo.setRowCount(10);
 		}
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
-			vo.setListStyle("img");
+			vo.setListStyle("all");
 		}
 
 		// 카테고리를 가져온다

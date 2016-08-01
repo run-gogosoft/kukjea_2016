@@ -285,6 +285,9 @@
                                                 - 사용하시고자 하는 포인트 확인 후 <strong style="color:red;">
                                                 포인트란에 해당 금액을 입력해 주시고,'적용하기'를 눌러</strong> 주시기 바랍니다.
                                             </div>
+                                            <div class="point-description">
+                                                - 포인트는 <strong style="color:red;">500 포인트</strong> 단위로 사용하실 수 있습니다.
+                                            </div>
                                         </td>
                                     </tr>
                                 </c:if>
@@ -296,23 +299,6 @@
                                         <div class="order-radio-list" style="margin-left:0;">
                                             <c:forEach var="item" items="${payMethodList}" varStatus="status">
                                                 <c:if test="${item.value ne 'POINT' and fn:contains(mallVo.payMethod, item.value)}">
-                                                    <c:if test="${sessionScope.loginMemberTypeCode eq 'P' and (item.value eq 'OFFLINE' or item.value eq 'ARS' or fn:startsWith(item.value,'NP'))}">
-                                                        <!-- 방문결제, 후청구, ARS 결제는 공공기관 회원에게만 노출시킨다. -->
-                                                        <div style="display:block; float:none; margin:10px 0; width:800px">
-                                                            <input type="radio" name="payMethod" value="${item.value}" onclick="checkPayMethod(this)" />&nbsp;${item.name}
-                                                            <c:if test="${item.value eq 'ARS'}">
-                                                                <br/>&nbsp; &nbsp;<span class="text-info">주문 완료시 위 주문자 정보의 휴대폰 번호로 ARS인증번호가 포함된 SMS가 발송됩니다.</span>
-                                                                <br/>&nbsp; &nbsp;<span class="text-info">수신된 SMS의 발신번호로 통화 연결을 하여 ARS안내에 따라 결제를 진행해 주시기 바랍니다.</span>
-                                                                <br/>&nbsp; &nbsp;<span class="text-danger">ARS결제가 완료되기 전까지는 해당 주문의 배송 처리가 되지 않음을 유의하시기 바랍니다.</span>
-                                                            </c:if>
-                                                            <c:if test="${item.value eq 'NP_CARD1'}">
-                                                                - <span class="text-info">안심클릭/ISP 인증 (30만원 이상 결제시 공인인증서 필요)</span>
-                                                            </c:if>
-                                                            <c:if test="${item.value eq 'NP_CARD2'}">
-                                                                - <span class="text-info">카드번호/비밀번호 인증</span>
-                                                            </c:if>
-                                                        </div>
-                                                    </c:if>
                                                     <c:if test="${(sessionScope.loginMemberTypeCode eq null or sessionScope.loginMemberTypeCode eq 'C' or sessionScope.loginMemberTypeCode eq 'P') and item.value eq 'CARD1'}">
                                                         <!-- 일반,공공기관 회원 및 비회원일 경우에만 노출 (신용카드 안심클릭/ISP 인증 필요) -->
                                                         <div style="display:block; float:none; margin:10px 0; width:800px">
@@ -439,16 +425,17 @@
                         </div>
                         </c:if>
 
-                        <div class="btn_action rt">
-                            <button id="orderSubmitBtn" class="btn btn_red">결제하기</button>
-                        </div>
-
                         <dl class="attention mt30">
                             <dt>안내</dt>
                             <dd>
                                 <p>구매하신 상품은 상품가치가 훼손되면 반품이 불가합니다.</p>
                             </dd>
                         </dl>
+
+                        <div class="btn_action rt">
+                            <button id="orderSubmitBtn" class="btn btn_red" >결제하기</button>
+                        </div>
+
                         <input type="hidden" id="seqs" name="seqs" value="${seq}" />
                         <%-- 사용 쿠폰 값 --%>
                         <input type="hidden" id="coupons" name="coupons" value="" />
@@ -465,23 +452,25 @@
         <%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
     </div>
 </div>
-<div id="black-wall" style="top:0;left:0;position:fixed;width:100%;height:100%;background:#000;z-index:99;display:none;">
-    <div style="position:absolute;top:50%;width:100%;height:50px;margin-top:-25px">
-        <div class="progress progress-striped active">
-            <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%"></div>
-        </div>
-    </div>
-</div>
-<div id="orderModal" class="modal fade" data-backdrop="static">
-    <div class="modal-dialog" style="width: 400px;">
-        <div class="modal-content" style="top: 130px;">
-            <div class="modal-body">
-                <h4>결제 처리 중입니다.. <img src="/assets/img/common/ajaxloader.gif" alt="" /></h4>
-                <h7>(결제 처리가 끝나기 전까지는 이 창을 닫지 마세요)</h7>
+
+        <div id="black-wall" style="top:0;left:0;position:fixed;width:100%;height:100%;background:#000;z-index:99;display:none;">
+            <div style="position:absolute;top:50%;width:100%;height:50px;margin-top:-25px">
+                <div class="progress progress-striped active">
+                    <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%"></div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+        <div id="orderModal" class="modal fade" data-backdrop="static">
+            <div class="modal-dialog" style="width: 400px;">
+                <div class="modal-content" style="top: 130px;">
+                    <div class="modal-body">
+                        <h4>결제 처리 중입니다.. <img src="/assets/img/common/ajaxloader.gif" alt="" /></h4>
+                        <h7>(결제 처리가 끝나기 전까지는 이 창을 닫지 마세요)</h7>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 <%@ include file="/WEB-INF/jsp/shop/order/delivery_view.jsp" %>
 <%@ include file="/WEB-INF/jsp/shop/order/delivery_postcode_view.jsp" %>
 <%@ include file="/WEB-INF/jsp/shop/include/postcode_view.jsp" %>
@@ -511,10 +500,10 @@
     };
 
     var callbackProc = function(msg) {
-        if(msg === 'fail') {
+       // if(msg === 'fail') {
             $("#orderModal").modal('hide');
             $("#orderSubmitBtn").attr("disabled", false);
-        }
+       // }
     };
 
     $(document).ready(function() {

@@ -39,7 +39,7 @@
                 <th scope="row"><label>비밀번호</label></th>
                 <td>
                     <input type="password" id="password" name="password" class="intxt w180" alt="비밀번호" maxlength="16"/>
-                    <p class="info_msg">아이디는 영문과 숫자 조합 8자 이상 16자 이하로 해주세요.</p>
+                    <p class="info_msg">비밀번호는 영문과 숫자 조합 8자 이상 16자 이하로 해주세요.</p>
                 </td>
             </tr>
             <tr>
