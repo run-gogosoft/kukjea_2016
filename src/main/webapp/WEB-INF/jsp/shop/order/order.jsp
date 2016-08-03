@@ -134,7 +134,7 @@
                     <input type="hidden" id="totalDeliveryPrice" value="${totalDeliveryPrice}"/>
                     <input type="hidden" id="total_price" value="${totalSellPrice + totalDeliveryPrice}" />
 
-                    <form action="/shop/order/start" method="post" onsubmit="return submitProc(this)" target="zeroframe">
+                    <form action="/shop/order/start" method="post" onsubmit="return submitProc(this)" target="_self">
                         <input type="hidden" name="estimate_flag" value="${estimateFlag}"/>
 
                         <h4 class="mt30"><span>2.</span> 주문자 정보</h4>
@@ -500,10 +500,10 @@
     };
 
     var callbackProc = function(msg) {
-       // if(msg === 'fail') {
+       if(msg === 'fail') {
             $("#orderModal").modal('hide');
             $("#orderSubmitBtn").attr("disabled", false);
-       // }
+       }
     };
 
     $(document).ready(function() {

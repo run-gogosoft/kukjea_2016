@@ -166,7 +166,7 @@
 			<div class="form-group">
 				<label class="col-md-3 control-label">카테고리명</label>
 				<div class="col-md-5">
-					<input type="text" name="name" class="form-control"  maxlength="16" value="<%="${name}"%>" alt="카테고리명" />
+					<input type="text" name="name" class="form-control"  maxlength="50" value="<%="${name}"%>" alt="카테고리명" />
 				</div>
 			</div>
 			<div class="form-group">

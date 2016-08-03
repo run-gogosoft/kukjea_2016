@@ -5,7 +5,7 @@
 <%@ page import="com.smpro.vo.OrderVo" %>
 <%@ page import="java.security.MessageDigest, java.util.*" %>
 <%@ page import="java.security.MessageDigest" %><%
-    request.setCharacterEncoding("euc-kr");
+
     //쇼핑몰 정보 가져오기
     MallVo mallVo = (MallVo)request.getAttribute("mallVo");
 
@@ -90,8 +90,10 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-    <title>통합LG유플러스 전자결서비스 결제테스트</title>
-    <script language="javascript" src="http://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript"></script>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <title>LG유플러스 eCredit서비스 결제테스트</title>
     <script type="text/javascript">
         /*
          * 수정불가.
@@ -102,7 +104,7 @@
          * 수정불가
          */
         function launchCrossPlatform(){
-            lgdwin = openXpay(document.getElementById('LGD_PAYINFO'), '<%= CST_PLATFORM %>', LGD_window_type, null, "", "");
+            lgdwin  = openXpay(document.getElementById('LGD_PAYINFO'), '<%= CST_PLATFORM %>', LGD_window_type, null, "", "");
         }
         /*
          * FORM 명만  수정 가능
@@ -116,68 +118,27 @@
          */
         function payment_return() {
             var fDoc;
-
             fDoc = lgdwin.contentWindow || lgdwin.contentDocument;
 
-
             if (fDoc.document.getElementById('LGD_RESPCODE').value == "0000") {
-
                 document.getElementById("LGD_PAYKEY").value = fDoc.document.getElementById('LGD_PAYKEY').value;
+                closeIframe();
                 document.getElementById("LGD_PAYINFO").target = "_self";
-                document.getElementById("LGD_PAYINFO").action = "payres.jsp";
+                document.getElementById("LGD_PAYINFO").action = "/shop/${mallId}/order/result";
                 document.getElementById("LGD_PAYINFO").submit();
             } else {
                 alert("LGD_RESPCODE (결과코드) : " + fDoc.document.getElementById('LGD_RESPCODE').value + "\n" + "LGD_RESPMSG (결과메시지): " + fDoc.document.getElementById('LGD_RESPMSG').value);
                 closeIframe();
+                document.getElementById("LGD_PAYINFO").target = "_self";
+                document.getElementById("LGD_PAYINFO").action = "/shop/cart";
+                document.getElementById("LGD_PAYINFO").submit();
             }
         }
     </script>
 </head>
 
 <body onload="launchCrossPlatform();">
-<form method="post" name ="LGD_PAYINFO" id="LGD_PAYINFO" action="/shop/${mallId}/order/result" target="zeroframe">
-    <%--<table>
-        <tr>
-            <td>구매자 이름 </td>
-            <td><%= LGD_BUYER %></td>
-        </tr>
-        <tr>
-            <td>구매자 IP </td>
-            <td><%= LGD_BUYERIP %></td>
-        </tr>
-        <tr>
-            <td>구매자 ID </td>
-            <td><%= LGD_BUYERID %></td>
-        </tr>
-        <tr>
-            <td>상품정보 </td>
-            <td><%= LGD_PRODUCTINFO %></td>
-        </tr>
-        <tr>
-            <td>결제금액 </td>
-            <td><%= LGD_AMOUNT %></td>
-        </tr>
-        <tr>
-            <td>구매자 이메일 </td>
-            <td><%= LGD_BUYEREMAIL %></td>
-        </tr>
-        <tr>
-            <td>주문번호 </td>
-            <td><%= LGD_OID %></td>
-        </tr>
-        <tr>
-            <td colspan="2">* 추가 상세 결제요청 파라미터는 메뉴얼을 참조하시기 바랍니다.</td>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-            <div id="LGD_BUTTON1">결제를 위한 모듈을 다운 중이거나, 모듈을 설치하지 않았습니다. </div>
-            <div id="LGD_BUTTON2" style="display:none"><input type="button" value="인증요청" onclick="doPay_ActiveX();"/> </div>
-            </td>
-        </tr>
-    </table>--%>
+<form method="post" name ="LGD_PAYINFO" id="LGD_PAYINFO" action="/shop/${mallId}/order/result" target="_self">
     <br>
     <input type="hidden" name="CST_PLATFORM"                id="CST_PLATFORM"		value="<%= CST_PLATFORM %>">                   	<!-- 테스트, 서비스 구분 -->
     <input type="hidden" name="CST_MID"                     id="CST_MID"			value="<%= CST_MID %>">                        	<!-- 상점아이디 -->
@@ -195,16 +156,14 @@
     <input type="hidden" name="LGD_PAYKEY"                  id="LGD_PAYKEY">   							   							<!-- LG유플러스 PAYKEY(인증후 자동셋팅)-->
     <input type="hidden" name="LGD_VERSION"         		id="LGD_VERSION"		value="JSP_XPay_2.5">
     <input type="hidden" name="LGD_BUYERIP"                 id="LGD_BUYERIP"		value="<%= LGD_BUYERIP %>">           			<!-- 구매자IP -->
-    <input type="hidden" name="LGD_BUYERID"                 id="LGD_BUYERID"		value="<%= LGD_BUYERID %>">           			<!-- 구매자ID -->
-    <input type="hidden" name="LGD_RETURNURL" id="LGD_RETURNURL" value="http://localhost:8080/returnurl.jsp";// FOR MANUAL
+    <input type="hidden" name="LGD_BUYERID"                 id="LGD_BUYERID"		value="<%= LGD_BUYERID %>">
+    <input type="hidden" name="LGD_RETURNURL"               id="LGD_RETURNURL"      value="http://localhost:8080/returnurl.jsp<%--= LGD_CASNOTEURL --%>"><!-- 구매자ID -->
+
     <!-- 주문페이지에서 선택한 결제 수단만 결제 팝업창에 띄우기 -->
     <input type="hidden" name="LGD_CUSTOM_USABLEPAY" id="LGD_CUSTOM_USABLEPAY" value="<%=vo.getPayMethod().replace("CARD","SC0010").replace("RA","SC0030")%>"/>
 
 </form>
 </body>
-<!--  xpay.js는 반드시 body 밑에 두시기 바랍니다. -->
-<!--  UTF-8 인코딩 사용 시는 xpay.js 대신 xpay_utf-8.js 을  호출하시기 바랍니다.-->
-<%--<script language="javascript" src="<%=request.getScheme()%>://xpay.uplus.co.kr<%="test".equals(CST_PLATFORM)?(request.getScheme().equals("https")?":7443":":7080"):""%>/xpay/js/xpay_utf-8.js" type="text/javascript">--%>
-script language="javascript" src="<%=request.getScheme()%>://xpay.uplus.co.kr<%="test".equals(CST_PLATFORM)?(request.getScheme().equals("https")?":7443":":7080"):""%>/xpay/js/xpay_ub_utf-8.js" type="text/javascript">
+<script language="javascript" src="http://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript">
 </script>
 </html>

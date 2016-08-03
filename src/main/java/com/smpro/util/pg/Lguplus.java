@@ -61,9 +61,9 @@ public class Lguplus {
 
 		// 환경설정 파일 경로 테스트, 운영 분기
 		String configPath = session.getServletContext().getRealPath("/WEB-INF/conf/lguplus");
-		if ("linux".equals(Const.OS)) {
-			configPath = "/web/out/hknuri/conf/lguplus";
-		} 
+		//if ("linux".equals(Const.OS)) {
+		//	configPath = "/web/out/conf/lguplus";
+		//}
 		boolean isInitOK = xpay.Init(configPath, CST_PLATFORM);
 		if (!isInitOK) {
 			// API 초기화 실패 화면처리
@@ -86,9 +86,9 @@ public class Lguplus {
 			xpay.Set("LGD_PAYKEY", LGD_PAYKEY);
 
 			// 금액을 체크하시기 원하는 경우 아래 주석을 풀어서 이용하십시요.
-			String DB_AMOUNT = String.valueOf(calcPayPrice); // 반드시 위변조가 불가능한 곳(DB나 세션)에서 금액을 가져오십시요.
-			xpay.Set("LGD_AMOUNTCHECKYN", "Y");
-			xpay.Set("LGD_AMOUNT", DB_AMOUNT);
+			//String DB_AMOUNT = String.valueOf(calcPayPrice); // 반드시 위변조가 불가능한 곳(DB나 세션)에서 금액을 가져오십시요.
+			//xpay.Set("LGD_AMOUNTCHECKYN", "Y");
+			//xpay.Set("LGD_AMOUNT", DB_AMOUNT);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception( "LG유플러스 제공 API를 사용할 수 없습니다. 환경파일 설정을 확인해 주시기 바랍니다.["+ e.getMessage() + "]");

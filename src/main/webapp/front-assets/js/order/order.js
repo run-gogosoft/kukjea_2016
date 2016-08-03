@@ -178,7 +178,7 @@ var submitProc = function(obj) {
 		}
 
 		var payMethod = $("input[name='payMethod']:checked").val();
-		
+
 		if(payMethod == null && payPrice > 0 ) {
 			alert("주결제 수단을 선택해 주세요.");
 			return false;
@@ -188,19 +188,19 @@ var submitProc = function(obj) {
 			alert("비교견적 요청 여부를 선택해 주세요.");
 			return false;
 		}
-		
+
 		if(payMethod == "NP_CARD2") {
-			if(!confirm("후청구(신용카드) 결제로 주문을 진행하시겠습니까?")) {
+			if(!confirm("신용카드 결제로 주문을 진행하시겠습니까?")) {
 				return false;
 			}
 		}
-		
+
 		if(payMethod == "NP_CASH") {
 			if(!confirm("무통장입금 결제로 주문을 진행하시겠습니까?")) {
 				return false;
 			}
 		}
-		
+
 		$(obj.accountInfo).prop("disabled",true);
 		if(payPrice > 0 && (payMethod == "CASH" || payMethod == "NP_CASH")) {
 			$(obj.accountInfo).prop("disabled",false);
