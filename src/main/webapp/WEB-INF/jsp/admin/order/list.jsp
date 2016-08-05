@@ -74,11 +74,11 @@
 								<td></td>
 							</tr>
 						</table>
-						<div class="pull-left" style="margin:10px 0 0 10px">
+						<!--div class="pull-left" style="margin:10px 0 0 10px">
 								<i class="fa fa-user"></i>개인회원&nbsp;
 								<i class="fa fa-user-plus text-primary"></i>기업/시설/단체&nbsp;
 								<i class="fa fa-user-secret text-warning"></i>공공기관회원
-						</div>
+						</div-->
 						<div class="pull-right">
 							<%-- <c:if test="${sessionScope.loginType eq 'A'}">
 								<button type="button" onclick="updateStatus('10');" class="btn btn-sm btn-warning">입금확인</button>

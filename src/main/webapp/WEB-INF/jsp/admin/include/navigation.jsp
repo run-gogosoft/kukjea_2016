@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <div class="wrapper">
@@ -65,24 +66,16 @@
 				<li class="${navi eq 'member' ? 'active':''} treeview">
 					<a href="#"><i class="fa fa-user"></i> <span>회원 관리</span><i class="fa fa-angle-left pull-right"></i></a>
 					<ul class="treeview-menu">
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
+						<c:if test="${sessionScope.loginType eq 'A'}">
 						<li ${naviSub eq '/member/stats' ? "class='active'":""}><a href="/admin/member/stats"><i class="fa fa-caret-right"></i>회원 현황</a></li>
 						</c:if>
 						<li ${naviSub eq '/member/list' ? "class='active'":""}><a href="/admin/member/list"><i class="fa fa-caret-right"></i>회원 리스트</a></li>
 						<li ${naviSub eq '/member/list/not_access' ? "class='active'":""}><a href="/admin/member/list/not_access"><i class="fa fa-caret-right"></i>회원 리스트(1년이상 미접속자)</a></li>
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
-						<li ${naviSub eq '/point/list' ? "class='active'":""}><a href="/admin/point/list"><i class="fa fa-caret-right"></i>포인트 적립/사용내역</a></li>
-						</c:if>
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
-						<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/point/excel/list"><i class="fa fa-caret-right"></i>포인트 내역 엑셀 다운로드</a></li>
-						</c:if>
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
-						<li ${naviSub eq '/point/all/list' ? "class='active'":""}><a href="/admin/point/all/list"><i class="fa fa-caret-right"></i>포인트 상세 내역</a></li>
-						</c:if>
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
+						<c:if test="${sessionScope.loginType eq 'A'}">
+							<li ${naviSub eq '/point/list' ? "class='active'":""}><a href="/admin/point/list"><i class="fa fa-caret-right"></i>포인트 적립/사용내역</a></li>
+							<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/point/excel/list"><i class="fa fa-caret-right"></i>포인트 내역 엑셀 다운로드</a></li>
+							<li ${naviSub eq '/point/all/list' ? "class='active'":""}><a href="/admin/point/all/list"><i class="fa fa-caret-right"></i>포인트 상세 내역</a></li>
 							<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/member/list"><i class="fa fa-caret-right"></i>회원등급관리</a></li>
-						</c:if>
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
 							<li ${naviSub eq '/point/all/list' ? "class='active'":""}><a href="/admin/member/list"><i class="fa fa-caret-right"></i>그룹관리</a></li>
 						</c:if>
 					</ul>
@@ -101,12 +94,10 @@
 					<a href="#"><i class="fa fa-gift"></i> <span>상품 관리</span><i class="fa fa-angle-left pull-right"></i></a>
 					<ul class="treeview-menu">
 						<li ${naviSub eq '/item/list' ? "class='active'":""}><a href="/admin/item/list"><i class="fa fa-caret-right"></i>상품 리스트</a></li>
-					<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
-						<%-- 관리자, 입점공급사 --%>
-						<li ${naviSub eq '/item/form' ? "class='active'":""}><a href="/admin/item/form"><i class="fa fa-caret-right"></i>상품 등록</a></li>
-						<li ${naviSub eq '/item/excel/form' ? "class='active'":""}><a href="/admin/item/excel/form"><i class="fa fa-caret-right"></i>상품 대량등록</a></li>
-					</c:if>
 					<c:if test="${sessionScope.loginType eq 'A'}">
+						<%-- 관리자--%>
+						<li ${naviSub eq '/item/form' ? "class='active'":""}><a href="/admin/item/form"><i class="fa fa-caret-right"></i>상품 등록</a></li>
+						<li ${naviSub eq '/item/excel/form' ? "class='active'":""}><a href="/admin/item/excel/form"><i class="fa fa-caret-right"></i>상품 대량 등록</a></li>
 						<li ${naviSub eq '/event/list' ? "class='active'":""}><a href="/admin/event/list"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>
 						<li ${naviSub eq '/category' ? "class='active'":""}><a href="/admin/category"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>
 					</c:if>
@@ -135,10 +126,9 @@
 				<li class="${navi eq 'stats' ? 'active':''} treeview">
 					<a href="#"><i class="fa fa-bar-chart-o"></i> <span>통계</span> <i class="fa fa-angle-left pull-right"></i></a>
 					<ul class="treeview-menu">
-						<li ${naviSub eq '/stats/list/category' ? "class='active'":""}><a href="/admin/stats/list/category"><i class="fa fa-caret-right"></i> 상품 카테고리별 매출 현황</a></li>
-						<li ${naviSub eq '/stats/list/member' ? "class='active'":""}><a href="/admin/stats/list/member"><i class="fa fa-caret-right"></i> 회원별 매출 현황</a></li>
-						<li ${naviSub eq '/stats/list/item' ? "class='active'":""}><a href="/admin/stats/list/item"><i class="fa fa-caret-right"></i> 기간별 상품 판매 현황</a></li>
-						<li ${naviSub eq '/stats/list/item/jachigu/seller' ? "class='active'":""}><a href="/admin/stats/list/item/jachigu/seller"><i class="fa fa-caret-right"></i> 공급사 판매 현황</a></li>
+						<li ${naviSub eq '/stats/list/category' ? "class='active'":""}><a href="/admin/stats/list/category"><i class="fa fa-caret-right"></i> 카테고리별 매출 현황</a></li>
+						<li ${naviSub eq '/stats/list/item' ? "class='active'":""}><a href="/admin/stats/list/item"><i class="fa fa-caret-right"></i> 상품별 판매 현황</a></li>
+						<li ${naviSub eq '/stats/list/item/jachigu/seller' ? "class='active'":""}><a href="/admin/stats/list/item/jachigu/seller"><i class="fa fa-caret-right"></i> 공급사별 판매 현황</a></li>
 					</ul>
 				</li>
 				</c:if>

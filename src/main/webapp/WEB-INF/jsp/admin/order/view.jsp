@@ -652,7 +652,7 @@
 											<div class="col-md-1">
 												<button type="submit" class="btn btn-primary" ${(statusCode > 10 && statusCode ne 60) ? "disabled":""}>배송정보 수정</button>
 											</div>
-											<div class="col-md-3" style="padding-left:30px;">
+											<div class="col-md-4" style="padding-left:50px;">
 												<span class="text-danger">'주문확인' 이전 단계 또는 '교환요청' 단계일 경우에만 변경이 가능합니다.</span>
 											</div>
 										</c:if>

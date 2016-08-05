@@ -317,15 +317,15 @@
                                                         <div style="display:block; float:none; margin:10px 0; width:740px;">
                                                             <input type="radio" name="payMethod" value="${item.value}" onclick="checkPayMethod(this)" />&nbsp;${item.name}
                                                             (
-                                                            입금은행: <strong class="text-info">ㅇㅇ은행</strong> /
-                                                            계좌번호: <strong class="text-info">100-123-123456</strong> /
-                                                            예금주: <strong class="text-info">(주)주식회사 홍길동</strong>
+                                                            입금은행: <strong class="text-info">KB국민은행</strong> /
+                                                            계좌번호: <strong class="text-info">029301-04-193023</strong> /
+                                                            예금주: <strong class="text-info">(주)국제메디팜 최태봉</strong>
                                                             )
                                                         </div>
                                                     </c:if>
                                                 </c:if>
                                             </c:forEach>
-                                            <input type="hidden" name="accountInfo" value="ㅇㅇ은행 100-123-123456 (주)주식회사 홍길동"/>
+                                            <input type="hidden" name="accountInfo" value="KB국민은행 029301-04-193023 (주)국제메디팜 최태봉"/>
                                         </div>
                                     </td>
                                 </tr>

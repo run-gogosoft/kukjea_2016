@@ -17,7 +17,7 @@
 		<h1>카테고리 관리 <small></small></h1>
 		<ol class="breadcrumb">
 			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
-			<li>시스템 관리</li>
+			<li>상품 관리</li>
 			<li class="active">카테고리 관리</li>
 		</ol>
 	</section>

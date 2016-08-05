@@ -3,6 +3,7 @@ package com.smpro.controller.shop;
 import com.smpro.service.CategoryService;
 import com.smpro.service.ItemService;
 import com.smpro.service.SystemService;
+import com.smpro.util.Const;
 import com.smpro.vo.CategoryVo;
 import com.smpro.vo.ItemVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,13 @@ public class SearchController {
 
 	@RequestMapping("/search")
 	public String search(ItemVo vo, HttpSession session, HttpServletRequest request, Model model) {
+
+		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
+			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
+			model.addAttribute("returnUrl", "/shop/login");
+			return Const.REDIRECT_PAGE;
+		}
+
 
 		model.addAttribute("title", "검색");
 
@@ -108,7 +116,6 @@ public class SearchController {
 		model.addAttribute("categoryList", categoryService.getListForSearch(vo));
 
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
-
 		model.addAttribute("list", itemService.getListSimple(vo));
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
 		model.addAttribute("itemSearchVo", vo);

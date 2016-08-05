@@ -51,21 +51,18 @@
 								<label class="col-md-2 control-label">상품 코드</label>
 								<div class="col-md-2 form-control-static">${vo.seq}</div>
 							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">판매 상태</label>
-								<div class="radio">
-									<c:choose>
-										<c:when test="${sessionScope.loginType eq 'A'}">
+							<c:if test="${sessionScope.loginType eq 'A'}">
+								<div class="form-group">
+									<label class="col-md-2 control-label">판매 상태</label
+									<div class="radio">
+										<c:choose>
 											<label><input type="radio" name="statusCode" value="H" <c:if test="${vo.statusCode eq 'H' or vo.statusCode eq 'E'}">checked="checked"</c:if> /> 가승인</label>
 											<label><input type="radio" name="statusCode" value="Y" <c:if test="${vo.statusCode eq 'Y'}">checked="checked"</c:if> /> 판매중</label>
-										</c:when>
-										<c:when test="${sessionScope.loginType eq 'S' && vo.statusCode ne 'N'}">
-											<label><input type="radio" name="statusCode" value="${vo.statusCode}" checked="checked" style="display: none;"/></label>
-										</c:when>
-									</c:choose>
-									<label><input type="radio" name="statusCode" value="N" <c:if test="${vo.statusCode eq 'N'}">checked="checked"</c:if> /> 판매중지</label>
+											<label><input type="radio" name="statusCode" value="N" <c:if test="${vo.statusCode eq 'N'}">checked="checked"</c:if> /> 판매중지</label>
+										</c:choose>
+									</div>
 								</div>
-							</div>
+							</c:if>
 						</c:if>
 						<%--관리자일 경우에만 입점업체를 선택한다.--
 						<c:if test="${sessionScope.loginType eq 'A'}">
@@ -455,7 +452,7 @@
 											</td>
 											<td class="text-center">
 												<div class="input-group">
-													<input type="text" class="form-control text-right" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" alt="제조일자" placeholder="- 을 제외하고 입력하세요. ex)20150101"/>
+													<input type="text" class="form-control text-right" name="salePeriod"  maxlength="8" onblur="numberCheck(this);"  />
 												</div>
 											</td>
 											<td class="text-center">
@@ -482,23 +479,24 @@
 												<input type="hidden" name="showFlag" value="Y"/>
 											</td>
 											<td class="text-center">
-
-												<input type="text" name="valueName" value="<%="${valueName}"%>"/>
+												<%="${valueName}"%>
+												<input type="hidden" name="valueName" value="<%="${valueName}"%>"/>
 											</td>
 											<td class="text-center">
-
-												<input type="text" name="optionPrice" value="<%="${optionPrice}"%>"/> 원
+												<%="${optionPrice}"%>
+												<input type="hidden" name="optionPrice" value="<%="${optionPrice}"%>"/> 원
 											</td>
 											<td class="text-center">
-
-												<input type="text" name="salePrice" value="<%="${salePrice}"%>"/> 원
+												<%="${salePrice}"%>
+												<input type="hidden" name="salePrice" value="<%="${salePrice}"%>"/> 원
 											</td>
 											<td class="text-center">
-												<input type="text" class="form-control datepicker" name="salePeriod" value="<%="${salePeriod}"%>" maxlength="8" onblur="numberCheck(this);" alt="제조일자"/>
-												<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+												<%="${salePeriod}"%>
+												<input type="hidden" name="salePeriod" value="<%="${salePeriod}"%>" />
 											</td>
 											<td class="text-center">
-												<input type="text" name="stockCount" value="<%="${stockCount}"%>"/>
+												<%="${numeral(stockCount).format('0,0')}"%>
+												<input type="hidden" name="stockCount" value="<%="${stockCount}"%>"/>
 											</td>
 											<td class="text-center">
 												{{if stockFlag == 'Y'}}
@@ -519,12 +517,12 @@
 									<c:if test="${vo ne null}">
 									<table class="table table-bordered">
 										<colgroup>
-											<col style="width:15%;"/>
+											<col style="width:10%;"/>
 											<col style="width:*"/>
 											<col style="width:10%;"/>
 											<col style="width:10%;"/>
 											<col style="width:10%;"/>
-											<col style="width:15%;"/>
+											<col style="width:10%;"/>
 											<col style="width:10%;"/>
 											<col style="width:10%;"/>
 										</colgroup>
@@ -681,7 +679,7 @@
 						<input type="text" class="form-control" name="stockCount" maxlength="5" value="0" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
 					</div>
 				</div>
-			<i class="icon icon-info-sign"></i>쇼핑몰 항목은 1개씩만 등록됩니다.
+
 		</div>
 		<div class="modal-footer">
 			<a data-dismiss="modal" class="btn" href="#">close</a>

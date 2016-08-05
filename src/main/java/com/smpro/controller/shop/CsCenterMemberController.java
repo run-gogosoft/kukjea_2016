@@ -134,7 +134,7 @@ public class CsCenterMemberController {
 //				MailVo mvo = new MailVo();
 //				mvo.setSubject("[Hknuri] 함께누리 가입을 진심으로 축하드립니다");
 //				mvo.setText(mailService.getMember(vo.getId(), vo.getName(), request.getSession().getServletContext().getRealPath("/")));
-//				mvo.setFromUser("hknuri@hknuri.co.kr");
+//				mvo.setFromUser(Const.MALL_MAIL);
 //				mvo.setToUser(vo.getEmail());
 //				mailService.sendMail(mvo);
 //			} catch(Exception e) {

@@ -11,39 +11,35 @@
 			<div class="form-group">
 				<label class="col-md-2 control-label">카테고리</label>
 				<div class="col-md-2">
-					<select class="form-control" name="cateLv1Seq">
+					<select class="form-control" name="cateLv1Seq" onchange="$('#searchForm')[0].submit()">
 						<option value="">---대분류---</option>
-						<c:forEach var="item" items="${cateLv1List}">
-							<option value="${item.seq}" <c:if test="${vo.cateLv1Seq eq (''+item.seq)}">selected="selected"</c:if>>${item.name}</option>
+						<c:forEach var="item" items="${cateLv1List}" varStatus="status" begin="0" step="1">
+							<option value="${item.seq}" <c:if test="${vo.cateLv1Seq eq (item.seq)}">selected="selected"</c:if>>${item.name}</option>
 						</c:forEach>
-						<option value="0" <c:if test="${vo.cateLv1Seq eq 0}">selected="selected"</c:if>>미지정</option>
 					</select>
 				</div>
 				<div class="col-md-2">
-					<select class="form-control" name="cateLv2Seq">
+					<select class="form-control" name="cateLv2Seq" onchange="$('#searchForm')[0].submit()">
 						<option value="">---중분류---</option>
-						<c:forEach var="item" items="${cateLv2List}">
-							<option value="${item.seq}" <c:if test="${vo.cateLv2Seq eq (''+item.seq)}">selected="selected"</c:if>>${item.name}</option>
+						<c:forEach var="item" items="${cateLv2List}" varStatus="status" begin="0" step="1">
+							<option value="${item.seq}" <c:if test="${vo.cateLv2Seq eq (item.seq)}">selected="selected"</c:if>>${item.name}</option>
 						</c:forEach>
-						<option value="0" <c:if test="${vo.cateLv2Seq eq 0}">selected="selected"</c:if>>미지정</option>
 					</select>
 				</div>
 				<div class="col-md-2">
-					<select class="form-control" name="cateLv3Seq">
+					<select class="form-control" name="cateLv3Seq" onchange="$('#searchForm')[0].submit()">
 						<option value="">---소분류---</option>
-						<c:forEach var="item" items="${cateLv3List}">
-							<option value="${item.seq}" <c:if test="${vo.cateLv3Seq eq (''+item.seq)}">selected="selected"</c:if>>${item.name}</option>
+						<c:forEach var="item" items="${cateLv3List}" varStatus="status" begin="0" step="1">
+							<option value="${item.seq}" <c:if test="${vo.cateLv3Seq eq (item.seq)}">selected="selected"</c:if>>${item.name}</option>
 						</c:forEach>
-						<option value="0" <c:if test="${vo.cateLv3Seq eq 0}">selected="selected"</c:if>>미지정</option>
 					</select>
 				</div>
 				<div class="col-md-2">
-					<select class="form-control" name="cateLv4Seq">
+					<select class="form-control" name="cateLv4Seq" onchange="$('#searchForm')[0].submit()">
 						<option value="">---세분류---</option>
-						<c:forEach var="item" items="${cateLv4List}">
-							<option value="${item.seq}" <c:if test="${vo.cateLv4Seq eq (''+item.seq)}">selected="selected"</c:if>>${item.name}</option>
+						<c:forEach var="item" items="${cateLv4List}" varStatus="status" begin="0" step="1">
+							<option value="${item.seq}" <c:if test="${vo.cateLv4Seq eq (item.seq)}">selected="selected"</c:if>>${item.name}</option>
 						</c:forEach>
-						<option value="0" <c:if test="${vo.cateLv4Seq eq 0}">selected="selected"</c:if>>미지정</option>
 					</select>
 				</div>
 			</div>

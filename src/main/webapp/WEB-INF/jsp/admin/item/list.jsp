@@ -39,7 +39,7 @@
 								<b style="margin-left:25px">■카테고리</b>
 								<button type="button" onclick="EBbatch.showCategoryModal({'method':'카테고리 일괄변경 처리','action':'category'})" class="btn btn-xs btn-default">일괄 변경</button>
 								<b style="margin-left:25px">■상품내용</b>
-								<button type="button" onclick="EBbatch.showContentModal({'method':'상품내용 일괄변경 처리','action':'content'})" class="btn btn-xs btn-default">일괄 변경</button>
+								<!--button type="button" onclick="EBbatch.showContentModal({'method':'상품내용 일괄변경 처리','action':'content'})" class="btn btn-xs btn-default">일괄 변경</button-->
 							</c:if>
 							<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
 								<button type="button" onclick="EBbatch.showDupliModal({'method':'상품 일괄 복사하기','action':'dupli'})" class="btn btn-xs btn-default">일괄 복사하기</button>
@@ -56,6 +56,8 @@
 								<col style="width:6%"/>
 								<col style="width:8%"/>
 								<col style="width:*%"/>
+								<col style="width:8%"/>
+								<col style="width:8%"/>
 								<col style="width:10%"/>
 								<col style="width:8%"/>
 							</colgroup>
@@ -63,11 +65,13 @@
 								<tr>
 									<th><input type="checkbox" onclick="checkProc(this)" /></th>
 									<th>카테고리</th>
-									<th>이미지</th>
+									<th><div class="text-primary">이미지</div></th>
 									<th>상품코드</th>
 									<th>
 										<div class="text-primary">상품명</div>
 									</th>
+									<th>규격</th>
+									<th><div class="text-primary">최저가</div></th>
 									<th>제조사</th>
 									<th>
 										<a href="#" onclick="searchOrderBy('A.status_code','${vo.orderByType}'); return false;">판매상태</a>
@@ -112,6 +116,14 @@
 												<a href="#" onclick="location.href='view/${item.seq}?search='+encodeURIComponent($('#searchForm').serialize());return false;">${item.name}</a>
 											</strong>
 										</div>
+									</td>
+									<td class="text-center">
+										<div class="text-warning">${item.type1}</div>
+										<div class="text-warning">${item.type2}</div>
+										<div class="text-warning">${item.type3}</div>
+									</td>
+									<td class="text-center">
+										<div class="text-warning">${item.sellPrice}</div>
 									</td>
 									<td class="text-center">
 										<div class="text-warning">${item.maker}</div>

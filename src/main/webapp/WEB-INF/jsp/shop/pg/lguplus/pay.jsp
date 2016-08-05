@@ -22,7 +22,7 @@
      *
      * 기본정보를 변경하여 주시기 바랍니다.(파라미터 전달시 POST를 사용하세요)
      */
-    String CST_PLATFORM         = Const.LOCATION;                                                                               //LG유플러스 결제서비스 선택(test:테스트, service:서비스)
+    String CST_PLATFORM         = "test";//Const.LOCATION;                                                                               //LG유플러스 결제서비스 선택(test:테스트, service:서비스)
     String CST_MID              = "kukjemedi";// : mallVo.getPgCode();                    //LG유플러스으로 부터 발급받으신 상점아이디를 입력하세요.
     String LGD_MID              = ("test".equals(CST_PLATFORM.trim())?"t":"")+CST_MID;                                          //테스트 아이디는 't'를 제외하고 입력하세요.
     //상점아이디(자동생성)
@@ -37,8 +37,11 @@
     String LGD_WINDOW_VER       = "2.5";                                                                                  //구매자 아이디
     String LGD_BUYERID          = vo.getMemberId();                                                                             //구매자 아이디
     String LGD_BUYERIP          = request.getRemoteAddr();
+    String CURRENT              = request.getRequestURL().toString();
+    int position = CURRENT.indexOf("WEB-INF");
+    CURRENT = CURRENT.substring(0,position)+"returnurl.jsp";
 
-
+   // http://" + request.getRequestURL().toString() + ":" + request.get포트() +  "/returnurl.jsp
     /*
      *************************************************
      * 2. MD5 해쉬암호화 (수정하지 마세요) - BEGIN
@@ -157,8 +160,7 @@
     <input type="hidden" name="LGD_VERSION"         		id="LGD_VERSION"		value="JSP_XPay_2.5">
     <input type="hidden" name="LGD_BUYERIP"                 id="LGD_BUYERIP"		value="<%= LGD_BUYERIP %>">           			<!-- 구매자IP -->
     <input type="hidden" name="LGD_BUYERID"                 id="LGD_BUYERID"		value="<%= LGD_BUYERID %>">
-    <input type="hidden" name="LGD_RETURNURL"               id="LGD_RETURNURL"      value="http://localhost:8080/returnurl.jsp<%--= LGD_CASNOTEURL --%>"><!-- 구매자ID -->
-
+    <input type="hidden" name="LGD_RETURNURL"               id="LGD_RETURNURL"      value="<%= CURRENT %>">        <!-- 결과 처리 -->
     <!-- 주문페이지에서 선택한 결제 수단만 결제 팝업창에 띄우기 -->
     <input type="hidden" name="LGD_CUSTOM_USABLEPAY" id="LGD_CUSTOM_USABLEPAY" value="<%=vo.getPayMethod().replace("CARD","SC0010").replace("RA","SC0030")%>"/>
 

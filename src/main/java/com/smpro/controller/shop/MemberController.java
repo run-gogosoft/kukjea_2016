@@ -232,9 +232,9 @@ public class MemberController {
 		if(result > 0) {
 			try {
 				MailVo mvo = new MailVo();
-				mvo.setSubject("[Hknuri] 임시 비밀번호를 안내해드립니다.");
+				mvo.setSubject("[국제메디몰] 임시 비밀번호를 안내해드립니다.");
 				mvo.setText(mailService.getPasswordHtml(vo.getTempPassword(), vo.getName(), request.getSession().getServletContext().getRealPath("/")));
-				mvo.setFromUser("hknuri@hknuri.co.kr");
+				mvo.setFromUser(Const.MALL_MAIL);
 				mvo.setToUser(validEmail);
 				mailService.sendMail(mvo);
 			} catch(Exception e) {

@@ -185,7 +185,7 @@
                     <div class="btn_action mt10">
                         <button type="button" class="btn btn_default" onclick="alert('준비중입니다')">선택상품 비교</button>
                     </div>
-                    <div class="board_action">${paging}</div>
+                    <div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div>
                 </div>
 
                 <div id="DescBody" class="goods_view"></div>

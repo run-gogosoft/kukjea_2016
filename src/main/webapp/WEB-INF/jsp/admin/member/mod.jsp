@@ -34,12 +34,6 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">${vo.memberTypeName}명</label>
 								<div class="col-md-3 form-control-static">${gvo.name}</div>
-								<div class="col-md-3 checkbox" style="padding-left:0;">
-									<label>
-										<input type="checkbox" name="investFlag" value="Y" ${gvo.investFlag eq "Y" ? "checked":""}/>
-										<strong class="text-warning">투자출연기관</strong>
-									</label>
-								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-md-2 control-label">사업자 등록 번호</label>
@@ -303,7 +297,7 @@
 			//서울시일 경우에만 자치구 선택 가능
 			$("#jachiguCode").css("display","block");
 			$("#jachiguCode").val("");
-		} else {
+		} else {호
 			$("#jachiguCode").css("display","none");
 			$("#jachiguCode").val($(this).val());
 		}

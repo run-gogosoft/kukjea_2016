@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Const {
+	/** Manager Mail **/
+	public final static String MALL_MAIL = "help@kukjemall.com";
 	/** 경고창만 뜨는 페이지 */
 	public final static String ALERT_PAGE = "/_proc/alert.jsp";
 	/** 경고창이 뜬 후에 부모창을 리다이렉트 시키는 페이지 */
@@ -47,15 +49,6 @@ public class Const {
 	static {
 		// VM OPTION에 -DdetailedDebugMode=true로 설정하면 DEBUG모드로 진입한다
 		if ("true".equalsIgnoreCase(System.getProperties().getProperty("detailedDebugMode"))) {
-			// DEBUG MODE local
-//			IMAGE_MAGICK_PATH = "C:\\Program Files\\ImageMagick-6.9.0-Q16\\convert.exe";
-//			UPLOAD_PATH = "/upload";
-//			UPLOAD_REAL_PATH = "C:\\dev\\eGovFrameDev-3.2.0-64bit\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hknuri\\upload";
-//			WEBAPP_HOME_REAL_PATH = "C:\\dev\\eGovFrameDev-3.2.0-64bit\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\hknuri";
-//			DOMAIN = "localhost";
-//			LOCATION = "test";
-//			OS = "window";
-
 			IMAGE_MAGICK_PATH = "convert";
 			UPLOAD_PATH = "/upload";
 			UPLOAD_REAL_PATH =      "/Users/aubergine/Documents/kookje_dev/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
@@ -82,7 +75,7 @@ public class Const {
 			UPLOAD_REAL_PATH = "/kookje/web/upload";
 			WEBAPP_HOME_REAL_PATH = "/kookje/apps/instance1/webapps/ROOT";
 			TEMP_DIR = "/tmp";
-			DOMAIN = "kookje.gogosoft.kr";
+			DOMAIN = "kukjemall.com";
 			LOCATION = "service";
 			OS = "linux";
 		}

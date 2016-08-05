@@ -1,6 +1,7 @@
 package com.smpro.controller.shop;
 
 import com.smpro.service.*;
+import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class LvController {
 			ItemVo vo, HttpSession session, Model model) {
 		String loginType = (String)session.getAttribute("loginType");
 		String memberTypeCode = (String)session.getAttribute("loginMemberTypeCode");
+
+		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
+			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
+			model.addAttribute("returnUrl", "/shop/login");
+			return Const.REDIRECT_PAGE;
+		}
 
 		//회원이면 회원의 멤버구분을, 비회원이면 무조건 회원으로 강제한다.
 		if(memberTypeCode == null) {
@@ -126,6 +133,12 @@ public class LvController {
 	public String lv2(
 			@PathVariable Integer seq, HttpServletRequest request,
 			ItemVo vo, HttpSession session, Model model) {
+
+		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
+			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
+			model.addAttribute("returnUrl", "/shop/login");
+			return Const.REDIRECT_PAGE;
+		}
 
 		String loginType = (String)session.getAttribute("loginType");
 		String memberTypeCode = (String)session.getAttribute("loginMemberTypeCode");
@@ -264,6 +277,7 @@ public class LvController {
 
 	@RequestMapping("/lv4/{seq}")
 	public String lv4(@PathVariable Integer seq, ItemVo vo, Model model) {
+
 		model.addAttribute("title", "Home");
 
 

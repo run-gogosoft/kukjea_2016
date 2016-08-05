@@ -134,7 +134,7 @@ public class MailServiceImpl implements MailService {
 			MailVo mvo = new MailVo();
 			mvo.setSubject("[" + vo.getMallName() + "] 주문하신 상품내역입니다.");
 			mvo.setText(getOrderAcceptHTML(vo, list, srcRealPath));
-			mvo.setFromUser("hknuri@hknuri.co.kr");
+			mvo.setFromUser(Const.MALL_MAIL);
 			mvo.setToUser(vo.getMemberEmail());
 			sendMail(mvo);
 		} catch (Exception e) {
@@ -221,7 +221,7 @@ public class MailServiceImpl implements MailService {
 					MailVo mvo = new MailVo();
 					mvo.setSubject("[" + vo.getMallName() + "] 주문이 접수되었습니다");
 					mvo.setText(getOrderSellerAcceptHTML(vo, srcRealPath));
-					mvo.setFromUser("hknuri@hknuri.co.kr");
+					mvo.setFromUser(Const.MALL_MAIL);
 					mvo.setToUser(salesEmail);
 					sendMail(mvo);
 				} catch (Exception e) {
@@ -268,7 +268,7 @@ public class MailServiceImpl implements MailService {
 					MailVo mvo = new MailVo();
 					mvo.setSubject("[" + vo.getMallName() + "] 비밀번호 변경 안내 메일");
 					mvo.setText(getMemberForPasswordNoticeHTML(vo));
-					mvo.setFromUser("hknuri@hknuri.co.kr");
+					mvo.setFromUser(Const.MALL_MAIL);
 					mvo.setToUser(CrypteUtil.decrypt(vo.getEmail(), Const.ARIA_KEY,Const.ARIA_KEY.length * 8, null));
 					sendMail(mvo);
 				} catch (Exception e) {
