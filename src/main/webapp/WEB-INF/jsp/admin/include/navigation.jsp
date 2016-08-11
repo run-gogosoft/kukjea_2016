@@ -153,15 +153,6 @@
 					</ul>
 				</li>
 				</c:if>
-				<c:if test="${sessionScope.loginType eq 'A'}">
-					<li class="${navi eq 'about' ? 'active':''} treeview">
-						<a href="#"><i class="fa fa-edit"></i> <span>about 사회적경제</span> <i class="fa fa-angle-left pull-right"></i></a>
-						<ul class="treeview-menu">
-							<li ${naviSub eq '/about/menu/list' ? "class='active'":""}><a href="/admin/about/menu/list"><i class="fa fa-caret-right"></i>메뉴 관리</a></li>
-							<li ${naviSub eq '/about/board/list' ? "class='active'":""}><a href="/admin/about/board/list"><i class="fa fa-caret-right"></i>게시판 관리</a></li>
-						</ul>
-					</li>
-				</c:if>
 			</ul>
 		</section>
 		<!-- /.sidebar -->

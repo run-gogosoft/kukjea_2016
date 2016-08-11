@@ -80,7 +80,7 @@
 				<ul class="tab">
 					<li class="tab1"><a href="#today_product">오늘만 이가격<span></span></a></li>
 					<li class="tab2"><a href="#new_product">신규상품<span></span></a></li>
-					<!--li class="tab3"><a href="#offer_price">가격제안<span></span></a></li-->
+					<li class="tab3"><a href="#offer_price">가격제안<span></span></a></li>
 				</ul>
 				<div class="tab_list">
 					<div id="today_product" class="img_list_type01">
@@ -130,7 +130,7 @@
 							</c:forEach>
 						</ul>
 					</div>
-					<!--div id="offer_price">
+					<div id="offer_price">
 						<div class="tit_box">
 							<dl class="offer_price">
 								<dt>가격제안이란?</dt>
@@ -155,7 +155,7 @@
 								</li>
 							</ol>
 						</div>
-					</div-->
+					</div>
 				</div>
 			</div>
 			<!-- //메인 상품목록 -->
