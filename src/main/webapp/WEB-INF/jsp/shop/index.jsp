@@ -80,7 +80,7 @@
 				<ul class="tab">
 					<li class="tab1"><a href="#today_product">오늘만 이가격<span></span></a></li>
 					<li class="tab2"><a href="#new_product">신규상품<span></span></a></li>
-					<li class="tab3"><a href="#offer_price">가격제안<span></span></a></li>
+					<!--li class="tab3"><a href="#offer_price">가격제안<span></span></a></li-->
 				</ul>
 				<div class="tab_list">
 					<div id="today_product" class="img_list_type01">
@@ -89,7 +89,7 @@
 							<li>
 								<a href="/shop/search?seq=${itemList.itemSeq}">
 									<span class="thumb">
-										<img src="/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="" />
+										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="" />
 										<%-- span class="icons">
 											<span class="icon icon_txt icon_txt_gray">무료배송</span>
 											<span class="icon icon_txt icon_txt_yellow">10+1</span>
@@ -113,7 +113,7 @@
 							<li>
 								<a href="/shop/search?seq=${itemList.seq}">
 									<span class="thumb">
-										<img src="/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="" />
+										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="" />
 										<%-- span class="icons">
 											<span class="icon icon_txt icon_txt_gray">무료배송</span>
 											<span class="icon icon_txt icon_txt_yellow">10+1</span>
@@ -130,7 +130,7 @@
 							</c:forEach>
 						</ul>
 					</div>
-					<div id="offer_price">
+					<!--div id="offer_price">
 						<div class="tit_box">
 							<dl class="offer_price">
 								<dt>가격제안이란?</dt>
@@ -155,7 +155,7 @@
 								</li>
 							</ol>
 						</div>
-					</div>
+					</div-->
 				</div>
 			</div>
 			<!-- //메인 상품목록 -->
@@ -182,7 +182,7 @@
 				<div class="col_rt brand_mall">
 					<h2>공급자몰</h2>
 					<ul>
-						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+						<li><a href="http://www.jongromedical.co.kr"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company04.jpg" alt="SAMYOUNG" /></a></li>
@@ -213,7 +213,8 @@
 								<th scope="col" class="col9"><div><input type="checkbox" title="상품 전체 선택" class="check" /></div></th>
 							</tr>
 							</thead>
-							<tbody></tbody>
+							<tbody>
+							</tbody>
 						</table>
 					</div>
 				</div>
@@ -237,7 +238,7 @@
 				</dl>
 				<dl class="cs_center">
 					<dt>고객센터</dt>
-					<dd class="tel">02-888-7777</dd>
+					<dd class="tel"><span>070-4693-1971</span></dd>
 					<dd class="time">
 						<span>평 일 : 09:00~18:00</span>
 						<span>토요일 : 09:00~13:00</span>
@@ -249,7 +250,7 @@
 			<div class="slide_wrap" id="banner_slide">
 				<div class="slide_list">
 					<ul>
-						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+						<li><a href="http://www.jongromedical.co.kr"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>

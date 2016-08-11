@@ -33,11 +33,11 @@
                             <li>1. FAX 주문양식을 내 컴퓨터로 다운 받습니다.</li>
                             <li class="mt35">
                                 2. 해당 내용을 작성하여 국제몰로 FAX를 발송합니다.
-                                <p class="number">국제몰 FAX <strong>02-888-9999</strong></p>
+                                <p class="number">국제몰 FAX <strong>02-812-3302</strong></p>
                             </li>
                             <li class="mt35">
                                 3. 주문한 주문서 확인을 위해 고객센터로 전화 확인 부탁드립니다.
-                                <p class="number">국제몰 고객센터 <strong>02-888-7777</strong></p>
+                                <p class="number">국제몰 고객센터 <strong>070-4693-1971</strong></p>
                             </li>
                         </ol>
 

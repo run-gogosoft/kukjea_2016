@@ -105,17 +105,23 @@ public class ItemExcelController {
 
 	@RequestMapping("/item/excel/check")
 	public String checkExcel(@RequestParam String filepath, @RequestParam(required=false) Integer sellerSeq, HttpServletRequest request, Model model) {
-		/** 엑셀 컬럼 개수 */
-		int LIST_SIZE = 17;
-		//if(sellerSeq == null) {
-			//데이터 이관을 위한 대량등록일 경우 입점업체매칭을 위한 셀 하나가 더 추가된다.
-		//	LIST_SIZE = LIST_SIZE+1;
-		//}
-		
 		HttpSession session = request.getSession(false);
+
+		/** 엑셀 컬럼 개수 */
+		String loginType = (String)session.getAttribute("loginType");
+
+		int LIST_SIZE = 18;
+		int OPTION_SIZE = 0;
+		if(loginType.equals("S")) {
+			//공급사인경우
+			OPTION_SIZE = 6;
+		}
+		
+
 
 		List<String> errorList = new ArrayList<>();
 		List<ItemVo> list = new ArrayList<>();
+		List<ItemOptionVo> optionList = new ArrayList<>();
 		String realPath = Const.UPLOAD_REAL_PATH;
 
 		// filepath에 ..을 포함하고 있다면 해킹의 가능성이 있다
@@ -180,7 +186,7 @@ public class ItemExcelController {
 		// 유효성 검사
 		for (int i = 1; i < v.size(); i++) {
 			// 오류를 검증한다
-			errorList.addAll(getErrorList(i + 1, v.get(i), LIST_SIZE)); // i에 1를 더하는 이유는 idx는 0부터 시작하니까 제목행을 포함해서 줄번호가 1 더 증가하기 때문이다.
+			errorList.addAll(getErrorList(i + 1, v.get(i), LIST_SIZE+OPTION_SIZE)); // i에 1를 더하는 이유는 idx는 0부터 시작하니까 제목행을 포함해서 줄번호가 1 더 증가하기 때문이다.
 		}
 
 		if (errorList.size() > 0) {
@@ -211,7 +217,11 @@ public class ItemExcelController {
 				}
 				*/
 				list.add(i - 1, vo);
-				
+				if(OPTION_SIZE>0) {
+					ItemOptionVo ovo = optionMapper(v.get(i), LIST_SIZE, OPTION_SIZE);
+					ovo.setValueName((String) session.getAttribute("loginName"));
+					optionList.add(i - 1, ovo);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				errorList.add("[" + (i + 1) + "] 번째 아이템을 매핑하던 도중 오류가 발생했습니다");
@@ -222,6 +232,7 @@ public class ItemExcelController {
 
 		// 해당 상태를 세션에 공유한다
 		Map<String, Object> statusMap = new LinkedHashMap<>();
+		int startInsertSeq= 0;
 		statusMap.put("imageCount", "0");
 		statusMap.put("dbCount", "0");
 		statusMap.put("listCount", new Integer(list.size()));
@@ -237,39 +248,42 @@ public class ItemExcelController {
 				return "/ajax/get-error-list.jsp";
 			}
 
-			if (!"".equals(list.get(i).getImg1())) {
-				//시퀀스 생성
-				itemService.createSeq(list.get(i));
-				try {
-					String resolvedImg1 = imgProc(list.get(i).getImg1(), realPath,	errorList, model);
-					
-					list.get(i).setImg1(itemService.imageProc(realPath + "/item", "1",	resolvedImg1, list.get(i).getSeq()));
-				} catch (Exception e) {
-					list.get(i).setImg1("/old/no_image1.jpg");
+			if(list.get(i).getSeq()==null || list.get(i).getSeq().intValue()==0) { //아이쳄 추가의 경우, 이미지 데이타 리사이징 처리 및 데이타 변경
+				if (!"".equals(list.get(i).getImg1())) {
+					//시퀀스 생성
+					itemService.createSeq(list.get(i));
+					if(startInsertSeq==0) startInsertSeq = list.get(i).getSeq();
+					try {
+						String resolvedImg1 = imgProc(list.get(i).getImg1(), realPath, errorList, model);
+
+						list.get(i).setImg1(itemService.imageProc(realPath + "/item", "1", resolvedImg1, list.get(i).getSeq()));
+					} catch (Exception e) {
+						list.get(i).setImg1("/old/no_image1.jpg");
+					}
+
+
+				} else {
+					errorList.add("반드시 상품이미지1 항목이 입력되어야 합니다");
+
+					model.addAttribute("errorCount", new Integer(errorList.size()));
+					model.addAttribute("list", errorList);
+					return "/ajax/get-error-list.jsp";
 				}
-				
 
-			} else {
-				errorList.add("반드시 상품이미지1 항목이 입력되어야 합니다");
+				if (!"".equals(list.get(i).getImg2())) {
+					try {
+						String resolvedImg2 = imgProc(list.get(i).getImg2(), realPath, errorList, model);
 
-				model.addAttribute("errorCount", new Integer(errorList.size()));
-				model.addAttribute("list", errorList);
-				return "/ajax/get-error-list.jsp";
-			}
+						list.get(i).setImg2(itemService.imageProc(realPath + "/item", "2", resolvedImg2, list.get(i).getSeq()));
+					} catch (Exception e) {
+						list.get(i).setImg2("/old/no_image1.jpg");
+					}
 
-			if (!"".equals(list.get(i).getImg2())) {
-				try {
-					String resolvedImg2 = imgProc(list.get(i).getImg2(), realPath, errorList, model);
-					
-					list.get(i).setImg2(itemService.imageProc(realPath + "/item", "2", resolvedImg2, list.get(i).getSeq()));
-				} catch (Exception e) {
-					list.get(i).setImg2("/old/no_image1.jpg");
 				}
-			
+				statusMap.put("imageCount", new Integer(i + 1));
+				session.setAttribute("excelStatus", statusMap);
+				log.info(list.get(i).toString());
 			}
-			statusMap.put("imageCount", new Integer(i + 1));
-			session.setAttribute("excelStatus", statusMap);
-			log.info(list.get(i).toString());
 		}
 
 		if (errorList.size() > 0) {
@@ -288,7 +302,8 @@ public class ItemExcelController {
 		// todo : commit과 rollback이 되어야 한다
 		for (int i = 0; i < list.size(); i++) {
 
-			//if(list.get(i).getSeq()<=0) {
+			//아이템 추가
+			if(list.get(i).getSeq() >= startInsertSeq) {
 				itemService.insertVo(list.get(i));
 				itemService.insertDetailVo(list.get(i));
 
@@ -297,9 +312,9 @@ public class ItemExcelController {
 				lvo.setItemSeq(list.get(i).getSeq());
 				lvo.setContent(list.get(i).toString());
 				itemService.insertLogVo(lvo);
-			/*}
+			}
 			else {
-				// 존재하는 아이템인 경우.
+				// 존재하는 아이템인 경우. 수정
 				itemService.updateVo(list.get(i));
 				itemService.updateDetailVo(list.get(i));
 
@@ -308,32 +323,62 @@ public class ItemExcelController {
 				lvo.setItemSeq(list.get(i).getSeq());
 				lvo.setContent(list.get(i).toString());
 				itemService.insertLogVo(lvo);
-			}*/
-
-			// 옵션 등록
-			/*List<ItemOptionVo> opList = list.get(i).getOptionList();
-			opList.get(0).setItemSeq(list.get(i).getSeq());
-			itemOptionService.insertVo(opList.get(0));
-			Integer optionSeq = opList.get(0).getSeq();
-
-			// 로그 (이력)
-			lvo.setAction("옵션등록");
-			lvo.setContent(opList.get(0).toString());
-			itemService.insertLogVo(lvo);
-
-			// 옵션 항목 등록
-			for (int j = 0; j < opList.size(); j++) {
-				opList.get(j).setOptionSeq(optionSeq);
-				itemOptionService.insertValueVo(opList.get(j));
-
-				// 로그 (이력)
-				lvo.setAction("옵션항목등록");
-				lvo.setContent(opList.get(j).toString());
-				itemService.insertLogVo(lvo);
-			}*/
-
+			}
 			statusMap.put("dbCount", new Integer(i + 1));
 			session.setAttribute("excelStatus", statusMap);
+		}
+
+		for(int i = 0;i<optionList.size();i++){
+			// 옵션 등록/변경
+			ItemOptionVo ovo = itemOptionService.getVo(itemOptionService.getSeq(optionList.get(i).getItemSeq()));
+			if(ovo != null && ovo.getValueName().equals(session.getAttribute("loginName"))){
+				// 로그 (이력)
+				lvo.setAction("옵션항목수정");
+				lvo.setContent(optionList.get(0).toString());
+				itemService.insertLogVo(lvo);
+				ovo.setOptionPrice(optionList.get(i).getOptionPrice());
+				ovo.setSalePrice(optionList.get(i).getSalePrice());
+				ovo.setSalePeriod(optionList.get(i).getSalePeriod());
+				ovo.setStockCount(optionList.get(i).getStockCount());
+				itemOptionService.updateValueVo(ovo);
+			}
+			else {
+				//TODO
+
+				ovo = new ItemOptionVo();
+
+				// 로그 (이력)
+				lvo.setAction("옵션항목추가");
+				lvo.setContent(optionList.get(0).toString());
+				itemService.insertLogVo(lvo);
+				ovo.setOptionName("병원몰");
+				ovo.setShowFlag("Y");
+				ovo.setItemSeq(optionList.get(i).getItemSeq());
+				if (itemOptionService.insertVo(ovo)) {
+					//add optionvalue
+					Integer optionSeq = itemOptionService.getSeq(optionList.get(i).getItemSeq());
+
+				}
+
+
+				ovo = itemOptionService.getVo(itemOptionService.getSeq(optionList.get(i).getItemSeq()));
+				List<ItemOptionVo> tmpOptionValue = itemOptionService.getValueList(itemOptionService.getSeq(optionList.get(i).getItemSeq()));
+
+				ovo.setItemSeq(optionList.get(i).getItemSeq());
+				if (!itemOptionService.insertVo(ovo)) {
+					model.addAttribute("message", "옵션 데이터 삽입 도중 오류가 발생했습니다[4]");
+					return Const.ALERT_PAGE;
+				}
+
+				Integer optionSeq = itemOptionService.getSeq(optionList.get(i).getItemSeq());
+				for (int j = 0; j < list.size(); j++) {
+					tmpOptionValue.get(j).setOptionSeq(optionSeq);
+					if (!itemOptionService.insertValueVo(tmpOptionValue.get(j))) {
+						model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
+						return Const.ALERT_PAGE;
+					}
+				}
+			}
 		}
 
 		if (errorList.size() > 0) {
@@ -408,7 +453,7 @@ public class ItemExcelController {
 			return errorList;
 		}
 
-		int index = 0;//index 0 = item_seq
+		int index = 1;//index 0 = item_seq
 		// 1대분류 코드(필수)
 		Map map = new HashMap();
 
@@ -416,7 +461,8 @@ public class ItemExcelController {
 		//if (!StringUtil.isNum(String.valueOf(list.get(index)))) {
 		//	errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 대분류 코드는 숫자만 허용됩니다.");
 		//} else {
-		map.put("seq", 0);
+
+		map.put("seq",0);
 		map.put("name", String.valueOf(list.get(index)));
 		lv1 = categoryService.getVoByName(map);
 
@@ -709,6 +755,31 @@ public class ItemExcelController {
 		return errorList;
 	}
 
+	private ItemOptionVo optionMapper(ArrayList<Object> list, int LIST_SIZE, int OPTION_SIZE) throws ExcelOutOfBoundsException {
+		ItemOptionVo vo = new ItemOptionVo();
+		int index = LIST_SIZE;
+		System.out.println(">>>seq:"+list.get(index));
+
+		vo.setSeq((Integer.valueOf("" + list.get(index++))).intValue());
+
+		System.out.println("setValueName:"+list.get(index));
+		vo.setValueName(String.valueOf(list.get(index++)));
+
+		System.out.println("setOptionPrice:"+list.get(index));
+		vo.setOptionPrice(Integer.valueOf("" +list.get(index++)));
+
+		System.out.println("setSalePrice:"+list.get(index));
+		vo.setSalePrice(Integer.valueOf("" +list.get(index++)));
+
+		System.out.println("setSalePeriod:"+list.get(index));
+		vo.setSalePeriod(String.valueOf(list.get(index++)));
+
+		System.out.println("setStockCount:"+list.get(index));
+		vo.setStockCount(Integer.valueOf("" +list.get(index++)));
+
+		return vo;
+	}
+
 	private ItemVo itemMapper(ArrayList<Object> list, int LIST_SIZE) throws ExcelOutOfBoundsException {
 
 		ItemVo vo = new ItemVo();
@@ -716,7 +787,11 @@ public class ItemExcelController {
 		// 1대분류 코드
 		Map map = new HashMap();
 
-		//vo.setSeq((Integer.valueOf(""+list.get(index++))).intValue());//item seq
+		try {
+			vo.setSeq((Integer.valueOf("" + list.get(index++))).intValue());//item seq
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 		map.put("seq", 0);
 		map.put("name", String.valueOf(list.get(index++)));

@@ -19,6 +19,12 @@ public class OrderDaoImpl implements OrderDao {
 	}
 
 	@Override
+	public List<OrderVo> getRepeatOrderList(OrderVo pvo) {
+		return sqlSession.selectList("order.getRepeatOrderList", pvo);
+	}
+
+
+	@Override
 	public int getListCount(OrderVo pvo) {
 		return ((Integer)sqlSession.selectOne("order.getListCount", pvo)).intValue();
 	}

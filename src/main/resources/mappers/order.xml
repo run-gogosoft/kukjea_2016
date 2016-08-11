@@ -3,194 +3,194 @@
 <mapper namespace="order">
 	<!-- 주문 리스트 -->
 	<select id="getList" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
-		SELECT
-			d.seq,
-			d.order_seq AS orderSeq,
-			d.option_value_seq AS optionValueSeq,
-			d.item_name AS itemName,
-			i.seller_item_code AS sellerItemCode,
-			d.item_seq AS itemSeq,
-			d.option_value AS optionValue,
-			d.status_code AS statusCode,
-			d.sell_price AS sellPrice,
-			p.amount AS payPrice,
-			ph.point,
-			d.option_price AS optionPrice,
-			d.supply_price AS supplyPrice,
-			d.supply_master_price AS supplyMasterPrice,
-			d.coupon_price AS couponPrice,
-			d.order_cnt AS orderCnt,
-			d.deli_cost AS deliCost,
-			d.deli_prepaid_flag AS deliPrepaidFlag,
-			d.deli_seq AS deliSeq,
-			d.deli_no AS deliNo,
-			(SELECT company_name FROM sm_deli_company WHERE seq=d.deli_seq) AS deliCompanyName,
-			(SELECT track_url FROM sm_deli_company WHERE seq=d.deli_seq) AS deliTrackUrl,
-			(SELECT complete_msg FROM sm_deli_company WHERE seq=d.deli_seq) AS completeMsg,
-			d.tax_code AS taxCode,
-			d.seller_seq AS sellerSeq,
-			d.seller_master_seq AS sellerMasterSeq,
-			d.seller_name AS sellerName,
-			d.c10_date AS c10Date,
-			d.c50_date AS c50Date,
-			d.c55_date AS c55Date,
-			d.c99_date AS c99Date,
-			d.mod_date AS modDate,
-			d.reg_date AS regDate,
-			(SELECT img1 FROM sm_item WHERE seq=d.item_seq) img1,
-			(SELECT name FROM sm_common WHERE group_code=6 AND value=d.status_code) statusText,
-			(SELECT u.name FROM sm_user u WHERE u.seq=o.mall_seq AND u.type_code='M') AS mallName,
-			(SELECT u.id FROM sm_user u WHERE u.seq=o.mall_seq AND u.type_code='M') AS mallId,
-			(SELECT COUNT(*) FROM sm_order_detail WHERE order_seq=o.seq) AS orderCount,
-			(SELECT COUNT(*) FROM sm_order_pay_cancel WHERE order_pay_seq=p.seq) AS partCancelCnt,
-			p.tid, p.mid, p.approval_no AS approvalNo,
-			IFNULL(p.pg_key, m.pg_key) AS pgKey,
-			o.member_name AS memberName,
-			o.receiver_name AS receiverName,
-			(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv1_seq) AS lv1Name,
-			(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv2_seq) AS lv2Name,
-			(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv3_seq) AS lv3Name,
-			(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv4_seq) AS lv4Name,
-			p.pg_code AS pgCode,
-			o.device_type AS deviceType,
-			s.sales_name AS salesName,
-			s.sales_tel AS salesTel,
-			s.sales_cell AS salesCell,
-			s.sales_email AS salesEmail,
-       		o.pay_method AS payMethod,
-       		c1.name AS payMethodName,
-       		c2.name AS taxName,
-       		(SELECT COUNT(*) FROM sm_estimate_compare WHERE order_seq=d.order_seq AND seller_seq=d.seller_seq) estimateCompareCnt,
-       		o.estimate_compare_flag AS estimateCompareFlag,
-       		c.member_type_code AS memberTypeCode,
-       		o.estimate_compare_flag AS estimateCompareFlag,
-       		c.dept_name AS deptName,
-       		g.name AS groupName,
-       		dc.company_name AS deliName,
-       		tr.request_flag AS requestFlag
-		FROM
-			sm_order_detail d LEFT OUTER JOIN
-			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
-			sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
-			sm_order_pay p ON (o.seq=p.order_seq) LEFT OUTER JOIN
-			sm_point_history ph ON (o.seq=ph.order_seq AND ph.status_code='U') LEFT OUTER JOIN
-			sm_mall m ON (o.mall_seq=m.seq) LEFT OUTER JOIN
-			sm_user u ON (o.member_seq=u.seq) LEFT OUTER JOIN
-			sm_member c ON (u.seq=c.seq) LEFT OUTER JOIN
-			sm_member_group g ON (c.group_seq=g.seq) LEFT OUTER JOIN
-			sm_seller s ON (d.seller_seq=s.seq) LEFT OUTER JOIN
-       		sm_deli_company dc ON (d.deli_seq=dc.seq) LEFT OUTER JOIN
-       		sm_common c1 ON (c1.group_code=21 AND o.pay_method=c1.value) LEFT OUTER JOIN
-       		sm_common c2 ON (c2.group_code=5 AND d.tax_code=c2.value) LEFT OUTER JOIN
-       		sm_order_tax_request tr ON (o.seq=tr.order_seq)
-		WHERE
-		<choose>
-			<when test="loginType eq 'A'.toString()">
-				1=1
-			</when>
-			<when test="loginType eq 'S'.toString()">
-				<!-- 판매자일 경우 -->
-				d.seller_seq=#{loginSeq}
-				AND d.status_code > '00'
-			</when>
-			<when test="loginType eq 'M'.toString()">
-				<!-- 쇼핑몰일 경우 -->
-				o.mall_seq=#{loginSeq}
-			</when>
-			<when test="loginType eq 'C'.toString()">
-				<!-- 회원 -->
-				o.member_seq=#{loginSeq}
-			</when>	
-			<otherwise>
-				<!-- 비회원 -->
-				o.member_name = #{loginName} 
-				AND o.member_email= #{loginEmail}
-				AND o.member_seq IS NULL
-			</otherwise>
-		</choose>
-		<choose>
-			<when test="boardType eq 'order'">
-				AND d.status_code <![CDATA[<]]> 60
-			</when>
-			<when test="boardType eq 'cancel'">
-				AND d.status_code <![CDATA[>=]]> 60
-			</when>
-		</choose>
-		<if test="memberSeq != null">
-			AND o.member_seq=#{memberSeq}
-		</if>
-		<if test="lv1Seq != null">
-			AND i.cate_lv1_seq = #{lv1Seq}
-		</if>
-		<if test="lv2Seq != null">
-			AND i.cate_lv2_seq = #{lv2Seq}
-		</if>
-		<if test="lv3Seq != null">
-			AND i.cate_lv3_seq = #{lv3Seq}
-		</if>
-		<if test="lv4Seq != null">
-			AND i.cate_lv4_seq = #{lv4Seq}
-		</if>
-		<if test="searchDate1 != '' and searchDate2 != ''">
-			AND DATE_FORMAT(d.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
-		</if>
-		<if test="deliSeq != null">
-			AND d.deli_seq != #{deliSeq}
-		</if>
-		<if test="statusCode != ''">
-			AND d.status_code = #{statusCode}
-		</if>
-		<if test="seq != null">
-			AND d.seq=#{seq}
-		</if>
-		<if test="orderSeq != null">
-			AND d.order_seq=#{orderSeq}
-		</if>
-		<if test="memberName != ''">
-			AND o.member_name LIKE CONCAT('%',#{memberName},'%')
-		</if>
-		<if test="memberId != ''">
-			AND o.member_seq IN (SELECT seq FROM sm_user WHERE id LIKE CONCAT('%',#{memberId},'%') AND type_code='C')
-		</if>
-		<if test="receiverName != ''">
-			AND o.receiver_name LIKE CONCAT('%',#{receiverName},'%')
-		</if>
-		<if test="sellerId != ''">
-			AND d.seller_seq IN (SELECT seq FROM sm_user WHERE id LIKE CONCAT('%',#{sellerId},'%') AND type_code='S')
-		</if>
-		<if test="sellerName != ''">
-			AND d.seller_name LIKE CONCAT('%',#{sellerName},'%')
-		</if>
-		<if test="receiverTel != ''">
-			AND (o.receiver_tel=#{receiverTel} OR o.receiver_cell=#{receiverTel})
-		</if>
-		<if test="payMethod != ''">
-			AND o.pay_method = #{payMethod}
-		</if>
-		<if test="groupName != ''">
-			AND g.name LIKE CONCAT('%',#{groupName},'%')
-		</if>
-		<if test="deptName != ''">
-			AND c.dept_name LIKE CONCAT('%',#{deptName},'%')
-		</if>
-		<if test="estimateCompareFlag != null and estimateCompareFlag != ''">
-			AND o.estimate_compare_flag=#{estimateCompareFlag}
-		</if>
-		<choose>
-			<when test="taxRequest eq 'A'.toString()">
-				AND tr.request_flag IS NOT NULL
-			</when>
-			<when test="taxRequest != null and taxRequest != ''">
-				AND tr.request_flag=#{taxRequest}
-			</when>
-		</choose>
-		<choose>
-			<when test="search eq 'itemSeq' and findword != ''">AND d.item_seq=#{findword}</when>
-			<when test="search eq 'itemName'">AND d.item_name LIKE CONCAT('%',#{findword},'%')</when>
-		</choose>
-		ORDER BY d.seq DESC
-		LIMIT ${pageNum * rowCount}, ${rowCount}
-	</select>
+	SELECT
+	d.seq,
+	d.order_seq AS orderSeq,
+	d.option_value_seq AS optionValueSeq,
+	d.item_name AS itemName,
+	i.seller_item_code AS sellerItemCode,
+	d.item_seq AS itemSeq,
+	d.option_value AS optionValue,
+	d.status_code AS statusCode,
+	d.sell_price AS sellPrice,
+	p.amount AS payPrice,
+	ph.point,
+	d.option_price AS optionPrice,
+	d.supply_price AS supplyPrice,
+	d.supply_master_price AS supplyMasterPrice,
+	d.coupon_price AS couponPrice,
+	d.order_cnt AS orderCnt,
+	d.deli_cost AS deliCost,
+	d.deli_prepaid_flag AS deliPrepaidFlag,
+	d.deli_seq AS deliSeq,
+	d.deli_no AS deliNo,
+	(SELECT company_name FROM sm_deli_company WHERE seq=d.deli_seq) AS deliCompanyName,
+	(SELECT track_url FROM sm_deli_company WHERE seq=d.deli_seq) AS deliTrackUrl,
+	(SELECT complete_msg FROM sm_deli_company WHERE seq=d.deli_seq) AS completeMsg,
+	d.tax_code AS taxCode,
+	d.seller_seq AS sellerSeq,
+	d.seller_master_seq AS sellerMasterSeq,
+	d.seller_name AS sellerName,
+	d.c10_date AS c10Date,
+	d.c50_date AS c50Date,
+	d.c55_date AS c55Date,
+	d.c99_date AS c99Date,
+	d.mod_date AS modDate,
+	d.reg_date AS regDate,
+	(SELECT img1 FROM sm_item WHERE seq=d.item_seq) img1,
+	(SELECT name FROM sm_common WHERE group_code=6 AND value=d.status_code) statusText,
+	(SELECT u.name FROM sm_user u WHERE u.seq=o.mall_seq AND u.type_code='M') AS mallName,
+	(SELECT u.id FROM sm_user u WHERE u.seq=o.mall_seq AND u.type_code='M') AS mallId,
+	(SELECT COUNT(*) FROM sm_order_detail WHERE order_seq=o.seq) AS orderCount,
+	(SELECT COUNT(*) FROM sm_order_pay_cancel WHERE order_pay_seq=p.seq) AS partCancelCnt,
+	p.tid, p.mid, p.approval_no AS approvalNo,
+	IFNULL(p.pg_key, m.pg_key) AS pgKey,
+	o.member_name AS memberName,
+	o.receiver_name AS receiverName,
+	(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv1_seq) AS lv1Name,
+	(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv2_seq) AS lv2Name,
+	(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv3_seq) AS lv3Name,
+	(SELECT cate_name FROM sm_item_category WHERE seq = i.cate_lv4_seq) AS lv4Name,
+	p.pg_code AS pgCode,
+	o.device_type AS deviceType,
+	s.sales_name AS salesName,
+	s.sales_tel AS salesTel,
+	s.sales_cell AS salesCell,
+	s.sales_email AS salesEmail,
+	o.pay_method AS payMethod,
+	c1.name AS payMethodName,
+	c2.name AS taxName,
+	(SELECT COUNT(*) FROM sm_estimate_compare WHERE order_seq=d.order_seq AND seller_seq=d.seller_seq) estimateCompareCnt,
+	o.estimate_compare_flag AS estimateCompareFlag,
+	c.member_type_code AS memberTypeCode,
+	o.estimate_compare_flag AS estimateCompareFlag,
+	c.dept_name AS deptName,
+	g.name AS groupName,
+	dc.company_name AS deliName,
+	tr.request_flag AS requestFlag
+	FROM
+	sm_order_detail d LEFT OUTER JOIN
+	sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+	sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
+	sm_order_pay p ON (o.seq=p.order_seq) LEFT OUTER JOIN
+	sm_point_history ph ON (o.seq=ph.order_seq AND ph.status_code='U') LEFT OUTER JOIN
+	sm_mall m ON (o.mall_seq=m.seq) LEFT OUTER JOIN
+	sm_user u ON (o.member_seq=u.seq) LEFT OUTER JOIN
+	sm_member c ON (u.seq=c.seq) LEFT OUTER JOIN
+	sm_member_group g ON (c.group_seq=g.seq) LEFT OUTER JOIN
+	sm_seller s ON (d.seller_seq=s.seq) LEFT OUTER JOIN
+	sm_deli_company dc ON (d.deli_seq=dc.seq) LEFT OUTER JOIN
+	sm_common c1 ON (c1.group_code=21 AND o.pay_method=c1.value) LEFT OUTER JOIN
+	sm_common c2 ON (c2.group_code=5 AND d.tax_code=c2.value) LEFT OUTER JOIN
+	sm_order_tax_request tr ON (o.seq=tr.order_seq)
+	WHERE
+	<choose>
+		<when test="loginType eq 'A'.toString()">
+			1=1
+		</when>
+		<when test="loginType eq 'S'.toString()">
+			<!-- 판매자일 경우 -->
+			d.seller_seq=#{loginSeq}
+			AND d.status_code > '00'
+		</when>
+		<when test="loginType eq 'M'.toString()">
+			<!-- 쇼핑몰일 경우 -->
+			o.mall_seq=#{loginSeq}
+		</when>
+		<when test="loginType eq 'C'.toString()">
+			<!-- 회원 -->
+			o.member_seq=#{loginSeq}
+		</when>
+		<otherwise>
+			<!-- 비회원 -->
+			o.member_name = #{loginName}
+			AND o.member_email= #{loginEmail}
+			AND o.member_seq IS NULL
+		</otherwise>
+	</choose>
+	<choose>
+		<when test="boardType eq 'order'">
+			AND d.status_code <![CDATA[<]]> 60
+		</when>
+		<when test="boardType eq 'cancel'">
+			AND d.status_code <![CDATA[>=]]> 60
+		</when>
+	</choose>
+	<if test="memberSeq != null">
+		AND o.member_seq=#{memberSeq}
+	</if>
+	<if test="lv1Seq != null">
+		AND i.cate_lv1_seq = #{lv1Seq}
+	</if>
+	<if test="lv2Seq != null">
+		AND i.cate_lv2_seq = #{lv2Seq}
+	</if>
+	<if test="lv3Seq != null">
+		AND i.cate_lv3_seq = #{lv3Seq}
+	</if>
+	<if test="lv4Seq != null">
+		AND i.cate_lv4_seq = #{lv4Seq}
+	</if>
+	<if test="searchDate1 != '' and searchDate2 != ''">
+		AND DATE_FORMAT(d.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+	</if>
+	<if test="deliSeq != null">
+		AND d.deli_seq != #{deliSeq}
+	</if>
+	<if test="statusCode != ''">
+		AND d.status_code = #{statusCode}
+	</if>
+	<if test="seq != null">
+		AND d.seq=#{seq}
+	</if>
+	<if test="orderSeq != null">
+		AND d.order_seq=#{orderSeq}
+	</if>
+	<if test="memberName != ''">
+		AND o.member_name LIKE CONCAT('%',#{memberName},'%')
+	</if>
+	<if test="memberId != ''">
+		AND o.member_seq IN (SELECT seq FROM sm_user WHERE id LIKE CONCAT('%',#{memberId},'%') AND type_code='C')
+	</if>
+	<if test="receiverName != ''">
+		AND o.receiver_name LIKE CONCAT('%',#{receiverName},'%')
+	</if>
+	<if test="sellerId != ''">
+		AND d.seller_seq IN (SELECT seq FROM sm_user WHERE id LIKE CONCAT('%',#{sellerId},'%') AND type_code='S')
+	</if>
+	<if test="sellerName != ''">
+		AND d.seller_name LIKE CONCAT('%',#{sellerName},'%')
+	</if>
+	<if test="receiverTel != ''">
+		AND (o.receiver_tel=#{receiverTel} OR o.receiver_cell=#{receiverTel})
+	</if>
+	<if test="payMethod != ''">
+		AND o.pay_method = #{payMethod}
+	</if>
+	<if test="groupName != ''">
+		AND g.name LIKE CONCAT('%',#{groupName},'%')
+	</if>
+	<if test="deptName != ''">
+		AND c.dept_name LIKE CONCAT('%',#{deptName},'%')
+	</if>
+	<if test="estimateCompareFlag != null and estimateCompareFlag != ''">
+		AND o.estimate_compare_flag=#{estimateCompareFlag}
+	</if>
+	<choose>
+		<when test="taxRequest eq 'A'.toString()">
+			AND tr.request_flag IS NOT NULL
+		</when>
+		<when test="taxRequest != null and taxRequest != ''">
+			AND tr.request_flag=#{taxRequest}
+		</when>
+	</choose>
+	<choose>
+		<when test="search eq 'itemSeq' and findword != ''">AND d.item_seq=#{findword}</when>
+		<when test="search eq 'itemName'">AND d.item_name LIKE CONCAT('%',#{findword},'%')</when>
+	</choose>
+	ORDER BY d.seq DESC
+	LIMIT ${pageNum * rowCount}, ${rowCount}
+</select>
 	<select id="getListCount" parameterType="com.smpro.vo.OrderVo" resultType="int">
 		SELECT
 			COUNT(*) cnt
@@ -2201,7 +2201,7 @@
 			sm_seller s ON (t1.seller_seq=s.seq)
 	</select>
 	
-	<!-- 함께누리몰 기주문 개인정보 암호화 대상 리스트 -->
+	<!--  기주문 개인정보 암호화 대상 리스트 -->
 	<select id="getListForEncrypt" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			seq AS orderSeq,
@@ -2216,7 +2216,7 @@
 			old_order_id IS NOT NULL AND
 			encrypt_flag='N'
 	</select>
-	<!-- 함께누리몰 기주문 개인정보 암호화 업데이트 -->
+	<!-- 기주문 개인정보 암호화 업데이트 -->
 	<update id="updateForEncrypt" parameterType="com.smpro.vo.OrderVo">
 		UPDATE sm_order SET
 			member_email=#{memberEmail},
@@ -2228,4 +2228,54 @@
 		WHERE
 			seq=#{orderSeq}
 	</update>
+
+	<select id="getRepeatOrderList" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
+
+		SELECT  DISTINCT
+		d.item_seq AS itemSeq,
+		d.item_name AS itemName,
+		d.seller_name AS sellerName,
+		d.option_price AS optionValue
+		FROM
+		sm_order_detail d LEFT OUTER JOIN
+		sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+		sm_item i ON (d.item_seq=i.seq)
+		WHERE
+		<choose>
+			<when test="loginType eq 'C'.toString()">
+				<!-- 회원 -->
+				o.member_seq=#{loginSeq}
+			</when>
+			<otherwise>
+				<!-- 비회원 -->
+				o.member_name = #{loginName}
+				AND o.member_email= #{loginEmail}
+				AND o.member_seq IS NULL
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="boardType eq 'order'">
+				AND d.status_code <![CDATA[<]]> 60
+			</when>
+			<when test="boardType eq 'cancel'">
+				AND d.status_code <![CDATA[>=]]> 60
+			</when>
+		</choose>
+		<if test="memberSeq != null">
+			AND o.member_seq=#{memberSeq}
+		</if>
+		<if test="lv1Seq != null">
+			AND i.cate_lv1_seq = #{lv1Seq}
+		</if>
+		<if test="lv2Seq != null">
+			AND i.cate_lv2_seq = #{lv2Seq}
+		</if>
+		<if test="lv3Seq != null">
+			AND i.cate_lv3_seq = #{lv3Seq}
+		</if>
+		<if test="lv4Seq != null">
+			AND i.cate_lv4_seq = #{lv4Seq}
+		</if>
+		ORDER BY d.seq
+	</select>
 </mapper>

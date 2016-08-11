@@ -1,6 +1,8 @@
 package com.smpro.service;
 
 import com.smpro.dao.ItemDao;
+import com.smpro.dao.ItemOptionDao;
+import com.smpro.dao.UserDao;
 import com.smpro.util.*;
 import com.smpro.util.exception.ImageIsNotAvailableException;
 import com.smpro.vo.*;
@@ -26,6 +28,12 @@ public class ItemServiceImpl implements ItemService {
 
 	@Autowired
 	private ItemDao itemDao;
+
+	@Autowired
+	private ItemOptionDao itemOptionDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	public List<ItemVo> getList(ItemVo vo) {
 		List<ItemVo> list = itemDao.getList(vo);
@@ -422,8 +430,7 @@ public class ItemServiceImpl implements ItemService {
 			HttpSession session) {
 		Workbook wb;
 		String loginType = (String) session.getAttribute("loginType");
-
-		int arrSize = 18;
+		int arrSize = loginType.equals("S")?24:18;
 
 		/* 타이틀 항목 생성 */
 		String[] strTitle = new String[arrSize];
@@ -446,6 +453,15 @@ public class ItemServiceImpl implements ItemService {
 		strTitle[idx++] = "자동발주량";
 		strTitle[idx++] = "상품이미지1";
 		strTitle[idx++] = "상품이미지2";
+
+		if(loginType.equals("S")){
+			strTitle[idx++] = "seq";
+			strTitle[idx++] = "쇼핑몰명";
+			strTitle[idx++] = "상품 가격";
+			strTitle[idx++] = "할인 가격";
+			strTitle[idx++] = "할인 기간";
+			strTitle[idx++] = "재고 수량";
+		}
 
 		/* 상품리스트 */
 		vo.setLoginType((String) session.getAttribute("loginType"));
@@ -482,6 +498,23 @@ public class ItemServiceImpl implements ItemService {
 				} else {
 					cell.add(ivo.getImg2());
 				}
+
+				List<ItemOptionVo> optionVoList = itemOptionDao.getList(ivo.getSeq());
+
+				if(loginType.equals("S")){
+					String s = (String)session.getAttribute("loginName");
+					for(int j = 0;j<optionVoList.size();j++){
+						if(s.equals(optionVoList.get(j).getValueName())) {
+							cell.add(optionVoList.get(j).getSeq());
+							cell.add(optionVoList.get(j).getOptionName());
+							cell.add(optionVoList.get(j).getOptionPrice());
+							cell.add(optionVoList.get(j).getSalePrice());
+							cell.add(optionVoList.get(j).getSalePeriod());
+							cell.add(optionVoList.get(j).getStockCount());
+						}
+					}
+				}
+
 				row.add(cell);
 			}
 		}

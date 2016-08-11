@@ -5,8 +5,8 @@
             <a href="#" id="favorite" class="btn_favorite">즐겨찾기 추가</a>
             <ul class="mall_links">
                 <li><a href="#">병원몰</a></li>
-                <li><a href="#">약국몰</a></li>
-                <li><a href="#">B2B 몰</a></li>
+                <!--li><a href="#">약국몰</a></li>
+                <li><a href="#">B2B 몰</a></li-->
             </ul>
             <c:choose>
             <c:when test="${sessionScope.loginSeq > 0}">
@@ -61,7 +61,9 @@
         <div class="promotion_top">
             <img src="/images/thumb/thumb_promotion230x70.jpg" alt="">
         </div>
-        <p class="noti">[공지] 국제몰 오픈 안내 공지사항 입니다. 공지공지공지공지 공지가 길면...</p>
+            <li>
+                <a href="#"><a href="/shop/cscenter/view/notice/${noticeList[0].seq}"><p class="noti">[공지]${noticeList[0].title}</p></a></a>
+            </li>
     </div>
 
     <%@ include file="/WEB-INF/jsp/shop/include/navigation.jsp" %>

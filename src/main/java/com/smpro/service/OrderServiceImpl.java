@@ -55,6 +55,21 @@ public class OrderServiceImpl implements OrderService {
 		return getList;
 	}
 
+	public List<OrderVo> getRepeatOrderList(OrderVo pvo) throws Exception{
+		List<OrderVo> getList = orderDao.getRepeatOrderList(pvo);
+		for (OrderVo vo : getList) {
+			//개인정보 복호화
+			decryptData(vo);
+
+			// LGUPLUS 영수증 출력용 MD5 인증값 생성
+			vo.setAuthData(StringUtil.encryptMd5(vo.getMid() + vo.getTid() + vo.getPgKey()));
+		}
+		if (pvo.getSearch().equals("receiver_num")) {
+			pvo.setFindword(CrypteUtil.decrypt(pvo.getFindword(), Const.ARIA_KEY, Const.ARIA_KEY.length * 8, null));
+		}
+		return getList;
+	}
+
 	public int getListCount(OrderVo vo) {
 		return orderDao.getListCount(vo);
 	}

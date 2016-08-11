@@ -28,7 +28,7 @@
 	<section class="content">
 		<div class="alert alert-info">
 			<ol>
-				<li>엑셀은 반드시 정해진 폼에 맞춰서 작업을 해야 합니다. 샘플파일을 참고하세요</li>
+				<li>엑셀은 반드시 정해진 폼에 맞춰서 작업을 해야 합니다. <strong> - 상품리스트에서 다운받은 엑셀 파일을 참고하세요</strong></li>
 				<li>엑셀은 금액부분을 제외하고 반드시 셀서식을 텍스트 형식으로 저장하셔야 합니다. 샘플파일을 참고하세요</li>
 				<li>
 					엑셀은 반드시 <strong>.xls (오피스 2003)</strong>으로 저장을 해주셔야 합니다. 오피스 2007은 적용되지 않습니다 <br/>
@@ -43,13 +43,6 @@
 					업로드 가능합니다
 				</li>
 			</ol>
-		</div>
-		<div class="alert alert-info">
-			<strong>상품등록시 제한되는 금지어</strong> (필드에 해당 금지어가 입력되면 등록이 되지 않습니다)<br/>
-			<c:forEach var="item" items="${filterList}" varStatus="status">
-				<c:if test="${status.index ne 0}">,</c:if>
-				${item.filterWord}
-			</c:forEach>
 		</div>
 
 		<div class="row">
@@ -170,67 +163,67 @@
 					<form id="validation-form" method="post" action="/admin/item/excel/upload" target="zeroframe" class="form-horizontal" onsubmit="return submitProc(this)" enctype="multipart/form-data">
 						<div class="box-body">
 					<c:choose>
-						<c:when test="${sessionScope.loginType eq 'A'}">
+						<c:when test="${sessionScope.loginType eq 'A' or sessionScope.loginType eq 'S'}">
 							<input type="hidden" name="sellerSeq" value="${sessionScope.loginSeq}" readonly="readonly" alt="관리자" />
 							<div class="form-group">
 								<label class="col-md-2 control-label">샘플 다운로드</label>
 								<div class="col-md-10">
-									<a href="/assets/xls/sample_item_list.xls" target="_blank" class="btn btn-sm btn-success">샘플 파일 다운로드 (sample_item_list.xls)</a>
+									<a href="/admin/item/list" target="_self" class="btn btn-sm btn-success">상품 리스트</a> 에서 <strong>엑셀다운</strong>하세요
 								</div>
 							</div>
 						</c:when>
 						<c:otherwise>
 
-						<div class="form-group">
-							<label class="col-md-2 control-label">샘플 다운로드</label>
-							<div class="col-md-10">
-								<a href="/assets/xls/sample_item_list.xls" target="_blank" class="btn btn-sm btn-success">샘플 파일 다운로드 (sample_item_list.xls)</a>
+							<div class="form-group">
+								<label class="col-md-2 control-label">샘플 다운로드</label>
+								<div class="col-md-10">
+									<a href="/admin/item/list" target="_self" class="btn btn-sm btn-success">상품 리스트</a> 에서 <strong>엑셀다운</strong>하세요
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-2 control-label">입점업체</label>
-							<div class="col-md-2">
-								<input type="text" class="form-control" name="sellerSeq" value="" readonly="readonly" ${param.transfer eq 'Y' ? '':'alt="입점업체"'}/>
+							<div class="form-group">
+								<label class="col-md-2 control-label">입점업체</label>
+								<div class="col-md-2">
+									<input type="text" class="form-control" name="sellerSeq" value="" readonly="readonly" ${param.transfer eq 'Y' ? '':'alt="입점업체"'}/>
+								</div>
+								<div class="col-md-2">
+									<select id="search" name="search" class="form-control">
+										<option value="name">업체명</option>
+										<option value="id">아이디</option>
+										<!-- <option value="nickname">닉네임</option> -->
+									</select>
+								</div>
+								<div class="col-md-2">
+									<input type="text" class="form-control" name="seller" value="" onkeydown="enterSearch();" placeholder="입점업체 검색" />
+								</div>
+								<div class="col-md-1">
+									<button type="button" class="btn btn-default" onclick="sellerProc(0)">검색</button>
+								</div>
 							</div>
-							<div class="col-md-2">
-								<select id="search" name="search" class="form-control">
-									<option value="name">업체명</option>
-									<option value="id">아이디</option>
-									<!-- <option value="nickname">닉네임</option> -->
-								</select>
+							<div class="form-group">
+								<div class="col-md-2">입점업체</div>
+								<div class="col-md-10">
+									<table class="table table-bordered table-striped" style=margin-top:5px;>
+										<thead>
+											<tr>
+												<th>아이디</th>
+												<th>입점업체명</th>
+												<th>입점업체<br/>등급</th>
+												<th>정산<br/>등급</th>
+												<th>상태</th>
+												<th>대표자명</th>
+												<th>대표전화</th>
+												<th>담당자명</th>
+												<th>담당자<br/>연락처</th>
+												<th>승인일자</th>
+											</tr>
+										</thead>
+										<tbody id="eb-seller-list">
+											<tr><td class="muted text-center" colspan="20">	검색결과가 이 안에 표시됩니다</td></tr>
+										</tbody>
+									</table>
+									<div id="paging"></div>
+								</div>
 							</div>
-							<div class="col-md-2">
-								<input type="text" class="form-control" name="seller" value="" onkeydown="enterSearch();" placeholder="입점업체 검색" />
-							</div>
-							<div class="col-md-1">
-								<button type="button" class="btn btn-default" onclick="sellerProc(0)">검색</button>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-md-2">입점업체</div>
-							<div class="col-md-10">
-								<table class="table table-bordered table-striped" style=margin-top:5px;>
-									<thead>
-										<tr>
-											<th>아이디</th>
-											<th>입점업체명</th>
-											<th>입점업체<br/>등급</th>
-											<th>정산<br/>등급</th>
-											<th>상태</th>
-											<th>대표자명</th>
-											<th>대표전화</th>
-											<th>담당자명</th>
-											<th>담당자<br/>연락처</th>
-											<th>승인일자</th>
-										</tr>
-									</thead>
-									<tbody id="eb-seller-list">
-										<tr><td class="muted text-center" colspan="20">	검색결과가 이 안에 표시됩니다</td></tr>
-									</tbody>
-								</table>
-								<div id="paging"></div>
-							</div>
-						</div>
 						</c:otherwise>
 					</c:choose>
 						<div class="form-group">
@@ -246,7 +239,7 @@
 							<div class="col-md-3">
 								<button type="button" class="btn btn-sm btn-success fileinput-button" onclick="doSubmit();">
 									<i class="fa fa-fw fa-plus"></i>
-									<span>엑셀 파일 업로드하기...</span>
+									<span>엑셀 파일 업로드하기</span>
 								</button>
 								<div id="upload-alert" class="hide">파일을 업로드하고 있습니다. 잠시만 기다려주세요 <img src="/assets/img/common/ajaxloader.gif" alt="" /></div>
 							</div>

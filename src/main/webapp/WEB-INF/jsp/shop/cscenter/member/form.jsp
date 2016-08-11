@@ -34,7 +34,7 @@
 
                             <div class="btn_action rt">
                                 <button type="submit" class="btn btn_red">회원가입</button>
-                                <button type="reset" class="btn btn_gray">취소하기</button>
+                                <button type="reset" class="btn btn_gray">다시작성하기</button>
                             </div>
                         </form>
                     </div>

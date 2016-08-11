@@ -159,7 +159,7 @@
                                             <c:if test="${itemSearchVo.listStyle eq 'all'}"><td>
                                                 <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
                                     <span class="thumb">
-                                        <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
+                                        <img src="/upload${fn:replace(item.img1, 'origin', 's60')}" alt="" onerror="noImage(this)" />
                                     </span>
                                                 </a>
                                             </td></c:if>

@@ -349,28 +349,19 @@ public class OrderStatsController {
 		}
 		
 		//자치구별 상품 판매수 리스트 저장 변수		
-		List<List<OrderVo>> lists = new ArrayList<>();
-		
-		//자치구별 상품 판매수 매출 합계 저장 변수
-		List<OrderVo> sLists = new ArrayList<>();
-		
-		//자치구 코드 조회
-		List<CommonVo> cList = systemService.getCommonListByGroup(new Integer((29)));
-		//자치구 갯수별로 루프를 돌면서 리스트를 저장한다.
-		for(CommonVo cvo : cList) {
-			vo.setJachiguCode(cvo.getValue());
-			if("seller".equals(userType)) {
-				lists.add(orderStatsService.getListByItemForSellerJachigu(vo));
-				sLists.add(orderStatsService.getListByItemForSellerJachiguSum(vo));
-			} else {
-				lists.add(orderStatsService.getListByItemForMemberJachigu(vo));
-				sLists.add(orderStatsService.getListByItemForMemberJachiguSum(vo));
-			}
+		List<OrderVo> lists = new ArrayList<OrderVo>();
+
+
+
+		lists=orderStatsService.getListByItemForSellerJachigu(vo);
+		System.out.print("getListByItemForJachigu size :"+lists.size());
+		for(int i = 0;i<lists.size();i++) {
+			System.out.print(">>"+lists.get(i).getSellerName());
+			System.out.print(">>"+lists.get(i).getOrderCnt());
+			System.out.print(">>"+lists.get(i).getSumPrice());
 		}
-		
-		model.addAttribute("cList", cList);
+
 		model.addAttribute("lists", lists);
-		model.addAttribute("sLists", sLists);
 		
 		model.addAttribute("vo", vo);
 		model.addAttribute("userType", userType);

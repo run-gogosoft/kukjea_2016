@@ -1595,8 +1595,6 @@ public class ItemController {
 	public void writeExcelItemList(ItemVo vo, HttpSession session, HttpServletResponse response) throws IOException {
 		// 엑셀 다운로드시 row수를 3000개로 무조건 고정한다.
 		vo.setRowCount(1000);
-		// 세션
-		String loginId = String.valueOf(session.getAttribute("loginId"));
 		// 엑셀 파일명
 		response.setHeader("Content-Disposition", "attachment; filename = item_list_" + StringUtil.getDate(0, "yyyyMMdd") + ".xls");
 		// 워크북

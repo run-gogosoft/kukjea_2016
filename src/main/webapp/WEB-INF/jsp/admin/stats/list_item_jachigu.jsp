@@ -44,7 +44,6 @@
 							</div>
 						</div>
 						<div class="box-footer">
-							<div class="pull-left">! 총 <b style="color:#00acd6;"><fmt:formatNumber value="${fn:length(list)}"/></b> 건이 조회 되었습니다.</div>
 							<div class="pull-right">
 								<!-- <button type="button" id="excelDownBtn" onclick="CHExcelDownload.excelDown();" class="btn btn-success btn-sm">엑셀다운</button> -->
 								<button type="submit" class="btn btn-default btn-sm">검색하기</button>
@@ -55,40 +54,40 @@
 			</div>
 		</div>
 
-
+<c:forEach var="list" items="${lists}" varStatus="listStatus">
+	<c:if test="${listStatus.index == 0 or (listStatus.index+1) % 2== 1}">
 		<div class="row">
-			<div class="col-md-12">
+	</c:if>
+			<div class="col-md-6">
 				<div class="box box-warning box-solid">
 					<!-- 내용 -->
 					<div class="box-body">
 						<table class="table table-bordered table-striped">
 							<colgroup>
-								<col style="width:10%;"/>
 								<col style="width:*;"/>
-
 								<col style="width:20%;"/>
+								<col style="width:30%;"/>
 							</colgroup>
 							<thead>
 								<tr>
-									<th>No.</th>
 									<th>공급사명</th>
-									<th>매출금액 (${vo.searchDate1} - ${vo.searchDate2})</th>
+									<th>주문횟수</th>
+									<th>매출금액 <br/>(${vo.searchDate1} - ${vo.searchDate2})</th>
 								</tr>
 							</thead>
 							<tbody>
-							<!--
+
 							<c:forEach var="list" items="${lists}" varStatus="listStatus">
 									<tr>
-										<td class="text-center">${status.index + 1}</td>
-										<td>${cList[listStatus.index].name}</td>
-										<td class="text-right"><fmt:formatNumber value="${sLists[listStatus.index].sumPrice}"/></td>
+										<td class="text-center" >${list.sellerName}</td>
+										<td class="text-center" >${list.orderCnt}</td>
+										<td class="text-right"><fmt:formatNumber value="${list.sumPrice}"/>원</td>
 									</tr>
-
 							</c:forEach>
-							-->
-							<!--:if test="${ fn:length(lists)==0 }"-->
+
+							<c:if test="${ fn:length(lists)==0 }">
 								<tr><td class="text-center" colspan="4">조회된 데이터가 없습니다.</td></tr>
-							<!--/c:if-->
+							</c:if>
 							</tbody>
 						</table>
 						<%-- <div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div> --%>
@@ -96,8 +95,10 @@
 				</div>
 			</div>
 
+	<c:if test="${listStatus.index > 0 and (listStatus.index+1) % 4 == 0}">
 		</div>
-
+	</c:if>
+</c:forEach>
 
 	</section>
 </div>

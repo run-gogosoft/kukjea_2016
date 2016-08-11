@@ -12,6 +12,9 @@ public interface OrderDao {
 	/** 주문 리스트 */
 	public List<OrderVo> getList(OrderVo vo);
 
+	/** 반복 주문 리스트 **/
+	public List<OrderVo> getRepeatOrderList(OrderVo vo);
+
 	/** 주문 리스트 페이징용 카운트 */
 	public int getListCount(OrderVo vo);
 

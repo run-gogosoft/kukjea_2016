@@ -38,8 +38,8 @@
                         <caption>구매리스트</caption>
                         <colgroup>
                             <col width="15%"/>
+                            <!--col width="10%"/-->
                             <col width="10%"/>
-                            <col width="8%"/>
                             <col width="*"/>
                             <col width="10%"/>
                             <col width="5%"/>
@@ -50,7 +50,7 @@
                         <thead>
                         <tr>
                             <th>주문번호(주문일자)</th>
-                            <th>상세정보</th>
+                            <!--th>상세정보</th-->
                             <th colspan="2">상품정보</th>
                             <th>상품 금액</th>
                             <th>수량</th>
@@ -157,9 +157,9 @@
                                     <button type="button" onclick="showReceipt('${vo.tid}')" class="btn btn_xs btn_default">영수증 출력</button>
                                 </c:if>
                             </td>
-                            <td data-detail-merge-flag="${vo.orderSeq}" data-detail-merge-flag-statuscode="${vo.statusCode}">
+                            <!--td data-detail-merge-flag="${vo.orderSeq}" data-detail-merge-flag-statuscode="${vo.statusCode}">
                                 <a href="/shop/mypage/order/detail/${vo.orderSeq}"><i class="fa fa-building-o fa-3x" style="color:#e5be34;"></i></a>
-                            </td>
+                            </td-->
                             <td>
                                 <c:if test="${vo.img1 ne ''}">
                                     <a href="/shop/search?seq=${vo.itemSeq}"><img src="/upload${fn:replace(vo.img1, '/origin/', '/s60/')}" onerror="noImage(this)" style="width:70px;height:70px;border:1px solid #d7d7d7;" alt="" /></a>

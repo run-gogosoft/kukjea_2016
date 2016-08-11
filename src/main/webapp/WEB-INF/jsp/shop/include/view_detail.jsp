@@ -9,7 +9,7 @@
             <div class="price_info">
                 <span class="price_label">해당 상품 최저가</span>
                 <span class="price"><strong><%="${ebFormatNumber(vo.sellPrice)}"%></strong>원</span>
-                <a href="#" class="btn btn_gray btn_xs" onclick="alert('준비중입니다');return false;">가격제안</a>
+                <a href="/shop/about/board/detail/form/10"  class="btn btn_gray btn_xs" >가격제안</a>
             </div>
         </div>
 

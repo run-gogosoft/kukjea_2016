@@ -63,7 +63,7 @@ public class IndexController {
 	private EventService eventService;
 
 	@RequestMapping("/main")
-	public String index(HttpSession session, HttpServletRequest request, Model model) {
+	public String index(HttpSession session, HttpServletRequest request, Model model) throws Exception {
 		String memberTypeCode = (String)session.getAttribute("loginMemberTypeCode");
 		//회원이면 회원의 멤버구분을, 비회원이면 무조건 회원으로 강제한다.
 		if(memberTypeCode == null) {
@@ -207,6 +207,12 @@ public class IndexController {
 		nvo.setLoginType((String) session.getAttribute("loginType"));
 		nvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		model.addAttribute("newItemList", itemService.getList(nvo));
+
+		OrderVo repeate = new OrderVo();
+		repeate.setRowCount(10);
+		repeate.setLoginType((String) session.getAttribute("loginType"));
+		repeate.setLoginSeq((Integer) session.getAttribute("loginSeq"));
+		model.addAttribute("repeatList", orderService.getRepeatOrderList(repeate));
 
 		return "/index.jsp";
 	}

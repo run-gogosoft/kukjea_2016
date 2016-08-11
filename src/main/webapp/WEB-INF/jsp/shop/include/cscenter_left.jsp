@@ -5,7 +5,7 @@
         <li <c:if test="${on eq '01'}">class="on"</c:if>><a href="/shop/cscenter/list/notice">공지사항</a></li>
         <li <c:if test="${on eq '02'}">class="on"</c:if>><a href="/shop/cscenter/list/faq?categoryCode=10">자주하는 질문</a></li>
         <%--<li <c:if test="${on eq '03'}">class="on"</c:if>><a href="/shop/mypage/qna/list">Q&amp;A</a></li>--%>
-        <li <c:if test="${on eq '04'}">class="on"</c:if>><a href="/shop/cscenter/guide">이용안내</a></li>
+        <!--li <c:if test="${on eq '04'}">class="on"</c:if>><a href="/shop/cscenter/guide">이용안내</a></li-->
         <li <c:if test="${on eq '05'}">class="on"</c:if>><a href="/shop/cscenter/policy">이용약관</a></li>
         <li <c:if test="${on eq '06'}">class="on"</c:if>><a href="/shop/cscenter/privacy">개인정보처리방침</a></li>
         <li <c:if test="${on eq '07'}">class="on"</c:if>><a href="/shop/cscenter/reject/email/collection">이메일무단수집거부</a></li>

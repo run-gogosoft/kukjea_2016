@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Const {
 	/** Manager Mail **/
-	public final static String MALL_MAIL = "help@kukjemall.com";
+	public final static String MALL_MAIL = "kukjea@empal.com";
 	/** 경고창만 뜨는 페이지 */
 	public final static String ALERT_PAGE = "/_proc/alert.jsp";
 	/** 경고창이 뜬 후에 부모창을 리다이렉트 시키는 페이지 */

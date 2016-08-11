@@ -59,7 +59,7 @@
                                 </td>
                                 <td>
                                     <c:if test="${item.img1 ne ''}">
-                                        <img src="/upload${fn:replace(item.img1, '/origin/', '/s110/')}"
+                                        <img src="/upload${fn:replace(item.img1, '/origin/', '/s170/')}"
                                              style="width:70px;border:1px solid #d7d7d7;" width="70px" onerror="noImage(this)" alt="상품이미지"/>
                                     </c:if>
                                 </td>

@@ -11,7 +11,6 @@
 </head>
 <body class="skin-blue fixed">
 <%@ include file="/WEB-INF/jsp/admin/include/navigation.jsp" %>
-
 <div class="content-wrapper">
 	<section class="content-header">
 	    <h1>메뉴 관리 <small>Main Menu</small></h1>

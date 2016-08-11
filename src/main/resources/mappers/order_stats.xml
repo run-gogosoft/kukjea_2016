@@ -475,48 +475,42 @@
 	<!-- 자치구별 상품 판매수 통계(판매자) -->
 	<select id="getListByItemForSellerJachigu" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.OrderVo">
 		SELECT tt.* FROM (	
-			SELECT 
-				t.item_name AS itemName,
+			SELECT
+				t.name AS sellerName,
 				SUM(t.order_cnt) AS orderCnt,
 				SUM(t.sell_price) AS sumPrice
 			FROM (
 				<!-- 정상주문 -->
 				SELECT
-					d.item_name,
+					s.name,
 					d.order_cnt,
 					((d.sell_price + d.option_price) * d.order_cnt) sell_price
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
-					sm_seller s ON (d.seller_seq=s.seq)
+					sm_user s ON (d.seller_seq=s.seq)
 				WHERE 
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">
 					AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 					</if>
-					<if test="jachiguCode != ''">
-					AND s.jachigu_code=#{jachiguCode}
-					</if>
 				UNION ALL
 				
 				<!-- 취소주문 -->
 				SELECT
-					d.item_name,
+					s.name,
 					-d.order_cnt,
 					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
-					sm_seller s ON (d.seller_seq=s.seq)
+					sm_user s ON (d.seller_seq=s.seq)
 				WHERE
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">
 					AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 					</if>
-					<if test="jachiguCode != ''">
-					AND s.jachigu_code=#{jachiguCode}
-					</if>
 					AND d.status_code='99'
 				) t
-			GROUP BY t.item_name
+			GROUP BY t.name
 		) tt
 		WHERE tt.orderCnt > 0
 		ORDER BY tt.orderCnt DESC

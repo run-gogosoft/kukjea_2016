@@ -319,13 +319,13 @@
                                                             (
                                                             입금은행: <strong class="text-info">KB국민은행</strong> /
                                                             계좌번호: <strong class="text-info">029301-04-193023</strong> /
-                                                            예금주: <strong class="text-info">(주)국제메디팜 최태봉</strong>
+                                                            예금주: <strong class="text-info">국제메디팜 최태봉</strong>
                                                             )
                                                         </div>
                                                     </c:if>
                                                 </c:if>
                                             </c:forEach>
-                                            <input type="hidden" name="accountInfo" value="KB국민은행 029301-04-193023 (주)국제메디팜 최태봉"/>
+                                            <input type="hidden" name="accountInfo" value="KB국민은행 029301-04-193023 국제메디팜 최태봉"/>
                                         </div>
                                     </td>
                                 </tr>

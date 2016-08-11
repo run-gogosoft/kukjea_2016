@@ -64,19 +64,7 @@
 						</div>
 					</form>
 				</div>
-				
-				<div class="box box-info box-solid">
-					<div class="box-header">
-						<h3 class="box-title">매출 통계</h3>
-						<div class="box-tools pull-right">
-							<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-							<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-						</div>
-					</div>
-					<div class="box-body chart-responsive">
-						<div class="chart" id="bar-chart" style="height: 300px;"></div>
-					</div><!-- /.box-body -->
-				</div><!-- /.box -->
+
 				
 				<div class="box">
 					<!-- 소제목 -->

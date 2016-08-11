@@ -70,7 +70,7 @@
 				</div>
 			</form>
 		</div>
-		<div class="text-right" style="margin-top:10px; font-size:12px; color:#888888;">이용문의: 국제몰 고객지원센터 <strong class="text-primary">02-888-7777</strong></div>
+		<div class="text-right" style="margin-top:10px; font-size:12px; color:#888888;">이용문의: 국제몰 고객지원센터 <strong class="text-primary">070-4693-1971</strong></div>
 		<div class="text-warning text-right" style="font-size:12px;color:#787878;">
 			<strong><i class="fa fa-exclamation"></i></strong>&nbsp;<strong>IE9</strong> 이상의 브라우저에 최적화 되어 있습니다.
 		</div>

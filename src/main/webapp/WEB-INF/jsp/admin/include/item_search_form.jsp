@@ -58,12 +58,13 @@
 				<div class="col-md-2"></div>
 			</div>
 			<div class="form-group">
-				<label class="col-md-2 control-label">상품명/상품코드</label>
+				<label class="col-md-2 control-label">상품명/상품코드/제조사</label>
 				<div class="col-md-2">
 					<select class="form-control" id="itemSearchType" name="itemSearchType">
-						<%-- <option value="">---구분---</option> --%>
+						<option value="">---구분---</option>
 						<option value="seq"  <c:if test="${vo.itemSearchType eq 'seq'}">selected</c:if>>상품코드</option>
-						<option value="name" <c:if test="${vo.itemSearchType eq '' or vo.itemSearchType eq 'name'}">selected</c:if>>상품명</option>
+						<option value="name" <c:if test="${vo.itemSearchType eq 'name'}">selected</c:if>>상품명</option>
+						<option value="maker" <c:if test="${vo.itemSearchType eq 'maker'}">selected</c:if>>제조사</option>
 					</select>
 				</div>
 				<div class="col-md-2">

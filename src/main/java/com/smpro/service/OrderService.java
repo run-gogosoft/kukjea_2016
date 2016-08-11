@@ -16,6 +16,8 @@ import java.util.*;
 public interface OrderService {
 	public List<OrderVo> getList(OrderVo pvo) throws Exception;
 
+	public List<OrderVo> getRepeatOrderList(OrderVo pvo) throws Exception;
+
 	public int getListCount(OrderVo vo);
 
 	public List<OrderVo> getCsOrderList(OrderVo pvo);

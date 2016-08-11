@@ -61,9 +61,9 @@ public class MailServiceImpl implements MailService {
 		// 고정이미지 생성
 		str = str.replace("{$titleMemberName$}", name);
 		str = str.replace("{$memberName$}", name);
-		str = str.replace("{$logo$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/logo.png'/>");
-		str = str.replace("{$searchBtn$}", "<a href='http://" + Const.DOMAIN + "/shop/main'><img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH	+ "/mail/home_btn.png'/></a>");
-		str = str.replace("{$footer$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/footer.jpg'/>");
+		str = str.replace("{$logo$}", "<img src='http://www.kukjemall.com/images/common/logo.png'/>");
+		str = str.replace("{$searchBtn$}", "<a href='http://"+Const.DOMAIN+"/shop/main' target='_blank'><button type='text' class='btn btn_gray'>페이지 바로가기</button></a>");
+		str = str.replace("{$footer$}", "<img src='http://www.kukjemall.com/images/common/footer.png'/>");
 		str = str.replace("{$password$}", password);
 		str = str.replace("{$sendDate$}",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
 		return str;
@@ -96,10 +96,10 @@ public class MailServiceImpl implements MailService {
 		br.close();
 		String str = sb.toString();
 		str = str.replace("{$name$}", name);
-		str = str.replace("{$logo$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/logo.png'/>");
+		str = str.replace("{$logo$}", "<img src='http://www.kukjemall.com/images/common/logo.png'/>");
 		str = str.replace("{$join$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/join.png'/>");
-		str = str.replace("{$searchBtn$}", "<a href='http://" + Const.DOMAIN + "/shop/main'><img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH	+ "/mail/home_btn.png'/></a>");
-		str = str.replace("{$footer$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/footer.jpg'/>");
+		str = str.replace("{$searchBtn$}", "<a href='http://"+Const.DOMAIN+"/shop/main' target='_blank'><button type='text' class='btn btn_gray'>페이지 바로가기</button></a>");
+		str = str.replace("{$footer$}", "<img src='http://www.kukjemall.com/images/common/footer.png'/>");
 		str = str.replace("{$id$}", id);
 
 		return str;
@@ -119,9 +119,9 @@ public class MailServiceImpl implements MailService {
 		String str = sb.toString();
 		str = str.replace("{$titleMemberName$}", name);
 		str = str.replace("{$memberName$}", name);
-		str = str.replace("{$logo$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/logo.png'/>");
-		str = str.replace("{$searchBtn$}", "<a href='http://" + Const.DOMAIN + "/shop/main'><img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH	+ "/mail/home_btn.png'/></a>");
-		str = str.replace("{$footer$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/footer.jpg'/>");
+		str = str.replace("{$logo$}", "<img src='http://www.kukjemall.com/images/common/logo.png'/>");
+		str = str.replace("{$searchBtn$}", "<a href='http://"+Const.DOMAIN+"/shop/main' target='_blank'><button type='text' class='btn btn_gray'>페이지 바로가기</button></a>");
+		str = str.replace("{$footer$}", "<img src='http://www.kukjemall.com/images/common/footer.png'/>");
 		str = str.replace("{$id$}", id);
 		str = str.replace("{$sendDate$}",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
 
@@ -190,11 +190,11 @@ public class MailServiceImpl implements MailService {
 		String html = sb.toString();
 		// 고정이미지 생성
 		html = html.replace("{$header$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/mail-find-pw-header-img.png'/>");
-		html = html.replace("{$searchBtn$}", "<a href='http://" + Const.DOMAIN + "/shop/main'><img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH	+ "/mail/home_btn.png'/></a>");
-		html = html.replace("{$orderBtn$}", "<a href='http://" + Const.DOMAIN + "/shop/mypage/order/list' style='margin-left:20px;'><img src='http://"+ Const.DOMAIN + Const.UPLOAD_PATH + "/mail/order_list_btn.png'/></a>");
+		html = html.replace("{$searchBtn$}", "<a href='http://"+Const.DOMAIN+"/shop/main' target='_blank'><button type='text' class='btn btn_gray'>페이지 바로가기</button></a>");
+		html = html.replace("{$orderBtn$}", "<a href='http://" + Const.DOMAIN + "/shop/mypage/order/list' style='margin-left:20px;'><button type='text' class='btn btn_gray'>주문 바로가기</button></a></a>");
 		
-		html = html.replace("{$logo$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/logo.png'/>");
-		html = html.replace("{$footer$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/footer.jpg'/>");
+		html = html.replace("{$logo$}", "<img src='http://www.kukjemall.com/images/common/logo.png'/>");
+		html = html.replace("{$footer$}", "<img src='http://www.kukjemall.com/images/common/footer.png'/>");
 		html = html.replace("{$memberName$}", vo.getMemberName());
 		html = html.replace("{$receiveAddr$}", vo.getReceiverAddr1() + " " + vo.getReceiverAddr2());
 		html = html.replace("{$receiveCell$}", vo.getReceiverCell());
@@ -246,9 +246,9 @@ public class MailServiceImpl implements MailService {
 	
 		// 고정이미지 생성
 		html = html.replace("{$header$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/mail-find-pw-header-img.png'/>");
-		html = html.replace("{$searchBtn$}", "<a href='http://" + Const.DOMAIN + "/admin/'><img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH	+ "/mail/home_btn.png'/></a>");
-		html = html.replace("{$logo$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/logo.png'/>");
-		html = html.replace("{$footer$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/footer.jpg'/>");
+		html = html.replace("{$searchBtn$}", "<a href='http://"+Const.DOMAIN+"/shop/main' target='_blank'><button type='text' class='btn btn_gray'>페이지 바로가기</button></a>");
+		html = html.replace("{$logo$}", "<img src='http://www.kukjemall.com/images/common/logo.png'/>");
+		html = html.replace("{$footer$}", "<img src='http://www.kukjemall.com/images/common/footer.png'/>");
 		// 데이터 맵핑
 		html = html.replace("{$memberName$}", vo.getMemberName());
 		html = html.replace("{$receiveAddr$}", vo.getReceiverAddr1() + " " + vo.getReceiverAddr2());
@@ -292,8 +292,8 @@ public class MailServiceImpl implements MailService {
 		br.close();
 	
 		// 고정이미지 생성
-		html = html.replace("{$logo$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/logo.png'/>");
-		html = html.replace("{$footer$}", "<img src='http://" + Const.DOMAIN + Const.UPLOAD_PATH + "/mail/footer.jpg'/>");
+		html = html.replace("{$logo$}", "<img src='http://www.kukjemall.com/images/common/logo.png'/>");
+		html = html.replace("{$footer$}", "<img src='http://www.kukjemall.com/images/common/footer.png'/>");
 		// 데이터 맵핑
 		html = html.replace("{$memberName$}", vo.getName());
 		

@@ -52,16 +52,21 @@
 								<div class="col-md-2 form-control-static">${vo.seq}</div>
 							</div>
 							<c:if test="${sessionScope.loginType eq 'A'}">
-								<div class="form-group">
-									<label class="col-md-2 control-label">판매 상태</label
-									<div class="radio">
-										<c:choose>
+							<div class="form-group">
+								<label class="col-md-2 control-label">판매 상태</label>
+								<div class="radio">
+									<c:choose>
+										<c:when test="${sessionScope.loginType eq 'A'}">
 											<label><input type="radio" name="statusCode" value="H" <c:if test="${vo.statusCode eq 'H' or vo.statusCode eq 'E'}">checked="checked"</c:if> /> 가승인</label>
 											<label><input type="radio" name="statusCode" value="Y" <c:if test="${vo.statusCode eq 'Y'}">checked="checked"</c:if> /> 판매중</label>
-											<label><input type="radio" name="statusCode" value="N" <c:if test="${vo.statusCode eq 'N'}">checked="checked"</c:if> /> 판매중지</label>
-										</c:choose>
-									</div>
+										</c:when>
+										<c:when test="${sessionScope.loginType eq 'A' && vo.statusCode ne 'N'}">
+											<label><input type="radio" name="statusCode" value="${vo.statusCode}" checked="checked" style="display: none;"/></label>
+										</c:when>
+									</c:choose>
+									<label><input type="radio" name="statusCode" value="N" <c:if test="${vo.statusCode eq 'N'}">checked="checked"</c:if> /> 판매중지</label>
 								</div>
+							</div>
 							</c:if>
 						</c:if>
 						<%--관리자일 경우에만 입점업체를 선택한다.--
