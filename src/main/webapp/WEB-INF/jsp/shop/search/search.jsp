@@ -200,6 +200,11 @@
 </div>
 
 <%@ include file="/WEB-INF/jsp/shop/include/view_detail.jsp" %>
-
+<script type="text/javascript">
+    var goPage = function (page) {
+        $("#pageNum").val(page);
+        location.href = location.pathname + "?pageNum=" + page + "&" + $("#search_form").serialize();
+    };
+</script>
 </body>
 </html>
