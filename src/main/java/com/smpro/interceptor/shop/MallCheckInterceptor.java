@@ -1,8 +1,10 @@
 package com.smpro.interceptor.shop;
 
+import com.smpro.service.BoardService;
 import com.smpro.service.MallService;
 import com.smpro.service.MenuService;
 import com.smpro.service.SystemService;
+import com.smpro.vo.BoardVo;
 import com.smpro.vo.MallVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private SystemService systemService;
 
+	@Autowired
+	private BoardService boardService;
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		log.debug("interceptor--handler #1:" + handler);
@@ -37,7 +42,15 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 //		response.setHeader("Pragma", "no-cache");
 //		response.setHeader("Expires", "-1"); // 일부 파이어폭스 버그 관련
 		log.info("### requestURI : " + request.getRequestURI());
-		
+
+		//공지사항
+		BoardVo boardVo = new BoardVo();
+		boardVo.setCategoryCode(new Integer(1));
+		boardVo.setGroupCode("notice");
+		boardVo.setRowCount(4);
+		boardVo.setTotalRowCount( boardService.getListCount(boardVo) );
+		request.setAttribute("noticeList",boardService.getList(boardVo));
+
 		String[] requestURI = request.getRequestURI().replace("http://","").split("/");
 		String mallId = "";
 		String errMsg = "";

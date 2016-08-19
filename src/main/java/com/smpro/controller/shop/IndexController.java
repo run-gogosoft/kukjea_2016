@@ -165,13 +165,6 @@ public class IndexController {
 //		model.addAttribute("galleryTitle8",  tlvo8 == null ? null :  tlvo8.getListTitle());
 //		model.addAttribute("gallery8",  tlvo8 == null ? null : displayService.getLvItemList(dvo));
 
-		//공지사항
-		BoardVo boardVo = new BoardVo();
-		boardVo.setCategoryCode(new Integer(1));
-		boardVo.setGroupCode("notice");
-		boardVo.setRowCount(4);
-		boardVo.setTotalRowCount( boardService.getListCount(boardVo) );
-		model.addAttribute("noticeList",boardService.getList(boardVo));
 
 		//사회적 기업 소식
 //		CommonBoardVo cvo = new CommonBoardVo();

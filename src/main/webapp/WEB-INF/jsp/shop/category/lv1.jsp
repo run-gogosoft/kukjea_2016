@@ -69,8 +69,8 @@
                                 <dt>선택 상품 정렬</dt>
                                 <dd>
                                     <a href="#" <c:if test="${vo.rowCount eq 10}">class="on"</c:if> onclick="changeRowCount(10);return false;">10개</a>
-                                    <a href="#" <c:if test="${vo.rowCount eq 12}">class="on"</c:if> onclick="changeRowCount(20);return false;">20개</a>
-                                    <a href="#" <c:if test="${vo.rowCount eq 15}">class="on"</c:if> onclick="changeRowCount(30);return false;">30개</a>
+                                    <a href="#" <c:if test="${vo.rowCount eq 20}">class="on"</c:if> onclick="changeRowCount(20);return false;">20개</a>
+                                    <a href="#" <c:if test="${vo.rowCount eq 30}">class="on"</c:if> onclick="changeRowCount(30);return false;">30개</a>
                                 </dd>
                                 <input type="hidden" name="rowCount" value="${vo.rowCount}" />
                             </dl>
@@ -181,11 +181,5 @@
 </div>
 
 <%@ include file="/WEB-INF/jsp/shop/include/view_detail.jsp" %>
-<script type="text/javascript">
-    var goPage = function (page) {
-        $("#pageNum").val(page);
-        location.href = location.pathname + "?pageNum=" + page + "&" + $("#search_form").serialize();
-    };
-</script>
 </body>
 </html>

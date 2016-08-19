@@ -34,6 +34,9 @@ public class LvController {
 	@Autowired
 	private MemberService memberService;
 
+	@Autowired
+	private BoardService boardService;
+
 	@RequestMapping("/lv1/{seq}")
 	public String lv1(
 			@PathVariable Integer seq, HttpServletRequest request,
@@ -42,6 +45,7 @@ public class LvController {
 		String memberTypeCode = (String)session.getAttribute("loginMemberTypeCode");
 
 		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
+
 			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
 			model.addAttribute("returnUrl", "/shop/login");
 			return Const.REDIRECT_PAGE;
@@ -114,7 +118,7 @@ public class LvController {
 			vo.setRowCount(10);
 		}
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
-			vo.setListStyle("all");
+			vo.setListStyle(vo.getListStyle());
 		}
 		vo.setSeq(null); // 이래야 검색이 제대로 된다
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
@@ -125,7 +129,7 @@ public class LvController {
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
 		model.addAttribute("vo", vo);
 		model.addAttribute("lv1", mainVo);
-		model.addAttribute("title", mainVo.getName());
+		if(mainVo != null) model.addAttribute("title", mainVo.getName());
 		return "/category/lv1.jsp";
 	}
 
@@ -173,10 +177,10 @@ public class LvController {
 		vo.setCateLv2Seq(seq);
 		vo.setStatusCode("Y");
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
-			vo.setRowCount(10);
+			vo.setRowCount(vo.getRowCount());
 		}
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
-			vo.setListStyle("all");
+			vo.setListStyle(vo.getListStyle());
 		}
 		vo.setSeq(null); // 이래야 검색이 제대로 된다
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));

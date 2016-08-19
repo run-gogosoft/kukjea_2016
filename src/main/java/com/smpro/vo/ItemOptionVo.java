@@ -28,7 +28,7 @@ public class ItemOptionVo {
 	private int optionPrice;
 
 	/** 할인 기간 */
-	private String salePeriod;
+	private String salePeriod="";
 
 	/** 할인 금액 */
 	private int salePrice;

@@ -16,7 +16,7 @@ public abstract class PagingVo {
 
 	private int pageNum = 0;
 	private int rowNumber = 0;
-	private int rowCount = 20;
+	private int rowCount = 10;
 
 	private int totalRowCount = 0;
 	private int pageCount = 10;

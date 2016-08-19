@@ -1077,7 +1077,7 @@ public class ItemController {
 			for (ItemOptionVo vo : list) {
 				Map map = new HashMap();
 				map.put("seq", vo.getSeq());
-				map.put("loginId", memberVo.getId());
+				map.put("loginName", memberVo.getName());
 				vo.setValueList(itemOptionService.getValueListForSeller(map));
 			}
 		}

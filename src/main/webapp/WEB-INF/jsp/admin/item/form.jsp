@@ -440,8 +440,8 @@
 												<input type="hidden" name="showFlag" value="Y"/>
 											</th>
 											<th class="text-center">
-												<%="${sessionScope.loginNam}"%>
-												<input type="hidden" name="valueName" value="<%="${sessionScope.loginNam}"%>"/>
+												<%="${sessionScope.loginName}"%>
+												<input type="hidden" name="valueName" value="<%="${sessionScope.loginName}"%>"/>
 											</th>
 											<td class="text-center">
 												<div class="input-group">
@@ -654,7 +654,7 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">공급자명</label>
 					<div class="col-md-9">
-						<input type="text" class="form-control" name="valueName" value="${sessionScope.loginId}" alt="공급자명" readonly="readonly" />
+						<input type="text" class="form-control" name="valueName" value="${sessionScope.loginName}" alt="공급자명" readonly="readonly" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -673,7 +673,7 @@
 					<label class="col-md-3 control-label">할인 기간</label>
 					<div class="col-md-9">
 						<div class="input-group">
-							<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" alt="제조일자" placeholder="- 을 제외하고 입력하세요. ex)20150101"/>
+							<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" value="""/>
 							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
 						</div>
 					</div>
@@ -734,7 +734,7 @@
 					<label class="col-md-3 control-label">할인 기간</label>
 					<div class="col-md-9">
 						<div class="input-group">
-							<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" alt="제조일자" placeholder="- 을 제외하고 입력하세요. ex)20150101"/>
+							<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" />
 							<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
 						</div>
 					</div>

@@ -236,6 +236,13 @@
             addQuick(seq, '/upload'+data.vo.img1 );
         });
     }
+
+    var goPage = function (page) {
+        $("#pageNum").val(page);
+
+        location.href = location.pathname + "?pageNum=" + page + "&" + $('form[name=searchForm]').serialize();
+    };
+
     function relationItem(sellerSeq) {
         $.ajax({
             type:"GET",

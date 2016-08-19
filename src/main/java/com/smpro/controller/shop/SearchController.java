@@ -38,10 +38,10 @@ public class SearchController {
 		model.addAttribute("title", "검색");
 
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
-			vo.setRowCount(10);
+			vo.setRowCount(vo.getRowCount());
 		}
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
-			vo.setListStyle("all");
+			vo.setListStyle(vo.getListStyle());
 		}
 
 		// 카테고리를 가져온다

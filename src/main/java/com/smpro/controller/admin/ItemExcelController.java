@@ -220,7 +220,8 @@ public class ItemExcelController {
 				if(OPTION_SIZE>0) {
 					ItemOptionVo ovo = optionMapper(v.get(i), LIST_SIZE, OPTION_SIZE);
 					ovo.setValueName((String) session.getAttribute("loginName"));
-					optionList.add(i - 1, ovo);
+					optionList.add(i-1,ovo);
+					System.out.println("optionList added size is:"+optionList.size());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -300,82 +301,108 @@ public class ItemExcelController {
 
 		// DB에 저장한다
 		// todo : commit과 rollback이 되어야 한다
-		for (int i = 0; i < list.size(); i++) {
+		//상품 추가.수정은 최상의 관리자만 가능하다
+		if("A".equals(session.getAttribute("loginType"))) {
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(">>> check seq ... insert or update :" + list.get(i).getSeq() + ", " + startInsertSeq);
+				//아이템 추가
+				if (startInsertSeq > 0 && list.get(i).getSeq() >= startInsertSeq) {
+					itemService.insertVo(list.get(i));
+					itemService.insertDetailVo(list.get(i));
 
-			//아이템 추가
-			if(list.get(i).getSeq() >= startInsertSeq) {
-				itemService.insertVo(list.get(i));
-				itemService.insertDetailVo(list.get(i));
+					// 로그 (이력)
+					lvo.setAction("등록");
+					lvo.setItemSeq(list.get(i).getSeq());
+					lvo.setContent(list.get(i).toString());
+					itemService.insertLogVo(lvo);
+				} else {
+					// 존재하는 아이템인 경우. 수정
+					itemService.updateVo(list.get(i));
+					itemService.updateDetailVo(list.get(i));
 
-				// 로그 (이력)
-				lvo.setAction("등록");
-				lvo.setItemSeq(list.get(i).getSeq());
-				lvo.setContent(list.get(i).toString());
-				itemService.insertLogVo(lvo);
+					// 로그 (이력)
+					lvo.setAction("수정");
+					lvo.setItemSeq(list.get(i).getSeq());
+					lvo.setContent(list.get(i).toString());
+					itemService.insertLogVo(lvo);
+				}
+				statusMap.put("dbCount", new Integer(i + 1));
+				session.setAttribute("excelStatus", statusMap);
 			}
-			else {
-				// 존재하는 아이템인 경우. 수정
-				itemService.updateVo(list.get(i));
-				itemService.updateDetailVo(list.get(i));
-
-				// 로그 (이력)
-				lvo.setAction("수정");
-				lvo.setItemSeq(list.get(i).getSeq());
-				lvo.setContent(list.get(i).toString());
-				itemService.insertLogVo(lvo);
-			}
-			statusMap.put("dbCount", new Integer(i + 1));
-			session.setAttribute("excelStatus", statusMap);
 		}
+
+
 
 		for(int i = 0;i<optionList.size();i++){
 			// 옵션 등록/변경
-			ItemOptionVo ovo = itemOptionService.getVo(itemOptionService.getSeq(optionList.get(i).getItemSeq()));
-			if(ovo != null && ovo.getValueName().equals(session.getAttribute("loginName"))){
-				// 로그 (이력)
-				lvo.setAction("옵션항목수정");
-				lvo.setContent(optionList.get(0).toString());
-				itemService.insertLogVo(lvo);
-				ovo.setOptionPrice(optionList.get(i).getOptionPrice());
-				ovo.setSalePrice(optionList.get(i).getSalePrice());
-				ovo.setSalePeriod(optionList.get(i).getSalePeriod());
-				ovo.setStockCount(optionList.get(i).getStockCount());
-				itemOptionService.updateValueVo(ovo);
-			}
-			else {
-				//TODO
-
+			List<ItemOptionVo> optionVoList = itemOptionService.getList(optionList.get(i).getItemSeq());
+			Integer optionSeq;
+			ItemOptionVo ovo;
+			if(optionVoList == null || optionVoList.size()<=0){
+				//해당 아이템의 가격이 없는 경우. 추가
 				ovo = new ItemOptionVo();
 
-				// 로그 (이력)
-				lvo.setAction("옵션항목추가");
-				lvo.setContent(optionList.get(0).toString());
-				itemService.insertLogVo(lvo);
-				ovo.setOptionName("병원몰");
+				ovo.setOptionName(optionList.get(i).getOptionName());
 				ovo.setShowFlag("Y");
 				ovo.setItemSeq(optionList.get(i).getItemSeq());
-				if (itemOptionService.insertVo(ovo)) {
-					//add optionvalue
-					Integer optionSeq = itemOptionService.getSeq(optionList.get(i).getItemSeq());
 
-				}
-
-
-				ovo = itemOptionService.getVo(itemOptionService.getSeq(optionList.get(i).getItemSeq()));
-				List<ItemOptionVo> tmpOptionValue = itemOptionService.getValueList(itemOptionService.getSeq(optionList.get(i).getItemSeq()));
-
-				ovo.setItemSeq(optionList.get(i).getItemSeq());
+				System.out.println(">>> ovo sequence:"+optionList.get(i).getItemSeq());
 				if (!itemOptionService.insertVo(ovo)) {
 					model.addAttribute("message", "옵션 데이터 삽입 도중 오류가 발생했습니다[4]");
 					return Const.ALERT_PAGE;
 				}
 
-				Integer optionSeq = itemOptionService.getSeq(optionList.get(i).getItemSeq());
-				for (int j = 0; j < list.size(); j++) {
-					tmpOptionValue.get(j).setOptionSeq(optionSeq);
-					if (!itemOptionService.insertValueVo(tmpOptionValue.get(j))) {
-						model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
-						return Const.ALERT_PAGE;
+				optionSeq = itemOptionService.getSeq(optionList.get(i).getItemSeq());
+				System.out.println(">>>optionSeq:"+optionSeq);
+				//optionvalue추가
+				ovo.setOptionSeq(optionSeq);
+				ovo.setValueName((String)session.getAttribute("loginName"));
+				ovo.setOptionPrice(optionList.get(i).getOptionPrice());
+				ovo.setSalePrice(optionList.get(i).getSalePrice());
+				ovo.setSalePeriod(optionList.get(i).getSalePeriod());
+				ovo.setStockCount(optionList.get(i).getStockCount());
+				ovo.setStockFlag(optionList.get(i).getStockFlag());
+
+				if (!itemOptionService.insertValueVo(ovo)) {
+					model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
+					return Const.ALERT_PAGE;
+				}
+			}
+			else {
+				//아이템 가격이 있는 경우.....
+				//해당 리스트에서 현재 공급사가 측적한 가격 정보가 있는지 확인해서
+				//수정할건지 추가할건지 결정한다
+				for(int ov = 0;ov<optionVoList.size();ov++) {
+					optionSeq = optionVoList.get(ov).getSeq();
+					ovo = optionVoList.get(ov);
+					System.out.println(">>>optionSeq:"+optionSeq);
+					System.out.println(">>>>ovo.getValueName():"+ovo.getValueName());
+					System.out.println(">>(String)session.getAttribute(\"loginName\")):"+(String)session.getAttribute("loginName"));
+					if(!ovo.getValueName().equals((String)session.getAttribute("loginName"))){
+						//추가
+						ovo.setValueName((String)session.getAttribute("loginName"));
+						ovo.setOptionPrice(optionList.get(i).getOptionPrice());
+						ovo.setSalePrice(optionList.get(i).getSalePrice());
+						ovo.setSalePeriod(optionList.get(i).getSalePeriod());
+						ovo.setStockCount(optionList.get(i).getStockCount());
+						ovo.setStockFlag(optionList.get(i).getStockFlag());
+
+						if (!itemOptionService.insertValueVo(ovo)) {
+							model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
+							return Const.ALERT_PAGE;
+						}
+					}
+					else {
+						//update
+						ovo.setOptionPrice(optionList.get(i).getOptionPrice());
+						ovo.setSalePrice(optionList.get(i).getSalePrice());
+						ovo.setSalePeriod(optionList.get(i).getSalePeriod());
+						ovo.setStockCount(optionList.get(i).getStockCount());
+						ovo.setStockFlag(optionList.get(i).getStockFlag());
+						if (!itemOptionService.updateValueVo(ovo)) {
+							model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
+							return Const.ALERT_PAGE;
+						}
 					}
 				}
 			}
@@ -651,6 +678,50 @@ public class ItemExcelController {
 			}*/
 		}
 		index++;
+
+		//공급자의 경우, 상품 옵션값 필드 오류 체스
+
+		if("".equals(list.get(index++))){
+			//아이템 시퀀스값
+			errorList.add(idx + " 번째 행:" + index  + "번째 열: 아이템 시퀀스값이 비어있습니다. ");
+		}
+
+		if("".equals(list.get(index++))){
+			//optionName
+			errorList.add(idx + " 번째 행:" + index  + "번째 열: 쇼핑몰 값이 비어있습니다. ");
+		}
+		if("".equals(list.get(index))){
+			//setOptionPrice
+			errorList.add(idx + " 번째 행:" + index  + "번째 열: 가격 값이 비어있습니다. ");
+		}
+
+		try {
+			Integer.valueOf("" + list.get(index++));
+			//setOptionPrice int value check
+		}catch (Exception e){
+			//setOptionPrice
+			errorList.add(idx + " 번째 행:" + index  + "번째 열: 가격 값이 잘못되어 있습니다.. ");
+		}
+
+		//saleprice
+		if(!"".equals(list.get(index))) {
+			try {
+				Integer.valueOf("" + list.get(index++));
+				//saleprice int value check
+			} catch (Exception e) {
+				//saleprice
+				errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다 ");
+			}
+		}
+		else {
+			index++;
+		}
+		//salePeriod
+		index++;//TODO salePeriod
+		if("".equals(list.get(index++))){
+			//setStockCount
+		}
+
 		// 18 상세정보(필수)
 		/*if (StringUtil.isBlank(String.valueOf(list.get(index)))) {
 			errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 상세정보는 반드시 입력되어야 합니다");
@@ -759,20 +830,25 @@ public class ItemExcelController {
 		ItemOptionVo vo = new ItemOptionVo();
 		int index = LIST_SIZE;
 		System.out.println(">>>seq:"+list.get(index));
+		vo.setItemSeq((Integer.valueOf("" + list.get(index++))).intValue());
 
-		vo.setSeq((Integer.valueOf("" + list.get(index++))).intValue());
-
-		System.out.println("setValueName:"+list.get(index));
-		vo.setValueName(String.valueOf(list.get(index++)));
+		System.out.println("setOptionName:"+list.get(index));
+		vo.setOptionName(String.valueOf(list.get(index++)));
 
 		System.out.println("setOptionPrice:"+list.get(index));
 		vo.setOptionPrice(Integer.valueOf("" +list.get(index++)));
 
 		System.out.println("setSalePrice:"+list.get(index));
-		vo.setSalePrice(Integer.valueOf("" +list.get(index++)));
+		if(!("".equals(list.get(index)))) {
+			vo.setSalePrice(Integer.valueOf("" + list.get(index++)));
+		}
+		else{
+			index++;
+		}
 
-		System.out.println("setSalePeriod:"+list.get(index));
-		vo.setSalePeriod(String.valueOf(list.get(index++)));
+		//System.out.println("setSalePeriod:"+list.get(index));
+		//vo.setSalePeriod(String.valueOf(list.get(index++)));
+		index++;//TODO salePeriod
 
 		System.out.println("setStockCount:"+list.get(index));
 		vo.setStockCount(Integer.valueOf("" +list.get(index++)));

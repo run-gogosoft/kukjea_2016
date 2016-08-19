@@ -72,7 +72,7 @@
 		FROM sm_item_option_value
 		WHERE 1=1
 		AND option_seq=#{seq}
-		AND value_name=#{loginId}
+		AND value_name=#{loginName}
 		ORDER BY seq ASC
 	</select>
 
@@ -141,9 +141,6 @@
 			stock_flag,
 			option_price,
 			sale_price,
-			<if test="salePeriod != '' ">
-				sale_period,
-			</if>
 			mod_date,
 			reg_date
 		) VALUES (
@@ -153,9 +150,6 @@
 			#{stockFlag},
 			#{optionPrice},
 			#{salePrice},
-			<if test="salePeriod != '' ">
-				#{salePeriod},
-			</if>
 			NOW(),
 			NOW()
 		)
@@ -177,9 +171,7 @@
 			, stock_flag=#{stockFlag}
 			, option_price=#{optionPrice}
 			, sale_price=#{salePrice}
-			<if test="salePeriod != ''">
-				,sale_period=#{salePeriod}
-			</if>
+
 			, mod_date=NOW()
 		WHERE 1=1
 		AND seq=#{seq}

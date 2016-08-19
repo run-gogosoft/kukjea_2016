@@ -238,7 +238,7 @@ public class ItemVo extends PagingVo {
 	/** 상품이미지내 이벤트 배너 전시 코드값(01:세일,02:특가,03:한정수량,04:행사) */
 	private String imgBannerCode = "";
 
-	private String listStyle = "img";
+	private String listStyle = "all";
 
 	@Override
 	public String getSearch() {

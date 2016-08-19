@@ -62,7 +62,9 @@
             <img src="/images/thumb/thumb_promotion230x70.jpg" alt="">
         </div>
             <li>
-                <a href="#"><a href="/shop/cscenter/view/notice/${noticeList[0].seq}"><p class="noti">[공지]${noticeList[0].title}</p></a></a>
+                <c:if test="${noticeList ne null}">
+                    <a href="#"><a href="/shop/cscenter/view/notice/${noticeList[0].seq}"><p class="noti">[공지]${noticeList[0].title}</p></a></a>
+                </c:if>
             </li>
     </div>
 
