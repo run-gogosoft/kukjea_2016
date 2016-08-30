@@ -135,7 +135,7 @@
 				</li>
 				</c:if>
 
-				<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode ne 4) or sessionScope.loginType eq 'S' or sessionScope.loginType eq 'D'}">
+				<c:if test="${sessionScope.loginType eq 'A' }">
 				<li class="${navi eq 'board' or navi eq 'about' ? 'active':''} treeview">
 					<a href="#"><i class="fa fa-clipboard"></i> <span>게시판 관리</span> <i class="fa fa-angle-left pull-right"></i></a>
 					<ul class="treeview-menu">

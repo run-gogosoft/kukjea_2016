@@ -455,7 +455,7 @@ public class ItemServiceImpl implements ItemService {
 		strTitle[idx++] = "상품이미지2";
 
 		if(loginType.equals("S")){
-			strTitle[idx++] = "seq";
+			strTitle[idx++] = "상품코드";
 			strTitle[idx++] = "쇼핑몰명";
 			strTitle[idx++] = "상품 가격";
 			strTitle[idx++] = "할인 가격";
@@ -467,7 +467,9 @@ public class ItemServiceImpl implements ItemService {
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		List<ItemVo> list = itemDao.getListExcel(vo);
-
+		System.out.println(">>>> download excel , vo.seq:"+vo.getSeq());
+		System.out.println(">>>> download excel , vo.name:"+vo.getName());
+		System.out.println(">>>> download excel , list size:"+list.size());
 		/* 데이터 생성 */
 		Vector<ArrayList<Object>> row = new Vector<>();
 		if (list != null && list.size() > 0) {
@@ -502,11 +504,11 @@ public class ItemServiceImpl implements ItemService {
 				List<ItemOptionVo> optionVoList = itemOptionDao.getList(ivo.getSeq());
 
 				if(loginType.equals("S")){
+					cell.add(ivo.getSeq());
+					cell.add("병원몰");//TODO check current mall id & set data
 					String s = (String)session.getAttribute("loginName");
 					for(int j = 0;j<optionVoList.size();j++){
 						if(s.equals(optionVoList.get(j).getValueName())) {
-							cell.add(optionVoList.get(j).getSeq());
-							cell.add(optionVoList.get(j).getOptionName());
 							cell.add(optionVoList.get(j).getOptionPrice());
 							cell.add(optionVoList.get(j).getSalePrice());
 							cell.add(optionVoList.get(j).getSalePeriod());

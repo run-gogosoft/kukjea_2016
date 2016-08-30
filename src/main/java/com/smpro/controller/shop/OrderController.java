@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.site.SitePreference;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Slf4j
@@ -641,6 +648,46 @@ public class OrderController {
 			if(ovo.getPayMethod().startsWith("CARD") || ovo.getPayMethod().startsWith("OFFLINE") || "POINT".equals(ovo.getPayMethod()) || ovo.getPayMethod().startsWith("NP") ) {
 				mailService.sendMailToSellerForOrder(ovo, request.getServletContext().getRealPath("/"));
 			}
+		}
+
+
+		//구매 후 포인트 적립 : 구입액 * 1%
+		//포인트 유효기가 30일
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Calendar cl = new GregorianCalendar();
+		Date date = new Date();
+		cl.setTime(date);
+		cl.add(cl.DATE, 30);
+		String endDate = sdf.format(cl.getTime());
+		PointVo orderPoint = new PointVo();
+		orderPoint.setStatusCode("S");
+		orderPoint.setMemberSeq((Integer)session.getAttribute("loginSeq"));
+		orderPoint.setEndDate(endDate);
+		orderPoint.setPoint((int)(ovo.getPayPrice()*0.01));
+		orderPoint.setValidFlag("Y");
+		orderPoint.setReserveCode("B");//회원가입 : N, 구매 : B  , 이벤트 : E
+		orderPoint.setTypeCode("1");
+		orderPoint.setNote("구매포인트지급(주문번호 :" +ovo.getOrderSeq()+")");
+		//orderPoint.setAdminSeq(memberSeq);
+		orderPoint.setUseablePoint(orderPoint.getPoint());
+
+		try {
+			if (!pointService.insertData(orderPoint)) {
+				throw new Exception();
+			}
+
+			orderPoint.setPointSeq(orderPoint.getSeq());
+
+			if (!pointService.insertHistoryData(orderPoint)) {
+				throw new Exception();
+			}
+
+			if (!pointService.insertLogData(orderPoint)) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			log.error("POINT FAIL:: ===> " + e.getMessage());
+			e.printStackTrace();
 		}
 		//메일 중복 발송 방지를 위한 세션값 업데이트
 		session.setAttribute("orderSeq", ovo.getOrderSeq());

@@ -19,73 +19,42 @@
             <%@ include file="/WEB-INF/jsp/shop/include/hotzone_left.jsp" %>
             <div id="contents">
                 <%@ include file="/WEB-INF/jsp/shop/include/hotzone_anchor.jsp" %>
-                <div class="event_detail">
-                    <div class="subject">
+                <div class="sub_cont">
+                    <div class="today_sale">
+                        <ul>
+                        <c:forEach var="groupList" items="${groupList}" varStatus="status">
 
-                        <span class="date">
-                            <fmt:parseDate value="${vo.regDate}" var="regDate" pattern="yyyy-mm-dd"/>
-                            <fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
-                            ~
-                            <fmt:parseDate value="${vo.endDate}" var="endDate" pattern="yyyymmdd"/>
-                            <fmt:formatDate value="${endDate}" pattern="yyyy-mm-dd"/>
-                        </span>
-                    </div>
-                </div>
-                <div class="event_cont">
-                    <div class="img">
-                        ${vo.html}
-                    </div>
-                </div>
+                            <c:forEach var="itemList" items="${itemList}" varStatus="status">
+                                <c:if test="${groupList.eventGroupSeq == itemList.groupSeq }">
 
+                                    <li>
+                                        <a href="/shop/search?seq=${itemList.itemSeq}">
+                                            <span class="thumb">
+                                                <img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt=""/>
+                                                <span class="icons">
+                                                    <span class="icon icon_discount"><em>20 </em>%</span>
+                                                </span>
+                                            </span>
+                                            <span class="tit">${itemList.itemName}</span>
+                                            <span class="price">
+                                                <del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del>
+                                                <span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+                                            </span>
+                                        </a>
+                                        <!--span class="btns">
+                                            <a href="#" class="btn btn_lightgray btn_xs">관심상품담기</a>
+                                            <a href="#" class="btn btn_gray btn_xs">장바구니담기</a>
+                                        </span-->
+                                    </li>
 
-                <c:forEach var="groupList" items="${groupList}" varStatus="status">
-                    <h3 class="tit_box_type">* ${groupList.groupName}</h3>
-                    <div class="goods_desc_list">
-                        <div class="item_grp">
-                        <c:forEach var="itemList" items="${itemList}" varStatus="status">
-                            <c:if test="${groupList.eventGroupSeq == itemList.groupSeq }">
-                            <div class="item col_lt" onclick="location.href='/shop/search?seq=${itemList.itemSeq}';" style="cursor:pointer">
-                                <div class="thumb">
-                                    <img src="/upload${fn:replace(itemList.img1, 'origin', 's110')}" onerror="noImage(this)" alt="">
-                                </div>
-                                <table class="default">
-                                    <caption>상품 기본 설명</caption>
-                                    <colgroup>
-                                        <col style="width:75px" />
-                                        <col style="width:auto" />
-                                    </colgroup>
-                                    <tbody>
-                                    <tr>
-                                        <th scope="row"><p>상 품 명</p></th>
-                                        <td>${itemList.itemName}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><p>규 격</p></th>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><p>제 조 사</p></th>
-                                        <td>${itemList.maker}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><p>단 위</p></th><td>1개</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><p>가 격</p></th>
-                                        <td><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row"><p>보 험 코 드</p></th>
-                                        <td></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            </c:if>
+                                </c:if>
+                            </c:forEach>
+
                         </c:forEach>
-                        </div>
-                    </div>
-
-                </c:forEach>
+                    </ul>
+                </div>
+               </div>
+                </div>
             </div>
         </div>
         <%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>

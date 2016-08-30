@@ -55,7 +55,6 @@
 						<option value="S" <c:if test="${vo.statusCode eq 'S'}">selected="selected"</c:if>>품절</option>
 					</select>
 				</div>
-				<div class="col-md-2"></div>
 			</div>
 			<div class="form-group">
 				<label class="col-md-2 control-label">상품명/상품코드/제조사</label>

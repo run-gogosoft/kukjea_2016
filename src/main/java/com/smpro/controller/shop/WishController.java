@@ -64,12 +64,12 @@ public class WishController extends MyPage {
 		int duplCnt = wishService.getCnt(itemSeq, memberSeq, optionValueSeq);
 		if(duplCnt == itemSeq.length) {
 			model.addAttribute("result", "D");
-			model.addAttribute("message", "이미 위시리스트에 등록된 상품입니다. 해당 페이지로 이동하시겠습니까?");
+			model.addAttribute("message", "이미 관심상품에 등록된 상품입니다. 해당 페이지로 이동하시겠습니까?");
 		} else {
 			int result = wishService.regData(itemSeq, memberSeq, optionValueSeq, deliPrepaidFlag);
 			if (result > 0) {
 				model.addAttribute("result", "Y");
-				model.addAttribute("message", "위시 리스트에 등록되었습니다. 해당 페이지로 이동하시겠습니까?");
+				model.addAttribute("message", "관심상품에 등록되었습니다. 해당 페이지로 이동하시겠습니까?");
 			} else {
 				model.addAttribute("result", "N");
 				model.addAttribute("message", "오류가 발생했습니다.");

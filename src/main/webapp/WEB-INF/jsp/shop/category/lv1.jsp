@@ -120,6 +120,7 @@
                                 <col style="width:auto" />
                                 <col style="width:100px" />
                                 <col style="width:100px" />
+                                <col style="width:100px" />
                             </colgroup>
 
                             <thead>
@@ -129,7 +130,8 @@
                                 <th scope="col"><span class="hide">상품 이미지</span></th>
                                 </c:if>
                                 <th scope="col">상품명</th>
-                                <th scope="col">프로모션 아이콘</th>
+                                <th scope="col"></th>
+                                <th scope="col">규격</th>
                                 <th scope="col">제조사</th>
                             </tr>
                             </thead>
@@ -153,6 +155,11 @@
                                     <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
                                     <%--span class="icon icon_txt icon_txt_yellow">10+1</span>
                                     <span class="icon icon_txt icon_txt_red">50%</span --%>
+                                </td>
+                                <td class="text-center">
+                                    <div class="text-warning">${item.type1}</div>
+                                    <div class="text-warning">${item.type2}</div>
+                                    <div class="text-warning">${item.type3}</div>
                                 </td>
                                 <td>${item.maker}</td>
                             </tr>

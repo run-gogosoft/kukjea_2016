@@ -25,6 +25,7 @@ import java.util.*;
 @Slf4j
 @Controller
 public class MyPageController extends MyPage {
+	private static final int ROW_COUNT = 10;
 
 	@Autowired
 	private LoginService loginService;
@@ -83,7 +84,7 @@ public class MyPageController extends MyPage {
 			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
 
-		pvo.setRowCount(5);
+		pvo.setRowCount(ROW_COUNT);
 		pvo.setBoardType("order");
 
 		pvo.setTotalRowCount(orderService.getListCount(pvo));
@@ -106,7 +107,7 @@ public class MyPageController extends MyPage {
 		BoardVo bvo = new BoardVo();
 		bvo.setCategoryCode(new Integer(1));
 		bvo.setGroupCode("notice");
-		bvo.setRowCount(5);
+		bvo.setRowCount(ROW_COUNT);
 		bvo.setPageCount(3);
 		model.addAttribute("noticeList", boardService.getList(bvo));
 
@@ -359,7 +360,7 @@ public class MyPageController extends MyPage {
 		initMypage(session, model);
 
 		pvo.setMemberSeq(loginSeq);
-		pvo.setRowCount(10);
+		pvo.setRowCount(ROW_COUNT);
 		pvo.setTotalRowCount(pointService.getShopPointCount(pvo));
 		model.addAttribute("data", orderService.getCntByStatus(ovo));
 		model.addAttribute("list", pointService.getShopPointList(pvo));
@@ -399,7 +400,7 @@ public class MyPageController extends MyPage {
 			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
 
-		pvo.setRowCount(5);
+		pvo.setRowCount(ROW_COUNT);
 		pvo.setBoardType("order");
 
 		pvo.setTotalRowCount(orderService.getListCount(pvo));
@@ -439,7 +440,7 @@ public class MyPageController extends MyPage {
 			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
 
-		vo.setRowCount(5);
+		vo.setRowCount(ROW_COUNT);
 		vo.setTotalRowCount(orderService.getListNPCount(vo));
 
 		try {
@@ -722,7 +723,7 @@ public class MyPageController extends MyPage {
 		pvo.setLoginSeq((Integer)session.getAttribute("loginSeq"));
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setGroupCode("one");
-		pvo.setRowCount(10);
+		pvo.setRowCount(ROW_COUNT);
 		pvo.setTotalRowCount(boardService.getListCount(pvo));
 
 		List<BoardVo> boardVo = boardService.getList(pvo);
@@ -1075,7 +1076,7 @@ public class MyPageController extends MyPage {
 			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
 		}
 
-		pvo.setRowCount(5);
+		pvo.setRowCount(ROW_COUNT);
 		pvo.setBoardType("cancel");
 		pvo.setTotalRowCount(orderService.getListCount(pvo));
 
@@ -1090,7 +1091,7 @@ public class MyPageController extends MyPage {
 		/* 주문 상태별 건수 */
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
-		pvo.setRowCount(5);
+		pvo.setRowCount(ROW_COUNT);
 		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", pvo);
 
@@ -1122,7 +1123,7 @@ public class MyPageController extends MyPage {
 		vo.setUserSeq((Integer)session.getAttribute("loginSeq"));
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		vo.setGroupCode("qna");
-		vo.setRowCount(10);
+		vo.setRowCount(ROW_COUNT);
 		vo.setTotalRowCount(boardService.getListCount(vo));
 
 		List<BoardVo> boardVo = boardService.getList(vo);

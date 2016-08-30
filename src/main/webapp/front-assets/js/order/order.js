@@ -479,6 +479,15 @@ var CHProcess = {
 	}
 	,deliveryAddrMethod:function(obj) {
 		var v = $(obj).val();
+
+		if(v =="self"){
+			$("#deliveryTable").hide();
+			$('#deliveryTable input[name=receiverName]').val('직접수령');
+			return;
+		}
+
+		$("#deliveryTable").show();
+
 		if(v === 'default') { //새로입력일때
 			EBDelivery.renderList( (function(){
 				return EBDelivery.mappingVo( EBDelivery.getSeqForDefaultFlag() );
@@ -489,10 +498,10 @@ var CHProcess = {
 		} else if(v === 'buyer') {
 			CHProcess.getBuyerMappingVo();
 		} else if(v === 'new') { //새로입력일때
-			$('#deliveryTable input[type=text]').each(function(){
+			$('#deliveryTable input[type=text]').each(function () {
 				$(this).val('');
 			});
-		} else if(v === 'notlogin') {
+		}else if(v === 'notlogin') {
 			// 비회원 로그인일 경우
 			$('input[name=receiverName]').val( $('input[name=memberName]').val() );
 			$('input[name=receiverCell1]').val( $('input[name=memberCell1]').val() );

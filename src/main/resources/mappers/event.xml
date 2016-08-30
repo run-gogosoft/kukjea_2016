@@ -30,7 +30,7 @@
 		<if test="mainSection != ''">
 			AND main_section = #{mainSection}
 		</if>
-		<if test="curDate != ''">
+		<if test="curDate != '' and e.end_date !=''">
 			AND e.end_date >= #{curDate}
 		</if>
 	</select>

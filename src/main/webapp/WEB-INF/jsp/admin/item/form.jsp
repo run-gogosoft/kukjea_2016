@@ -68,6 +68,9 @@
 								</div>
 							</div>
 							</c:if>
+							<c:if test="${sessionScope.loginType eq 'S'}">
+								<input type="hidden" name="statusCode" value="${vo.statusCode}" />
+							</c:if>
 						</c:if>
 						<%--관리자일 경우에만 입점업체를 선택한다.--
 						<c:if test="${sessionScope.loginType eq 'A'}">
@@ -554,7 +557,7 @@
 									</table>
 									</c:if>
 									<c:if test="${vo ne null}">
-										<button type="button" id="OptionAddBtn" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품옵션추가</button>
+										<button type="button" id="OptionAddBtn" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품가격추가</button>
 									</c:if>
 								</div>
 							</div>
@@ -1187,7 +1190,7 @@
 		//유효성검사가 모두 끝난 후 수정시 임시몰의 판매가와 상태코드가 중복(sellPrice,statusCode)되므로 에러가 발생되기 때문에 임시몰 부분을 disabled처리한다.
 		if(flag === true) {
 			$('#tempMall').find('input[name=sellPrice]').prop('disabled',true);
-			$('#tempMall').find('select[name=statusCode]').prop('disabled',true);
+			//$('#tempMall').find('select[name=statusCode]').prop('disabled',true);
 		}
 		return flag;
 	};

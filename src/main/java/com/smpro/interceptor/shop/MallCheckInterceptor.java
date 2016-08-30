@@ -1,10 +1,8 @@
 package com.smpro.interceptor.shop;
 
-import com.smpro.service.BoardService;
-import com.smpro.service.MallService;
-import com.smpro.service.MenuService;
-import com.smpro.service.SystemService;
+import com.smpro.service.*;
 import com.smpro.vo.BoardVo;
+import com.smpro.vo.ItemVo;
 import com.smpro.vo.MallVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.net.URLEncoder;
 
 @Slf4j
@@ -30,6 +29,9 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 
 	@Autowired
 	private BoardService boardService;
+
+	@Autowired
+	private CartService cartService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -50,6 +52,12 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 		boardVo.setRowCount(4);
 		boardVo.setTotalRowCount( boardService.getListCount(boardVo) );
 		request.setAttribute("noticeList",boardService.getList(boardVo));
+
+		//장바구니 카운트
+		ItemVo itemVo = new ItemVo();
+		HttpSession session  = request.getSession();
+		itemVo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
+		request.setAttribute("cartCount", cartService.getListTotalCount(itemVo));
 
 		String[] requestURI = request.getRequestURI().replace("http://","").split("/");
 		String mallId = "";

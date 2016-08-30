@@ -23,6 +23,7 @@ public class ItemVo extends PagingVo {
 	private String type2 = "";
 	private String type3 = "";
 	/** 보험코드 */
+
 	private String insuranceCode = "";
 
 	/** 진료과목 */

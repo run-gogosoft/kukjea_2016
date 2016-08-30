@@ -741,15 +741,13 @@ em.must {color:#ef3f3b;}
 .repeat_order .scrollable {height:145px; overflow-y:auto; overflow-x:hidden;}
 .repeat_order .scrollable table {width:1004px;}
 .repeat_order .scrollable table thead tr {position:absolute; top:0; left:0; width:1004px;}
-.repeat_order .scrollable table .col1 div {width:110px;}
-.repeat_order .scrollable table .col2 div {width:239px}
-.repeat_order .scrollable table .col3 div {width:85px}
-.repeat_order .scrollable table .col4 div {width:93px}
-.repeat_order .scrollable table .col5 div {width:80px}
-.repeat_order .scrollable table .col6 div {width:65px}
-.repeat_order .scrollable table .col7 div {width:100px}
-.repeat_order .scrollable table .col8 div {width:100px}
-.repeat_order .scrollable table .col9 div {width:35px}
+.repeat_order .scrollable table .col1 div {width:112px;}
+.repeat_order .scrollable table .col2 div {width:326px}
+.repeat_order .scrollable table .col3 div {width:152px}
+.repeat_order .scrollable table .col4 div {width:95px}
+.repeat_order .scrollable table .col5 div {width:102px}
+.repeat_order .scrollable table .col6 div {width:102px}
+.repeat_order .scrollable table .col7 div {width:39px}
 .repeat_order .btn_default {position:absolute; top:-5px; right:18px;}
 
 /*=== LOGIN ===*/

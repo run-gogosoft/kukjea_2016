@@ -193,6 +193,7 @@
                                     <label><input type="radio" name="deliveryMethod" onclick="CHProcess.deliveryAddrMethod(this)" value="lately">&nbsp;최근 배송지</label>
                                     <label><input type="radio" name="deliveryMethod" onclick="CHProcess.deliveryAddrMethod(this)" value="buyer">&nbsp;주문자 정보와 동일</label>
                                     <label><input type="radio" name="deliveryMethod" onclick="CHProcess.deliveryAddrMethod(this)" value="new">&nbsp;새로입력</label>
+                                    <label><input type="radio" name="deliveryMethod" onclick="CHProcess.deliveryAddrMethod(this)" value="self">&nbsp;직접수령</label>
                                     <label><button type="button" class="btn btn_gray btn_xs" onclick="CHDelivery.deliveryListShow()">배송주소록</button>에서 불러오기</label>
                                 </c:if>
                                 <c:if test="${sessionScope.loginSeq eq null and sessionScope.loginEmail ne null}">

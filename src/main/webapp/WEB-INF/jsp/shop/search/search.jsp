@@ -139,6 +139,7 @@
                                         <col style="width:auto" />
                                         <col style="width:100px" />
                                         <col style="width:100px" />
+                                        <col style="width:100px" />
                                     </colgroup>
 
                                     <thead>
@@ -148,7 +149,8 @@
                                             <th scope="col"><span class="hide">상품 이미지</span></th>
                                         </c:if>
                                         <th scope="col">상품명</th>
-                                        <th scope="col">프로모션 아이콘</th>
+                                        <th scope="col"></th>
+                                        <th scope="col">규격</th>
                                         <th scope="col">제조사</th>
                                     </tr>
                                     </thead>
@@ -158,9 +160,9 @@
                                             <td><input type="checkbox" class="check" title="상품 선택" /></td>
                                             <c:if test="${itemSearchVo.listStyle eq 'all'}"><td>
                                                 <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
-                                    <span class="thumb">
-                                        <img src="/upload${fn:replace(item.img1, 'origin', 's60')}" alt="" onerror="noImage(this)" />
-                                    </span>
+                                                <span class="thumb">
+                                                    <img src="/upload${fn:replace(item.img1, 'origin', 's60')}" alt="" onerror="noImage(this)" />
+                                                </span>
                                                 </a>
                                             </td></c:if>
                                             <td class="lt">
@@ -172,6 +174,11 @@
                                                 <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
                                                 <%--span class="icon icon_txt icon_txt_yellow">10+1</span>
                                                 <span class="icon icon_txt icon_txt_red">50%</span --%>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="text-warning">${item.type1}</div>
+                                                <div class="text-warning">${item.type2}</div>
+                                                <div class="text-warning">${item.type3}</div>
                                             </td>
                                             <td>${item.maker}</td>
                                         </tr>

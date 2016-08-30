@@ -69,9 +69,9 @@
 			<div class="best_ranking">
 				<h2>국제 <strong>TOP10</strong></h2>
 				<ul>
-					<li class="latest"><a href="#">최신 판매 랭킹</a></li>
-					<li class="month"><a href="#">월간 상품별 판매 랭킹</a></li>
-					<li class="member_best"><a href="#">회원이 뽑은 관심상품 Best</a></li>
+					<li class="latest"><a href="/shop/event/plan/plansub/2">최신 판매 랭킹</a></li>
+					<li class="month"><a href="/shop/event/plan/plansub/3">월간 상품별 판매 랭킹</a></li>
+					<li class="member_best"><a href="/shop/event/plan/plansub/4">회원이 뽑은 관심상품 Best</a></li>
 				</ul>
 			</div>
 			<!-- //국제 TOP10 -->
@@ -79,7 +79,7 @@
 			<div class="tab_wrap product_tab">
 				<ul class="tab">
 					<li class="tab1"><a href="#today_product">오늘만 이가격<span></span></a></li>
-					<li class="tab2"><a href="#new_product">신규상품<span></span></a></li>
+					<li class="tab2"><a href="#new_productnew_product">신규상품<span></span></a></li>
 					<li class="tab3"><a href="#offer_price">가격제안<span></span></a></li>
 				</ul>
 				<div class="tab_list">
@@ -192,35 +192,48 @@
 			<!-- //공지사항/공급자몰 -->
 			<%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>
 		</div>
-		<!-- 반복 주문 상품
-		<div class="repeat_order">
-			<div class="layout_inner">
-				<h2>반복 주문 상품</h2>
-				<div class="scrollable_wrap">
-					<div class="scrollable">
-						<table class="data">
-							<caption>반복 주문 상품 정보</caption>
-							<thead>
-							<tr>
-								<th scope="col" class="col1"><div>최근 구매일</div></th>
-								<th scope="col" class="col2"><div>상품명</div></th>
-								<th scope="col" class="col3"><div>규격</div></th>
-								<th scope="col" class="col4"><div>제조사</div></th>
-								<th scope="col" class="col5"><div>단위</div></th>
-								<th scope="col" class="col6"><div>수량</div></th>
-								<th scope="col" class="col7"><div>공급가</div></th>
-								<th scope="col" class="col8"><div>공급사</div></th>
-								<th scope="col" class="col9"><div><input type="checkbox" title="상품 전체 선택" class="check" /></div></th>
-							</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
+		<!-- 반복 주문 상품-->
+
+			<!-- 반복 주문 상품 -->
+			<div class="repeat_order">
+				<div class="layout_inner">
+					<h2>반복 주문 상품</h2>
+					<div class="scrollable_wrap">
+						<div class="scrollable">
+							<table class="data">
+								<caption>반복 주문 상품 정보</caption>
+								<thead>
+								<tr>
+									<th scope="col" class="col1"><div>최근 구매일</div></th>
+									<th scope="col" class="col2"><div>상품명</div></th>
+									<th scope="col" class="col3"><div>규격</div></th>
+									<th scope="col" class="col4"><div>제조사</div></th>
+									<th scope="col" class="col5"><div>공급사</div></th>
+									<th scope="col" class="col6"><div>공급가</div></th>
+									<th scope="col" class="col7"><div><input type="checkbox" title="상품 전체 선택" class="check" /></div></th>
+								</tr>
+								</thead>
+								<tbody>
+								<c:forEach var="repeatList" items="${repeatList}">
+									<tr data-seq="${item.seq}">
+										<td class="col1"><div>${repeatList.regDate}</div></td>
+										<td class="col2"><div><a href="/shop/search?seq=${repeatList.itemSeq}">${repeatList.itemName}</a></div></td>
+										<td class="col3"><div>${repeatList.postcode} ${repeatList.postcode1} ${repeatList.postcode2}</div></td>
+										<td class="col4"><div>${repeatList.addr1}</div></td>
+										<td class="col5"><div>${repeatList.sellerName}</div></td>
+										<td class="col6"><div>${repeatList.optionPrice}</div></td>
+										<td class="col7"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+									</tr>
+								</c:forEach>
+								</tbody>
+							</table>
+						</div>
 					</div>
+					<!--a href="#" class="btn btn_default">선택상품 장바구니 담기</a-->
 				</div>
-				<a href="#" class="btn btn_default">선택상품 장바구니 담기</a>
 			</div>
-		</div>
+			<!-- //반복 주문 상품 -->
+
 		<!-- //반복 주문 상품 -->
 	</div>
 

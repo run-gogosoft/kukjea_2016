@@ -12,7 +12,7 @@
             <c:when test="${sessionScope.loginSeq > 0}">
                 <ul class="utils">
                     <li class="user">${sessionScope.loginName}님 ( <em data-access="point">---</em> 포인트)</li>
-                    <li><a href="/shop/cart">장바구니</a></li>
+                    <li><a href="/shop/cart">장바구니(<em>${cartCount}</em>)</a></li>
                     <li><a href="/shop/mypage/main">마이페이지</a></li>
                     <li><a href="/shop/mypage/order/list">주문배송조회</a></li>
                     <li><a href="/shop/cscenter/list/notice">고객센터</a></li>

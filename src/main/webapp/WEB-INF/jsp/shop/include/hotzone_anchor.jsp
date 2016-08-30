@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<div class="sub_tit">
+<div class="sub_tit line_type">
     <h3>${title}</h3>
     <p class="location">
         <a href="/shop/main">홈</a>

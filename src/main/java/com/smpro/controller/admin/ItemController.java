@@ -1593,12 +1593,15 @@ public class ItemController {
 	@CheckGrade(controllerName = "itemController", controllerMethod = "writeExcelItemList")
 	@RequestMapping("/item/list/download/excel")
 	public void writeExcelItemList(ItemVo vo, HttpSession session, HttpServletResponse response) throws IOException {
-		// 엑셀 다운로드시 row수를 3000개로 무조건 고정한다.
-		vo.setRowCount(1000);
+		// 엑셀 다운로드시 row수를 1000개로 무조건 고정한다.
+		vo.setRowCount(itemService.getListTotalCount(vo));
 		// 엑셀 파일명
 		response.setHeader("Content-Disposition", "attachment; filename = item_list_" + StringUtil.getDate(0, "yyyyMMdd") + ".xls");
 		// 워크북
 		Workbook wb = itemService.writeExcelItemList(vo, "xls", session);
+		System.out.println(">>>> download excel , vo.seq:"+vo.getSeq());
+		System.out.println(">>>> download excel , vo.name:"+vo.getName());
+
 		// 파일스트림
 		OutputStream fileOut = response.getOutputStream();
 
@@ -1618,11 +1621,11 @@ public class ItemController {
 		/* 상품리스트 */
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		vo.setLoginType((String) session.getAttribute("loginType"));
-		if (itemService.getListTotalCount(vo) > 1000) {
-			model.addAttribute("result", "false");
-			model.addAttribute("message", "엑셀 다운로드는 1000건 까지만 다운로드 됩니다.");
-			return "/ajax/get-message-result.jsp";
-		}
+		//if (itemService.getListTotalCount(vo) > 1000) {
+		//	model.addAttribute("result", "false");
+		//	model.addAttribute("message", "엑셀 다운로드는 1000건 까지만 다운로드 됩니다.");
+		//	return "/ajax/get-message-result.jsp";
+		//}
 		model.addAttribute("result", "true");
 		return "/ajax/get-message-result.jsp";
 	}

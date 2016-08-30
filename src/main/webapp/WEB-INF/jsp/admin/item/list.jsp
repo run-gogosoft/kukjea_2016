@@ -57,9 +57,10 @@
 								<col style="width:8%"/>
 								<col style="width:*%"/>
 								<col style="width:8%"/>
-								<col style="width:8%"/>
 								<col style="width:10%"/>
 								<col style="width:8%"/>
+								<col style="width:8%"/>
+
 							</colgroup>
 							<thead>
 								<tr>
@@ -71,7 +72,6 @@
 										<div class="text-primary">상품명</div>
 									</th>
 									<th>규격</th>
-									<th><div class="text-primary">최저가</div></th>
 									<th>제조사</th>
 									<th>
 										<a href="#" onclick="searchOrderBy('A.status_code','${vo.orderByType}'); return false;">판매상태</a>
@@ -79,6 +79,8 @@
 											<span class="text-warning"><i class="fa fa-caret-${vo.orderByType eq 'ASC' ? "up":"down"}"></i></span>
 										</c:if>
 									</th>
+									<th><div class="text-primary">최저가</div></th>
+
 								</tr>
 							</thead>
 							<tbody id="itemList">
@@ -123,9 +125,6 @@
 										<div class="text-warning">${item.type3}</div>
 									</td>
 									<td class="text-center">
-										<div class="text-warning">${item.sellPrice}</div>
-									</td>
-									<td class="text-center">
 										<div class="text-warning">${item.maker}</div>
 									</td>
 									<td class="text-center">
@@ -135,6 +134,9 @@
 										<c:when test="${item.statusCode eq 'S'}"><strong class="text-danger">${item.statusName}</strong></c:when>
 										<c:otherwise><span>${item.statusName}</span></c:otherwise>
 									</c:choose>
+									</td>
+									<td class="text-center">
+										<div class="text-warning">${item.sellPrice}</div>
 									</td>
 								</tr>
 							</c:forEach>

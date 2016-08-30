@@ -40,16 +40,14 @@
                         <caption>포인트 사용리스트</caption>
                         <colgroup>
                             <col style="width:10%" />
-                            <col style="width:20%" />
-                            <col style="width:auto" />
-                            <col style="width:20%" />
-                            <col style="width:15%" />
+                            <col style="width:25%" />
+                            <col style="width:25%" />
+                            <col style="width:40%" />
                         </colgroup>
                         <thead>
                         <tr>
                             <th scope="col">번호</th>
                             <th scope="col">포인트명</th>
-                            <th scope="col">포인트내용</th>
                             <th scope="col" class="rt">지급/사용 포인트</th>
                             <th scope="col">발생일</th>
                         </tr>
@@ -57,9 +55,8 @@
                         <tbody>
                         <c:forEach var="item" items="${list}" varStatus="status">
                         <tr>
-                            <td>00</td>
+                            <td>${item.seq}</td>
                             <td>${item.statusName}</td>
-                            <td class="lt">${item.note}</td>
                             <td class="rt">
                                 <span class="txt_sub_point">
                                     <c:if test="${item.statusCode eq 'U' or item.statusCode eq 'D'}">-</c:if>

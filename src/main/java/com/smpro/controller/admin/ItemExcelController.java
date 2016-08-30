@@ -186,7 +186,7 @@ public class ItemExcelController {
 		// 유효성 검사
 		for (int i = 1; i < v.size(); i++) {
 			// 오류를 검증한다
-			errorList.addAll(getErrorList(i + 1, v.get(i), LIST_SIZE+OPTION_SIZE)); // i에 1를 더하는 이유는 idx는 0부터 시작하니까 제목행을 포함해서 줄번호가 1 더 증가하기 때문이다.
+			errorList.addAll(getErrorList(i + 1, v.get(i), LIST_SIZE,OPTION_SIZE)); // i에 1를 더하는 이유는 idx는 0부터 시작하니까 제목행을 포함해서 줄번호가 1 더 증가하기 때문이다.
 		}
 
 		if (errorList.size() > 0) {
@@ -249,17 +249,35 @@ public class ItemExcelController {
 				return "/ajax/get-error-list.jsp";
 			}
 
-			if(list.get(i).getSeq()==null || list.get(i).getSeq().intValue()==0) { //아이쳄 추가의 경우, 이미지 데이타 리사이징 처리 및 데이타 변경
+			//if(list.get(i).getSeq()==null || list.get(i).getSeq().intValue()==0) { //아이쳄 추가의 경우, 이미지 데이타 리사이징 처리 및 데이타 변경
 				if (!"".equals(list.get(i).getImg1())) {
-					//시퀀스 생성
-					itemService.createSeq(list.get(i));
-					if(startInsertSeq==0) startInsertSeq = list.get(i).getSeq();
-					try {
-						String resolvedImg1 = imgProc(list.get(i).getImg1(), realPath, errorList, model);
+					String imgString = list.get(i).getImg1();
+					int lastSlashIndex  = imgString.lastIndexOf("/");
+					int jpgIndex = imgString.indexOf(".");
+					int imgSeq = -1;
 
-						list.get(i).setImg1(itemService.imageProc(realPath + "/item", "1", resolvedImg1, list.get(i).getSeq()));
-					} catch (Exception e) {
-						list.get(i).setImg1("/old/no_image1.jpg");
+					try{
+						imgSeq = Integer.getInteger(imgString.substring(lastSlashIndex,jpgIndex));
+					} catch(Exception e){
+						e.printStackTrace();
+						imgSeq = -1;
+					}
+					System.out.println("lastSlashIndex:"+lastSlashIndex+",jpgIndexL:"+jpgIndex +"imgString:"+imgString+", imgSeq:"+imgSeq);
+					if(list.get(i).getSeq() ==null || (list.get(i).getSeq() != imgSeq)) {
+						//현재 아이템의 이미지 데이타 변경된 경우에만 진행한다
+						//아이템 추가의 경우, 아이템 시퀀스 생성
+						if(list.get(i).getSeq()==null || list.get(i).getSeq()==0) {
+							itemService.createSeq(list.get(i));
+							if (startInsertSeq == 0) startInsertSeq = list.get(i).getSeq();
+						}
+
+						try {
+							String resolvedImg1 = imgProc(list.get(i).getImg1(), realPath, errorList, model);
+
+							list.get(i).setImg1(itemService.imageProc(realPath + "/item", "1", resolvedImg1, list.get(i).getSeq()));
+						} catch (Exception e) {
+							list.get(i).setImg1("/old/no_image1.jpg");
+						}
 					}
 
 
@@ -284,7 +302,7 @@ public class ItemExcelController {
 				statusMap.put("imageCount", new Integer(i + 1));
 				session.setAttribute("excelStatus", statusMap);
 				log.info(list.get(i).toString());
-			}
+			//}
 		}
 
 		if (errorList.size() > 0) {
@@ -470,12 +488,12 @@ public class ItemExcelController {
 	 *            해당 column의 리스트
 	 * @return
 	 */
-	private List<String> getErrorList(int idx, ArrayList<Object> list, int LIST_SIZE) {
+	private List<String> getErrorList(int idx, ArrayList<Object> list, int LIST_SIZE, int OPSION_SIZE) {
 		List<String> errorList = new ArrayList<>();
 		List<FilterVo> fList = itemService.getFilterList();
 
 		// 사이즈를 검사한다
-		if (list.size() != LIST_SIZE) {
+		if (list.size() != (LIST_SIZE+OPSION_SIZE)) {
 			errorList.add(idx + " 번째 행이 잘못 작성되었습니다. [" + LIST_SIZE	+ "] 개의 항목이 있어야 하는데 [" + list.size()	+ "] 개의 항목이 검색되었습니다");
 			return errorList;
 		}
@@ -679,49 +697,48 @@ public class ItemExcelController {
 		}
 		index++;
 
-		//공급자의 경우, 상품 옵션값 필드 오류 체스
+		//공급자의 경우, 상품 옵션값 필드 오류 체크
+		if(OPSION_SIZE>0) {
+			if ("".equals(list.get(index++))) {
+				//아이템 시퀀스값
+				errorList.add(idx + " 번째 행:" + index + "번째 열: 아이템 시퀀스값이 비어있습니다. ");
+			}
 
-		if("".equals(list.get(index++))){
-			//아이템 시퀀스값
-			errorList.add(idx + " 번째 행:" + index  + "번째 열: 아이템 시퀀스값이 비어있습니다. ");
-		}
+			if ("".equals(list.get(index++))) {
+				//optionName
+				errorList.add(idx + " 번째 행:" + index + "번째 열: 쇼핑몰 값이 비어있습니다. ");
+			}
+			if ("".equals(list.get(index))) {
+				//setOptionPrice
+				errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 비어있습니다. ");
+			}
 
-		if("".equals(list.get(index++))){
-			//optionName
-			errorList.add(idx + " 번째 행:" + index  + "번째 열: 쇼핑몰 값이 비어있습니다. ");
-		}
-		if("".equals(list.get(index))){
-			//setOptionPrice
-			errorList.add(idx + " 번째 행:" + index  + "번째 열: 가격 값이 비어있습니다. ");
-		}
-
-		try {
-			Integer.valueOf("" + list.get(index++));
-			//setOptionPrice int value check
-		}catch (Exception e){
-			//setOptionPrice
-			errorList.add(idx + " 번째 행:" + index  + "번째 열: 가격 값이 잘못되어 있습니다.. ");
-		}
-
-		//saleprice
-		if(!"".equals(list.get(index))) {
 			try {
 				Integer.valueOf("" + list.get(index++));
-				//saleprice int value check
+				//setOptionPrice int value check
 			} catch (Exception e) {
-				//saleprice
-				errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다 ");
+				//setOptionPrice
+				errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다.. ");
+			}
+
+			//saleprice
+			if (!"".equals(list.get(index))) {
+				try {
+					Integer.valueOf("" + list.get(index++));
+					//saleprice int value check
+				} catch (Exception e) {
+					//saleprice
+					errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다 ");
+				}
+			} else {
+				index++;
+			}
+			//salePeriod
+			index++;//TODO salePeriod
+			if ("".equals(list.get(index++))) {
+				//setStockCount
 			}
 		}
-		else {
-			index++;
-		}
-		//salePeriod
-		index++;//TODO salePeriod
-		if("".equals(list.get(index++))){
-			//setStockCount
-		}
-
 		// 18 상세정보(필수)
 		/*if (StringUtil.isBlank(String.valueOf(list.get(index)))) {
 			errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 상세정보는 반드시 입력되어야 합니다");

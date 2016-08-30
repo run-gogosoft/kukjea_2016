@@ -2232,10 +2232,20 @@
 	<select id="getRepeatOrderList" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 
 		SELECT  DISTINCT
+		d.seq,
+		d.order_seq AS orderSeq,
 		d.item_seq AS itemSeq,
+		d.option_value_seq AS optionValueSeq,
 		d.item_name AS itemName,
 		d.seller_name AS sellerName,
-		d.option_price AS optionValue
+		d.status_code AS statusCode,
+		d.option_price AS optionPrice,
+		d.order_cnt AS orderCnt,
+		d.reg_date AS regDate,
+		i.type1 AS postcode,
+		i.type2 AS postcode1,
+		i.type3 AS postcode2,
+		i.maker AS addr1
 		FROM
 		sm_order_detail d LEFT OUTER JOIN
 		sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
