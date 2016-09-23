@@ -47,7 +47,8 @@
 			J.cate_name AS cateLv4Name,
 			E.name AS sellerName,
 			IFNULL(F.sales_tel,F.sales_cell) AS salesTel,
-		    (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS sellPrice,
+		    (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS optionPrice,
+			(SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS salePrice,
 			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = A.seq) AS itemGrade,
 			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq = A.seq) AS reviewCount,
 			(SELECT MAX(option_name) FROM sm_item_option WHERE item_seq = A.seq) AS optionName,
@@ -56,7 +57,13 @@
 			c1.name AS statusName,
 			c2.name AS typeName,
 			c3.name AS taxName,
-			A.auth_category AS authCategory
+			A.auth_category AS authCategory,
+			CASE
+				WHEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) > 0 THEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq)
+				ELSE (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq)
+			END AS sellPrice,
+			A.sell_price AS sellPrice,
+			(100-(100 * (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq))/(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) ) AS salePercent
 		FROM
 			sm_item A LEFT OUTER JOIN
 			sm_item_category B	ON A.cate_lv1_seq=B.seq LEFT OUTER JOIN
@@ -160,14 +167,22 @@
 			)
 		</if>
 		<choose>
-			<when test="orderByName != '' and orderByType != ''">
-		ORDER BY ${orderByName} ${orderByType}
+			<when test="orderType == 'highprice'">
+				ORDER BY sellPrice DESC
+			</when>
+			<when test="orderType == 'lowprice'">
+				ORDER BY sellPrice ASC
+			</when>
+			<when test="orderType == 'name'">
+				ORDER BY A.name ASC
+			</when>
+			<when test="orderType == 'maker'">
+				ORDER BY A.maker ASC
 			</when>
 			<otherwise>
-		ORDER BY A.seq DESC
+				ORDER BY A.seq DESC
 			</otherwise>
 		</choose>
-		
 		LIMIT ${pageNum * rowCount}, ${rowCount}
 	</select>
 
@@ -282,11 +297,17 @@
 			, c.name AS sellerName
 			, d.name AS sellerMasterName
 			, o.option_name as optionName
+			, 	CASE
+					WHEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq) > 0 THEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq)
+					ELSE (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq)
+				END AS sellPrice
 			, (SELECT value_name FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS valueName
 			, (SELECT option_price FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS optionPrice
 			, (SELECT sale_price FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS salePrice
 			, (SELECT stock_cnt FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS stockCount
-			, (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq) AS sellPrice,
+			, (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq) AS optionPrice
+  			, (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq) AS salePrice
+  			, (100-(100 * (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq))/(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq) ) AS salePercent
 		FROM
 			sm_item a LEFT OUTER JOIN
 			sm_item_option o on(a.seq=o.item_seq) LEFT OUTER JOIN
@@ -309,7 +330,13 @@
 			, i.type_code AS typeCode
 			, (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = i.seq) AS itemGrade
 			, (SELECT COUNT(*) FROM sm_item_review WHERE item_seq = i.seq) AS reviewCount
-			  , (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS sellPrice,
+			, (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS optionPrice
+			, (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS salePrice
+			, CASE
+					WHEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) > 0 THEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+					ELSE (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+			  END AS sellPrice
+			, (100-(100 * (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq))/(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) ) AS salePercent
 		FROM
 			sm_item i LEFT OUTER JOIN (
 				SELECT
@@ -330,16 +357,22 @@
 
 	<select id="getVo" parameterType="java.lang.Integer" resultType="com.smpro.vo.ItemVo">
 		SELECT
-			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS sellPrice,
 			A.status_code AS statusCode,
 			A.cate_lv1_seq AS cateLv1Seq,
 			A.cate_lv2_seq AS cateLv2Seq,
 			A.cate_lv3_seq AS cateLv3Seq,
 			A.cate_lv4_seq AS cateLv4Seq,
+			CASE
+				WHEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) > 0 THEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq)
+				ELSE (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq)
+			END AS sellPrice,
 			(SELECT cate_name FROM sm_item_category i WHERE i.seq=A.cate_lv1_seq) AS cateLv1Name,
 			(SELECT cate_name FROM sm_item_category B WHERE B.seq=A.cate_lv2_seq) AS cateLv2Name,
 			(SELECT cate_name FROM sm_item_category C WHERE C.seq=A.cate_lv3_seq) AS cateLv3Name,
 			(SELECT cate_name FROM sm_item_category D WHERE D.seq=A.cate_lv4_seq) AS cateLv4Name,
+			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS optionPrice,
+  			(SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS salePrice,
+  			(100-(100 * (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq))/(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) ),
 			A.seq,
 			A.name,
 			A.supply_master_price AS supplyMasterPrice,
@@ -942,8 +975,14 @@
 
 	<select id="getListSimple" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
 		SELECT
-			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS sellPrice,
-			(SELECT cate_name FROM sm_item_category A WHERE A.seq=i.cate_lv1_seq) AS cateLv1Name,
+			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS optionPrice,
+			(SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS salePrice,
+			(100-(100 * (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq))/(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) ) AS salePercent,
+			CASE
+				WHEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) > 0 THEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+				ELSE (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+			END AS sellPrice,
+			(SELECT cate_name FROM sm_item_category A WHERE i.seq=i.cate_lv1_seq) AS cateLv1Name,
 			(SELECT cate_name FROM sm_item_category B WHERE B.seq=i.cate_lv2_seq) AS cateLv2Name,
 			(SELECT cate_name FROM sm_item_category C WHERE C.seq=i.cate_lv3_seq) AS cateLv3Name,
 			(SELECT cate_name FROM sm_item_category D WHERE D.seq=i.cate_lv4_seq) AS cateLv4Name,
@@ -1002,6 +1041,12 @@
 		<if test="cateLv4Seq != null">
 			AND i.cate_lv4_seq=#{cateLv4Seq}
 		</if>
+		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
+			AND LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
+		</if>
+		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
+			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
+		</if>
 		<if test="name != ''">
 			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{name}),'%') OR LOWER(u.name) LIKE CONCAT('%',LOWER(#{name}),'%'))
 		</if>
@@ -1044,10 +1089,16 @@
 		</choose>
 		<choose>
 			<when test="orderType == 'highprice'">
-				ORDER BY i.type_code ASC, i.sell_price DESC, i.seq DESC
+				ORDER BY sellPrice DESC
 			</when>
 			<when test="orderType == 'lowprice'">
-				ORDER BY i.type_code DESC, i.sell_price ASC, i.seq DESC
+				ORDER BY sellPrice ASC
+			</when>
+			<when test="orderType == 'name'">
+				ORDER BY i.name ASC
+			</when>
+			<when test="orderType == 'maker'">
+				ORDER BY i.maker ASC
 			</when>
 			<otherwise>
 				ORDER BY i.seq DESC
@@ -1103,7 +1154,7 @@
 		<!--
  		<if test="loginType != 'A'.toString()">
  			<if test="memberTypeCode != 'P'.toString()">
-				AND i.cate_lv1_seq != 53
+				AND i.cate_lv1_seq !=
 			</if>
 		</if>-->
 		<choose>
@@ -1161,7 +1212,6 @@
 			A.seq,
 			A.name,
 			A.status_code AS statusCode,
-			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS sellPrice,
 			A.supply_master_price AS supplyMasterPrice,
 			A.supply_price AS supplyPrice,
 			A.market_price AS marketPrice,
@@ -1205,6 +1255,12 @@
 			J.cate_name AS cateLv4Name,
 			E.name AS sellerName,
 			F.sales_tel AS salesTel,
+			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS optionPrice,
+			(SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq) AS salePrice,
+			CASE
+				WHEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) > 0 THEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+				ELSE (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+			END AS sellPrice,
 			(SELECT MAX(good_grade) FROM sm_item_review WHERE item_seq = A.seq) AS itemGrade,
 			(SELECT COUNT(*) FROM sm_item_review WHERE item_seq = A.seq) AS reviewCount,
 			(SELECT MAX(option_name) FROM sm_item_option WHERE item_seq = A.seq) AS optionName,

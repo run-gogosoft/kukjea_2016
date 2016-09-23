@@ -55,6 +55,17 @@
 						<option value="S" <c:if test="${vo.statusCode eq 'S'}">selected="selected"</c:if>>품절</option>
 					</select>
 				</div>
+
+				<label class="col-md-2 control-label">정렬방식</label>
+				<div class="col-md-2">
+					<select class="form-control" id="orderType" name="orderType">
+						<option value="">---구분---</option>
+						<option value="lowprice" <c:if test="${vo.orderType eq 'lowprice'}">selected="selected"</c:if>>낮은가격</option>
+						<option value="highprice" <c:if test="${vo.orderType eq 'highprice'}">selected="selected"</c:if>>높은가격</option>
+						<option value="name" <c:if test="${vo.orderType eq 'name'}">selected="selected"</c:if>>상품명</option>
+						<option value="maker" <c:if test="${vo.orderType eq 'maker'}">selected="selected"</c:if>>제조사</option>
+					</select>
+				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-md-2 control-label">상품명/상품코드/제조사</label>

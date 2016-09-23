@@ -31,15 +31,25 @@
                                         <a href="/shop/search?seq=${itemList.itemSeq}">
                                             <span class="thumb">
                                                 <img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt=""/>
+                                                <c:if test="${itemList.salePercent >0}">
                                                 <span class="icons">
-                                                    <span class="icon icon_discount"><em>20 </em>%</span>
+                                                    <span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
                                                 </span>
+                                                </c:if>
+                                                <c:if test="${item.sellPrice >= 50000}">
+                                                    <span class="icon icon_txt icon_txt_gray">무료배송</span>
+                                                </c:if>
                                             </span>
                                             <span class="tit">${itemList.itemName}</span>
                                             <span class="price">
-                                                <del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del>
-                                                <span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
-                                            </span>
+                                                <c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
+                                                    <del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
+                                                    <span class="sale"><strong><fmt:formatNumber value="${itemList.salePrice}" pattern="#,###" /></strong>원</span>
+                                                </c:if>
+                                                <c:if test="${itemList.salePercent eq 0}">
+                                                    <span class="sale"><strong><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" /></strong>원</span>
+                                                </c:if>
+                                           </span>
                                         </a>
                                         <!--span class="btns">
                                             <a href="#" class="btn btn_lightgray btn_xs">관심상품담기</a>

@@ -35,7 +35,7 @@
                     </select>
                 </span>
             </div>
-
+            <c:if test="${itemSearchVo.totalRowCount >0}">
             <div class="search_result">
                 <div class="tit">
                     <p>'<em class="txt_point">${itemSearchVo.name}</em>'로 검색된 검색결과</p>
@@ -83,14 +83,36 @@
                         <input type="hidden" name="cateLv1Seq" value="${itemSearchVo.cateLv1Seq}" />
                         <input type="hidden" name="cateLv2Seq" value="${itemSearchVo.cateLv2Seq}" />
 
+                        <div class="re_search">
+                            <label>결과 내 재검색</label>
+
+                                <select class="form-control" id="itemSearchType" name="itemSearchType">
+                                    <option value="">---구분---</option>
+                                    <option value="name" <c:if test="${itemSearchVo.itemSearchType eq 'name'}">selected</c:if>>상품명</option>
+                                    <option value="maker" <c:if test="${itemSearchVo.itemSearchType eq 'maker'}">selected</c:if>>제조사</option>
+                                </select>
+
+                                <input class="form-control" type="text" id="itemSearchValue" name="itemSearchValue" value="${itemSearchVo.itemSearchValue}" maxlength="20"/>
+
+                            <button type="submit" class="btn btn_gray btn_xs">검색</button>
+                        </div>
+
                         <div class="board_option">
                             <dl class="list_ctn">
-                                <dt>선택 상품 정렬</dt>
+                                <dt>상품 보기</dt>
                                 <dd>
                                     <a href="#" <c:if test="${itemSearchVo.rowCount eq 10}">class="on"</c:if> onclick="changeRowCount(10);return false;">10개</a>
                                     <a href="#" <c:if test="${itemSearchVo.rowCount eq 20}">class="on"</c:if> onclick="changeRowCount(20);return false;">20개</a>
                                     <a href="#" <c:if test="${itemSearchVo.rowCount eq 30}">class="on"</c:if> onclick="changeRowCount(30);return false;">30개</a>
                                 </dd>
+                                <dt>&nbsp;&nbsp;상품 정렬</dt>
+                                <dd>
+                                    <a href="#" <c:if test="${itemSearchVo.orderType eq 'lowprice'}">class="on"</c:if> onclick="changeOrderType('lowprice');return false;">낮은가격</a>
+                                    <a href="#" <c:if test="${itemSearchVo.orderType eq 'highprice'}">class="on"</c:if> onclick="changeOrderType('highprice');return false;">높은가격</a>
+                                    <a href="#" <c:if test="${itemSearchVo.orderType eq 'name'}">class="on"</c:if> onclick="changeOrderType('name');return false;">상품명</a>
+                                    <a href="#" <c:if test="${itemSearchVo.orderType eq 'maker'}">class="on"</c:if> onclick="changeOrderType('maker');return false;">제조사</a>
+                                </dd>
+                                <input type="hidden" name="orderType" value="${itemSearchVo.orderType}" />
                                 <input type="hidden" name="rowCount" value="${itemSearchVo.rowCount}" />
                             </dl>
 
@@ -114,11 +136,9 @@
                                             <span class="thumb">
                                                 <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
                                                 <span class="icons">
-                                                    <c:if test="${item.deliCost eq 0}">
-                                                        <span class="icon icon_txt icon_txt_gray">무료배송</span>
-                                                    </c:if>
-                                                    <!--span class="icon icon_txt icon_txt_yellow">10+1</span>
-                                                    <span class="icon icon_txt icon_txt_red">50%</span-->
+                                                    <c:if test="${item.sellPrice >= 50000}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
+                                                    <!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
+                                                    <c:if test="${ item.salePercent <100 && item.salePercent >0  }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                                 </span>
                                             </span>
                                                 <span class="tit">${item.name}</span>
@@ -152,6 +172,7 @@
                                         <th scope="col"></th>
                                         <th scope="col">규격</th>
                                         <th scope="col">제조사</th>
+                                        <th scope="col">가격</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -171,9 +192,9 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
-                                                <%--span class="icon icon_txt icon_txt_yellow">10+1</span>
-                                                <span class="icon icon_txt icon_txt_red">50%</span --%>
+                                                <c:if test="${item.sellPrice >= 50000}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
+                                                    <%--span class="icon icon_txt icon_txt_yellow">10+1</span--%>
+                                                <c:if test="${item.salePercent <100 && item.salePercent >0 }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                             </td>
                                             <td class="text-center">
                                                 <div class="text-warning">${item.type1}</div>
@@ -181,6 +202,7 @@
                                                 <div class="text-warning">${item.type3}</div>
                                             </td>
                                             <td>${item.maker}</td>
+                                            <td>${item.sellPrice}</td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>
@@ -198,6 +220,26 @@
                 <div id="DescBody" class="goods_view"></div>
             </div>
         </div>
+        </c:if>
+        <c:if test="${itemSearchVo.totalRowCount ==0}">
+            <!-- 검색결과 -->
+            <div class="search_result">
+                <div class="tit">
+                    <p>'<em class="txt_point">${itemSearchVo.name}</em>'로 검색된 검색결과가 없습니다.</p>
+                    <span class="result_num">검색된 상품수 : <span class="txt_accent">0</span>개</span>
+                </div>
+            </div>
+            <!-- 검색결과 -->
+            <div class="no_search_result">
+                <div class="search_result_info">
+                    <strong>죄송합니다. 검색하신 상품이 없습니다.</strong>
+                    <p>상품 판매 요청을 해주시면, 빠르게 반영하도록 하겠습니다.</p>
+                </div>
+                <div class="sales_request">
+                    <a href="/shop/about/board/detail/form/1" class="btn btn_red">상품판매요청<span>이제품도 올려주세요.</span></a>
+                </div>
+            </div>
+        </c:if>
         <%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>
     </div>
 

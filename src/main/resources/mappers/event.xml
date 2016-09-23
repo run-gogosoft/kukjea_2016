@@ -223,7 +223,8 @@
 				  , i.img2 AS img2
 				  , i.img3 AS img3
 				  , i.img4 AS img4
-			      , (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS sellPrice
+			      , (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS optionPrice
+				  , (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)  AS salePrice
 				  , i.maker
 			      , (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = ei.item_seq) AS reviewGrade
 			      , CASE WHEN i.status_code = 'H' THEN '가승인'
@@ -231,7 +232,12 @@
 				         WHEN i.status_code = 'N' THEN '판매중지'
 				    END AS statusFlag
 				  , i.img_banner_code AS imgBannerCode
-		FROM
+				  ,CASE
+						WHEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) > 0 THEN (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+						ELSE (SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq)
+					END AS sellPrice
+				  ,(100-(100 * (SELECT MIN(sale_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq))/(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) ) AS salePercent
+			  FROM
 			   		sm_event_group eg LEFT OUTER JOIN
 			   		sm_event_item ei ON (eg.seq = ei.group_seq) LEFT OUTER JOIN
 			   		sm_item i ON (ei.item_seq = i.seq)

@@ -60,18 +60,34 @@
                     <form name="searchForm">
                         <div class="re_search">
                             <label>결과 내 재검색</label>
-                            <input type="text" class="inp_txt w195" name="name" value="${vo.name}"/>
+                            <select class="form-control" id="itemSearchType" name="itemSearchType">
+                                <option value="">---구분---</option>
+                                <option value="name" <c:if test="${vo.itemSearchType eq 'name'}">selected</c:if>>상품명</option>
+                                <option value="maker" <c:if test="${vo.itemSearchType eq 'maker'}">selected</c:if>>제조사</option>
+                            </select>
+
+
+                            <input class="form-control" type="text" id="itemSearchValue" name="itemSearchValue" value="${vo.itemSearchValue}" maxlength="20"/>
                             <button type="submit" class="btn btn_gray btn_xs">검색</button>
                         </div>
 
                         <div class="board_option">
                             <dl class="list_ctn">
-                                <dt>선택 상품 정렬</dt>
+                                <dt>상품 보기</dt>
                                 <dd>
                                     <a href="#" <c:if test="${vo.rowCount eq 10}">class="on"</c:if> onclick="changeRowCount(10);return false;">10개</a>
                                     <a href="#" <c:if test="${vo.rowCount eq 20}">class="on"</c:if> onclick="changeRowCount(20);return false;">20개</a>
                                     <a href="#" <c:if test="${vo.rowCount eq 30}">class="on"</c:if> onclick="changeRowCount(30);return false;">30개</a>
                                 </dd>
+
+                                <dt>&nbsp;&nbsp;상품 정렬</dt>
+                                <dd>
+                                    <a href="#" <c:if test="${vo.orderType eq 'lowprice'}">class="on"</c:if> onclick="changeOrderType('lowprice');return false;">낮은가격</a>
+                                    <a href="#" <c:if test="${vo.orderType eq 'highprice'}">class="on"</c:if> onclick="changeOrderType('highprice');return false;">높은가격</a>
+                                    <a href="#" <c:if test="${vo.orderType eq 'name'}">class="on"</c:if> onclick="changeOrderType('name');return false;">상품명</a>
+                                    <a href="#" <c:if test="${vo.orderType eq 'maker'}">class="on"</c:if> onclick="changeOrderType('maker');return false;">제조사</a>
+                                </dd>
+                                <input type="hidden" name="orderType" value="${vo.orderType}" />
                                 <input type="hidden" name="rowCount" value="${vo.rowCount}" />
                             </dl>
 
@@ -95,9 +111,9 @@
                                     <span class="thumb">
                                         <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
                                         <span class="icons">
-                                            <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
-                                            <%-- span class="icon icon_txt icon_txt_yellow">10+1</span>
-                                            <span class="icon icon_txt icon_txt_red">50%</span --%>
+                                            <c:if test="${item.sellPrice >= 50000}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
+                                            <%-- span class="icon icon_txt icon_txt_yellow">10+1</span--%>
+                                            <c:if test="${ item.salePercent <100 && item.salePercent >0  }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                         </span>
                                     </span>
                                     <span class="tit">${item.name}</span>
@@ -121,6 +137,7 @@
                                 <col style="width:100px" />
                                 <col style="width:100px" />
                                 <col style="width:100px" />
+                                <col style="width:100px" />
                             </colgroup>
 
                             <thead>
@@ -133,6 +150,7 @@
                                 <th scope="col"></th>
                                 <th scope="col">규격</th>
                                 <th scope="col">제조사</th>
+                                <th scope="col">가격</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -152,9 +170,9 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <c:if test="${item.deliCost eq 0}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
-                                    <%--span class="icon icon_txt icon_txt_yellow">10+1</span>
-                                    <span class="icon icon_txt icon_txt_red">50%</span --%>
+                                    <c:if test="${item.sellPrice >= 50000}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
+                                    <%--span class="icon icon_txt icon_txt_yellow">10+1</span--%>
+                                    <c:if test="${item.salePercent <100 && item.salePercent >0 }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                 </td>
                                 <td class="text-center">
                                     <div class="text-warning">${item.type1}</div>
@@ -162,6 +180,7 @@
                                     <div class="text-warning">${item.type3}</div>
                                 </td>
                                 <td>${item.maker}</td>
+                                <td>${item.sellPrice}</td>
                             </tr>
                             </c:forEach>
                             </tbody>

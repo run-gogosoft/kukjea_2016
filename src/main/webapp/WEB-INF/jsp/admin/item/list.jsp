@@ -80,7 +80,6 @@
 										</c:if>
 									</th>
 									<th><div class="text-primary">최저가</div></th>
-
 								</tr>
 							</thead>
 							<tbody id="itemList">

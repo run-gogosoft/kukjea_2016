@@ -731,7 +731,7 @@ public class OrderController {
 					return null;
 				}
 				if (list.get(i).getStockCount() < list.get(i).getCount()) {
-					model.addAttribute("message", "죄송합니다.\\n해당 상품의 구매 수량이 현재 재고 수량을 초과합니다.[상품번호:"+ list.get(i).getSeq() + "]");
+					model.addAttribute("message", "죄송합니다.\\n해당 상품의 구매 수량이 현재 재고 수량을 초과합니다.[상품번호:"+ list.get(i).getName() + "]");
 					return null;
 				}
 			}

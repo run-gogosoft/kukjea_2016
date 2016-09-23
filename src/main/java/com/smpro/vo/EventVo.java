@@ -47,6 +47,13 @@ public class EventVo extends PagingVo {
 	private String itemName = "";
 	/** 상품 가격 */
 	private int sellPrice;
+	/** 옵션 가격 */
+	private int optionPrice;
+	/** 할인 가격 */
+	private int salePrice;
+	/** 할인률 **/
+	private int salePercent;
+
 	/** 상품 상태(가승인,판매중,판매중지) */
 	private String statusFlag = "";
 	/** 카테고리 이름 */
@@ -246,6 +253,30 @@ public class EventVo extends PagingVo {
 
 	public void setSellPrice(int sellPrice) {
 		this.sellPrice = sellPrice;
+	}
+
+	public int getOptionPrice(){
+		return optionPrice;
+	}
+
+	public void setOptionPrice(int optionPrice) {
+		this.optionPrice = optionPrice;
+	}
+
+	public int getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(int salePrice) {
+		this.salePrice = salePrice;
+	}
+
+	public int getSalePercent() {
+		return salePercent;
+	}
+
+	public void setSalePercent(int salePercent) {
+		this.salePercent = salePercent;
 	}
 
 	public String getStatusFlag() {

@@ -3,8 +3,7 @@ package com.smpro.controller.admin;
 import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.*;
 import com.smpro.util.Const;
-import com.smpro.util.StringUtil;
-import com.smpro.vo.CommonVo;
+import com.smpro.util.StringUtil;import com.smpro.vo.CommonVo;
 import com.smpro.vo.DisplayLvItemVo;
 import com.smpro.vo.DisplayVo;
 import com.smpro.vo.ItemVo;
@@ -124,7 +123,7 @@ public class DisplayController {
 		/** 상품목록을 불러옴 */
 		vo.setStatusCode("Y");
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
-		model.addAttribute("list", itemService.getListSimple(vo));
+		model.addAttribute("list",itemService.getListSimple(vo) );
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
 		model.addAttribute("total", new Integer(vo.getTotalRowCount()));
 		return "/ajax/get-lv1DisplayItem-list.jsp";

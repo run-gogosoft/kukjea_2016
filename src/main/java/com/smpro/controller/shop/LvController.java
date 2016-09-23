@@ -182,6 +182,7 @@ public class LvController {
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
 			vo.setListStyle(vo.getListStyle());
 		}
+
 		vo.setSeq(null); // 이래야 검색이 제대로 된다
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
 
@@ -234,8 +235,7 @@ public class LvController {
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
 
 		List<ItemVo> list = itemService.getListSimple(vo);
-		for(int i=0;i<list.size();i++){
-			ItemVo tmpVo = list.get(i);
+		for(ItemVo tmpVo:list){
 			tmpVo.setName(StringUtil.cutString(tmpVo.getName(),140));
 		}
 
@@ -321,8 +321,7 @@ public class LvController {
 
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
 		List<ItemVo> list = itemService.getListSimple(vo);
-		for(int i=0;i<list.size();i++){
-			ItemVo tmpVo = list.get(i);
+		for(ItemVo tmpVo:list){
 			tmpVo.setName(StringUtil.cutString(tmpVo.getName(),140));
 		}
 
@@ -390,8 +389,7 @@ public class LvController {
 
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
 		List<ItemVo> list = itemService.getListSimple(vo);
-		for(int i=0;i<list.size();i++){
-			ItemVo tmpVo = list.get(i);
+		for(ItemVo tmpVo:list){
 			tmpVo.setName(StringUtil.cutString(tmpVo.getName(),140));
 		}
 

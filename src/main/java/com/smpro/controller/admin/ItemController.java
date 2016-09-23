@@ -104,9 +104,10 @@ public class ItemController {
 		}
 		*/
 		ItemVo vo = itemService.getVo(seq);
+
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("title", "상품");
-		model.addAttribute("vo", vo);
+		model.addAttribute("vo", itemService.getVo(seq));
 		model.addAttribute("optionList", itemOptionService.getList(seq));
 		model.addAttribute("propList", itemService.getPropList(vo.getTypeCd()));
 		model.addAttribute("propInfo", itemService.getInfo(seq));
@@ -157,6 +158,7 @@ public class ItemController {
 		lvo.setContent(vo.toString());
 		lvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		lvo.setLoginType("" + session.getAttribute("loginType"));
+
 		if (!itemService.insertLogVo(lvo)) {
 			model.addAttribute("message", "데이터 삭제 도중 오류가 발생했습니다[3]");
 			return Const.ALERT_PAGE;
@@ -214,9 +216,20 @@ public class ItemController {
 		if(!"".equals(vo.getAuthCategory()) ) {
 			vo.setAuthCategoryArr( vo.getAuthCategory().split(",") );
 		}
-				
+
 		vo.setTotalRowCount(itemService.getListTotalCount(vo));
-		model.addAttribute("list", itemService.getList(vo));
+
+		List<ItemVo> list = itemService.getList(vo);
+		System.out.println(">>>>> getList, orderType:"+vo.getOrderType());
+
+		for(ItemVo tmp:list){
+			System.out.println(">>>>> getList, name:"+tmp.getName());
+			System.out.println(">>>>> getList, price:"+tmp.getSellPrice());
+
+		}
+
+
+		model.addAttribute("list",list);
 		model.addAttribute("vo", vo);
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
 
@@ -260,6 +273,7 @@ public class ItemController {
 			return Const.REDIRECT_PAGE;
 		}
 */
+
 		model.addAttribute("pageNum", pageNum);
 		// todo : 아이템을 수정할 수 있는 권한이 있는지 검사하여야 함
 		model.addAttribute("title", "상품 수정");

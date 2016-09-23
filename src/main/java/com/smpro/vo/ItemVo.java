@@ -136,6 +136,7 @@ public class ItemVo extends PagingVo {
 	private String optionPrices = "";
 	private int salePrice;
 	private String salePrices = "";
+	private int salePercent=0;
 	/** 수량 */
 	private int count;
 	/** 견적 수량 */
@@ -241,12 +242,19 @@ public class ItemVo extends PagingVo {
 
 	private String listStyle = "all";
 
+
 	@Override
 	public String getSearch() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	public int getSalePercent(){
+		return this.salePercent;
+	}
+	public void setSalePercent(int salePercent){
+		this.salePercent =  salePercent;
+	}
 	public String getSoldOutFlag() {
 		return soldOutFlag;
 	}

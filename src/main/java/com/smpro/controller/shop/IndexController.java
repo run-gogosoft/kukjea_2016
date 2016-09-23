@@ -189,16 +189,23 @@ public class IndexController {
 		eventVo.setStatusCode("Y");
 		eventVo.setMallSeq(mallVo.getSeq());
 		eventVo.setSeq(1); // <-- 오늘만 이가격
-		model.addAttribute("eventVo", eventService.getVo(eventVo));
+
+		model.addAttribute("eventVo",eventService.getVo(eventVo) );
 		eventVo.setStatusCode("Y");
-		model.addAttribute("eventItemList", eventService.getItemList(eventVo));
+		List<EventVo> eventVoList = eventService.getItemList(eventVo);
+		for (EventVo tmpVo:eventVoList) {
+			tmpVo.setTitle(StringUtil.cutString(tmpVo.getTitle(), 150));
+		}
+
+		model.addAttribute("eventItemList",eventVoList);
 
 		// 신규상품
 		ItemVo nvo = new ItemVo();
 		nvo.setRowCount(20);
 		nvo.setStatusCode("Y");
-		nvo.setLoginType((String) session.getAttribute("loginType"));
-		nvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
+
+		//nvo.setLoginType((String) session.getAttribute("loginType"));
+		//nvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		model.addAttribute("newItemList", itemService.getList(nvo));
 
 		OrderVo repeate = new OrderVo();
@@ -398,7 +405,6 @@ public class IndexController {
 	@RequestMapping("/detail/seller/item/list/ajax")
 	public String getSellerItemListAjax(ItemVo vo, Model model) {
 		vo.setTotalRowCount( itemService.getListSimpleTotalCount(vo) );
-
 		model.addAttribute("list", itemService.getListSimple(vo));
 		model.addAttribute("paging", vo.drawPagingNavigation("goPageSellerItem"));
 		model.addAttribute("vo", vo);

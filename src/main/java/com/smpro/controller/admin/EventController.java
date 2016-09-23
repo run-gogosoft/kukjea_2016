@@ -226,7 +226,6 @@ public class EventController {
 		// 몰 리스트
 		MallVo mvo = new MallVo();
 		model.addAttribute("mallList", mallService.getList(mvo));
-
 		model.addAttribute("titleListVo", eventService.getTitleList(paramVo));
 		model.addAttribute("itemListVo", eventService.getItemList(paramVo));
 		model.addAttribute("seq", seq);

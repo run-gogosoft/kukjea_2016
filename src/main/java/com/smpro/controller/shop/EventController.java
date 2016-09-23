@@ -92,8 +92,8 @@ public class EventController {
 
 		/** sm_event_item 내용 */
 		eventVo.setStatusCode("Y");
-		List<EventVo> eventItemListVo = eventService.getItemList(eventVo);
-		model.addAttribute("itemList", eventItemListVo);
+
+		model.addAttribute("itemList",  eventService.getItemList(eventVo));
 		model.addAttribute("title", vo.getTitle());
 		model.addAttribute("on", "01");
 		return "/event/plan_sub.jsp";

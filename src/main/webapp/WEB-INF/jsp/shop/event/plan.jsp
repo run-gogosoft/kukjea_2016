@@ -35,8 +35,8 @@
                                 </dd>
                                 <dd class="thumb">
                                     <a href="/shop/event/plan/plansub/${item.seq}">
-                                        <img src="/upload${item.thumbImg}" alt="${item.title}" onerror="noImage(this)" />
-                                    </a>
+                                <img src="/upload${item.thumbImg}" alt="${item.title}" onerror="noImage(this)" />
+                            </a>
                                 </dd>
                             </dl>
                         </li>

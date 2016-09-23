@@ -394,11 +394,11 @@ public class MyPageController extends MyPage {
 		pvo.setLoginName((String)session.getAttribute("loginName"));
 		pvo.setLoginEmail((String)session.getAttribute("loginEmail"));
 
-		//기본 조회기간 일주일
-		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
-			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+		//기본 조회기간 일주일 > 제거 . 모두 검색되도록 변경
+		//if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+		//	pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+		//	pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+		//}
 
 		pvo.setRowCount(ROW_COUNT);
 		pvo.setBoardType("order");

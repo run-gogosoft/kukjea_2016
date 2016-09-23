@@ -483,6 +483,9 @@ var CHProcess = {
 		if(v =="self"){
 			$("#deliveryTable").hide();
 			$('#deliveryTable input[name=receiverName]').val('직접수령');
+			$('#deliveryTable input[name=postcode]').val('06949');
+			$('#deliveryTable input[name=addr1]').val('국제메디팜');
+			$('#deliveryTable input[name=addr2]').val('국제메디팜');
 			return;
 		}
 

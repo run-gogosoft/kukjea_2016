@@ -40,7 +40,7 @@
                 <td class="lt" ><%="${valueName}"%></td>
                 <td>
                     <em class="txt_point">
-                        <strong><%="${ebFormatNumber(optionPrice)}"%></strong>
+                        <strong><%="${ebFormatNumber(salePrice>0? salePrice:optionPrice)}"%></strong>
                     </em>원
                 </td>
                 <td><%="${stockCount}"%></td>
@@ -192,6 +192,10 @@
 <script>
     function changeRowCount(v) {
         $('form[name=searchForm] input[name=rowCount]').val(v);
+        location.href=location.pathname + '?' + $('form[name=searchForm]').serialize();
+    }
+    function changeOrderType(v) {
+        $('form[name=searchForm] input[name=orderType]').val(v);
         location.href=location.pathname + '?' + $('form[name=searchForm]').serialize();
     }
     function changeListStyle(v) {

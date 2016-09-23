@@ -79,7 +79,7 @@
 			<div class="tab_wrap product_tab">
 				<ul class="tab">
 					<li class="tab1"><a href="#today_product">오늘만 이가격<span></span></a></li>
-					<li class="tab2"><a href="#new_productnew_product">신규상품<span></span></a></li>
+					<li class="tab2"><a href="#new_product">신규상품<span></span></a></li>
 					<li class="tab3"><a href="#offer_price">가격제안<span></span></a></li>
 				</ul>
 				<div class="tab_list">
@@ -90,16 +90,24 @@
 								<a href="/shop/search?seq=${itemList.itemSeq}">
 									<span class="thumb">
 										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="" />
-										<%-- span class="icons">
-											<span class="icon icon_txt icon_txt_gray">무료배송</span>
-											<span class="icon icon_txt icon_txt_yellow">10+1</span>
-											<span class="icon icon_discount"><em>50 </em>%</span>
-										</span --%>
+										<span class="icons">
+											<!--span class="icon icon_txt icon_txt_gray">무료배송</span-->
+											<!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
+											<c:if test="${itemList.salePercent >0}">
+												<span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
+											</c:if>
+										</span>
 									</span>
 									<span class="tit">${itemList.itemName}</span>
 									<span class="price">
 										<%-- del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del --%>
-										<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+										<c:if test="${itemList.salePercent >0}">
+											<del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
+											<span class="sale"><strong><fmt:formatNumber value="${itemList.salePrice}" pattern="#,###" /></strong>원</span>
+										</c:if>
+											<c:if test="${itemList.salePercent eq 0}">
+												<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+											</c:if>
 									</span>
 								</a>
 							</li>
@@ -114,16 +122,23 @@
 								<a href="/shop/search?seq=${itemList.seq}">
 									<span class="thumb">
 										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="" />
-										<%-- span class="icons">
-											<span class="icon icon_txt icon_txt_gray">무료배송</span>
-											<span class="icon icon_txt icon_txt_yellow">10+1</span>
-											<span class="icon icon_discount"><em>50 </em>%</span>
-										</span --%>
+										<span class="icons">
+											<!--span class="icon icon_txt icon_txt_gray">무료배송</span-->
+											<!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
+											<c:if test="${itemList.salePercent >0}">
+												<span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
+											</c:if>
+										</span>
 									</span>
 									<span class="tit">${itemList.name}</span>
 									<span class="price">
-										<%-- del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del --%>
-										<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+										<c:if test="${itemList.salePercent >0}">
+											<del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
+											<span class="sale"><strong><fmt:formatNumber value="${itemList.salePrice}" pattern="#,###" /></strong>원</span>
+										</c:if>
+                                                <c:if test="${itemList.salePercent eq 0}">
+													<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+												</c:if>
 									</span>
 								</a>
 							</li>
