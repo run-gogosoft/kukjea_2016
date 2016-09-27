@@ -8,7 +8,7 @@
             <p class="mt5"><%="${vo.maker}"%></p>
             <div class="price_info">
                 <span class="price_label">해당 상품 최저가</span>
-                <span class="price"><strong><%="${ebFormatNumber(vo.sellPrice)}"%></strong>원</span>
+                <span class="price"><strong><%="${ebFormatNumber(vo.sellPrice)}"%>원</strong></span>
                 <a href="/shop/about/board/detail/form/10"  class="btn btn_gray btn_xs" >가격제안</a>
             </div>
         </div>
@@ -89,23 +89,16 @@
                         </tr>
                         <tr>
                             <th scope="row"><p>규 격 </p></th>
-                            <td><%="${vo.type1}"%></td>
+                            <td><%="${vo.type1}"%>
+                                {{if vo.type2}}
+                                ,<%="${vo.type2}"%>
+                                {{/if}}
+                                {{if vo.type3}}
+                                ,<%="${vo.type3}"%>
+                                {{/if}}
+                            </td>
                             <td></td>
                         </tr>
-                        {{if vo.type2}}
-                        <tr>
-                            <th scope="row"><p></p></th>
-                            <td><%="${vo.type2}"%></td>
-                            <td></td>
-                        </tr>
-                        {{/if}}
-                        {{if vo.type3}}
-                        <tr>
-                            <th scope="row"><p></p></th>
-                            <td><%="${vo.type3}"%></td>
-                            <td></td>
-                        </tr>
-                        {{/if}}
                         <tr>
                             <th scope="row"><p>단 위</p></th>
                             <td><%="${vo.originCountry}"%></td>

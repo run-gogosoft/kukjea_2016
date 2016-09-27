@@ -31,7 +31,7 @@
                                         <a href="/shop/search?seq=${itemList.itemSeq}">
                                             <span class="thumb">
                                                 <img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt=""/>
-                                                <c:if test="${itemList.salePercent >0}">
+                                                <c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
                                                 <span class="icons">
                                                     <span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
                                                 </span>
@@ -46,7 +46,7 @@
                                                     <del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
                                                     <span class="sale"><strong><fmt:formatNumber value="${itemList.salePrice}" pattern="#,###" /></strong>원</span>
                                                 </c:if>
-                                                <c:if test="${itemList.salePercent eq 0}">
+                                                <c:if test="${itemList.salePercent eq 0 || itemList.salePercent eq 100}">
                                                     <span class="sale"><strong><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" /></strong>원</span>
                                                 </c:if>
                                            </span>

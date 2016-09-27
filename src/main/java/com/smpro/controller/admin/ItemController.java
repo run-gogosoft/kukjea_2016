@@ -220,15 +220,6 @@ public class ItemController {
 		vo.setTotalRowCount(itemService.getListTotalCount(vo));
 
 		List<ItemVo> list = itemService.getList(vo);
-		System.out.println(">>>>> getList, orderType:"+vo.getOrderType());
-
-		for(ItemVo tmp:list){
-			System.out.println(">>>>> getList, name:"+tmp.getName());
-			System.out.println(">>>>> getList, price:"+tmp.getSellPrice());
-
-		}
-
-
 		model.addAttribute("list",list);
 		model.addAttribute("vo", vo);
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));

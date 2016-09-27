@@ -180,7 +180,7 @@
                                     <div class="text-warning">${item.type3}</div>
                                 </td>
                                 <td>${item.maker}</td>
-                                <td>${item.sellPrice}</td>
+                                <td><span class="price"><strong>${item.sellPrice}</strong>원</span></td>
                             </tr>
                             </c:forEach>
                             </tbody>

@@ -216,7 +216,10 @@ table.data_type2 tbody td {padding:7px 5px; border-bottom:1px solid #e6e6e6; col
 table.data_type2 tbody td .intxt {color:#333; text-align:right;}
 table.data_type2 tbody td a:hover {text-decoration:underline;}
 table.data_type2 tbody td .addr {margin-bottom:2px; color:#ea6710;}
+table.data_type2 tbody td .price strong {color:#666;font-size:14px;}
 table.data_type2.tight th, table.data_type2.tight td {padding-left:0; padding-right:0;}
+
+
 .valign_t {vertical-align:top;}
 table .rt_space {padding-right:10px !important; text-align:right !important;}
 
@@ -547,8 +550,8 @@ em.must {color:#ef3f3b;}
 .sub #gnb .total_menu > a {height:33px; padding-top:16px; background:#ef3f3b;}
 .sub .total_menu_list {top:49px;}
 .sub #gnb .mn {margin-top:10px; padding-left:178px;}
-.sub #gnb .mn li {margin-right:36px;}
-.sub #gnb .mn li a {width:auto; height:23px; padding-top:5px; background:none;}
+.sub #gnb .mn li {width:70px;height:21px;overflow:hidden;margin-right:17px;}
+.sub #gnb .mn li a {width:auto; height:23px; padding-top:5px; background:none;font-size:13px;}
 .sub #gnb .mn.special {float:left; height:auto; padding-left:0;}
 .sub #gnb .mn.special li {margin:0; padding:0 10px 0 35px;}
 .sub #gnb .mn.special li a {width:auto; margin:0;}

@@ -51,8 +51,8 @@ public class Const {
 		if ("true".equalsIgnoreCase(System.getProperties().getProperty("detailedDebugMode"))) {
 			IMAGE_MAGICK_PATH = "convert";
 			UPLOAD_PATH = "/upload";
-			UPLOAD_REAL_PATH =      "/Users/aubergine/Documents/kookje_dev/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
-			WEBAPP_HOME_REAL_PATH = "/Users/aubergine/Documents/kookje_dev/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war";
+			UPLOAD_REAL_PATH =      "/Users/aubergine/Documents/gogo/kookje_2016/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
+			WEBAPP_HOME_REAL_PATH = "/Users/aubergine/Documents/gogo/kookje_2016/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war";
 			TEMP_DIR = "/tmp";
 			DOMAIN = "localhost";
 			LOCATION = "test";

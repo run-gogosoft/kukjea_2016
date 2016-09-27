@@ -93,7 +93,7 @@
 										<span class="icons">
 											<!--span class="icon icon_txt icon_txt_gray">무료배송</span-->
 											<!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
-											<c:if test="${itemList.salePercent >0}">
+											<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 												<span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
 											</c:if>
 										</span>
@@ -101,11 +101,11 @@
 									<span class="tit">${itemList.itemName}</span>
 									<span class="price">
 										<%-- del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del --%>
-										<c:if test="${itemList.salePercent >0}">
+										<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 											<del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
 											<span class="sale"><strong><fmt:formatNumber value="${itemList.salePrice}" pattern="#,###" /></strong>원</span>
 										</c:if>
-											<c:if test="${itemList.salePercent eq 0}">
+											<c:if test="${itemList.salePercent eq 0 || itemList.salePercent eq 100 }">
 												<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
 											</c:if>
 									</span>
@@ -125,20 +125,20 @@
 										<span class="icons">
 											<!--span class="icon icon_txt icon_txt_gray">무료배송</span-->
 											<!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
-											<c:if test="${itemList.salePercent >0}">
+											<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 												<span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
 											</c:if>
 										</span>
 									</span>
 									<span class="tit">${itemList.name}</span>
 									<span class="price">
-										<c:if test="${itemList.salePercent >0}">
+										<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 											<del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
 											<span class="sale"><strong><fmt:formatNumber value="${itemList.salePrice}" pattern="#,###" /></strong>원</span>
 										</c:if>
-                                                <c:if test="${itemList.salePercent eq 0}">
-													<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
-												</c:if>
+										<c:if test="${itemList.salePercent eq 0 || itemList.salePercent eq 100}">
+											<span class="sale"><strong><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" /></strong>원</span>
+										</c:if>
 									</span>
 								</a>
 							</li>
