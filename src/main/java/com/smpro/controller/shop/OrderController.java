@@ -727,7 +727,7 @@ public class OrderController {
 		for (int i = 0; i < list.size(); i++) {
 			if("Y".equals(list.get(i).getStockFlag())) {
 				if (list.get(i).getStockCount() == 0) {
-					model.addAttribute("message", "죄송합니다.\\n해당 상품은 품절되었습니다.[상품번호:"	+ list.get(i).getSeq() + "]");
+					model.addAttribute("message", "죄송합니다.\\n해당 상품은 품절되었습니다.[상품번호:"	+ list.get(i).getName() + "]");
 					return null;
 				}
 				if (list.get(i).getStockCount() < list.get(i).getCount()) {

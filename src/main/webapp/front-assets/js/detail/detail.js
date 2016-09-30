@@ -23,7 +23,7 @@ var PriceLB = {
 		$("#optionValueSeq").val( $(obj).attr("data-option-value") );
 	}
 	, calcOrderAmt: function() {
-		$("#order-amt").text( numeral((PriceLB.sellPrice + PriceLB.optionPrice) * $("#count").val()).format("0,0") );
+		$("#order-amt").text( numeral((PriceLB.salePrice>0? PriceLB.salePrice: PriceLB.optionPrice) * $("#count").val()).format("0,0") );
 	}
 };
 

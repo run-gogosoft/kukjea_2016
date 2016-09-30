@@ -175,7 +175,7 @@
 <iframe id="zeroframe" name="zeroframe" width="0" height="0" frameborder="0"></iframe>
 
 <!-- jQuery 1.12.4 -->
-<script src="/assets/admin_lte2/plugins/jQuery/jQuery-1.12.4.min.js" type="text/javascript"></script>
+<script src="/assets/admin_lte2/plugins/jQuery/jquery-1.12.4.min.js" type="text/javascript"></script>
 <!-- Bootstrap 3.3.2 JS -->
 <script src="/assets/admin_lte2/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <!-- iCheck -->

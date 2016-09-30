@@ -32,8 +32,11 @@
 			i.seq AS itemSeq,
 			i.img1 AS img1,
 			i.name,
-			i.sell_price AS sellPrice,
-			i.seller_seq AS sellerSeq,
+			CASE
+				WHEN ov.sale_price > 0 THEN ov.sale_price
+				ELSE ov.option_price
+			END AS sellPrice,
+			ov.seller_seq AS sellerSeq,
 			i.tax_code AS taxCode,
 			u.name AS sellerName,
 			s.jachigu_code AS jachiguCode,
@@ -55,7 +58,7 @@
 			sm_item_option o       ON ov.option_seq=o.seq AND o.show_flag='Y' INNER JOIN
 			sm_item i ON c.item_seq=i.seq LEFT OUTER JOIN
 			sm_item_category ic ON (i.cate_lv1_seq=ic.seq) LEFT OUTER JOIN
-			sm_user u ON i.seller_seq=u.seq LEFT OUTER JOIN
+			sm_user u ON ov.seller_seq=u.seq LEFT OUTER JOIN
 			sm_seller s ON u.seq = s.seq LEFT OUTER JOIN
 			sm_member me ON c.member_seq=me.seq LEFT OUTER JOIN (
 			<!-- 회원별 동일상품 총 주문 금액 가져오기(조건부 무료 배송 여부 체크) -->
@@ -168,7 +171,7 @@
       d.name,
       d.supply_price AS supplyPrice,
       d.supply_master_price AS supplyMasterPrice,
-      d.seller_seq AS sellerSeq,
+      b.seller_seq AS sellerSeq,
       d.tax_code AS taxCode,
       d.deli_type_code AS deliTypeCode,
       d.deli_cost AS deliCost,
@@ -184,8 +187,8 @@
       sm_item_option_value b ON a.option_value_seq=b.seq INNER JOIN
       sm_item_option c       ON b.option_seq=c.seq AND c.show_flag='Y' INNER JOIN
 	  sm_item d ON c.item_seq=d.seq LEFT OUTER JOIN
-      sm_user e              ON d.seller_seq=e.seq AND e.type_code='S' LEFT OUTER JOIN
-      sm_seller g            ON d.seller_seq=g.seq LEFT OUTER JOIN
+      sm_user e              ON b.seller_seq=e.seq AND e.type_code='S' LEFT OUTER JOIN
+      sm_seller g            ON b.seller_seq=g.seq LEFT OUTER JOIN
       sm_user h              ON g.master_seq=h.seq
     WHERE a.seq=#{seq}
   </select>

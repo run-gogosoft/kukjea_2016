@@ -19,6 +19,7 @@
                 <col style="width:12%" />
                 <col style="width:auto" />
                 <col style="width:20%" />
+                <col style="width:20%" />
                 <col style="width:15%" />
                 <col style="width:15%" />
             </colgroup>
@@ -26,6 +27,7 @@
             <tr>
                 <th scope="col">선택</th>
                 <th scope="col">공급사</th>
+                <th scope="col"><span class="hide">프로모션 아이콘</span></th>
                 <th scope="col">공급가</th>
                 <th scope="col">재고</th>
                 <th scope="col">수량</th>
@@ -39,8 +41,15 @@
                 </td>
                 <td class="lt" ><%="${valueName}"%></td>
                 <td>
+                    <span class="icons">
+                        {{if sellPrice >50000}}<span class="icon icon_txt icon_txt_gray">무료배송</span>{{/if}}
+                        <!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
+                        {{if salePercent <100 && salePercent >0}}<span class="icon icon_txt icon_txt_red"><%="${salePercent}"%>%</span>{{/if}}
+                    </span>
+                </td>
+                <td>
                     <em class="txt_point">
-                        <strong><%="${ebFormatNumber(salePrice>0? salePrice:optionPrice)}"%></strong>
+                        <strong><%="${ebFormatNumber(sellPrice)}"%></strong>
                     </em>원
                 </td>
                 <td><%="${stockCount}"%></td>
@@ -71,7 +80,9 @@
                 <dt>상품요약</dt>
                 <dd>
                     <div class="thumb">
+
                         <img src="/upload<%="${vo.img1}"%>" alt="" onerror="noImage(this)"/>
+
                         <button type="button" class="btn_zoom_img" onclick="$('#PopupModal').show();">
                             <img src="/images/common/icon_zoom_img.png" alt="" /> 큰이미지 보기
                         </button>
@@ -134,14 +145,9 @@
 <script id="RelationTemplate" type="text/html">
     <li>
         <a href="/shop/detail/<%="${seq}"%>" onclick="view(<%="${seq}"%>);return false;" title="<%="${name}"%>">
-        <span class="thumb">
-            <img src="<%="${img1}"%>" alt="" onerror="noImage(this)" />
-        </span>
-        <span class="icons">
-            <%-- span class="icon icon_txt icon_txt_gray">무료배송</span>
-            <span class="icon icon_txt icon_txt_yellow">10+1</span>
-            <span class="icon icon_txt icon_txt_red">50%</span --%>
-        </span>
+            <span class="thumb">
+                <img src="<%="${img1}"%>" alt="" onerror="noImage(this)" />
+            </span>
             <span class="tit"><%="${name}"%></span>
             <span class="price"><strong><%="${sellPrice}"%>원</strong></span>
         </a>

@@ -36,7 +36,7 @@
                         <c:if test="${item.deliPrepaidFlag eq 'Y'}">
                             <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice + item.deliCost}" />
                         </c:if>
-                        <c:set var="totalSellPrice" value="${totalSellPrice + ((item.sellPrice + item.optionPrice) * item.orderCnt)}" />
+                        <c:set var="totalSellPrice" value="${totalSellPrice + (item.sellPrice  * item.orderCnt)}" />
                     </c:forEach>
 
                     <table class="purchase_list">

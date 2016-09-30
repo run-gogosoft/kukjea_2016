@@ -27,6 +27,11 @@ public class ItemOptionVo {
 	/** 추가 금액 */
 	private int optionPrice;
 
+	/** 세일 % **/
+	private int salePercent;
+
+	/** 판매가격 **/
+	private int sellPrice;
 	/** 할인 기간 */
 	private String salePeriod="";
 
@@ -136,6 +141,14 @@ public class ItemOptionVo {
 		this.stockFlag = stockFlag;
 	}
 
+	public int getSellPrice() {
+		return sellPrice;
+	}
+
+	public void setSellPrice(int sellPrice) {
+		this.sellPrice = sellPrice;
+	}
+
 	public int getOptionPrice() {
 		return optionPrice;
 	}
@@ -183,6 +196,16 @@ public class ItemOptionVo {
 	public void setSalePrice(int salePrice) {
 		this.salePrice = salePrice;
 	}
+
+	public int getSalePercent() {
+		return salePercent;
+	}
+
+	public void setSalePercent(int salePercent) {
+		this.salePercent = salePercent;
+	}
+
+
 	public String getEventAdded() {
 		return eventAdded;
 	}

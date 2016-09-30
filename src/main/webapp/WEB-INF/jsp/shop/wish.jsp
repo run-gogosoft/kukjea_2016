@@ -37,7 +37,6 @@
                             <th><input type="checkbox" id="allChk" onclick="WishUtil.checkProc(this)"/></th>
                             <th colspan="2">상품정보</th>
                             <th>판매가</th>
-                            <th>배송정보</th>
                             <th>업체</th>
                             <th>선택</th>
                             <th></th>
@@ -57,38 +56,24 @@
                                     <input type="checkbox" id="wishSeq" name="wishSeq" value="${item.wishSeq}"
                                            wish-value="${item.itemSeq}" style="margin:0 auto;"/>
                                 </td>
-                                <td>
-                                    <c:if test="${item.img1 ne ''}">
-                                        <img src="/upload${fn:replace(item.img1, '/origin/', '/s170/')}"
-                                             style="width:70px;border:1px solid #d7d7d7;" width="70px" onerror="noImage(this)" alt="상품이미지"/>
-                                    </c:if>
-                                </td>
-                                <td class="text-left item-name">
-                                    ${item.name}<br/>
-                                    <span class="option-name">${item.optionName}: ${item.valueName}</span><br/>
-                                </td>
+                                    <td>
+                                        <a href="/shop/search?seq=${item.itemSeq}">
+                                        <c:if test="${item.img1 ne ''}">
+                                            <img src="/upload${fn:replace(item.img1, '/origin/', '/s170/')}"
+                                                 style="width:70px;border:1px solid #d7d7d7;" width="70px" onerror="noImage(this)" alt="상품이미지"/>
+                                        </c:if>
+                                        </a>
+                                    </td>
+
+                                    <td class="text-left item-name">
+                                        <a href="/shop/search?seq=${item.itemSeq}">
+                                        ${item.name}<br/>
+                                        <span class="option-name">${item.optionName}: ${item.valueName}</span><br/>
+                                        </a>
+                                    </td>
+
                                 <td class="item-price">
                                     <fmt:formatNumber value="${ item.sellPrice }" pattern="#,###"/>원
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${item.deliTypeCode eq '00'}">
-                                            무료
-                                        </c:when>
-                                        <c:when test="${item.deliTypeCode eq '10'}">
-                                            <fmt:formatNumber value="${item.deliCost}" pattern="#,###"/>원
-                                            <br/>
-                                            <c:if test="${item.deliPrepaidFlag eq 'Y'}">
-                                                선결제
-                                                <%--착불 배송비 제외--%>
-                                                <c:set var="totalDeliveryPrice"
-                                                       value="${totalDeliveryPrice + item.deliCost}"/>
-                                            </c:if>
-                                            <c:if test="${item.deliPrepaidFlag eq 'N'}">
-                                                착불
-                                            </c:if>
-                                        </c:when>
-                                    </c:choose>
                                 </td>
                                 <td>
                                         ${item.sellerName}

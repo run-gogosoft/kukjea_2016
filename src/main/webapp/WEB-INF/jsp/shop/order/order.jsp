@@ -51,7 +51,7 @@
                         <c:set var="totalDeliveryPrice" value="0" />
                         <tbody>
                         <c:forEach var="item" items="${list}">
-                            <c:set var="rowSum" value="${(item.sellPrice +item.optionPrice) * item.count}"/>
+                            <c:set var="rowSum" value="${item.sellPrice  * item.count}"/>
                             <tr>
                                 <td>
                                     <c:if test="${item.img1 ne ''}">
@@ -65,7 +65,7 @@
                                     <span class="option-name">${item.optionName}: ${item.valueName}</span><br/>
                                 </td>
                                 <td>
-                                    <span><fmt:formatNumber value="${item.sellPrice+item.optionPrice}" pattern="#,###" />원</span>
+                                    <span><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" />원</span>
                                 </td>
                                 <td>
                                     <fmt:formatNumber value="${item.count}" pattern="#,###" />개

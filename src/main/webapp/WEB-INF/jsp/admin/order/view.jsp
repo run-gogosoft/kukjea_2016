@@ -208,7 +208,7 @@
 										</c:choose>
 									</td>
 									<td class="text-right">
-										<c:set var="subTotal" value="${(vo.sellPrice + vo.optionPrice) * vo.orderCnt}"/>
+										<c:set var="subTotal" value="${vo.sellPrice * vo.orderCnt}"/>
 										<c:if test="${vo.deliPrepaidFlag eq 'Y'}">
 											<c:set var="subTotal" value="${subTotal + vo.deliCost}"/>
 										</c:if>

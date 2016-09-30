@@ -29,7 +29,6 @@
                                 <th>판매가</th>
                                 <th>수량</th>
                                 <th>상품 금액</th>
-                                <th>배송정보</th>
                                 <th>업체</th>
                                 <th></th>
                             </tr>
@@ -73,22 +72,31 @@
     <tr {{if stockCount==="0"}}class="danger"{{/if}}>
         <td><input type="checkbox" id="seq" name="seq" value="<%="${seq}"%>" wish-value="<%="${itemSeq}"%>" checked="checked" /></td>
         <td>
-            {{if img1 !== ''}}<img src="<%="${img1}"%>" alt="" onerror="noImage(this)" style="width:70px" />{{/if}}
-        </td>
-        <td class="text-left item-name">
-            {{if stockCount==="0"}}
-            <span class="text-danger" data-danger="true">품절</span>
-            {{else stockFlag =="Y" && parseInt(stockCount,10) < count}}
-            <span class="text-danger" data-danger="true">재고<%="${stockCount}"%>개</span>
+            {{if img1 !== ''}}
+            <a href="/shop/search?seq=<%="${itemSeq}"%>">
+            <img src="<%="${img1}"%>" alt="" onerror="noImage(this)" style="width:70px"/>
+            </a>
             {{/if}}
-            <%="${name}"%><br/>
-            <span class="option-name">
-                <%="${optionName}"%>{{if optionName !== ''}} : {{/if}}<%="${valueName}"%>
-            </span><br/>
-            <input type="hidden" name="stockCount" value="<%="${stockCount}"%>"/>
-            <input type="hidden" name="stockFlag" value="<%="${stockFlag}"%>"/>
-            <input type="hidden" name="optionValueSeq" value="<%="${optionValueSeq}"%>"/>
         </td>
+
+            <td class="text-left item-name">
+                <a href="/shop/search?seq=<%="${itemSeq}"%>">
+                    {{if stockCount==="0"}}
+                    <span class="text-danger" data-danger="true">품절</span>
+                    {{else stockFlag =="Y" && parseInt(stockCount,10) < count}}
+                    <span class="text-danger" data-danger="true">재고<%="${stockCount}"%>개</span>
+                    {{/if}}
+
+                    <%="${name}"%><br/>
+                    <span class="option-name">
+                        <%="${optionName}"%>{{if optionName !== ''}} : {{/if}}<%="${valueName}"%>
+                    </span><br/>
+                    <input type="hidden" name="stockCount" value="<%="${stockCount}"%>"/>
+                    <input type="hidden" name="stockFlag" value="<%="${stockFlag}"%>"/>
+                    <input type="hidden" name="optionValueSeq" value="<%="${optionValueSeq}"%>"/>
+                </a>
+            </td>
+
         <td>
             <span><%="${sellPriceText}"%>원</span>
         </td>
@@ -102,26 +110,6 @@
         </td>
         <td class="item-price">
             <%="${totalPriceText}"%>원
-        </td>
-        <td>
-            {{if deliCost == 0}}
-            {{if packageDeliCost > 0}}
-            무료<br/>(묶음배송 할인)
-            {{else}}
-            무료
-            {{if deliFreeAmount > 0}}
-            <br/>(<%="${deliFreeAmountText}"%>원 이상 구매)
-            {{/if}}
-            {{/if}}
-            {{else}}
-            <span><%="${deliCostText}"%>원</span>
-            {{if deliPrepaidFlag === "Y"}}
-            <br/>선결제
-            {{else}}
-            <br/>착불
-            {{/if}}
-            {{/if}}
-            <input type="hidden" name="deliPrepaidFlag" value="<%="${deliPrepaidFlag}"%>"/>
         </td>
         <td>
             <%="${sellerName}"%>

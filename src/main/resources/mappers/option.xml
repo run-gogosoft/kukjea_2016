@@ -17,6 +17,11 @@
 			, B.option_price AS optionPrice
 			, B.sale_price AS salePrice
 			, B.sale_period AS salePeriod
+			,100-(100 * B.sale_price)/B.option_price AS salePercent
+			, CASE
+				  WHEN B.sale_price > 0 THEN B.sale_price
+				  ELSE B.option_price
+			  END AS sellPrice
 		FROM sm_item_option A
 		INNER JOIN sm_item_option_value B
 		ON A.seq=B.option_seq
@@ -51,6 +56,11 @@
 			, sale_period AS salePeriod
 			, mod_date AS modDate
 			, reg_date AS regDate
+			,100-(100 * sale_price)/option_price AS salePercent
+			, CASE
+				  WHEN sale_price > 0 THEN sale_price
+				  ELSE option_price
+			  END AS sellPrice
 		FROM sm_item_option_value
 		WHERE 1=1
 		AND option_seq=#{value}
@@ -110,6 +120,11 @@
 			, A.stock_flag AS stockFlag
 			, B.item_seq AS itemSeq
 			, B.show_flag AS showFlag
+			,100-(100 * A.sale_price)/A.option_price AS salePercent
+			, CASE
+				  WHEN A.sale_price > 0 THEN A.sale_price
+				  ELSE A.option_price
+			  END AS sellPrice
 		FROM sm_item_option_value A
 		INNER JOIN sm_item_option B
 			ON A.option_seq=B.seq
