@@ -214,9 +214,10 @@ table.data_type2 {width:100%;}
 table.data_type2 thead th {padding:10px 5px; background:#a7aab5; color:#fff; font-weight:normal;}
 table.data_type2 tbody td {padding:7px 5px; border-bottom:1px solid #e6e6e6; color:#333; text-align:center}
 table.data_type2 tbody td .intxt {color:#333; text-align:right;}
-table.data_type2 tbody td a:hover {text-decoration:underline;}
+table.data_type2 tbody td a:hover {text-decoration:underline; font-size:13px;}
+table.data_type2 tbody td a {font-size:13px;}
 table.data_type2 tbody td .addr {margin-bottom:2px; color:#ea6710;}
-table.data_type2 tbody td .price strong {color:#666;font-size:14px;}
+table.data_type2 tbody td .price strong {color:#666;font-size:15px;}
 table.data_type2.tight th, table.data_type2.tight td {padding-left:0; padding-right:0;}
 
 

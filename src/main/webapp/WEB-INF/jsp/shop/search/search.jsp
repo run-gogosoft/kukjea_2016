@@ -138,10 +138,13 @@
                                                 <span class="icons">
                                                     <c:if test="${item.sellPrice >= 50000}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
                                                     <!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
-                                                    <c:if test="${ item.salePercent <100 && item.salePercent >0  }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
+                                                    <c:if test="${ item.salePercent <100 && item.salePercent >0  }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></c:if>
                                                 </span>
                                             </span>
                                                 <span class="tit">${item.name}</span>
+                                                <span class="price">
+                                                <strong><fmt:formatNumber value="${item.sellPrice}"/></strong>원
+                                            </span>
 
                                             </a>
                                         </li>
@@ -202,7 +205,7 @@
                                                 <div class="text-warning">${item.type3}</div>
                                             </td>
                                             <td>${item.maker}</td>
-                                            <td><span class="price"><strong>${item.sellPrice}</strong>원</span></td>
+                                            <td><span class="price"><strong><fmt:formatNumber value="${item.sellPrice}"/></strong>원</span></td>
                                         </tr>
                                     </c:forEach>
                                     </tbody>

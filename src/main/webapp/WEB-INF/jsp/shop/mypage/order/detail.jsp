@@ -151,10 +151,10 @@
                                         <span class="option-name">${item.optionValue}</span><br/>
                                     </c:if>
                                 </td>
-                                <td><fmt:formatNumber value="${item.sellPrice+item.optionPrice}"/>원</td>
+                                <td><fmt:formatNumber value="${item.sellPrice}"/>원</td>
                                 <td><strong>${item.orderCnt}개</strong></td>
                                 <td class="item-price">
-                                    <fmt:formatNumber value="${(item.sellPrice+item.optionPrice)*item.orderCnt}"/>원
+                                    <fmt:formatNumber value="${(item.sellPrice)*item.orderCnt}"/>원
                                 </td>
                                 <td>${item.sellerName}</td>
                                 <td>

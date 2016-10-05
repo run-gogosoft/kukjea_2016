@@ -172,7 +172,7 @@
                                 </c:if>
                             </td>
                             <td class="item-price">
-                                <fmt:formatNumber value="${(vo.sellPrice+vo.optionPrice)*vo.orderCnt}"/>원
+                                <fmt:formatNumber value="${(vo.sellPrice)*vo.orderCnt}"/>원
                             </td>
                             <td>${vo.orderCnt}</td>
                             <%--<td>--%>

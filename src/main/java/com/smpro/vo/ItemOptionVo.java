@@ -49,6 +49,9 @@ public class ItemOptionVo {
 	/** 수량 */
 	private int count;
 
+	/** seller seq **/
+	private int sellerSeq;
+
 	/** 변경내역 */
 	private String modContent="";
 	private String column="";
@@ -148,6 +151,15 @@ public class ItemOptionVo {
 	public void setSellPrice(int sellPrice) {
 		this.sellPrice = sellPrice;
 	}
+
+	public int getSellerSeq() {
+		return sellerSeq;
+	}
+
+	public void setSellerSeq(int sellerSeq) {
+		this.sellerSeq = sellerSeq;
+	}
+
 
 	public int getOptionPrice() {
 		return optionPrice;

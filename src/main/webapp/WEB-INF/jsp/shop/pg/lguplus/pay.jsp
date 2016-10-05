@@ -28,7 +28,7 @@
     //상점아이디(자동생성)
     String LGD_OID              = String.valueOf(vo.getOrderSeq());                                                             //주문번호(상점정의 유니크한 주문번호를 입력하세요)
     String LGD_AMOUNT           = String.valueOf(vo.getPayPrice());                                                             //결제금액("," 를 제외한 결제금액을 입력하세요)
-    String LGD_MERTKEY          = "cdca9f29d6411811c53c2887bb94d582" ;//: mallVo.getPgKey(); //상점MertKey(mertkey는 상점관리자 -> 계약정보 -> 상점정보관리에서 확인하실수 있습니다)
+    String LGD_MERTKEY          = Const.MERT_KEY ;//: mallVo.getPgKey(); //상점MertKey(mertkey는 상점관리자 -> 계약정보 -> 상점정보관리에서 확인하실수 있습니다)
     String LGD_BUYER            = vo.getMemberName();                                                                           //구매자명
     String LGD_PRODUCTINFO      = vo.getItemName();                                                                             //상품명
     String LGD_BUYEREMAIL       = vo.getMemberEmail();                                                                           //구매자 이메일

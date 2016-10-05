@@ -15,7 +15,11 @@
 			w.reg_date AS regDate,
 			i.seq AS itemSeq,
 			i.name,
-			(SELECT MIN(option_price) FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq) AS sellPrice,
+			CASE
+				WHEN ov.sale_price > 0 THEN ov.sale_price
+				ELSE ov.option_price
+			END AS sellPrice,
+
 			i.deli_cost AS deliCost,
 			i.deli_type_code AS deliTypeCode,
 			i.deli_free_amount AS deliFreeAmount,
@@ -24,6 +28,7 @@
 			u.name AS sellerName
 		FROM
 			sm_wish w LEFT OUTER JOIN
+			sm_item_option_value ov ON w.option_value_seq=ov.seq INNER JOIN
 			sm_item i ON (w.item_seq=i.seq) LEFT OUTER JOIN
 			sm_user u ON (i.seller_seq=u.seq)
 		WHERE w.member_seq=#{memberSeq}

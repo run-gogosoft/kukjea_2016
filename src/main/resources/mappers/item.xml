@@ -11,7 +11,6 @@
 			A.maker,
 			A.origin_country AS originCountry,
 			A.min_cnt AS minCnt,
-			A.seller_seq AS sellerSeq,
 			A.seller_item_code AS sellerItemCode,
 			A.cate_lv1_seq AS cateLv1Seq,
 			A.cate_lv2_seq AS cateLv2Seq,
@@ -1286,6 +1285,15 @@
 					AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
 				</when>-->
 			</choose>
+			<if test="itemSearchType eq 'name' and itemSearchValue != ''">
+				AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
+			</if>
+			<if test="itemSearchType eq 'seq' and itemSearchValue != ''">
+				AND A.seq = #{itemSearchValue}
+			</if>
+			<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
+				AND A.maker LIKE CONCAT('%',#{itemSearchValue},'%')
+			</if>
 			<if test="cateLv1Seq != null">
 				AND A.cate_lv1_seq=#{cateLv1Seq}
 			</if>

@@ -17,6 +17,7 @@
 			, B.option_price AS optionPrice
 			, B.sale_price AS salePrice
 			, B.sale_period AS salePeriod
+			, B.seller_seq AS sellerSeq
 			,100-(100 * B.sale_price)/B.option_price AS salePercent
 			, CASE
 				  WHEN B.sale_price > 0 THEN B.sale_price
@@ -54,6 +55,7 @@
 			, option_price AS optionPrice
 			, sale_price AS salePrice
 			, sale_period AS salePeriod
+			, seller_seq AS sellerSeq
 			, mod_date AS modDate
 			, reg_date AS regDate
 			,100-(100 * sale_price)/option_price AS salePercent
@@ -77,6 +79,7 @@
 		, option_price AS optionPrice
 		, sale_price AS salePrice
 		, sale_period AS salePeriod
+		, seller_seq AS sellerSeq
 		, mod_date AS modDate
 		, reg_date AS regDate
 		FROM sm_item_option_value
@@ -120,6 +123,7 @@
 			, A.stock_flag AS stockFlag
 			, B.item_seq AS itemSeq
 			, B.show_flag AS showFlag
+			, A.seller_seq AS sellerSeq
 			,100-(100 * A.sale_price)/A.option_price AS salePercent
 			, CASE
 				  WHEN A.sale_price > 0 THEN A.sale_price
@@ -157,7 +161,8 @@
 			option_price,
 			sale_price,
 			mod_date,
-			reg_date
+			reg_date,
+			seller_seq
 		) VALUES (
 			#{optionSeq},
 			#{valueName},
@@ -166,7 +171,8 @@
 			#{optionPrice},
 			#{salePrice},
 			NOW(),
-			NOW()
+			NOW(),
+			#{sellerSeq}
 		)
 	</insert>
 
@@ -186,7 +192,7 @@
 			, stock_flag=#{stockFlag}
 			, option_price=#{optionPrice}
 			, sale_price=#{salePrice}
-
+			, seller_seq=#{sellerSeq}
 			, mod_date=NOW()
 		WHERE 1=1
 		AND seq=#{seq}

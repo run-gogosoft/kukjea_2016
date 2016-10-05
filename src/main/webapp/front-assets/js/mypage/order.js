@@ -34,16 +34,16 @@ var hhWrite = {
 
 		if(statusCode==='60'){
 			$('.hh-writebox-header .title').text('교환신청');
-			$('#reasonText').html('교환<br/>요청<br/> 사유');
+			$('#reasonText').html('교환요청사유');
 		} else if(statusCode==='70'){
 			$('.hh-writebox-header .title').text('반품신청');
-			$('#reasonText').html('반품<br/>요청<br/>사유');
+			$('#reasonText').html('반품요청사유');
 		} else if(statusCode==='90') {
 			$('.hh-writebox-header .title').text('취소신청');
-			$('#reasonText').html('취소<br/>요청<br/>사유');
+			$('#reasonText').html('취소요청사유');
 		} else if(statusCode==='99') {
 			$('.hh-writebox-header .title').text('주문취소');
-			$('#reasonText').html('주문<br/>취소<br/>사유');
+			$('#reasonText').html('주문취소사유');
 			$('#submitBtn').text('취소하기');
 		}
 

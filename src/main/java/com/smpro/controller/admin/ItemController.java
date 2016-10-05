@@ -1603,9 +1603,9 @@ public class ItemController {
 		// 엑셀 파일명
 		response.setHeader("Content-Disposition", "attachment; filename = item_list_" + StringUtil.getDate(0, "yyyyMMdd") + ".xls");
 		// 워크북
-		Workbook wb = itemService.writeExcelItemList(vo, "xls", session);
 		System.out.println(">>>> download excel , vo.seq:"+vo.getSeq());
 		System.out.println(">>>> download excel , vo.name:"+vo.getName());
+		Workbook wb = itemService.writeExcelItemList(vo, "xls", session);
 
 		// 파일스트림
 		OutputStream fileOut = response.getOutputStream();

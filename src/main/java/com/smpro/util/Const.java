@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Const {
+	/** MertKey **/
+	public final static String MERT_KEY = "8b704ceee7a39edcba8f6370a521e5c7";
 	/** Manager Mail **/
 	public final static String MALL_MAIL = "kukjea@empal.com";
 	/** 경고창만 뜨는 페이지 */
@@ -51,7 +53,7 @@ public class Const {
 		if ("true".equalsIgnoreCase(System.getProperties().getProperty("detailedDebugMode"))) {
 			IMAGE_MAGICK_PATH = "convert";
 			UPLOAD_PATH = "/upload";
-			UPLOAD_REAL_PATH =      "/Users/aubergine/Documents/gogo/kookje_2016/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
+			UPLOAD_REAL_PATH =      "/Users/aubergine/Documents/gogo/kukje_2016/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war/upload";
 			WEBAPP_HOME_REAL_PATH = "/Users/aubergine/Documents/gogo/kookje_2016/out/artifacts/kookje/exploded/kookje-1.0-SNAPSHOT.war";
 			TEMP_DIR = "/tmp";
 			DOMAIN = "localhost";

@@ -426,8 +426,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	/** 상품 엑셀 다운로드 */
-	public Workbook writeExcelItemList(ItemVo vo, String type,
-			HttpSession session) {
+	public Workbook writeExcelItemList(ItemVo vo, String type,HttpSession session) {
 		Workbook wb;
 		String loginType = (String) session.getAttribute("loginType");
 		int arrSize = loginType.equals("S")?24:18;
@@ -467,9 +466,7 @@ public class ItemServiceImpl implements ItemService {
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		List<ItemVo> list = itemDao.getListExcel(vo);
-		System.out.println(">>>> download excel , vo.seq:"+vo.getSeq());
-		System.out.println(">>>> download excel , vo.name:"+vo.getName());
-		System.out.println(">>>> download excel , list size:"+list.size());
+
 		/* 데이터 생성 */
 		Vector<ArrayList<Object>> row = new Vector<>();
 		if (list != null && list.size() > 0) {
@@ -514,6 +511,13 @@ public class ItemServiceImpl implements ItemService {
 							cell.add(optionVoList.get(j).getSalePeriod());
 							cell.add(optionVoList.get(j).getStockCount());
 						}
+					}
+					if(cell.size()<arrSize){
+
+							cell.add("");
+							cell.add("");
+							cell.add("");
+							cell.add("");
 					}
 				}
 

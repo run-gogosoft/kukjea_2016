@@ -72,61 +72,6 @@
 								<input type="hidden" name="statusCode" value="${vo.statusCode}" />
 							</c:if>
 						</c:if>
-						<%--관리자일 경우에만 입점업체를 선택한다.--
-						<c:if test="${sessionScope.loginType eq 'A'}">
-							<div class="form-group">
-								<label class="col-md-2 control-label">입점업체 선택</label>
-								<div class="col-md-2">
-									<input type="text" class="form-control" name="sellerSeq" value="${vo.sellerSeq}" readonly="readonly" alt="입점업체" />
-								</div>
-
-								<div class="col-md-2">
-									<input type="text" class="form-control" name="seller" value="" onkeydown="enterSearch();" placeholder="입점업체 검색" />
-								</div>
-								<div class="col-md-1">
-									<button type="button" class="btn btn-default" onclick="sellerProc(0)">검색하기</button>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<div class="col-md-2"></div>
-								<div class="col-md-10">
-									<table class="table table-bordered table-striped" style="margin-top:10px">
-										<colgroup>
-											<col style="width:10%;"/>
-											<col style="width:10%;"/>
-											<col style="width:7%;"/>
-											<col style="width:7%;"/>
-											<col style="width:6%;"/>
-											<col style="width:12%;"/>
-											<col style="width:12%;"/>
-											<col style="width:12%;"/>
-											<col style="width:12%;"/>
-											<col style="width:12%;"/>
-										</colgroup>
-										<thead>
-										<tr>
-											<th>아이디</th>
-											<th>입점업체명</th>
-											<th>입점업체<br/>등급</th>
-											<th>정산<br/>등급</th>
-											<th>상태</th>
-											<th>대표자명</th>
-											<th>대표전화</th>
-											<th>담당자명</th>
-											<th>담당자<br/>연락처</th>
-											<th>승인일자</th>
-										</tr>
-										</thead>
-										<tbody id="eb-seller-list">
-											<tr><td class="muted text-center" colspan="20">검색결과가 이 안에 표시됩니다</td></tr>
-										</tbody>
-									</table>
-									<div id="paging"></div>
-								</div>
-							</div>
-						</c:if>
-						--%>
 							<script id="lvTemplate" type="text/html">
 								<option value="">분류를 선택해주세요</option>
 								{{each list}}

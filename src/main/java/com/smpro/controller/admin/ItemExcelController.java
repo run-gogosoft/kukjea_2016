@@ -219,9 +219,11 @@ public class ItemExcelController {
 				list.add(i - 1, vo);
 				if(OPTION_SIZE>0) {
 					ItemOptionVo ovo = optionMapper(v.get(i), LIST_SIZE, OPTION_SIZE);
-					ovo.setValueName((String) session.getAttribute("loginName"));
-					optionList.add(i-1,ovo);
-					System.out.println("optionList added size is:"+optionList.size());
+					if(ovo != null) {
+						ovo.setValueName((String) session.getAttribute("loginName"));
+						optionList.add(i - 1, ovo);
+						System.out.println("optionList added size is:" + optionList.size());
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -240,33 +242,34 @@ public class ItemExcelController {
 		session.setAttribute("excelStatus", statusMap);
 
 		// 외부 이미지를 불러와서 imagemagick으로 변환한다
-		for (int i = 0; i < list.size(); i++) {
-			if (errorList.size() > 0) {
-				log.error(errorList.toString());
+		if(loginType.equals("A")) {
+			for (int i = 0; i < list.size(); i++) {
+				if (errorList.size() > 0) {
+					log.error(errorList.toString());
 
-				model.addAttribute("errorCount", new Integer(errorList.size()));
-				model.addAttribute("list", errorList);
-				return "/ajax/get-error-list.jsp";
-			}
+					model.addAttribute("errorCount", new Integer(errorList.size()));
+					model.addAttribute("list", errorList);
+					return "/ajax/get-error-list.jsp";
+				}
 
-			//if(list.get(i).getSeq()==null || list.get(i).getSeq().intValue()==0) { //아이쳄 추가의 경우, 이미지 데이타 리사이징 처리 및 데이타 변경
+				//if(list.get(i).getSeq()==null || list.get(i).getSeq().intValue()==0) { //아이쳄 추가의 경우, 이미지 데이타 리사이징 처리 및 데이타 변경
 				if (!"".equals(list.get(i).getImg1())) {
 					String imgString = list.get(i).getImg1();
-					int lastSlashIndex  = imgString.lastIndexOf("/");
+					int lastSlashIndex = imgString.lastIndexOf("/");
 					int jpgIndex = imgString.indexOf(".");
 					int imgSeq = -1;
 
-					try{
-						imgSeq = Integer.getInteger(imgString.substring(lastSlashIndex,jpgIndex));
-					} catch(Exception e){
+					try {
+						imgSeq = Integer.getInteger(imgString.substring(lastSlashIndex, jpgIndex));
+					} catch (Exception e) {
 						e.printStackTrace();
 						imgSeq = -1;
 					}
-					System.out.println("lastSlashIndex:"+lastSlashIndex+",jpgIndexL:"+jpgIndex +"imgString:"+imgString+", imgSeq:"+imgSeq);
-					if(list.get(i).getSeq() ==null || (list.get(i).getSeq() != imgSeq)) {
+					System.out.println("lastSlashIndex:" + lastSlashIndex + ",jpgIndexL:" + jpgIndex + "imgString:" + imgString + ", imgSeq:" + imgSeq);
+					if (list.get(i).getSeq() == null || (list.get(i).getSeq() != imgSeq)) {
 						//현재 아이템의 이미지 데이타 변경된 경우에만 진행한다
 						//아이템 추가의 경우, 아이템 시퀀스 생성
-						if(list.get(i).getSeq()==null || list.get(i).getSeq()==0) {
+						if (list.get(i).getSeq() == null || list.get(i).getSeq() == 0) {
 							itemService.createSeq(list.get(i));
 							if (startInsertSeq == 0) startInsertSeq = list.get(i).getSeq();
 						}
@@ -302,7 +305,8 @@ public class ItemExcelController {
 				statusMap.put("imageCount", new Integer(i + 1));
 				session.setAttribute("excelStatus", statusMap);
 				log.info(list.get(i).toString());
-			//}
+				//}
+			}
 		}
 
 		if (errorList.size() > 0) {
@@ -391,12 +395,28 @@ public class ItemExcelController {
 				//해당 리스트에서 현재 공급사가 측적한 가격 정보가 있는지 확인해서
 				//수정할건지 추가할건지 결정한다
 				for(int ov = 0;ov<optionVoList.size();ov++) {
+
 					optionSeq = optionVoList.get(ov).getSeq();
 					ovo = optionVoList.get(ov);
-					System.out.println(">>>optionSeq:"+optionSeq);
-					System.out.println(">>>>ovo.getValueName():"+ovo.getValueName());
-					System.out.println(">>(String)session.getAttribute(\"loginName\")):"+(String)session.getAttribute("loginName"));
-					if(!ovo.getValueName().equals((String)session.getAttribute("loginName"))){
+					System.out.println(">>>optionSeq:" + optionSeq);
+					System.out.println(">>>sellerSeq:" + ovo.getSellerSeq());
+					System.out.println(">>>>ovo.getValueName():" + ovo.getValueName());
+					System.out.println(">>(String)session.getAttribute(\"loginSeq\")):" + (Integer) session.getAttribute("loginSeq"));
+					if (ovo.getSellerSeq() == ((Integer) session.getAttribute("loginSeq"))) {
+						//update
+						ovo.setOptionPrice(optionList.get(i).getOptionPrice());
+						ovo.setSalePrice(optionList.get(i).getSalePrice());
+						ovo.setSalePeriod(optionList.get(i).getSalePeriod());
+						ovo.setStockCount(optionList.get(i).getStockCount());
+						ovo.setStockFlag(optionList.get(i).getStockFlag());
+						ovo.setSellerSeq( (Integer) session.getAttribute("loginSeq"));
+						if (!itemOptionService.updateValueVo(ovo)) {
+							model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
+							return Const.ALERT_PAGE;
+						}
+						break;
+					}
+					else if(ov == optionVoList.size()-1){
 						//추가
 						ovo.setValueName((String)session.getAttribute("loginName"));
 						ovo.setOptionPrice(optionList.get(i).getOptionPrice());
@@ -404,20 +424,8 @@ public class ItemExcelController {
 						ovo.setSalePeriod(optionList.get(i).getSalePeriod());
 						ovo.setStockCount(optionList.get(i).getStockCount());
 						ovo.setStockFlag(optionList.get(i).getStockFlag());
-
+						ovo.setSellerSeq( (Integer) session.getAttribute("loginSeq"));
 						if (!itemOptionService.insertValueVo(ovo)) {
-							model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
-							return Const.ALERT_PAGE;
-						}
-					}
-					else {
-						//update
-						ovo.setOptionPrice(optionList.get(i).getOptionPrice());
-						ovo.setSalePrice(optionList.get(i).getSalePrice());
-						ovo.setSalePeriod(optionList.get(i).getSalePeriod());
-						ovo.setStockCount(optionList.get(i).getStockCount());
-						ovo.setStockFlag(optionList.get(i).getStockFlag());
-						if (!itemOptionService.updateValueVo(ovo)) {
 							model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
 							return Const.ALERT_PAGE;
 						}
@@ -710,33 +718,38 @@ public class ItemExcelController {
 			}
 			if ("".equals(list.get(index))) {
 				//setOptionPrice
-				errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 비어있습니다. ");
-			}
+				//errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 비어있습니다. ");
 
-			try {
-				Integer.valueOf("" + list.get(index++));
-				//setOptionPrice int value check
-			} catch (Exception e) {
-				//setOptionPrice
-				errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다.. ");
 			}
+			else {
 
-			//saleprice
-			if (!"".equals(list.get(index))) {
+				//optionPrice
 				try {
 					Integer.valueOf("" + list.get(index++));
-					//saleprice int value check
+					//setOptionPrice int value check
 				} catch (Exception e) {
-					//saleprice
-					errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다 ");
+					//setOptionPrice
+					errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다.. ");
 				}
-			} else {
-				index++;
-			}
-			//salePeriod
-			index++;//TODO salePeriod
-			if ("".equals(list.get(index++))) {
-				//setStockCount
+
+				//saleprice
+				if (!"".equals(list.get(index))) {
+					try {
+						Integer.valueOf("" + list.get(index++));
+						//saleprice int value check
+					} catch (Exception e) {
+						//saleprice
+						errorList.add(idx + " 번째 행:" + index + "번째 열: 가격 값이 잘못되어 있습니다 ");
+					}
+				} else {
+					index++;
+				}
+
+				//salePeriod
+				index++;//TODO salePeriod
+				if ("".equals(list.get(index++))) {
+					//setStockCount
+				}
 			}
 		}
 		// 18 상세정보(필수)
@@ -852,7 +865,8 @@ public class ItemExcelController {
 		System.out.println("setOptionName:"+list.get(index));
 		vo.setOptionName(String.valueOf(list.get(index++)));
 
-		System.out.println("setOptionPrice:"+list.get(index));
+
+		if("".equals(list.get(index))) return null;
 		vo.setOptionPrice(Integer.valueOf("" +list.get(index++)));
 
 		System.out.println("setSalePrice:"+list.get(index));
