@@ -75,7 +75,7 @@
 							<li ${naviSub eq '/point/list' ? "class='active'":""}><a href="/admin/point/list"><i class="fa fa-caret-right"></i>포인트 적립/사용내역</a></li>
 							<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/point/excel/list"><i class="fa fa-caret-right"></i>포인트 내역 엑셀 다운로드</a></li>
 							<li ${naviSub eq '/point/all/list' ? "class='active'":""}><a href="/admin/point/all/list"><i class="fa fa-caret-right"></i>포인트 상세 내역</a></li>
-							<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/member/list"><i class="fa fa-caret-right"></i>회원등급관리</a></li>
+							<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/member/grade"><i class="fa fa-caret-right"></i>회원등급관리</a></li>
 							<li ${naviSub eq '/point/all/list' ? "class='active'":""}><a href="/admin/member/list"><i class="fa fa-caret-right"></i>그룹관리</a></li>
 						</c:if>
 					</ul>
@@ -115,9 +115,9 @@
 						<li ${naviSub eq '/order/exchange/list' ? "class='active'":""}><a href="/admin/order/exchange/list"><i class="fa fa-caret-right"></i>교환 요청 리스트</a></li>
 						<li ${naviSub eq '/order/return/list' ? "class='active'":""}><a href="/admin/order/return/list"><i class="fa fa-caret-right"></i>반품 요청 리스트</a></li>
 					</c:if>
-					<c:if test="${sessionScope.loginType eq 'A'}">
-						<li ${naviSub eq '/order/list/np' ? "class='active'":"" }><a href="/admin/order/list/np"><i class="fa fa-caret-right"></i>후청구/방문결제 리스트</a></li>
-					</c:if>
+					<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
+						<%--<li ${naviSub eq '/order/list/np' ? "class='active'":"" }><a href="/admin/order/list/np"><i class="fa fa-caret-right"></i>후청구/방문결제 리스트</a></li>--%>
+					<%--</c:if>--%>
 					<c:if test="${sessionScope.loginType eq 'A' }">
 						<li ${naviSub eq '/order/delivery/proc/list' ? "class='active'":""}><a href="/admin/order/delivery/proc/list"><i class="fa fa-caret-right"></i>자동 배송완료 처리</a></li>
 					</c:if>

@@ -232,28 +232,28 @@
                                             <!-- <button class="btn btn-danger btn-xs" onclick="updateOrderStatus('${vo.seq}','${vo.orderSeq}','55');" style="width: 75px;margin-top: 2px;">구매확정</button> -->
                                             <button class="btn btn_red btn_xs" onclick="CHBoardUtil.writeButton('${status.count}')" style="width: 75px;margin-top: 2px;">구매확정</button>
                                         </c:if>
-                                        <c:if test="${vo.statusCode <= 50}">
-                                            <button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('70',${vo.seq}, ${vo.orderSeq},'');">반품신청</button>
-                                            <button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('60',${vo.seq}, ${vo.orderSeq},'');">교환신청</button>
-                                        </c:if>
+                                        <%--<c:if test="${vo.statusCode <= 50}">--%>
+                                            <%--<button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('70',${vo.seq}, ${vo.orderSeq},'');">반품신청</button>--%>
+                                            <%--<button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('60',${vo.seq}, ${vo.orderSeq},'');">교환신청</button>--%>
+                                        <%--</c:if>--%>
                                     </c:when>
-                                    <c:when test="${vo.statusCode == 20}">
-                                        <button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('90',${vo.seq}, ${vo.orderSeq},'');">취소신청</button>
-                                    </c:when>
-                                    <c:when test="${vo.statusCode < 20}">
-                                        <c:choose>
-                                            <c:when test="${vo.orderCount == 1}">
-                                                <!-- 단건 주문인 경우는 전체 취소 처리한다. -->
-                                                <button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('99',${vo.seq}, ${vo.orderSeq},'ALL');">주문취소</button>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <c:if test="${!(fn:startsWith(vo.payMethod,'ARS') and vo.statusCode eq '00')}">
-                                                    <!-- ARS결제 주문일 경우에는 입금대기 상태에서 부분취소 요청을 할 수 없다. -->
-                                                    <button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('90',${vo.seq}, ${vo.orderSeq},'');">취소신청</button>
-                                                </c:if>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:when>
+                                    <%--<c:when test="${vo.statusCode == 20}">--%>
+                                        <%--<button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('90',${vo.seq}, ${vo.orderSeq},'');">취소신청</button>--%>
+                                    <%--</c:when>--%>
+                                    <%--<c:when test="${vo.statusCode < 20}">--%>
+                                        <%--<c:choose>--%>
+                                            <%--<c:when test="${vo.orderCount == 1}">--%>
+                                                <%--<!-- 단건 주문인 경우는 전체 취소 처리한다. -->--%>
+                                                <%--<button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('99',${vo.seq}, ${vo.orderSeq},'ALL');">주문취소</button>--%>
+                                            <%--</c:when>--%>
+                                            <%--<c:otherwise>--%>
+                                                <%--<c:if test="${!(fn:startsWith(vo.payMethod,'ARS') and vo.statusCode eq '00')}">--%>
+                                                    <%--<!-- ARS결제 주문일 경우에는 입금대기 상태에서 부분취소 요청을 할 수 없다. -->--%>
+                                                    <%--<button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('90',${vo.seq}, ${vo.orderSeq},'');">취소신청</button>--%>
+                                                <%--</c:if>--%>
+                                            <%--</c:otherwise>--%>
+                                        <%--</c:choose>--%>
+                                    <%--</c:when>--%>
                                 </c:choose>
                             </td>
                         </tr>

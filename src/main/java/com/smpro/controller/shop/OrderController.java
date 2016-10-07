@@ -651,44 +651,46 @@ public class OrderController {
 		}
 
 
-		//구매 후 포인트 적립 : 구입액 * 1%
-		//포인트 유효기가 30일
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		Calendar cl = new GregorianCalendar();
-		Date date = new Date();
-		cl.setTime(date);
-		cl.add(cl.DATE, 30);
-		String endDate = sdf.format(cl.getTime());
-		PointVo orderPoint = new PointVo();
-		orderPoint.setStatusCode("S");
-		orderPoint.setMemberSeq((Integer)session.getAttribute("loginSeq"));
-		orderPoint.setEndDate(endDate);
-		orderPoint.setPoint((int)(ovo.getPayPrice()*0.01));
-		orderPoint.setValidFlag("Y");
-		orderPoint.setReserveCode("B");//회원가입 : N, 구매 : B  , 이벤트 : E
-		orderPoint.setTypeCode("1");
-		orderPoint.setNote("구매포인트지급(주문번호 :" +ovo.getOrderSeq()+")");
-		//orderPoint.setAdminSeq(memberSeq);
-		orderPoint.setUseablePoint(orderPoint.getPoint());
+		//if(!"CASH".equals(ovo.getPayMethod())) {
+			//구매 후 포인트 적립 : 구입액 * 1%
+			//포인트 유효기가 30일
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			Calendar cl = new GregorianCalendar();
+			Date date = new Date();
+			cl.setTime(date);
+			cl.add(cl.DATE, 30);
+			String endDate = sdf.format(cl.getTime());
+			PointVo orderPoint = new PointVo();
+			orderPoint.setStatusCode("S");
+			orderPoint.setMemberSeq((Integer) session.getAttribute("loginSeq"));
+			orderPoint.setEndDate(endDate);
+			orderPoint.setPoint((int) (ovo.getPayPrice() * 0.01));
+			orderPoint.setValidFlag("Y");
+			orderPoint.setReserveCode("B");//회원가입 : N, 구매 : B  , 이벤트 : E
+			orderPoint.setTypeCode("1");
+			orderPoint.setNote("구매포인트지급(주문번호 :" + ovo.getOrderSeq() + ")");
+			//orderPoint.setAdminSeq(memberSeq);
+			orderPoint.setUseablePoint(orderPoint.getPoint());
 
-		try {
-			if (!pointService.insertData(orderPoint)) {
-				throw new Exception();
+			try {
+				if (!pointService.insertData(orderPoint)) {
+					throw new Exception();
+				}
+
+				orderPoint.setPointSeq(orderPoint.getSeq());
+
+				if (!pointService.insertHistoryData(orderPoint)) {
+					throw new Exception();
+				}
+
+				if (!pointService.insertLogData(orderPoint)) {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				log.error("POINT FAIL:: ===> " + e.getMessage());
+				e.printStackTrace();
 			}
-
-			orderPoint.setPointSeq(orderPoint.getSeq());
-
-			if (!pointService.insertHistoryData(orderPoint)) {
-				throw new Exception();
-			}
-
-			if (!pointService.insertLogData(orderPoint)) {
-				throw new Exception();
-			}
-		} catch (Exception e) {
-			log.error("POINT FAIL:: ===> " + e.getMessage());
-			e.printStackTrace();
-		}
+		//}
 		//메일 중복 발송 방지를 위한 세션값 업데이트
 		session.setAttribute("orderSeq", ovo.getOrderSeq());
 
@@ -747,7 +749,7 @@ public class OrderController {
 			if("Y".equals(estimateFlag)) {
 				totalPrice += list.get(i).getSellPrice();
 			} else {
-				totalPrice += (list.get(i).getSellPrice() + list.get(i).getOptionPrice()) * list.get(i).getCount();
+				totalPrice += list.get(i).getSellPrice() * list.get(i).getCount();
 				if ("Y".equals(list.get(i).getDeliPrepaidFlag())) {
 					totalPrice += list.get(i).getDeliCost();
 				}
@@ -918,7 +920,7 @@ public class OrderController {
 			for(int i=0; i<list.size(); i++) {
 				ItemVo vo = list.get(i);
 				if(!"1".equals(vo.getTaxCode())) {
-					taxFreeAmt += (vo.getSellPrice()+vo.getOptionPrice()) * vo.getCount();
+					taxFreeAmt += vo.getSellPrice()* vo.getCount();
 				}
 			}
 		}

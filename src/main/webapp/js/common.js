@@ -530,6 +530,7 @@ $(document).ready(function(){
 	// 포인트를 매핑한다
 	if($('[data-access=point]').length > 0) {
 		$.get('/shop/mypage/point/ajax', function(data){
+			$('[data-access=grade]').text( ebFormatNumber( data.grade || 0 ) );
 			$('[data-access=point]').text( ebFormatNumber( data.point || 0 ) );
 		});
 	}

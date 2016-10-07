@@ -87,6 +87,11 @@ var applyPoint = function() {
 		return;
 	}
 
+	if(point%500 != 0){
+		alert("포인트는 500 포인트 단위로 사용하실 수 있습니다.");
+		return;
+	}
+
 	if( curPoint < point ) {
 		alert("잔여 포인트 금액을 초과하여 사용할 수 없습니다.");
 		return;
@@ -109,6 +114,9 @@ var applyPoint = function() {
 	if(totalPrice - point == 0) {
 		$("input[name='payMethod']").prop("disabled", true);
 	}
+
+
+	alert("포인트 사용이 적용되었습니다.");
 };
 
 /** 사용 포인트 자동 입력 */

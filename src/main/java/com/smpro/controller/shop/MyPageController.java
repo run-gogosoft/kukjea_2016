@@ -46,6 +46,9 @@ public class MyPageController extends MyPage {
 	private PointService pointService;
 
 	@Autowired
+	private GradeService gradeService;
+
+	@Autowired
 	private BoardService boardService;
 
 	@Autowired
@@ -468,8 +471,20 @@ public class MyPageController extends MyPage {
 	public String getPoint(HttpSession session) {
 		Integer loginSeq = (Integer)session.getAttribute("loginSeq");
 		Integer useablePoint = pointService.getUseablePoint(loginSeq);
+		String grade = "GOLD";
+
+	 	int totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(loginSeq));
+		GradeVo gradeVo = new GradeVo();
+		List<GradeVo> grades = gradeService.getList(gradeVo);
+		for(GradeVo vo:grades){
+			if(vo.getPayCondition()<totlaOrderPrice) {
+				grade = vo.getName();
+				break;
+			}
+		}
 
 		Map map = new HashMap();
+		map.put("grade", grade);
 		map.put("point", useablePoint == null ? new Integer(0) : useablePoint);
 
 		return JsonHelper.render(map);

@@ -154,7 +154,7 @@ public class MailServiceImpl implements MailService {
 			itemList.append(list.get(i).getItemName()+"<br/><span style='color:#66cccc;'>"+list.get(i).getOptionValue()+"</span>");
 			itemList.append("</td>");
 			itemList.append("<td style='border-bottom: 1px solid #e1e1e1;text-align:center;'>");
-			itemList.append(fmt.format(list.get(i).getSellPrice() + list.get(i).getOptionPrice())+"원");
+			itemList.append(fmt.format(list.get(i).getSellPrice())+"원");
 			itemList.append("</td>");
 			itemList.append("<td style='border-bottom: 1px solid #e1e1e1;text-align:center;font-weight:bold;'>");
 			itemList.append(list.get(i).getOrderCnt()+"개");

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Const {
 	/** MertKey **/
 	public final static String MERT_KEY = "8b704ceee7a39edcba8f6370a521e5c7";
+	public final static String SHOP_ID = "kjmp2014";
 	/** Manager Mail **/
 	public final static String MALL_MAIL = "kukjea@empal.com";
 	/** 경고창만 뜨는 페이지 */

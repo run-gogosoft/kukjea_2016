@@ -34,6 +34,8 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private GradeService gradeService;
 
 	@Autowired
 	private MemberGroupService memberGroupService;
@@ -121,6 +123,24 @@ public class MemberController {
 		return getList(pvo, model);
 	}
 
+	@CheckGrade(controllerName = "memberController", controllerMethod = "getList")
+	@RequestMapping("/member/grade")
+	public String getGradeList(Model model) throws Exception {
+		GradeVo gradeVo = new GradeVo();
+		List<GradeVo> grades = gradeService.getList(gradeVo);
+
+		for(GradeVo vo:grades){
+			System.out.println(">>>"+vo.getName());
+			System.out.println(">>>"+vo.getPayCondition());
+		}
+
+		if(grades != null) {
+			model.addAttribute("list", grades);
+		}
+		
+		return "/member/grade.jsp";
+	}
+
 	@CheckGrade(controllerName = "memberController", controllerMethod = "getView")
 	@RequestMapping("/member/view/{seq}")
 	public String getView(@PathVariable Integer seq, Model model) throws Exception {
@@ -129,9 +149,16 @@ public class MemberController {
 		if(vo != null) {
 			model.addAttribute("gvo", memberGroupService.getVo(vo.getGroupSeq()));
 		}
-		
+
 		return "/member/view.jsp";
 	}
+
+
+
+
+
+
+
 
 	@CheckGrade(controllerName = "memberController", controllerMethod = "getData")
 	@RequestMapping("/member/mod/{seq}")

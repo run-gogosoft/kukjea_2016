@@ -701,8 +701,8 @@ public class OrderServiceImpl implements OrderService {
 				cell.add(StringUtil.restoreClearXSS(ovo.getModelName()));
 				cell.add(ovo.getPayMethodName());
 				cell.add(StringUtil.formatAmount(ovo.getOrderCnt()));
-				cell.add(StringUtil.formatAmount(ovo.getSellPrice()+ovo.getOptionPrice()));
-				cell.add(StringUtil.formatAmount((ovo.getSellPrice() + ovo.getOptionPrice()) * ovo.getOrderCnt()));
+				cell.add(StringUtil.formatAmount(ovo.getSellPrice()));
+				cell.add(StringUtil.formatAmount((ovo.getSellPrice()) * ovo.getOrderCnt()));
 				cell.add(StringUtil.formatAmount(ovo.getDeliCost()));
 				
 				if(ovo.getDeliCost() == 0) {
@@ -806,7 +806,7 @@ public class OrderServiceImpl implements OrderService {
 				cell.add(ovo.getItemName());
 				
 				cell.add(ovo.getTaxName());
-				cell.add(StringUtil.formatAmount(ovo.getSellPrice()+ovo.getOptionPrice()));
+				cell.add(StringUtil.formatAmount(ovo.getSellPrice()));
 				cell.add(StringUtil.formatAmount(ovo.getOrderCnt()));
 				cell.add(StringUtil.formatAmount(ovo.getDeliCost()));
 				cell.add(ovo.getStatusText());
@@ -900,7 +900,7 @@ public class OrderServiceImpl implements OrderService {
 			vo.setOrderCnt(list.get(i).getCount());
 			
 			/** 공급가 계산 */	
-			int sellPrice = vo.getSellPrice() + vo.getOptionPrice();
+			int sellPrice = vo.getSellPrice();
 			vo.setSupplyPrice(sellPrice);
 			if(data != null) {
 				//서울시 수수료

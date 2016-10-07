@@ -281,10 +281,10 @@
                                             <input type="text" id="point" name="point" class="form-control numeric point-input-box" value="0" onfocus="initPoint()"/>&nbsp;&nbsp;
                                             <span class="won">원</span>
                                             <input type="checkbox" id="apply_point_checkbox_click" class="all-point-use-button" onclick="inputPointAll(this)" style="margin-left:15px;width:20px;height:auto;"/> 사용금액 자동입력
-                                            <button type="button" onclick="applyPoint()" class="btn btn-xs small-btn btn-default point-use-button">적용하기</button>
+                                            <button type="button" onclick="applyPoint()" class="btn btn-xs small-btn btn-default point-use-button"><strong style="color:red;">적용하기</strong></button>
                                             <div class="point-description">
-                                                - 사용하시고자 하는 포인트 확인 후 <strong style="color:red;">
-                                                포인트란에 해당 금액을 입력해 주시고,'적용하기'를 눌러</strong> 주시기 바랍니다.
+                                                - 사용하시고자 하는 포인트 확인 후
+                                                포인트란에 해당 금액을 입력해 주시고,<strong style="color:red;">'적용하기'</strong>를  눌러 주시기 바랍니다.
                                             </div>
                                             <div class="point-description">
                                                 - 포인트는 <strong style="color:red;">500 포인트</strong> 단위로 사용하실 수 있습니다.

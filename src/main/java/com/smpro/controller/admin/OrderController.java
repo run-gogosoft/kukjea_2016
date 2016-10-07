@@ -24,6 +24,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Slf4j
@@ -514,6 +518,7 @@ public class OrderController {
 
 		try {
 			if (orderService.updateStatusForConfirm(vo)) {
+
 				//입점업체 주문확인 메일 발송
 				mailService.sendMailToSellerForOrder(orderService.getData(vo), request.getServletContext().getRealPath("/"));
 				

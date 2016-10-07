@@ -27,7 +27,7 @@
                         <img src="../../images/common/icon_grade.png" alt="등급" class="level" />
                         <dl class="mylevel">
                             <dt>구매등급</dt>
-                            <dd>회원님의 구매등급은 <strong>GOLD</strong> 입니다.</dd>
+                            <dd>회원님의 구매등급은 <strong data-access="grade">---</strong> 입니다.</dd>
                         </dl>
                         <dl class="mypoint">
                             <dt>나의 포인트</dt>
@@ -37,7 +37,7 @@
 
                     <!-- 나의그룹 -->
                     <%--<div class="mygroup">--%>
-                        <%--<dl>--%>
+                       <%--<dl>--%>
                             <%--<dt>나의 그룹</dt>--%>
                             <%--<dd>--%>
                                 <%--<button type="button" class="btn btn_red btn_sm">그룹 신청하기</button>--%>
