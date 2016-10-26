@@ -54,7 +54,7 @@
 			</div>
 		</div>
 
-<c:forEach var="list" items="${lists}" varStatus="listStatus">
+<%--<c:forEach var="list" items="${lists}" varStatus="listStatus">--%>
 	<c:if test="${listStatus.index == 0 or (listStatus.index+1) % 2== 1}">
 		<div class="row">
 	</c:if>
@@ -98,7 +98,7 @@
 	<c:if test="${listStatus.index > 0 and (listStatus.index+1) % 4 == 0}">
 		</div>
 	</c:if>
-</c:forEach>
+<%--</c:forEach>--%>
 
 	</section>
 </div>

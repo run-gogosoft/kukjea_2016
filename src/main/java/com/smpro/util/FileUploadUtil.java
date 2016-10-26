@@ -60,9 +60,42 @@ public class FileUploadUtil {
 	 * @throws ImageIsNotAvailableException
 	 *             (이미지가 아닐 경우 발생하는 예외)
 	 * @throws ImageSizeException
-	 *             (이미지가 사이즈가 342x100 아닐경우 발생하는 예외)
+	 *             (이미지가 사이즈가 804x270 아닐경우 발생하는 예외)
 	 */
 	public String uploadEventImageFile(MultipartFile formFile, String realPath) throws IOException, ImageIsNotAvailableException, ImageSizeException {
+		// 랜덤으로 생성된 이미지에 확장자를 붙인다
+		String fileName = UUID.randomUUID().toString() + formFile.getOriginalFilename().substring(formFile.getOriginalFilename().lastIndexOf(".")).toLowerCase();
+
+		upload(realPath, formFile, fileName);
+		// 이미지 파일인지 아닌지 검사한다 (이 부분은 서버 부하가 있으므로 추후 문제되면 제거한다)
+		ImageIcon ii = new ImageIcon(realPath + "/" + fileName);
+		System.out.print("ii.getWidth:"+ii.getIconWidth());
+		System.out.print("ii.getIconHeight:"+ii.getIconHeight());
+		if (ii.getIconWidth() == -1 && ii.getIconHeight() == -1) {
+			new File(realPath + "/" + fileName).delete();
+			throw new ImageIsNotAvailableException();
+		} else if(ii.getIconWidth() > 804 || ii.getIconWidth() < 804 && ii.getIconHeight() > 270 || ii.getIconHeight() < 270) {
+			new File(realPath + "/" + fileName).delete();
+			throw new ImageSizeException();
+		}
+		return fileName;
+	}
+
+	/**
+	 * 이미지를 업로드하고 유일한 파일명으로 포장해서 던져주는 메서드 이 리스트는 업로드된 디렉토리를 포함하지 않음, 오로지 파일명만을
+	 * 반환한다(이벤트 리스트 이미지 등록시에 사용한다)
+	 *
+	 * @param formFile
+	 * @param realPath
+	 * @return
+	 * @throws java.io.IOException
+	 *             (물리적인 IO에 문제가 발생했을 경우 발생하는 예외, 디스크 용량부족 등...)
+	 * @throws ImageIsNotAvailableException
+	 *             (이미지가 아닐 경우 발생하는 예외)
+	 * @throws ImageSizeException
+	 *             (이미지가 사이즈가 804x270 아닐경우 발생하는 예외)
+	 */
+	public String uploadEventBannerImageFile(MultipartFile formFile, String realPath) throws IOException, ImageIsNotAvailableException, ImageSizeException {
 		// 랜덤으로 생성된 이미지에 확장자를 붙인다
 		String fileName = UUID.randomUUID().toString() + formFile.getOriginalFilename().substring(formFile.getOriginalFilename().lastIndexOf(".")).toLowerCase();
 
@@ -72,7 +105,7 @@ public class FileUploadUtil {
 		if (ii.getIconWidth() == -1 && ii.getIconHeight() == -1) {
 			new File(realPath + "/" + fileName).delete();
 			throw new ImageIsNotAvailableException();
-		} else if(ii.getIconWidth() > 342 || ii.getIconWidth() < 342 && ii.getIconHeight() > 100 || ii.getIconHeight() < 100) {
+		} else if(ii.getIconWidth() > 804 || ii.getIconWidth() < 804 && ii.getIconHeight() > 270 || ii.getIconHeight() < 270) {
 			new File(realPath + "/" + fileName).delete();
 			throw new ImageSizeException();
 		}

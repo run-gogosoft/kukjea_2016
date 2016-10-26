@@ -38,7 +38,7 @@
                 <fieldset>
                     <legend>통합검색</legend>
                     <div class="search_area">
-                        <input type="text" name="name" class="intxt search-input" placeholder="검색어 입력" style="ime-mode:active" />
+                        <input type="text" name="nameMaker" class="intxt search-input" placeholder="검색어 입력" style="ime-mode:active" />
                         <button type="submit" class="btn_total_search"><span class="blind">검색</span></button>
                     </div>
                 </fieldset>
@@ -47,9 +47,9 @@
                 <dl>
                     <dt><span class="icon icon_search"><span class="blind">인기검색어</span></span></dt>
                     <dd>
-                        <a href="/shop/search?name=드레싱포셉">드레싱포셉</a>
-                        <a href="/shop/search?name=일회용주사기">일회용주사기</a>
-                        <a href="/shop/search?name=발마사지기">발마사지기</a>
+                        <a href="/shop/search?nameMaker=드레싱포셉">드레싱포셉</a>
+                        <a href="/shop/search?nameMaker=일회용주사기">일회용주사기</a>
+                        <a href="/shop/search?nameMaker=발마사지기">발마사지기</a>
                     </dd>
                 </dl>
                 <%-- div class="btn_paging">
@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="promotion_top">
-            <img src="/images/thumb/thumb_promotion230x70.jpg" alt="">
+            <a href="http://blog.naver.com/alaman92" target="_blank"><img src="/images/thumb/thumb_promotion230x70.jpg" alt="">
         </div>
             <li>
                 <c:if test="${noticeList ne null}">

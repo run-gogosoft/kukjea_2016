@@ -134,10 +134,10 @@
                                 <col style="width:25px" />
                                 <c:if test="${vo.listStyle eq 'all'}"><col style="width:70px" /></c:if>
                                 <col style="width:auto" />
-                                <col style="width:100px" />
-                                <col style="width:100px" />
-                                <col style="width:100px" />
-                                <col style="width:100px" />
+                                <col style="width:80px" />
+                                <col style="width:80px" />
+                                <col style="width:80px" />
+                                <col style="width:80px" />
                             </colgroup>
 
                             <thead>

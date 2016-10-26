@@ -47,7 +47,7 @@
                         <ul class="defalut">
                             <c:forEach var="item" items="${categoryList}" begin="0" end="4">
                                 <li><label>
-                                    <a href="/shop/search?name=${itemSearchVo.name}&<c:choose><%--
+                                    <a href="/shop/search?nameMaker=${itemSearchVo.nameMaker}&<c:choose><%--
                                     --%><c:when test="${item.depth==1}">cateLv1Seq=${item.seq}</c:when><%--
                                     --%><c:when test="${item.depth==2}">cateLv1Seq=${item.parentSeq}&cateLv2Seq=${item.seq}</c:when><%--
                                     --%><c:when test="${item.depth==3}">cateLv1Seq=${itemSearchVo.cateLv1Seq}&cateLv2Seq=${item.parentSeq}&cateLv3Seq=${item.seq}</c:when><%--
@@ -60,7 +60,7 @@
                             <ul class="defalut">
                                 <c:forEach var="item" items="${categoryList}" begin="4">
                                     <li><label>
-                                        <a href="/shop/search?name=${itemSearchVo.name}&<c:choose><%--
+                                        <a href="/shop/search?nameMaker=${itemSearchVo.nameMaker}&<c:choose><%--
                                     --%><c:when test="${item.depth==1}">cateLv1Seq=${item.seq}</c:when><%--
                                     --%><c:when test="${item.depth==2}">cateLv1Seq=${item.parentSeq}&cateLv2Seq=${item.seq}</c:when><%--
                                     --%><c:when test="${item.depth==3}">cateLv1Seq=${itemSearchVo.cateLv1Seq}&cateLv2Seq=${item.parentSeq}&cateLv3Seq=${item.seq}</c:when><%--
@@ -79,7 +79,7 @@
                 <!-- 상품목록 -->
                 <div class="goods_list_wrap">
                     <form name="searchForm">
-                        <input type="hidden" name="name" value="${itemSearchVo.name}"/>
+                        <input type="hidden" name="nameMaker" value="${itemSearchVo.nameMaker}"/>
                         <input type="hidden" name="cateLv1Seq" value="${itemSearchVo.cateLv1Seq}" />
                         <input type="hidden" name="cateLv2Seq" value="${itemSearchVo.cateLv2Seq}" />
 
@@ -141,7 +141,7 @@
                                                     <c:if test="${ item.salePercent <100 && item.salePercent >0  }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></c:if>
                                                 </span>
                                             </span>
-                                                <span class="tit">${item.name}</span>
+                                                <span class="tit"><strong>${item.name}</strong></span>
                                                 <span class="price">
                                                 <strong><fmt:formatNumber value="${item.sellPrice}"/></strong>원
                                             </span>
@@ -160,9 +160,9 @@
                                         <col style="width:25px" />
                                         <c:if test="${itemSearchVo.listStyle eq 'all'}"><col style="width:70px" /></c:if>
                                         <col style="width:auto" />
-                                        <col style="width:100px" />
-                                        <col style="width:100px" />
-                                        <col style="width:100px" />
+                                        <col style="width:80px" />
+                                        <col style="width:80px" />
+                                        <col style="width:80px" />
                                     </colgroup>
 
                                     <thead>

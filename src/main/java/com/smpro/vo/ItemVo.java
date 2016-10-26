@@ -242,6 +242,10 @@ public class ItemVo extends PagingVo {
 
 	private String listStyle = "all";
 
+	private String nameMaker="";
+
+	public void setNameMaker(String nameMaker){ this.nameMaker = nameMaker;}
+	public String getNameMaker(){return this.nameMaker;}
 
 	@Override
 	public String getSearch() {
@@ -1200,7 +1204,7 @@ public class ItemVo extends PagingVo {
 	@Override
 	public String toString() {
 		return "ItemVo [rankNumber=" + rankNumber + ", seq=" + seq + ", name="
-				+ name + ", nickname=" + nickname + ", statusCode="
+				+ name +", nameMaker ="+nameMaker+", nickname=" + nickname + ", statusCode="
 				+ statusCode + ", statusName=" + statusName + ", sellPrice="
 				+ sellPrice + ", tempSellPrice=" + tempSellPrice
 				+ ", supplyMasterPrice=" + supplyMasterPrice + ", supplyPrice=" + supplyPrice

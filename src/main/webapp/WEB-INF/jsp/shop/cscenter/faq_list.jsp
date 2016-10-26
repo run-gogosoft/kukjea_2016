@@ -62,10 +62,8 @@
                                 <a href="#" class="ellipsis full fold_control">${item.title}</a>
                             </td>
                         </tr>
-                        <tr class="folding_view">
-                            <td colspan="3">
-                                ${item.content}
-                            </td>
+                        <tr class="folding_view"  >
+                            <td colspan="3" >${item.content}</td>
                         </tr>
                         </c:forEach>
                         </tbody>
@@ -82,6 +80,7 @@
         <%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
     </div>
 </div>
+
 <script type="text/javascript">
 var goPage = function (page) {
     location.href = location.pathname + "?pageNum=" + page +"&categoryCode=${categoryCode}";

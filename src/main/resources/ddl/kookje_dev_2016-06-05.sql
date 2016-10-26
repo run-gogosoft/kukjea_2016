@@ -1391,7 +1391,7 @@ CREATE TABLE `sm_item` (
   `min_cnt` int(11) DEFAULT '1' COMMENT '최소구매수량',
   `max_cnt` int(11) DEFAULT NULL COMMENT '최대구매수량',
   `auth_category` varchar(50) DEFAULT NULL,
-  `old_deli_cost` int(11) NOT NULL DEFAULT '0' COMMENT '함께누리몰 배송비 백업',
+  `old_deli_cost` int(11) NOT NULL DEFAULT '0' COMMENT '국제몰 배송비 백업',
   `img_banner_code` varchar(20) DEFAULT NULL COMMENT '상품이미지내 이벤트 배너 전시 코드값(01:세일,02:특가,03:한정수량,04:행사)',
   PRIMARY KEY (`seq`),
   KEY `idx1_sm_item` (`cate_lv1_seq`,`cate_lv2_seq`,`cate_lv3_seq`,`cate_lv4_seq`),
@@ -2484,8 +2484,8 @@ CREATE TABLE `sm_member` (
   `dept_name` varchar(50) DEFAULT NULL COMMENT '부서명',
   `pos_name` varchar(50) DEFAULT NULL COMMENT '직책',
   `group_seq` int(10) unsigned DEFAULT NULL COMMENT '기관,기업/시설/단체 회원 부가 정보 시퀀스(FK)',
-  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '함께누리몰 PK',
-  `encrypt_flag` char(1) NOT NULL DEFAULT 'Y' COMMENT '함께누리몰 개인정보 암호화 처리 여부',
+  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '국제몰 PK',
+  `encrypt_flag` char(1) NOT NULL DEFAULT 'Y' COMMENT '국제몰 개인정보 암호화 처리 여부',
   PRIMARY KEY (`seq`),
   KEY `fk2_sm_member` (`mall_seq`),
   KEY `fk3_sm_member` (`group_seq`),
@@ -2556,7 +2556,7 @@ CREATE TABLE `sm_member_group` (
   `tax_name` varchar(50) DEFAULT NULL COMMENT '세금계산서 담당자',
   `tax_email` varchar(100) DEFAULT NULL COMMENT '세금계산서 수신 이메일',
   `tax_tel` varchar(15) DEFAULT NULL COMMENT '세금계산서 담당자 전화번호',
-  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '함께누리몰 고유키값(삭제예정)',
+  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '국제몰 고유키값(삭제예정)',
   PRIMARY KEY (`seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='기관(기업/시설/단체) 회원 부가 정보';
 
@@ -2590,7 +2590,7 @@ INSERT INTO `sm_menu` (`seq`, `sort`, `name`)
 VALUES
 	(1,3,'사회적경제'),
 	(2,1,'게시판'),
-	(4,2,'함께누리'),
+	(4,2,'국제'),
 	(6,0,'기타');
 
 /*!40000 ALTER TABLE `sm_menu` ENABLE KEYS */;
@@ -2624,7 +2624,7 @@ VALUES
 	(5,1,3,'자활기업','http://hknuri.co.kr/upload/hknuri/html/self_support.html'),
 	(6,1,4,'마을기업','http://hknuri.co.kr/upload/hknuri/html/town.html'),
 	(7,1,5,'사회적기업','http://hknuri.co.kr/upload/hknuri/html/company.html'),
-	(9,4,0,'함께누리','http://hknuri.co.kr/upload/hknuri/html/hknuri.html'),
+	(9,4,0,'국제몰','http://www.kukjemall.com'),
 	(10,2,0,'보도자료','/shop/about/board/detail/list/6'),
 	(12,2,0,'유투브 게시판','/shop/about/board/detail/list/7'),
 	(13,2,0,'정보공개','/shop/about/board/detail/list/9');
@@ -2657,7 +2657,7 @@ LOCK TABLES `sm_notice_popup` WRITE;
 
 INSERT INTO `sm_notice_popup` (`seq`, `mall_seq`, `title`, `width`, `height`, `top_margin`, `left_margin`, `status_code`, `content_html`, `type_code`)
 VALUES
-	(1,NULL,'함께누리 새단장 오픈 안내',464,560,50,50,'N','&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;http://localhost/upload/editor/temp/e60bea64-52b4-4102-a359-297b1dce1295.jpg&quot; style=&quot;height:756px; width:540px&quot; /&gt;&lt;/p&gt;','C'),
+	(1,NULL,'국제몰 새단장 오픈 안내',464,560,50,50,'N','&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;http://localhost/upload/editor/temp/e60bea64-52b4-4102-a359-297b1dce1295.jpg&quot; style=&quot;height:756px; width:540px&quot; /&gt;&lt;/p&gt;','C'),
 	(2,NULL,'에디터 이미지 업로드 테스트',5,5,5,5,'N','..','C'),
 	(3,NULL,'에디터 이미지 업로드 테스트',3,3,3,3,'N','&lt;p&gt;&lt;img alt=&quot;&quot; src=&quot;http://localhost/upload/editor/notice_popup/1000/3_1.jpg&quot; style=&quot;height:381px; width:540px&quot; /&gt;&lt;img alt=&quot;&quot; src=&quot;http://localhost/upload/editor/notice/1000/3_2.jpg&quot; style=&quot;height:381px; width:540px&quot; /&gt;&lt;/p&gt;','C'),
 	(4,NULL,'이미지 업로드 테스트 4',550,470,3,4,'N','<p>...</p>\r\n','C'),
@@ -2721,9 +2721,9 @@ CREATE TABLE `sm_order` (
   `np_pay_date` datetime DEFAULT NULL COMMENT '후청구 건 결제 일자',
   `mod_date` datetime DEFAULT NULL COMMENT '변경일',
   `reg_date` datetime NOT NULL COMMENT '등록일',
-  `old_order_id` varchar(50) DEFAULT NULL COMMENT '함께누리몰 기주문아이디(sm_order_detail.order_seq 매칭용)',
-  `old_member_id` varchar(20) DEFAULT NULL COMMENT '함께누리몰 기주문자 아이디(member_seq 매칭용)',
-  `encrypt_flag` char(1) NOT NULL DEFAULT 'Y' COMMENT '함께누리몰 개인정보 암호화 처리 여부',
+  `old_order_id` varchar(50) DEFAULT NULL COMMENT '국제몰 기주문아이디(sm_order_detail.order_seq 매칭용)',
+  `old_member_id` varchar(20) DEFAULT NULL COMMENT '국제몰 기주문자 아이디(member_seq 매칭용)',
+  `encrypt_flag` char(1) NOT NULL DEFAULT 'Y' COMMENT '국제몰 개인정보 암호화 처리 여부',
   PRIMARY KEY (`seq`),
   KEY `idx1_sm_order` (`mall_seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='주문';
@@ -3074,7 +3074,7 @@ CREATE TABLE `sm_seller` (
   `adjust_email` varchar(100) DEFAULT NULL COMMENT '정산 담당자 이메일',
   `adjust_tel` varchar(30) DEFAULT NULL COMMENT '정산 담당자 연락처',
   `jachigu_code` varchar(3) DEFAULT NULL COMMENT '자치구 코드',
-  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '함께누리몰 DB이관용(작업 완료 후 삭제)',
+  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '국제몰 DB이관용(작업 완료 후 삭제)',
   `auth_category` varchar(50) DEFAULT NULL COMMENT '인증구분',
   `total_sales` varchar(100) DEFAULT NULL COMMENT '매출액',
   `amount_of_worker` varchar(100) DEFAULT NULL COMMENT '종업원수',
@@ -3147,8 +3147,8 @@ CREATE TABLE `sm_user` (
   `mod_password_date` datetime DEFAULT NULL COMMENT '비밀번호 변경일',
   `mod_date` datetime DEFAULT NULL COMMENT '변경일',
   `reg_date` datetime NOT NULL COMMENT '등록일',
-  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '함께누리몰 PK',
-  `encrypt_flag` char(1) NOT NULL DEFAULT 'Y' COMMENT '함께누리몰 패스워드 암호화 처리 여부',
+  `old_seq` int(10) unsigned DEFAULT NULL COMMENT '국제몰 PK',
+  `encrypt_flag` char(1) NOT NULL DEFAULT 'Y' COMMENT '국제몰 패스워드 암호화 처리 여부',
   PRIMARY KEY (`seq`),
   KEY `idx1_sm_user` (`type_code`),
   KEY `idx2_sm_user` (`status_code`),

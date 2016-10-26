@@ -19,6 +19,22 @@
             <%@ include file="/WEB-INF/jsp/shop/include/hotzone_left.jsp" %>
             <div id="contents">
                 <%@ include file="/WEB-INF/jsp/shop/include/hotzone_anchor.jsp" %>
+
+                <div class="sub_cont">
+                    <div class="privacy_intro">
+                        <em>이벤트 기간 </em>
+                        <span class="date">
+                            <fmt:parseDate value="${vo.regDate}" var="regDate" pattern="yyyy-mm-dd"/>
+                            <fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
+                            ~
+                            <fmt:parseDate value="${vo.endDate}" var="endDate" pattern="yyyymmdd"/>
+                            <fmt:formatDate value="${endDate}" pattern="yyyy-mm-dd"/>
+                        </span>
+                        ${vo.html}
+                    </div>
+                </div>
+
+
                 <div class="sub_cont">
                     <div class="today_sale">
                         <ul>

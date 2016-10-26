@@ -61,9 +61,36 @@
 					<li><a href="/shop/wish/list"><img src="/images/contents/btn_my_product.png" alt="나의 관심상품" /></a></li>
 				</ul>
 			</div>
-			${mainHeroBanner}
+			<%--${mainHeroBanner}--%>
+			<div class="promotion_banner">
+				<div class="promotion_list">
+					<ul>
+						<c:forEach var="item" items="${eventList}" varStatus="status" begin="0" step="1">
+							<li><a href="/shop/event/plan/plansub/${item.seq}">
+								<img src="/upload${item.thumbImg}" alt="${item.title}" onerror="noImage(this)" />
+							</a></li>
+						</c:forEach>
+						<%--<li><a href="/shop/event/plan/plansub/13"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
+						<%--<li><a href="/shop/event/plan/plansub/14"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
+						<%--<li><a href="/shop/event/plan/plansub/15"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
+						<%--<li><a href="/shop/event/plan/plansub/16"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
+						<%--<li><a href="/shop/event/plan/plansub/17"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
+						<%--<li><a href="/shop/event/plan/plansub/18"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
+					</ul>
+				</div>
+				<ul class="slider_control">
+					<c:forEach var="item" items="${eventList}" varStatus="status" begin="0" step="1">
+						<li><a href="#"><span>${item.title}</span></a></li>
+					</c:forEach>
+					<%--<li><a href="#" class="on"><span>한가위 할인 이벤트</span></a></li>--%>
+					<%--<li><a href="#"><span>영우메디컬</span></a></li>--%>
+					<%--<li><a href="#"><span>에이원메디컬</span></a></li>--%>
+					<%--<li><a href="#"><span>제이웰팜</span></a></li>--%>
+					<%--<li><a href="#"><span>한국메디텍</span></a></li>--%>
+					<%--<li><a href="#"><span>이지메디컴</span></a></li>--%>
+				</ul>
+			</div>
 		</div>
-
 		<div id="contents" class="main_contents">
 			<!-- 국제 TOP10 -->
 			<div class="best_ranking">
@@ -175,35 +202,35 @@
 			</div>
 			<!-- //메인 상품목록 -->
 			<!-- 공지사항/공급자몰 -->
-			<div class="cols">
-				<div class="col_lt notice">
-					<h2>공지사항</h2>
-					<ul>
-						<c:forEach var="item" items="${noticeList}">
-						<li>
-							<a href="#"><a href="/shop/cscenter/view/notice/${item.seq}">${item.title}</a></a>
-							<span class="date">
-								<fmt:parseDate value="${item.regDate}" var="regDate" pattern="yyyy-mm-dd"/>
-								<fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
-							</span>
-						</li>
-						</c:forEach>
-						<c:if test="${fn:length(noticeList) eq 0}">
-						<li class="text-center" style="font-size:12px;">등록된 내용이 없습니다.</li>
-						</c:if>
-					</ul>
-					<a href="/shop/cscenter/list/notice" class="btn_more">더보기</a>
-				</div>
-				<div class="col_rt brand_mall">
-					<h2>공급자몰</h2>
-					<ul>
-						<li><a href="http://www.jongromedical.co.kr"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company04.jpg" alt="SAMYOUNG" /></a></li>
-					</ul>
-				</div>
-			</div>
+			<%--<div class="cols">--%>
+				<%--<div class="col_lt notice">--%>
+					<%--<h2>공지사항</h2>--%>
+					<%--<ul>--%>
+						<%--<c:forEach var="item" items="${noticeList}">--%>
+						<%--<li>--%>
+							<%--<a href="#"><a href="/shop/cscenter/view/notice/${item.seq}">${item.title}</a></a>--%>
+							<%--<span class="date">--%>
+								<%--<fmt:parseDate value="${item.regDate}" var="regDate" pattern="yyyy-mm-dd"/>--%>
+								<%--<fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>--%>
+							<%--</span>--%>
+						<%--</li>--%>
+						<%--</c:forEach>--%>
+						<%--<c:if test="${fn:length(noticeList) eq 0}">--%>
+						<%--<li class="text-center" style="font-size:12px;">등록된 내용이 없습니다.</li>--%>
+						<%--</c:if>--%>
+					<%--</ul>--%>
+					<%--<a href="/shop/cscenter/list/notice" class="btn_more">더보기</a>--%>
+				<%--</div>--%>
+				<%--<div class="col_rt brand_mall">--%>
+					<%--<h2>공급자몰</h2>--%>
+					<%--<ul>--%>
+						<%--<li><a href="http://www.jongromedical.co.kr"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>--%>
+						<%--<li><a href="http://blog.naver.com/alaman92"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company04.jpg" alt="SAMYOUNG" /></a></li>--%>
+					<%--</ul>--%>
+				<%--</div>--%>
+			<%--</div>--%>
 			<!-- //공지사항/공급자몰 -->
 			<%@ include file="/WEB-INF/jsp/shop/include/quick.jsp" %>
 		</div>
@@ -278,13 +305,13 @@
 			<div class="slide_wrap" id="banner_slide">
 				<div class="slide_list">
 					<ul>
-						<li><a href="http://www.jongromedical.co.kr"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
+						<li><a href="http://www.jongromedical.co.kr" target="_blank"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
+						<li><a href="http://blog.naver.com/alaman92" target="_blank"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
 						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
 					</ul>
 				</div>

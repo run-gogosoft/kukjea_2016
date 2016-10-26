@@ -318,7 +318,7 @@
 								<col style="width:15%;"/>
 								<col style="width:15%;"/>
 								<col style="width:15%;"/>
-								<col style="width:10%;"/>
+								<%--<col style="width:10%;"/>--%>
 
 							</colgroup>
 							<thead>
@@ -329,7 +329,7 @@
 								<th>할인가격</th>
 								<th>할인기간</th>
 								<th>재고량</th>
-								<th>재고관리</th>
+								<%--<th>재고관리</th>--%>
 							</tr>
 							</thead>
 							<tbody>
@@ -341,7 +341,7 @@
 									<td class="text-center"><fmt:formatNumber value="${item.salePrice}" pattern="#,###" /> 원</td>
 									<td class="text-center">${item.salePeriod}</td>
 									<td class="text-center">${item.stockCount}</td>
-									<td class="text-center">${item.stockFlag eq "Y" ? "재고관리":"재고관리 안함" }</td>
+									<%--<td class="text-center">${item.stockFlag eq "Y" ? "재고관리":"재고관리 안함" }</td>--%>
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(optionList)==0 }">

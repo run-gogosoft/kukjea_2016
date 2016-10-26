@@ -150,7 +150,9 @@ public class CsCenterController {
 			for(int i=0;i<boardVo.size();i++){
 				BoardVo tmpVo = boardVo.get(i);
 				tmpVo.setTitle(StringUtil.cutString(tmpVo.getTitle(),125));
+				tmpVo.setContent((String)tmpVo.getContent() == null ? "" : StringUtil.restoreClearXSS((String)tmpVo.getContent()));
 			}
+
 			model.addAttribute("categoryCode",pvo.getCategoryCode());
 			model.addAttribute("boardGroup",boardName);
 			model.addAttribute("list",boardVo);

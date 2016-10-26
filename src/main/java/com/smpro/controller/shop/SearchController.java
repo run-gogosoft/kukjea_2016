@@ -107,8 +107,8 @@ public class SearchController {
 //		//자치구 코드가 00이라면 전체라는 의미로 사용하고 값을 초기화시킨다.
 //		if("00".equals(vo.getJachiguCode())) {
 //			vo.setJachiguCode("");
-//		}
-
+//
+		System.out.print(vo.toString());
 		vo.setStatusCode("Y"); // 판매가 가능한 리스트만 보여야 한다
 		vo.setShowFlag("Y");   //카테고리가 노출
 		//함께누리 측의 요청으로 공공기관에만 특별주문 카테고리를 노출한다.

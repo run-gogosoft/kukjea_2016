@@ -33,7 +33,7 @@
                             <li>1. FAX 주문양식을 내 컴퓨터로 다운 받습니다.</li>
                             <li class="mt35">
                                 2. 해당 내용을 작성하여 국제몰로 FAX를 발송합니다.
-                                <p class="number">국제몰 FAX <strong>02-812-3302</strong></p>
+                                <p class="number">국제몰 FAX <strong>02-3280-8007</strong></p>
                             </li>
                             <li class="mt35">
                                 3. 주문한 주문서 확인을 위해 고객센터로 전화 확인 부탁드립니다.
@@ -43,9 +43,9 @@
 
                         <h4 class="mt40">FAX 주문서</h4>
                         <ul class="fax_docu_list">
-                            <li><a href="#"><img src="/images/contents/btn_fax_hwp.png" alt="한글 FAX 주문서" /></a></li>
-                            <li><a href="#"><img src="/images/contents/btn_fax_word.png" alt="MS Word FAX 주문서" /></a></li>
-                            <li><a href="#"><img src="/images/contents/btn_fax_excel.png" alt="MS EXCEL FAX 주문서" /></a></li>
+                            <li><a href="/assets/form/Fax_order.hwp" target="_blank" ><img src="/images/contents/btn_fax_hwp.png" alt="한글 FAX 주문서" /></a></li>
+                            <li><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/contents/btn_fax_word.png" alt="MS Word FAX 주문서" /></a></li>
+                            <li><a href="/assets/form/Fax_order.xls" target="_blank" ><img src="/images/contents/btn_fax_excel.png" alt="MS EXCEL FAX 주문서" /></a></li>
                         </ul>
                     </div>
                 </div>

@@ -81,9 +81,9 @@ public class IndexController {
 		vo.setLocation("main");
 
 		//배너
-		vo.setTitle("mainHeroBanner");
-		DisplayVo bvo = displayService.getVo(vo);
-		model.addAttribute("mainHeroBanner", bvo==null ? null:bvo.getContent());
+//		vo.setTitle("mainHeroBanner");
+//		DisplayVo bvo = displayService.getVo(vo);
+//		model.addAttribute("mainHeroBanner", bvo==null ? null:bvo.getContent());
 //
 //		vo.setTitle("mainBannerA");
 //		DisplayVo bvo2 = displayService.getVo(vo);
@@ -181,13 +181,25 @@ public class IndexController {
 		}
 		model.addAttribute("memberVo", mvo);
 
-		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
 
-		// 오늘만 이가격
+		//배너
+		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
 		EventVo eventVo = new EventVo();
+		/** 현재 진행중인 기획전 상품리스트를 가져옴 */
 		eventVo.setTypeCode("1");
 		eventVo.setStatusCode("Y");
 		eventVo.setMallSeq(mallVo.getSeq());
+		//현재날짜 저장
+		eventVo.setCurDate(StringUtil.getDate(0, "yyyyMMdd"));
+		List<EventVo> eventList = eventService.getList(eventVo);
+		for(int i=0;i<eventList.size();i++){
+			EventVo tmpVo = eventList.get(i);
+			tmpVo.setTitle(StringUtil.cutString(tmpVo.getTitle(),150));
+		}
+		model.addAttribute("eventList",eventList);
+
+
+		// 오늘만 이가격
 		eventVo.setSeq(1); // <-- 오늘만 이가격
 
 		model.addAttribute("eventVo",eventService.getVo(eventVo) );

@@ -374,7 +374,7 @@
 											<td></td>
 											<td></td>
 											<td></td>
-											<td></td>
+											<%--<td></td>--%>
 											<td class="text-center">
 												<!--<button type="button" onclick="EBOption.remove(this)" class="btn btn-sm btn-danger">삭제</button>-->
 											</td>
@@ -414,11 +414,11 @@
 													<div class="input-group-addon">개</div>
 												</div>
 											</td>
-											<td class="text-center">
-												<div class="checkbox">
-													<label><input type="checkbox" name="stockFlag" value="N"/> 재고관리 안함</label>
-												</div>
-											</td>
+											<%--<td class="text-center">--%>
+												<%--<div class="checkbox">--%>
+													<%--<label><input type="checkbox" name="stockFlag" value="N"/> 재고관리 안함</label>--%>
+												<%--</div>--%>
+											<%--</td>--%>
 											<td></td>
 										</tr>
 
@@ -451,14 +451,14 @@
 												<%="${numeral(stockCount).format('0,0')}"%>
 												<input type="hidden" name="stockCount" value="<%="${stockCount}"%>"/>
 											</td>
-											<td class="text-center">
-												{{if stockFlag == 'Y'}}
-												재고관리
-												{{else}}
-												재고관리 안함
-												{{/if}}
-												<input type="checkbox" name="stockFlag" value="<%="${stockFlag}"%>" {{if stockFlag == 'N'}}checked{{/if}} style="display:none;"/>
-											</td>
+											<%--<td class="text-center">--%>
+												<%--{{if stockFlag == 'Y'}}--%>
+												<%--재고관리--%>
+												<%--{{else}}--%>
+												<%--재고관리 안함--%>
+												<%--{{/if}}--%>
+												<%--<input type="checkbox" name="stockFlag" value="<%="${stockFlag}"%>" {{if stockFlag == 'N'}}checked{{/if}} style="display:none;"/>--%>
+											<%--</td>--%>
 											<td class="text-center">
 												<button type="button" class="btn btn-sm btn-default" onclick="EBOption.showUpdateOptionValueModal(this, <%="${seq}"%>)">수정</button>
 												<button type="button" class="btn btn-sm btn-danger" onclick="EBOption.showDeleteOptionValueModal(this, <%="${seq}"%>)">삭제</button>
@@ -476,7 +476,7 @@
 											<col style="width:10%;"/>
 											<col style="width:10%;"/>
 											<col style="width:10%;"/>
-											<col style="width:10%;"/>
+											<%--<col style="width:10%;"/>--%>
 											<col style="width:10%;"/>
 										</colgroup>
 										<thead>
@@ -487,7 +487,7 @@
 											<th>할인가격</th>
 											<th>할인기간</th>
 											<th>재고량</th>
-											<th>재고관리</th>
+											<%--<th>재고관리</th>--%>
 											<th></th>
 										</tr>
 										</thead>
@@ -691,9 +691,9 @@
 					<label class="col-md-3 control-label">재고수량</label>
 					<div class="col-md-9">
 						<input type="text" class="form-control" name="stockCount" value="999" maxlength="5" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
-						<div class="checkbox">
-							<label><input type="checkbox" name="stockFlag" value="N"> 재고관리 안함</label>	
-						</div>
+						<%--<div class="checkbox">--%>
+							<%--<label><input type="checkbox" name="stockFlag" value="N"> 재고관리 안함</label>	--%>
+						<%--</div>--%>
 					</div>
 				</div>
 			</div>
@@ -792,9 +792,9 @@
 					<label class="col-md-3 control-label">재고수량</label>
 					<div class="col-md-9">
 						<input type="text" class="form-control" name="stockCount" maxlength="5" value="<%="${stockCount}"%>" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
-						<div class="checkbox">
-							<label><input type="checkbox" name="stockFlag" value="N" {{if stockFlag == 'N'}}checked{{/if}}> 재고관리 안함</label>	
-						</div>
+						<%--<div class="checkbox">--%>
+							<%--<label><input type="checkbox" name="stockFlag" value="N" {{if stockFlag == 'N'}}checked{{/if}}> 재고관리 안함</label>	--%>
+						<%--</div>--%>
 					</div>
 				</div>
 			</div>

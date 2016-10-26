@@ -85,7 +85,7 @@
 		<if test="curDate != ''">
 			AND e.end_date >= #{curDate}
 		</if>
-		ORDER BY e.seq DESC
+		ORDER BY e.seq ASC
 		LIMIT ${pageNum * rowCount}, ${rowCount}
 	</select>
 	

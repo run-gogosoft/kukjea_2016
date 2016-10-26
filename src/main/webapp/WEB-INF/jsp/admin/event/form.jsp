@@ -8,7 +8,7 @@
 	<style type="text/css">
 		.thumbViewimg {padding:0;}
 		.thumbViewimg div {float:left; text-align:center}
-		.thumbViewimg img {margin-right:5px; cursor:pointer; width:342px; height:100px}
+		.thumbViewimg img {margin-right:5px; cursor:pointer; width:804px; height:270px}
 		.detail-content {display:none}
 		.detail-image {display:none}
 	</style>
@@ -69,7 +69,7 @@
 								</div>
 								<div>
 									<button type="button" onclick="showUploadModal()" class="btn btn-info">업로드</button>
-									<label class="col-md-4 control-label"> ! 이미지 크기 342 x 100 </label>
+									<label class="col-md-4 control-label"> ! 이미지 크기 804 x 270 </label>
 								</div>
 							</div>
 							<div class="form-group">
@@ -128,7 +128,7 @@
 		<form action="/admin/event/thumnail/upload" enctype="multipart/form-data" target="zeroframe" method="post">
 			<div class="modal-body">
 				<legend>이미지 업로드</legend>
-				<p>이미지 크기는 <strong> 342 x 100 </strong>으로 업로드해주시기 바랍니다</p>
+				<p>이미지 크기는 <strong> 804 x 270 </strong>으로 업로드해주시기 바랍니다</p>
 				<p>이미지가 아닐 경우 업로드 되지 않습니다</p>
 				<p>이미지는 jpg, jpeg 확장자만 가능합니다</p>
 			</div>
@@ -297,12 +297,13 @@
 	};
 
 	var imgProc = function(obj, size) {
-		if($(obj).width() === 342 && size !== 0) {
+//		804 || ii.getIconWidth() < 804 && ii.getIconHeight() > 270 || ii.getIconHeight() < 270
+		if($(obj).width() === 804 && size !== 0) {
 			$(obj).css({width:size, height:size});
-		} else if(size === 0 && $(obj).width() === 115 ) {
+		} else if(size === 0 && $(obj).width() === 270 ) {
 			$(obj).css({width:"auto", height:"auto"});
 		} else {
-			$(obj).css({width:342, height:100});
+			$(obj).css({width:804, height:270});
 		}
 	};
 </script>

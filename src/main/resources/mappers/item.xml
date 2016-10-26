@@ -124,6 +124,9 @@
 				</otherwise>
 			</choose>
 		</if>
+		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
+			AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+		</if>
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 		</if>
@@ -240,6 +243,9 @@
 					AND A.cate_lv4_seq=#{cateLv4Seq}
 				</otherwise>
 			</choose>
+		</if>
+		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
+			AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
 		</if>
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
@@ -1039,10 +1045,19 @@
 		<if test="cateLv4Seq != null">
 			AND i.cate_lv4_seq=#{cateLv4Seq}
 		</if>
+		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
+			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR i.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+		</if>
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 		</if>
 		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
+			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
+		</if>
+		<if test="nameMaker != ''">
+			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR i.maker LIKE CONCAT('%',#{nameMaker},'%'))
+		</if>
+		<if test="maker != ''">
 			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
 		</if>
 		<if test="name != ''">
@@ -1127,7 +1142,21 @@
 		<if test="cateLv4Seq != null">
 			AND i.cate_lv4_seq=#{cateLv4Seq}
 		</if>
-
+		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
+			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR i.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+		</if>
+		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
+			AND LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
+		</if>
+		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
+			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
+		</if>
+		<if test="maker != ''">
+			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
+		</if>
+		<if test="nameMaker != ''">
+			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR i.maker LIKE CONCAT('%',#{nameMaker},'%'))
+		</if>
 		<if test="name != ''">
 			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{name}),'%') OR LOWER(u.name) LIKE CONCAT('%',LOWER(#{name}),'%'))
 		</if>
@@ -1285,6 +1314,9 @@
 					AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
 				</when>-->
 			</choose>
+			<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
+				AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+			</if>
 			<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 				AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 			</if>

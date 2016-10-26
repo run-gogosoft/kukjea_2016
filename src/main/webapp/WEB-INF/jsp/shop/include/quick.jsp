@@ -21,9 +21,9 @@
     </div>
     <ul class="menus">
         <li><a href="/shop/mypage/order/list">주문배송조회</a></li>
-        <li><a href="#" onclick="alert('준비중입니다');return false;">배송환불문의</a></li>
+        <%--<li><a href="#" onclick="alert('준비중입니다');return false;">배송환불문의</a></li>--%>
         <li><a href="/shop/mypage/direct/list">문의게시판</a></li>
         <li class="cs"><a href="/shop/cscenter/list/notice">고객센터<em>070-4693-1971</em></a></li>
-        <li class="cs"><a href="/shop/cscenter/fax">FAX 주문하기<em>02-812-3302</em></a></li>
+        <li class="cs"><a href="/shop/cscenter/fax">FAX 주문하기<em>02-3280-8007</em></a></li>
     </ul>
 </div>
