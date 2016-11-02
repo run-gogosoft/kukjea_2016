@@ -260,12 +260,18 @@ public class ItemExcelController {
 					int imgSeq = -1;
 
 					try {
-						imgSeq = Integer.getInteger(imgString.substring(lastSlashIndex, jpgIndex));
+						String imgPath = imgString.substring(lastSlashIndex+1, jpgIndex);
+						System.out.println(">>>>imgPath:"+imgPath);
+						imgSeq = Integer.parseInt(imgPath);
 					} catch (Exception e) {
 						e.printStackTrace();
 						imgSeq = -1;
 					}
-					System.out.println("lastSlashIndex:" + lastSlashIndex + ",jpgIndexL:" + jpgIndex + "imgString:" + imgString + ", imgSeq:" + imgSeq);
+					System.out.println("list.get(i).getSeq() :"+list.get(i).getSeq() +", lastSlashIndex:" + lastSlashIndex + ",jpgIndexL:" + jpgIndex + "imgString:" + imgString + ", imgSeq:" + imgSeq);
+
+					// 현재 아이템의 ID와 상품 이미지 링크값이 같은경우, 현재 이미지 유지
+					// 현재 아이템 ID와 상품 이미지 링크값이 다른경우, 아이템 이미지 변경 > 업로드 폴더에서 해당 이미지 검색
+					// 해당 이미지 없는 경우, 기본 이미지인 no_image1.jpg로 지정.
 					if (list.get(i).getSeq() == null || (list.get(i).getSeq() != imgSeq)) {
 						//현재 아이템의 이미지 데이타 변경된 경우에만 진행한다
 						//아이템 추가의 경우, 아이템 시퀀스 생성
@@ -276,10 +282,10 @@ public class ItemExcelController {
 
 						try {
 							String resolvedImg1 = imgProc(list.get(i).getImg1(), realPath, errorList, model);
-
 							list.get(i).setImg1(itemService.imageProc(realPath + "/item", "1", resolvedImg1, list.get(i).getSeq()));
 						} catch (Exception e) {
-							list.get(i).setImg1("/old/no_image1.jpg");
+							e.printStackTrace();
+							list.get(i).setImg1("/images/thumb/no_image.jpg");
 						}
 					}
 
@@ -295,10 +301,11 @@ public class ItemExcelController {
 				if (!"".equals(list.get(i).getImg2())) {
 					try {
 						String resolvedImg2 = imgProc(list.get(i).getImg2(), realPath, errorList, model);
-
+						System.out.println("resolvedImage1"+resolvedImg2);
 						list.get(i).setImg2(itemService.imageProc(realPath + "/item", "2", resolvedImg2, list.get(i).getSeq()));
 					} catch (Exception e) {
-						list.get(i).setImg2("/old/no_image1.jpg");
+						e.printStackTrace();
+						list.get(i).setImg2("/images/thumb/no_image.jpg");
 					}
 
 				}
@@ -611,7 +618,7 @@ public class ItemExcelController {
 		//}
 		index++;
 		//6 상품명(필수)
-		if (StringUtil.isBlank((String)list.get(index))) {
+		if (StringUtil.isBlank(""+list.get(index))) {
 			errorList.add(idx + " 번째 행:" + (index + 1) + "번째 열: 상품명은 필수 값입니다.");
 		}
 		String nameFilter = StringUtil.filterWord(fList,

@@ -73,7 +73,7 @@
 </div>
 <script id="SearchTemplate" type="text/html">
 <div class="info_box"><div class="id_info"><p>해당 정보와 일치하는 ID 는 <%="${id}"%> 입니다.</p></div></div>
-<p class="info_txt txt_point">※ 개인정보 보호를 위해 일부는 * 표 처리 합니다.</p>
+<%--<p class="info_txt txt_point">※ 개인정보 보호를 위해 일부는 * 표 처리 합니다.</p>--%>
 </script>
 <script>
     function callbackProc(id) {

@@ -70,7 +70,7 @@
 
 <script id="cartTemplate" type="text/html">
     <tr {{if stockCount==="0"}}class="danger"{{/if}}>
-        <td><input type="checkbox" id="seq" name="seq" value="<%="${seq}"%>" wish-value="<%="${itemSeq}"%>" checked="checked" /></td>
+        <td><input type="checkbox" id="seq" name="seq" value="<%="${seq}"%>" wish-value="<%="${itemSeq}"%>"  checked = "checked"/></td>
         <td>
             {{if img1 !== ''}}
             <a href="/shop/search?seq=<%="${itemSeq}"%>">

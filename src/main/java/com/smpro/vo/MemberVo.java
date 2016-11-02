@@ -344,5 +344,4 @@ public class MemberVo extends UserVo {
 	public void setLongTermNotLoginFlag(String longTermNotLoginFlag) {
 		this.longTermNotLoginFlag = longTermNotLoginFlag;
 	}
-	
 }

@@ -27,4 +27,5 @@
 	, "addr1" : "${vo.addr1}"
 	, "addr2" : "${vo.addr2}"
 	, "email" : "${vo.email}"
+	, "newPassword": "${vo.newPassword}"
 }

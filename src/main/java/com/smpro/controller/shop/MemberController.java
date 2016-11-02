@@ -314,7 +314,7 @@ public class MemberController {
 //			return Const.REDIRECT_PAGE;
 
 			// 마지막 4자리를 *표 처리한다
-			model.addAttribute("callback", resultId.replaceAll(".{4}$", "****"));
+			model.addAttribute("callback", resultId);
 			return Const.REDIRECT_PAGE;
 		}
 

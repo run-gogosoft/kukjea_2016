@@ -14,12 +14,12 @@
                 <th scope="row">아이디</th>
                 <td>${sessionScope.loginId}</td>
             </tr>
-            <tr>
-                <th scope="row"><label>비밀번호</label></th>
-                <td>
-                    <button type="button" class="btn btn_default">비밀번호 변경</button>
-                </td>
-            </tr>
+            <%--<tr>--%>
+                <%--<th scope="row"><label>비밀번호</label></th>--%>
+                <%--<td>--%>
+                    <%--<button type="button" id="changePassword" class="btn btn_default">비밀번호 변경</button>--%>
+                <%--</td>--%>
+            <%--</tr>--%>
             <tr>
                 <th scope="row"><label>이름</label></th>
                 <td>${sessionScope.loginName}</td>

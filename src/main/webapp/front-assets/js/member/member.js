@@ -63,34 +63,6 @@ var CHInsertUtil = {
 				}
 			});
 		}
-
-		// if(memberTypeCode !== 'P' && flag === true) {
-		// 	if(email != $('#emailCheckFlag').val()) {
-		// 		alert('이메일 중복확인을 해주세요.');
-		// 		$('#email1').focus();
-		// 		flag = false;
-		// 	}
-		// }
-        //
-		// if(memberTypeCode === 'O' && flag === true) {
-		// 	// 사업자 중복 체크
-		// 	if($("#bizno_check_flag").val() != "Y") {
-		// 		alert("사업자번호 중복 확인 바랍니다.");
-		// 		return false;
-		// 	}
-		// }
-
-		if(flag) {
-			// if(typeof $('input[name="emailFlag"]:checked').val() === 'undefined') {
-			// 	alert('뉴스레터 수신여부를 선택해주세요.');
-			// 	flag = false;
-			// 	$('#emailReceiveFlagY').focus();
-			// } else if(typeof $('input[name="smsFlag"]:checked').val() === 'undefined') {
-			// 		alert('SMS 수신여부를 선택해주세요.');
-			// 		flag = false;
-			// 		$('#smsReceiveFlagY').focus();
-			// }
-		}
 		return flag;
 	}
 	, validIdCheck:function() {

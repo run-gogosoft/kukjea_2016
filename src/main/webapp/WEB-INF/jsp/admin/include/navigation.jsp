@@ -135,15 +135,15 @@
 				</li>
 				<%--</c:if>--%>
 
-				<c:if test="${sessionScope.loginType eq 'A' }">
-				<li class="${navi eq 'stats' ? 'active':''} treeview">
-					<a href="#"><i class="fa fa-bar-chart-o"></i> <span>메인화면관리</span> <i class="fa fa-angle-left pull-right"></i></a>
-					<ul class="treeview-menu">
-						<li ${naviSub eq '/item/filter/list' ? "class='active'":""}><a href="/admin/item/filter/list"><i class="fa fa-caret-right"></i> 인기검색어</a></li>
-						<li ${naviSub eq '/stats/list/item' ? "class='active'":""}><a href="/admin/stats/list/item"><i class="fa fa-caret-right"></i> 광고배너</a></li>
-					</ul>
-				</li>
-				</c:if>
+				<%--<c:if test="${sessionScope.loginType eq 'A' }">--%>
+				<%--<li class="${navi eq 'stats' ? 'active':''} treeview">--%>
+					<%--<a href="#"><i class="fa fa-bar-chart-o"></i> <span>메인화면관리</span> <i class="fa fa-angle-left pull-right"></i></a>--%>
+					<%--<ul class="treeview-menu">--%>
+						<%--<li ${naviSub eq '/item/filter/list' ? "class='active'":""}><a href="/admin/item/filter/list"><i class="fa fa-caret-right"></i> 인기검색어</a></li>--%>
+						<%--<li ${naviSub eq '/stats/list/item' ? "class='active'":""}><a href="/admin/stats/list/item"><i class="fa fa-caret-right"></i> 광고배너</a></li>--%>
+					<%--</ul>--%>
+				<%--</li>--%>
+				<%--</c:if>--%>
 
 
 				<c:if test="${sessionScope.loginType eq 'A' }">

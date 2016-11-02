@@ -264,7 +264,7 @@ public class ItemServiceImpl implements ItemService {
 	 */
 	public void deleteFiles(String realPath, Integer seq) {
 		ItemVo vo = getVo(seq);
-		if(!"/old/no_image1.jpg".equals(vo.getImg1())) {
+		if(!"/images/thumb/no_image.jpg".equals(vo.getImg1())) {
 			new File(realPath + vo.getImg1()).delete();
 			new File(realPath + vo.getImg1().replaceAll("origin", "s60")).delete();
 			new File(realPath + vo.getImg1().replaceAll("origin", "s110")).delete();
@@ -272,7 +272,7 @@ public class ItemServiceImpl implements ItemService {
 			log.info("vo.getImg1 deleted --> " + vo.getImg1());
 		}
 		
-		if(!"/old/no_image1.jpg".equals(vo.getImg2())) {
+		if(!"/images/thumb/no_image.jpg".equals(vo.getImg2())) {
 			new File(realPath + vo.getImg2()).delete();
 			new File(realPath + vo.getImg2().replaceAll("origin", "s60")).delete();
 			new File(realPath + vo.getImg2().replaceAll("origin", "s110")).delete();

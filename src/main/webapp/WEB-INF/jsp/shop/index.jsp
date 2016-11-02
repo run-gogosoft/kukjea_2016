@@ -116,7 +116,7 @@
 							<li>
 								<a href="/shop/search?seq=${itemList.itemSeq}">
 									<span class="thumb">
-										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="" />
+										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="이벤트상품" />
 										<span class="icons">
 											<!--span class="icon icon_txt icon_txt_gray">무료배송</span-->
 											<!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
@@ -301,26 +301,26 @@
 				</dl>
 			</div>
 		</div>
-		<div class="layout_inner">
-			<div class="slide_wrap" id="banner_slide">
-				<div class="slide_list">
-					<ul>
-						<li><a href="http://www.jongromedical.co.kr" target="_blank"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
-						<li><a href="http://blog.naver.com/alaman92" target="_blank"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>
-						<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>
-					</ul>
-				</div>
-				<div class="slide_control">
-					<a href="#" class="prev"><span class="blind">이전</span></a>
-					<a href="#" class="next"><span class="blind">다음</span></a>
-				</div>
-			</div>
-		</div>
+		<%--<div class="layout_inner">--%>
+			<%--<div class="slide_wrap" id="banner_slide">--%>
+				<%--<div class="slide_list">--%>
+					<%--<ul>--%>
+						<%--<li><a href="http://www.jongromedical.co.kr" target="_blank"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company02.jpg" alt="명진산업" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>--%>
+						<%--<li><a href="http://blog.naver.com/alaman92" target="_blank"><img src="/images/thumb/thumb_company03.jpg" alt="DARA" /></a></li>--%>
+						<%--<li><a href="#"><img src="/images/thumb/thumb_company01.jpg" alt="종료의료기" /></a></li>--%>
+					<%--</ul>--%>
+				<%--</div>--%>
+				<%--<div class="slide_control">--%>
+					<%--<a href="#" class="prev"><span class="blind">이전</span></a>--%>
+					<%--<a href="#" class="next"><span class="blind">다음</span></a>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+		<%--</div>--%>
 		<%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
 	</div>
 </div>

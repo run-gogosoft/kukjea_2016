@@ -16,7 +16,7 @@ var Cart = {
 
 				if(Cart.list.length === 0) {
 					$('#allChk').prop('checked',false);
-					$("#cartBody").html("<tr><td class='text-center' style='padding:50px' colspan='9'>장바구니에 담긴 상품이 없습니다.</td></tr>");
+					$("#cartBody").html("<tr><td class='text-center' style='padding:50px' colspan='8'>장바구니에 담긴 상품이 없습니다.</td></tr>");
 				}
 
 				callback();

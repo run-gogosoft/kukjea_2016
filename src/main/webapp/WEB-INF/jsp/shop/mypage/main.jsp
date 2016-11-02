@@ -27,11 +27,11 @@
                         <img src="../../images/common/icon_grade.png" alt="등급" class="level" />
                         <dl class="mylevel">
                             <dt>구매등급</dt>
-                            <dd>회원님의 구매등급은 <strong data-access="grade">---</strong> 입니다.</dd>
+                            <dd>회원님의 구매등급은 <strong data-access="grade">BASIC</strong> 입니다.</dd>
                         </dl>
                         <dl class="mypoint">
                             <dt>나의 포인트</dt>
-                            <dd>회원님의 포인트는 <strong data-access="point">---</strong><span>점</span> 입니다.</dd>
+                            <dd>회원님의 포인트는 <strong data-access="point">0</strong><span>점</span> 입니다.</dd>
                         </dl>
                     </div>
 

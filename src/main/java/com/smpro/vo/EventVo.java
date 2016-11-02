@@ -271,14 +271,13 @@ public class EventVo extends PagingVo {
 		this.salePrice = salePrice;
 	}
 
-	public int getSalePercent() {
-		return salePercent;
+	public int getSalePercent(){
+		return this.salePercent;
 	}
-
-	public void setSalePercent(int salePercent) {
-		this.salePercent = salePercent;
+	public void setSalePercent(int salePercent){
+		if(!(salePercent >1 && salePercent <100)) this.salePercent = 0;
+		else this.salePercent =  salePercent;
 	}
-
 	public String getStatusFlag() {
 		return statusFlag;
 	}

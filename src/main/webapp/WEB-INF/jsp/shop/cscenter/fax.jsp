@@ -44,7 +44,7 @@
                         <h4 class="mt40">FAX 주문서</h4>
                         <ul class="fax_docu_list">
                             <li><a href="/assets/form/Fax_order.hwp" target="_blank" ><img src="/images/contents/btn_fax_hwp.png" alt="한글 FAX 주문서" /></a></li>
-                            <li><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/contents/btn_fax_word.png" alt="MS Word FAX 주문서" /></a></li>
+                            <%--<li><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/contents/btn_fax_word.png" alt="MS Word FAX 주문서" /></a></li>--%>
                             <li><a href="/assets/form/Fax_order.xls" target="_blank" ><img src="/images/contents/btn_fax_excel.png" alt="MS EXCEL FAX 주문서" /></a></li>
                         </ul>
                     </div>

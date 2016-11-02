@@ -154,6 +154,23 @@ public class MyPageController extends MyPage {
 		return "/mypage/member_confirm.jsp";
 	}
 
+	/**
+	 * 회원비밀번호수정
+	 */
+	@RequestMapping("/mypage/modpassword")
+	public String mypageModPassword(HttpSession session, Model model, OrderVo pvo) {
+		initMypage(session, model);
+
+
+		pvo.setLoginType((String) session.getAttribute("loginType"));
+		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
+		model.addAttribute("data", orderService.getCntByStatus(pvo));
+
+		model.addAttribute("title", "비밀번호 변경");
+		model.addAttribute("on", "01");
+		return "/mypage/member_password_confirm.jsp";
+	}
+
 	/** 회원수정,탈퇴 전 검증 **/
 	@RequestMapping("/mypage/confirm/proc")
 	public String confirmPassword(String member, HttpServletRequest request, HttpSession session, UserVo vo, Model model){
@@ -186,6 +203,12 @@ public class MyPageController extends MyPage {
 		if(member.endsWith("mod")){
 			session.setAttribute("checkPass", "pass");
 			model.addAttribute("returnUrl", "/shop/mypage/mod");
+			return Const.REDIRECT_PAGE;
+		}
+
+		if(member.endsWith("changepassword")){
+			session.setAttribute("checkPass", "pass");
+			model.addAttribute("returnUrl", "/shop/mypage/changepassword");
 			return Const.REDIRECT_PAGE;
 		}
 
@@ -229,6 +252,76 @@ public class MyPageController extends MyPage {
 		model.addAttribute("on", "01");
 		return "/mypage/member_mod.jsp";
 	}
+
+	@RequestMapping(value = "/mypage/changepassword")
+	public String modPasswordForm(HttpSession session, MemberVo mvo, Model model, OrderVo pvo) {
+		initMypage(session, model);
+
+		pvo.setLoginType((String) session.getAttribute("loginType"));
+		pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
+
+		mvo.setId((String)session.getAttribute("loginId"));
+		mvo.setName((String)session.getAttribute("loginName"));
+
+		model.addAttribute("data", orderService.getCntByStatus(pvo));
+
+		MemberVo vo;
+		try {
+			vo = memberService.getData((Integer)session.getAttribute("loginSeq"));
+
+			if(vo.getGroupSeq() != null) {
+				model.addAttribute("gvo", memberGroupService.getVo(vo.getGroupSeq()));
+			}
+		} catch(Exception e) {
+			model.addAttribute("message", "회원 정보 복호화에 실패했습니다. ["+e.getMessage()+"]");
+			return Const.ALERT_PAGE;
+		}
+		model.addAttribute("vo", vo);
+		model.addAttribute("title", "비밀번호 변경");
+		model.addAttribute("on", "01");
+		return "/mypage/member_modpassword.jsp";
+	}
+
+	/**
+	 * 비밀번호수정
+	 */
+	@RequestMapping(value = "/mypage/mod/password", method = RequestMethod.POST)
+	public String modPasswordData(HttpServletRequest request, HttpSession session, MemberVo vo, MemberGroupVo gvo, Model model) {
+		boolean flag = false;
+		String errMsg = "";
+		/* 로그인 seq, type 세션으로부터 가져와서 vo 셋팅 */
+		vo.setLoginType((String) session.getAttribute("loginType"));
+		vo.setSeq((Integer)session.getAttribute("loginSeq"));
+		vo.setLogLoginSeq((Integer)session.getAttribute("loginSeq"));
+		vo.setMemberTypeCode((String)session.getAttribute("loginMemberTypeCode"));
+
+		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
+		vo.setMallSeq(mallVo.getSeq());
+		System.out.println(">>>>>modPasswordData");
+		System.out.println("vo.getNewPassword():"+vo.getNewPassword());
+
+
+		/* 비밀번호 암호화 */
+		try {
+			vo.setNewPassword(StringUtil.encryptSha2(vo.getNewPassword()));
+		} catch (NoSuchAlgorithmException e) {
+			errMsg = "새 비밀번호 암호화 처리 중 문제가 발생하였습니다.";
+			flag = false;
+		}
+
+		/* 비밀번호 변경 */
+		if (memberService.updateMemberPassword(vo) >0) {
+			model.addAttribute("message","비밀번호 변경이 완료되었습니다.");
+			model.addAttribute("returnUrl", "/shop/mypage/main");
+			return Const.REDIRECT_PAGE;
+		}
+
+		errMsg = "새 비밀번호 변경에 문제가 발생하였습니다.";
+
+		model.addAttribute("message", errMsg);
+		return Const.ALERT_PAGE;
+	}
+
 
 	/**
 	 * 회원수정
@@ -471,9 +564,13 @@ public class MyPageController extends MyPage {
 	public String getPoint(HttpSession session) {
 		Integer loginSeq = (Integer)session.getAttribute("loginSeq");
 		Integer useablePoint = pointService.getUseablePoint(loginSeq);
-		String grade = "GOLD";
+		String grade = "BASIC";
 
-	 	int totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(loginSeq));
+
+	 	int totlaOrderPrice = 0;
+		if(orderService.getTotalOrderFinishPrice(loginSeq) !=null){
+			totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(loginSeq));
+		}
 		GradeVo gradeVo = new GradeVo();
 		List<GradeVo> grades = gradeService.getList(gradeVo);
 		for(GradeVo vo:grades){

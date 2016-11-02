@@ -15,6 +15,7 @@
         <%-- li <c:if test="${on eq '11'}">class="on"</c:if>><a href="">쪽지함</a></li --%>
         <li <c:if test="${on eq '12'}">class="on"</c:if>><a href="/shop/mypage/direct/list">내질문보기</a></li>
         <%-- li <c:if test="${on eq '13'}">class="on"</c:if>><a href="">개별구매하기</a></li --%>
+        <li <c:if test="${on eq '13'}">class="on"</c:if>><a href="/shop/mypage/modpassword">비밀번호변경</a></li>
         <li <c:if test="${on eq '14'}">class="on"</c:if>><a href="/shop/mypage/leave/confirm">회원탈퇴</a></li>
         <%-- li <c:if test="${on eq '15'}">class="on"</c:if>><a href="">외상구매</a></li --%>
     </ul>

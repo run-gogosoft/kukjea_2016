@@ -742,7 +742,7 @@ em.must {color:#ef3f3b;}
 .repeat_order .layout_inner {position:relative;}
 .repeat_order h2 {margin-bottom:15px; color:#666; font-size:18px;}
 .repeat_order .scrollable_wrap {position:relative; padding-top:35px; background:#e6e6e6;}
-.repeat_order .scrollable {height:145px; overflow-y:auto; overflow-x:hidden;}
+.repeat_order .scrollable {height:300px; overflow-y:auto; overflow-x:hidden;}
 .repeat_order .scrollable table {width:1004px;}
 .repeat_order .scrollable table thead tr {position:absolute; top:0; left:0; width:1004px;}
 .repeat_order .scrollable table .col1 div {width:112px;}
