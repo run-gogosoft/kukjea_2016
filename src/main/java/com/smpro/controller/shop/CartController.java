@@ -183,7 +183,7 @@ public class CartController extends MyPage {
 			// 숫자를 1 증가시킨다
 			list.get(duplicatedIdx).setCount( list.get(duplicatedIdx).getCount()+1 );
 			if (!cartService.updateVo(list.get(duplicatedIdx))) {
-				model.addAttribute("callback", "ERROR[4]");
+				model.addAttribute("getcallback", "ERROR[4]");
 				return Const.ALERT_PAGE;
 			}
 		}

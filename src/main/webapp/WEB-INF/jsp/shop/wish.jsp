@@ -22,16 +22,14 @@
                 <div class="sub_cont myinfo">
                     <form id="mgrForm" method="post" target="zeroframe">
                     <table class="board_list">
-                        <colgroup>
-                            <col width="3%"/>
-                            <col width="8%"/>
-                            <col width="*"/>
-                            <col width="10%"/>
-                            <col width="10%"/>
-                            <col width="10%"/>
-                            <col width="15%"/>
-                            <col width="8%"/>
-                        </colgroup>
+                        <%--<colgroup>--%>
+                            <%--<col width="3%"/>--%>
+                            <%--<col width="10%"/>--%>
+                            <%--<col width="*"/>--%>
+                            <%--<col width="10%"/>--%>
+                            <%--<col width="20%"/>--%>
+                            <%--<col width="8%"/>--%>
+                        <%--</colgroup>--%>
                         <thead>
                         <tr>
                             <th><input type="checkbox" id="allChk" onclick="WishUtil.checkProc(this)"/></th>
@@ -85,13 +83,17 @@
                                     </button>
                                     <br/>
                                     <button type="button" class="btn btn_default btn_xs"
-                                            remove-value="${item.wishSeq}" onclick="WishUtil.addCart(${item.wishSeq})">장바구니
+                                            remove-value="${item.wishSeq}" onclick="WishUtil.addCart(${item.wishSeq})">
+                                        장바구니
                                     </button>
                                 </td>
                                 <td class="text-center">
                                     <div class="item-delete" style="cursor:pointer" remove-value="${item.wishSeq}"
-                                         onclick="WishUtil.wishOneDelProc(this)" style="margin:0 auto"><i
-                                            class="fa fa-times"></i></div>
+                                         onclick="WishUtil.wishOneDelProc(this)" style="margin:0 auto">
+                                        <button type="button" class="btn btn_default btn_xs">
+                                            삭제
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>

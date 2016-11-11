@@ -1207,7 +1207,7 @@ public class MyPageController extends MyPage {
 		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", pvo);
 
-		return "/mypage/order/list_cancel.jsp";
+		return "/mypage/order/list.jsp";
 	}
 
 	/**

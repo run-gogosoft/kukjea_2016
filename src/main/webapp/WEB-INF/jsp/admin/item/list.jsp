@@ -35,7 +35,9 @@
 							<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2) or sessionScope.loginType eq 'S'}">
 								<button type="button" onclick="EBbatch.show({'method':'판매중지로 일괄변경 처리','action':'update', 'statusCode':'N'})" class="btn btn-xs btn-warning">판매중지</button>
 								<button type="button" onclick="EBbatch.show({'method':'품절로 일괄변경 처리','action':'update', 'statusCode':'S'})" class="btn btn-xs btn-warning">품 절</button>
-								<button type="button" onclick="EBbatch.show({'method':'일괄 삭제 처리','action':'delete'})" class="btn btn-xs btn-danger">삭 제</button>
+								<c:if test="${sessionScope.loginType eq 'A'}">
+									<button type="button" onclick="EBbatch.show({'method':'일괄 삭제 처리','action':'delete'})" class="btn btn-xs btn-danger">삭 제</button>
+								</c:if>
 								<b style="margin-left:25px">■카테고리</b>
 								<button type="button" onclick="EBbatch.showCategoryModal({'method':'카테고리 일괄변경 처리','action':'category'})" class="btn btn-xs btn-default">일괄 변경</button>
 								<b style="margin-left:25px">■상품내용</b>

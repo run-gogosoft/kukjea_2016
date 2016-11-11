@@ -64,6 +64,7 @@
                                 <option value="">---구분---</option>
                                 <option value="name" <c:if test="${vo.itemSearchType eq 'name'}">selected</c:if>>상품명</option>
                                 <option value="maker" <c:if test="${vo.itemSearchType eq 'maker'}">selected</c:if>>제조사</option>
+                                <option value="type" <c:if test="${vo.itemSearchType eq 'type'}">selected</c:if>>규격</option>
                             </select>
 
 

@@ -498,8 +498,8 @@ em.must {color:#ef3f3b;}
 #header .popular_keyword .btn_paging .btn_prev,
 #header .popular_keyword .btn_paging .btn_next {float:left; width:15px; height:16px; background:url('../images/common/spr_btn.png') no-repeat 0 0}
 #header .popular_keyword .btn_paging .btn_next {width:16px; background-position:-15px 0}
-#header .promotion_top {position:absolute; top:0; right:20px}
-#header .promotion_top img {width:230px; height:70px;}
+#header .promotion_top {position:absolute; top:9px; right:50px}
+#header .promotion_top img {width:168px; height:52px;}
 #header .noti {position:absolute; top:74px; right:10px; width:220px; line-height: 1.4; text-overflow:ellipsis; white-space:nowrap; overflow:hidden}
 
 /* gnb(main) */

@@ -242,36 +242,46 @@
 					<h2>반복 주문 상품</h2>
 					<div class="scrollable_wrap">
 						<div class="scrollable">
-							<table class="data">
-								<caption>반복 주문 상품 정보</caption>
-								<thead>
-								<tr>
-									<th scope="col" class="col1"><div>최근 구매일</div></th>
-									<th scope="col" class="col2"><div>상품명</div></th>
-									<th scope="col" class="col3"><div>규격</div></th>
-									<th scope="col" class="col4"><div>제조사</div></th>
-									<th scope="col" class="col5"><div>공급사</div></th>
-									<th scope="col" class="col6"><div>공급가</div></th>
-									<th scope="col" class="col7"><div><input type="checkbox" title="상품 전체 선택" class="check" /></div></th>
-								</tr>
-								</thead>
-								<tbody>
-								<c:forEach var="repeatList" items="${repeatList}">
-									<tr data-seq="${item.seq}">
-										<td class="col1"><div>${repeatList.regDate}</div></td>
-										<td class="col2"><div><a href="/shop/search?seq=${repeatList.itemSeq}">${repeatList.itemName}</a></div></td>
-										<td class="col3"><div>${repeatList.postcode} ${repeatList.postcode1} ${repeatList.postcode2}</div></td>
-										<td class="col4"><div>${repeatList.addr1}</div></td>
-										<td class="col5"><div>${repeatList.sellerName}</div></td>
-										<td class="col6"><div>${repeatList.optionPrice}</div></td>
-										<td class="col7"><div><input type="checkbox" title="상품 선택" class="check" /></div></td>
+							<form id="mgrForm" method="post" target="zeroframe">
+								<table class="data">
+									<caption>반복 주문 상품 정보</caption>
+									<thead>
+									<tr>
+										<th scope="col" class="col1"><div>최근 구매일</div></th>
+										<th scope="col" class="col2"><div>상품명</div></th>
+										<th scope="col" class="col3"><div>규격</div></th>
+										<th scope="col" class="col4"><div>제조사</div></th>
+										<th scope="col" class="col5"><div>공급사</div></th>
+										<th scope="col" class="col6"><div>공급가</div></th>
+										<th scope="col" class="col7">
+											<div>
+												<input type="checkbox" title="상품 전체 선택" class="check" id="allChk" name="'allChk" onclick="RepeatUtil.checkProc(this)"/>
+											</div>
+										</th>
 									</tr>
-								</c:forEach>
-								</tbody>
-							</table>
+									</thead>
+									<tbody id="repeatList">
+									<c:forEach var="repeatList" items="${repeatList}">
+										<tr data-seq="${item.seq}">
+											<td class="col1"><div>${repeatList.regDate}</div></td>
+											<td class="col2"><div><a href="/shop/search?seq=${repeatList.itemSeq}">${repeatList.itemName}</a></div></td>
+											<td class="col3"><div>${repeatList.postcode} ${repeatList.postcode1} ${repeatList.postcode2}</div></td>
+											<td class="col4"><div>${repeatList.addr1}</div></td>
+											<td class="col5"><div>${repeatList.sellerName}</div></td>
+											<td class="col6"><div>${repeatList.optionPrice}</div></td>
+											<td class="col7"><div>
+												<input type="checkbox" id="seq" name="seq" value="${repeatList.seq}"  wish-value="${repeatList.seq}" title="상품 선택" class="check" />
+												<a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
+											</div></td>
+										</tr>
+									</c:forEach>
+									</tbody>
+								</table>
+							</form>
 						</div>
 					</div>
-					<!--a href="#" class="btn btn_default">선택상품 장바구니 담기</a-->
+					<button type="button" onclick="RepeatUtil.addCart()" class="btn btn_default">선택상품 장바구니 담기</button>
+					<%--<a href="#" class="btn btn_default">선택상품 장바구니 담기</a>--%>
 				</div>
 			</div>
 			<!-- //반복 주문 상품 -->
@@ -332,6 +342,11 @@
 			$("#rememberLoginId").prop("checked", true);
 			$("#loginId").val($.cookie("lastLoginId"));
 		}
+
+//		$('input[name="allChk"]').bind('click', function(){
+//			var status = $(this).is(':checked');
+//			$('input[type="checkbox"]').attr('checked', status);
+//		});
 	});
 	var submitProc = function(obj) {
 		var flag = true;
@@ -352,6 +367,23 @@
 
 		return flag;
 	};
+
+	var RepeatUtil = {
+		checkProc:function(obj) {
+			$("#repeatList input:checkbox").each(function(){
+				$(this).prop("checked", $(obj).prop("checked"));
+			});
+		}
+		,addCart:function() {
+
+			$("#repeatList input:checkbox").each(function(){
+				$("#mgrForm").attr('action', '/shop/index/cart/proc');
+				$("#mgrForm").submit();
+			});
+		}
+	};
+
+
 </script>
 </body>
 </html>

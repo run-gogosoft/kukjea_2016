@@ -1477,6 +1477,8 @@
 			d.seq AS seq,
 			d.item_name AS itemName,
 			d.option_value AS valueName,
+			d.option_value_seq AS optionValueSeq,
+			i.seq AS itemSeq,
 			i.img1 AS img1
 		FROM
 			sm_order_detail d LEFT OUTER JOIN

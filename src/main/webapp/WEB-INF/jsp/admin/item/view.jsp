@@ -41,7 +41,7 @@
 							<%--관리자, 입점업체일 경우에만 노출 --%>
 							<a href="/admin/item/form/${vo.seq}" onclick="location.href='/admin/item/form/${vo.seq}?pageNum=${pageNum}&search='+encodeURIComponent('${param.search}');return false;" class="btn btn-sm btn-primary">수정하기</a>
 						</c:if>
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2) or sessionScope.loginType eq 'S'}">
+						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
 							<%--관리자일 경우에만 노출 --%>
 							<button type="button" onclick="deleteItem('${vo.statusCode}','${sessionScope.loginType}')" class="btn btn-sm btn-danger">삭제하기</button>
 							&nbsp;&nbsp;

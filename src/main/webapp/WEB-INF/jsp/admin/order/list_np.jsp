@@ -218,7 +218,7 @@
 										</c:if>
 									</td>
 									<td class="text-center" data-tax-name="${item.orderSeq}">${item.taxName}</td>
-									<td class="text-right" data-sell-price="${item.orderSeq}"><fmt:formatNumber value="${item.sellPrice+item.optionPrice}"/></td>
+									<td class="text-right" data-sell-price="${item.orderSeq}"><fmt:formatNumber value="${item.sellPrice}"/></td>
 									<td class="text-right" data-order-cnt="${item.orderSeq}"><fmt:formatNumber value="${item.orderCnt}"/></td>
 									<td class="text-right" data-deli-cost="${item.orderSeq}"><fmt:formatNumber value="${item.deliCost}"/></td>
 									<td class="text-center" data-status-text="${item.orderSeq}">${item.statusText}</td>

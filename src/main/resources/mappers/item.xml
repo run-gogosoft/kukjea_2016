@@ -125,7 +125,13 @@
 			</choose>
 		</if>
 		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
-			AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+			AND (
+				LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.maker LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			)
 		</if>
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
@@ -245,7 +251,13 @@
 			</choose>
 		</if>
 		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
-			AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+			AND (
+			LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.maker LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			)
 		</if>
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
@@ -1046,7 +1058,13 @@
 			AND i.cate_lv4_seq=#{cateLv4Seq}
 		</if>
 		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
-			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR i.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+			AND (
+			LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.maker LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			)
 		</if>
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
@@ -1055,7 +1073,13 @@
 			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
 		</if>
 		<if test="nameMaker != ''">
-			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR i.maker LIKE CONCAT('%',#{nameMaker},'%'))
+			AND (
+			LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.maker LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			)
 		</if>
 		<if test="maker != ''">
 			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
@@ -1143,7 +1167,13 @@
 			AND i.cate_lv4_seq=#{cateLv4Seq}
 		</if>
 		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
-			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR i.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+			AND (
+			LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.maker LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			)
 		</if>
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
@@ -1155,7 +1185,13 @@
 			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
 		</if>
 		<if test="nameMaker != ''">
-			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR i.maker LIKE CONCAT('%',#{nameMaker},'%'))
+			AND (
+			LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.maker LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			)
 		</if>
 		<if test="name != ''">
 			AND (LOWER(i.name) LIKE CONCAT('%',LOWER(#{name}),'%') OR LOWER(u.name) LIKE CONCAT('%',LOWER(#{name}),'%'))
@@ -1315,7 +1351,13 @@
 				</when>-->
 			</choose>
 			<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
-				AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+				AND (
+				LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.maker LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				)
 			</if>
 			<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 				AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')

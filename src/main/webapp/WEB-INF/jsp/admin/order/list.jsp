@@ -217,10 +217,10 @@
 									<td>${item.optionValue}</td>
 									<td class="text-right"><fmt:formatNumber value="${item.orderCnt}"/></td>
 									<td class="text-right">
-										<fmt:formatNumber value="${item.sellPrice+item.optionPrice}"/>
+										<fmt:formatNumber value="${item.sellPrice}"/>
 										<%-- <span class="text-primary"><fmt:formatNumber value="${item.supplyPrice}"/></span> --%>
 									</td>
-									<td class="text-right"><fmt:formatNumber value="${((item.sellPrice+item.optionPrice) * item.orderCnt)}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${((item.sellPrice) * item.orderCnt)}"/></td>
 									<td class="text-right">
 										<c:choose>
 											<c:when test="${item.deliCost eq 0}">무료</c:when>

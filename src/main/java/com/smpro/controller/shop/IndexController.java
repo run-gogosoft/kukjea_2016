@@ -8,10 +8,7 @@ import com.smpro.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,6 +19,8 @@ import java.util.Map;
 
 @Controller
 public class IndexController {
+	@Autowired
+	private CartService cartService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -465,4 +464,82 @@ public class IndexController {
 		model.addAttribute("list",  tlvo8 == null ? null : displayService.getLvItemList(dvo));
 		return "/ajax/get-template-list.jsp";
 	}
+
+	/** 장바구니 등록 */
+	@RequestMapping("/index/cart/proc")
+	public String regCart(HttpServletRequest request,@RequestParam Integer[] seq, Model model) {
+
+		// 1, login 확인 & get
+		HttpSession session = request.getSession();
+		model.addAttribute("loginSeq", session.getAttribute("loginSeq"));
+		model.addAttribute("nickName", session.getAttribute("nickname"));
+		MemberVo mvo;
+		try {
+			mvo = memberService.getData((Integer)session.getAttribute("loginSeq"));
+		} catch(Exception e) {
+			model.addAttribute("message","허용되지 않은 접근입니다.");
+			model.addAttribute("returnUrl", "/shop/main");
+			return Const.REDIRECT_PAGE;
+		}
+
+
+		//get ItemVo from selected seq in repeated list
+		List<ItemVo> list = new ArrayList<>();
+		for(int i=0; i<seq.length; i++) {
+			// 2. 선택한 아이템에서 주문 정보 얻어오기
+			System.out.println(">>>>seq[i]seq : "+seq[i]);
+			ItemVo vo = new ItemVo();
+			OrderVo ov = orderService.getVoDetail(seq[i]);
+			// 3. 주문정보를 기준으로 아이템 정보 셋팅
+			vo.setMemberSeq(mvo.getSeq());
+			vo.setItemSeq(ov.getItemSeq());
+			vo.setSeq(ov.getItemSeq());
+			vo.setOptionValueSeq(ov.getOptionValueSeq());
+			vo.setDirectFlag("N");
+			vo.setCount(1);
+			list.add(vo);
+		}
+
+
+		ItemVo logineVo = new ItemVo();
+		logineVo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
+		//비회원일 경우 별도 인증키 값 저장
+		if(session.getAttribute("notLoginKey") != null) {
+			logineVo.setNotLoginKey((String)session.getAttribute("notLoginKey"));
+		}
+
+		List<ItemVo> cartList = cartService.getList(logineVo);
+
+		// 4. 장바구니에 담기
+		for(int i=0; i<list.size(); i++){
+			//이미 장바구니에 있는지 확인 -> 수량 추가
+			// 즉시구매로 들어온 내역은 지워버린다
+			boolean found = false;
+			for(int k=0; k<cartList.size(); k++) {
+//				System.out.println(">>>>cartList.get(k).getItemSeq(): "+cartList.get(k).getItemSeq());
+//				System.out.println(">>>>list.get(i).getItemSeq(): "+list.get(i).getItemSeq());
+//				System.out.println(">>>>cartList.get(k).getOptionValueSeq(): "+cartList.get(k).getOptionValueSeq());
+//				System.out.println(">>>>list.get(i).getOptionValueSeq(): "+list.get(i).getOptionValueSeq());
+
+				if((cartList.get(k).getItemSeq().intValue() == list.get(i).getItemSeq().intValue()) &&
+						(cartList.get(k).getOptionValueSeq().intValue() == list.get(i).getOptionValueSeq().intValue())){
+					found = true;
+					cartList.get(k).setCount(cartList.get(k).getCount()+1);
+					cartService.updateVo(cartList.get(k));
+					break;
+				}
+
+			}
+			//장바구니에 없는 경우, 추가
+			if(!found) {
+				cartService.insertVo(list.get(i));
+			}
+			found = false;
+		}
+
+		model.addAttribute("message", "장바구니에 등록 되었습니다.");
+		model.addAttribute("returnUrl", "/shop/cart");
+		return Const.REDIRECT_PAGE;
+	}
+
 }

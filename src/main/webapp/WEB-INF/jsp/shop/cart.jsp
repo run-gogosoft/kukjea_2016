@@ -115,7 +115,11 @@
             <%="${sellerName}"%>
         </td>
         <td>
-            <div class="item-delete" remove-value="<%="${seq}"%>" style="cursor:pointer" onclick="Cart.oneRemoveSelected(this)"><i class="fa fa-times"></i></div>
+            <div class="item-delete" remove-value="<%="${seq}"%>" style="cursor:pointer" onclick="Cart.oneRemoveSelected(this)">
+                <button type="button" class="btn btn_default btn_xs">
+                    삭제
+                </button>
+            </div>
         </td>
     </tr>
 </script>

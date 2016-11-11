@@ -44,6 +44,7 @@ public class SmsDaoImpl implements SmsDao {
 
 	@Override
 	public int insertSmsSendVo(SmsVo vo) {
+		System.out.println(">>>> insertSmsSendVo, Smsvo is "+ vo.getTrPhone()+", msg :"+vo.getTrMsg());
 		return sqlSession.insert("sms.insertSmsSendVo", vo);
 	}
 
