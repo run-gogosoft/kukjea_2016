@@ -27,6 +27,8 @@
 				, "salePrice":"${value.salePrice}"
 				, "salePeriod":"${value.salePeriod}"
 				, "optionPrice":"${value.optionPrice}"
+				, "freeDeli":"${value.freeDeli}"
+				, "eventAdded":"${value.eventAdded}"
 			}
 			</c:forEach>
 		]

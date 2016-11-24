@@ -90,7 +90,7 @@
                                     <option value="">---구분---</option>
                                     <option value="name" <c:if test="${itemSearchVo.itemSearchType eq 'name'}">selected</c:if>>상품명</option>
                                     <option value="maker" <c:if test="${itemSearchVo.itemSearchType eq 'maker'}">selected</c:if>>제조사</option>
-                                    <option value="type" <c:if test="${itemSearchVo.itemSearchType eq 'type'}">selected</c:if>>규격</option>
+                                    <%--<option value="type" <c:if test="${itemSearchVo.itemSearchType eq 'type'}">selected</c:if>>규격</option>--%>
                                 </select>
 
                                 <input class="form-control" type="text" id="itemSearchValue" name="itemSearchValue" value="${itemSearchVo.itemSearchValue}" maxlength="20"/>
@@ -196,8 +196,8 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <c:if test="${item.sellPrice >= 50000}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
-                                                    <%--span class="icon icon_txt icon_txt_yellow">10+1</span--%>
+                                                <%--<c:if test="${item.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>--%>
+                                                <%--<c:if test="${item.eventAdded != '0'}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:if>--%>
                                                 <c:if test="${item.salePercent <100 && item.salePercent >0 }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                             </td>
                                             <td class="text-center">

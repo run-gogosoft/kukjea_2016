@@ -84,7 +84,7 @@ public class ItemController {
 	
 	@CheckGrade(controllerName = "itemController", controllerMethod = "view")
 	@RequestMapping("/item/view/{seq}")
-	public String view(@PathVariable Integer seq, Integer pageNum, HttpSession session, Model model) {
+	public String view(@PathVariable Integer seq, Integer pageNum, HttpSession session, Model model)  throws  Exception {
 		// 상품 소유자 체크
 		String loginType = (String) session.getAttribute("loginType");
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
@@ -105,10 +105,26 @@ public class ItemController {
 		*/
 		ItemVo vo = itemService.getVo(seq);
 
+		MemberVo memberVo = memberService.getData(loginSeq);
+
+		if ("A".equals(memberVo.getTypeCode())) {
+			model.addAttribute("optionList", itemOptionService.getList(seq));
+		}
+		else{
+
+			List<ItemOptionVo> list = itemOptionService.getOptionList(seq);
+
+			Map map = new HashMap();
+			map.put("seq", list.get(0).getSeq());
+			map.put("loginName", memberVo.getName());
+			model.addAttribute("optionList", itemOptionService.getValueListForSeller(map));
+		}
+
+
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("title", "상품");
 		model.addAttribute("vo", itemService.getVo(seq));
-		model.addAttribute("optionList", itemOptionService.getList(seq));
+
 		model.addAttribute("propList", itemService.getPropList(vo.getTypeCd()));
 		model.addAttribute("propInfo", itemService.getInfo(seq));
 		model.addAttribute("authCategoryList", systemService.getCommonListOrderByValue(new Integer(35)));

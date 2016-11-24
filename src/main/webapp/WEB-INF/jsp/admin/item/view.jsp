@@ -312,14 +312,16 @@
 					<div class="box-body">
 						<table class="table table-striped table-bordered">
 							<colgroup>
-								<col style="width:15%;"/>
+								<col style="width:10%;"/>
 								<col style="width:*;"/>
-								<col style="width:15%;"/>
-								<col style="width:15%;"/>
-								<col style="width:15%;"/>
-								<col style="width:15%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
 								<%--<col style="width:10%;"/>--%>
-
 							</colgroup>
 							<thead>
 							<tr>
@@ -329,26 +331,39 @@
 								<th>할인가격</th>
 								<th>할인기간</th>
 								<th>재고량</th>
+								<th>무료배송여부</th>
+								<th>이벤트</th>
+								<th></th>
 								<%--<th>재고관리</th>--%>
 							</tr>
 							</thead>
 							<tbody>
 							<c:forEach var="item" items="${optionList}" varStatus="status" begin="0" step="1">
 								<tr>
-									<td class="text-center">${item.optionName}</td>
+									<td class="text-center">병원몰</td>
 									<td class="text-center">${item.valueName}</td>
 									<td class="text-center"><fmt:formatNumber value="${item.optionPrice}" pattern="#,###" /> 원</td>
 									<td class="text-center"><fmt:formatNumber value="${item.salePrice}" pattern="#,###" /> 원</td>
 									<td class="text-center">${item.salePeriod}</td>
 									<td class="text-center">${item.stockCount}</td>
+									<td class="text-center">${item.freeDeli}</td>
+									<td class="text-center">${item.eventAdded}</td>
 									<%--<td class="text-center">${item.stockFlag eq "Y" ? "재고관리":"재고관리 안함" }</td>--%>
+									<td class="text-center">
+										<button type="button" class="btn btn-sm btn-default" onclick="EBOption.showUpdateOptionValueModal(this, '${item.seq}')">수정</button>
+										<button type="button" class="btn btn-sm btn-danger" onclick="EBOption.showDeleteOptionValueModal(this, '${item.seq}')">삭제</button>
+									</td>
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(optionList)==0 }">
-								<tr><td class="text-center" colspan="7">조회된 데이터가 없습니다.</td></tr>
+								<tr><td class="text-center" colspan="9">조회된 데이터가 없습니다.</td></tr>
 							</c:if>
+
 							</tbody>
 						</table>
+						<c:if test="${ fn:length(optionList)==0 }">
+							<button type="button" id="OptionAddBtn" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품가격추가</button>
+						</c:if>
 					</div>
 				</div>
 				<div class="box">
@@ -386,10 +401,361 @@
 	</div>
 </div>
 </form>
+<script id="propTemplate" type="text/html">
+	{{each prop}}
+	{{if $index===0}}
+	<tr>
+		<th>상품군</th>
+		<td><%="${typeNm}"%></td>
+	</tr>
+	{{/if}}
+	<tr class="propTr">
+		<th><%="${propNm}"%></th>
+		<td>
+			{{if propType==="T"}}
+			<input type="text" name="prop_val<%="${$index+1}"%>" value="<%="${defaultVal}"%>" alt="<%="${propNm}"%>" style="width:50%" maxlength="100"/>
+			<input type="hidden" name="prop_cd<%="${$index+1}"%>" value="<%="${propCd}"%>">
+			{{else propType==="R"}}
+			{{each radioList.split("|")}}
+			{{if $value.indexOf("[text]") > 0}}
+			<input type="radio" class="radio" name="prop_val<%="${number+1}"%>" value="<%="${$value.replace(\"[text]\",\"\")}"%>" alt="<%="${$value.replace(\"[text]\",\"\")}"%>"/> <%="${$value.replace(\"[text]\",\"\")}"%>
+			<input type="text" alt="<%="${$value.replace(\"[text]\",\"\")}"%>" value="제품 상세 설명내 표기" maxlength="40">
+			{{else (/[\[][(Y|N)][\]]/).test($value)}}
+			<input type="radio" name="prop_val<%="${number+1}"%>" value="<%="${((/[\\[][Y][\\]]/).test($value)?'Y':'N')}"%>" {{if $value.indexOf('['+defaultVal+']')>0 }}checked="checked"{{/if}}/> <%="${$value.replace( (/[\\[][(Y|N)][\\]]/),'')}"%>
+			{{else}}
+			<input type="radio" name="prop_val<%="${number+1}"%>" value="<%="${$value}"%>" alt="" {{if $value==defaultVal}}checked="checked"{{/if}}/> <%="${$value}"%>
+			{{/if}}
+			{{/each}}
+			{{else}}
+			비정상적인 데이터가 삽입되었습니다
+			{{/if}}
+		</td>
+	</tr>
+	{{/each}}
+</script>
+
+
+<script id="sellerTemplate" type="text/html">
+	<tr style="cursor:hand;" data-seq="<%="${seq}"%>" onclick="sellerSelectProc(this)">
+		<td class="text-center"><%="${id}"%></td>
+		<td class="text-center" id="seller_name<%="${seq}"%>"><%="${name}"%></td>
+		<td class="text-center"><%="${gradeCode}"%></td>
+		<td class="text-center"><%="${adjustGradeCode}"%></td>
+		<td class="text-center"><%="${statusCode}"%></td>
+		<td class="text-center"><%="${ceoName}"%></td>
+		<td class="text-center"><%="${tel}"%></td>
+		<td class="text-center"><%="${salesName}"%></td>
+		<td class="text-center"><%="${salesTel}"%></td>
+		<td class="text-center"><%="${approvalDate}"%></td>
+	</tr>
+</script>
+<script id="optionAddTemplate" type="text/html">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form class="form-horizontal" onsubmit="return false">
+				<div class="modal-body">
+					<legend>상품가격 추가</legend>
+					<div class="alert alert-danger">
+						이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">쇼핑몰명</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="optionName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+							<input type="hidden" name="showFlag" value="Y" />
+						</div>
+					</div>
+					<hr/>
+					<div class="form-group">
+						<label class="col-md-3 control-label">공급자명</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="valueName" value="${sessionScope.loginName}" alt="공급자명" readonly="readonly" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">상품 가격</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="optionPrice" value="0" alt="금액" onblur="numberCheck(this);"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">할인 가격</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">할인 기간</label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" value=""/>
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">재고수량</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="stockCount" maxlength="5" value="0" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">무료배송</label>
+						<div class="col-md-9">
+							<div class="checkbox">
+								<label><input type="checkbox" name="freeDeli" value="N">무료배송</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">이벤트</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="eventAdded" maxlength="5" value="" class="numeric" alt="이벤트" />
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<a data-dismiss="modal" class="btn" href="#">close</a>
+					<button type="button" onclick="EBOption.submitAddProc(<%="${seq}"%>, this)" class="btn btn-primary">추가</button>
+				</div>
+			</form>
+		</div>
+		<div>
+</script>
+
+<script id="optionValueAddTemplate" type="text/html">
+
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">상품가격 추가</h3>
+			</div>
+			<form class="form-horizontal" onsubmit="return false">
+				<div class="modal-body">
+					<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">쇼핑몰명</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="valueName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label">공급자명</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>"  alt="고급자명"  readonly="readonly"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">상품 가격</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="optionPrice" value="0" alt="금액" onblur="numberCheck(this);"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">할인 가격</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">할인 기간</label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<input type="text" class="form-control datepicker" name="salePeriod"  maxlength="8" onblur="numberCheck(this);" />
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">재고수량</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="stockCount" value="999" maxlength="5" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
+							<%--<div class="checkbox">--%>
+							<%--<label><input type="checkbox" name="stockFlag" value="N"> 재고관리 안함</label>	--%>
+							<%--</div>--%>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">무료배송</label>
+						<div class="col-md-9">
+							<%--<input type="text" class="form-control" name="freeDe;o" value="Y" maxlength="5" class="numeric" alt="무료배송"  />--%>
+							<div class="checkbox">
+							<label><input type="checkbox" name="freeDeli" value="N">무료배송</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">이벤트</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="eventAdded" value="" maxlength="10" class="numeric" alt="이벤트"  />
+
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a data-dismiss="modal" class="btn btn-md btn-default" href="#">취소</a>
+					<button type="button btn-md btn-primary" onclick="EBOption.submitAddValueProc(<%="${optionSeq}"%>, this)" class="btn btn-primary">추가</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	</form>
+</script>
+<script id="optionUpdateTemplate" type="text/html">
+	<form action="<%="${action}"%>" id="optionDiv" class="form-horizontal" method="post" target="zeroframe">
+		<input type="hidden" name="seq" value="<%="${seq}"%>" />
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<legend>"<%="${optionName}"%>" 수정하기</legend>
+					<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
+					<label class="col-md-3 control-label">쇼핑몰명</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" name="optionName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+						<input type="hidden" name="showFlag" value="Y" />
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">상품옵션명</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="optionName" value="<%="${optionName}"%>" alt="상품옵션명" />
+							<input type="hidden" name="showFlag" value="Y" />
+						</div>
+					</div>
+					<%--<div class="form-group">--%>
+					<%--<label class="col-md-2 control-label">판매상태</label>--%>
+					<%--<div class="col-md-10">--%>
+					<%--<select class="form-control" name="showFlag" style="width:120px">--%>
+					<%--<option value="Y" {{if showFlag=="Y"}}selected{{/if}}>판매</option>--%>
+					<%--<option value="N" {{if showFlag=="N"}}selected{{/if}}>숨김</option>--%>
+					<%--</select>--%>
+					<%--</div>--%>
+					<%--</div>--%>
+				</div>
+				<div class="modal-footer">
+					<a data-dismiss="modal" class="btn btn-md btn-default" href="#">취소</a>
+					<button type="submit" class="btn btn-md btn-primary">수정</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</script>
+<script id="optionValueUpdateTemplate" type="text/html">
+	<form action="<%="${action}"%>" id="optionValueDiv" class="form-horizontal" method="post" target="zeroframe" onsubmit="return optionSubmitProc(this)">
+		<input type="hidden" name="seq" value="<%="${seq}"%>" />
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<legend>"<%="${valueName}"%>" 항목 수정하기</legend>
+					<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
+
+
+					<div class="form-group">
+						<label class="col-md-3 control-label">쇼핑몰명</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="optionName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label">공급자명</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>" alt="공급자명" readonly="readonly" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">상품 가격</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="optionPrice" value="<%="${optionPrice}"%>" alt="추가금액" onblur="numberCheck(this);"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">할인 가격</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="salePrice" value="<%="${salePrice}"%>" alt="할인가격" onblur="numberCheck(this);"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">할인 기간</label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<input type="text" class="form-control datepicker" name="salePeriod" value="<%="${salePeriod}"%>" maxlength="8"/>
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">재고수량</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="stockCount" maxlength="5" value="<%="${stockCount}"%>" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
+							<%--<div class="checkbox">--%>
+							<%--<label><input type="checkbox" name="stockFlag" value="N" {{if stockFlag == 'N'}}checked{{/if}}> 재고관리 안함</label>	--%>
+							<%--</div>--%>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">무료배송</label>
+						<div class="col-md-9">
+							<%--<input type="text" class="form-control" name="freeDe;o" value="Y" maxlength="5" class="numeric" alt="무료배송"  />--%>
+							<div class="checkbox">
+								<label><input type="checkbox" name="freeDeli" value="<%="${freeDeli}"%>">무료배송</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">이벤트</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="eventAdded" value="<%="${eventAdded}"%>" maxlength="10" class="numeric" alt="이벤트"  />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a data-dismiss="modal" class="btn btn-md btn-default" href="#">취소</a>
+					<button type="submit" class="btn btn-md btn-primary">수정</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</script>
+<script id="optionDeleteTemplate" type="text/html">
+	<form action="<%="${action}"%>" target="zeroframe">
+		<input type="hidden" name="seq" value="<%="${seq}"%>" />
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<legend>정말로 "<%="${optionName}"%><%="${valueName}"%>" 공급자 가격을 삭제하시겠습니까?</legend>
+					<p>이 작업은 (수정버튼을 누르지 않아도) <strong>바로 데이터베이스에 적용</strong>됩니다</p>
+					<p>이 쇼핑몰 항목과 관련있는 데이터가 유실될 수 있습니다</p>
+				</div>
+				<div class="modal-footer">
+					<a data-dismiss="modal" class="btn" href="#">취소</a>
+					<button type="submit" class="btn btn-danger">삭제</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</script>
+<div id="optionModal" class="modal"></div>
+
 <%@ include file="/WEB-INF/jsp/admin/include/footer.jsp" %>
+<script type="text/javascript" src="/assets/js/admin/item/form.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	goPage(0);
+	<c:if test="${vo eq null}">
+	setTimeout(function(){
+		EBCategory.renderList(1, 0, 0);
+	}, 100);
+	EBOption.add(); //옵션추가
+	EBOption.addChild($('.optionValueAdd'));
+
+	</c:if>
+
+	<c:if test="${vo ne null}">
+		//옵션
+		EBOption.renderList(${vo.seq});
+	</c:if>
 });
 var deleteItem = function(statusCode, loginType) {
 	if(loginType === 'S' && statusCode === 'H' || loginType === 'S' && statusCode === 'Y') {
@@ -397,7 +763,7 @@ var deleteItem = function(statusCode, loginType) {
 		return;
 	}
 	$('#deleteModal').modal();
-}
+};
 var goPage = function(page) {
 	$.ajax({
 		url:"/admin/item/view/${vo.seq}/log/ajax",
@@ -417,7 +783,8 @@ var convertAgain = function(filename) {
 };
 var showLog = function(seq){
 	$('#'+seq).toggle();
-}
+};
+
 </script>
 </body>
 </html>

@@ -464,11 +464,12 @@ var EBOption = {
 			, stockFlag:$(obj).find("input[name=stockFlag]:checked").val()
 		};
 	}
+
 	/** 해당 아이템의 모든 옵션을 다시 그린다 */
-	, renderList:function(itemSeq) {
+	, renderList:function(seq) {
 		$("#eb-eb-option-list").html('<tr><td class="muted text-center" colspan="20">데이터를 불러오고 있습니다 <img src="/assets/img/common/ajaxloader.gif" alt="" /></td></tr>');
 		$.ajax({
-			url:"/admin/item/option/json/"+itemSeq,
+			url:"/admin/item/option/json/"+seq,
 			type:"get",
 			data:{},
 			dataType:"text",

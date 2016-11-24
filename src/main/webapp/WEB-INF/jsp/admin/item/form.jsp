@@ -833,19 +833,19 @@
 			<div class="modal-body">
 				<legend>분류 수정</legend>
 				<c:if test="${vo ne null}">
-				<label class="label">대분류</label>
-				<select class="form-control" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val())">데이터를 불러오고 있습니다</select>
-				<br/>
-				<label class="label">중분류</label>
-				<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val())">데이터를 불러오고 있습니다</select>
-				<br/>
-				<label class="label">소분류</label>
-				<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val())">데이터를 불러오고 있습니다</select>
-				<br/>
-				<div id="updateFormLv4SelectBox">
-					<label class="label">세분류</label>
-					<select class="form-control" id="lv4" name="cateLv4Seq"></select>
-				</div>
+					<label class="label">대분류</label>
+					<select class="form-control" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val())">데이터를 불러오고 있습니다</select>
+					<br/>
+					<label class="label">중분류</label>
+					<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val())">데이터를 불러오고 있습니다</select>
+					<br/>
+					<label class="label">소분류</label>
+					<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val())">데이터를 불러오고 있습니다</select>
+					<br/>
+					<div id="updateFormLv4SelectBox">
+						<label class="label">세분류</label>
+						<select class="form-control" id="lv4" name="cateLv4Seq"></select>
+					</div>
 				</c:if>
 			</div>
 			<div class="modal-footer">
