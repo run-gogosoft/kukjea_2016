@@ -113,11 +113,12 @@ public class ItemController {
 		else{
 
 			List<ItemOptionVo> list = itemOptionService.getOptionList(seq);
-
-			Map map = new HashMap();
-			map.put("seq", list.get(0).getSeq());
-			map.put("loginName", memberVo.getName());
-			model.addAttribute("optionList", itemOptionService.getValueListForSeller(map));
+			for (ItemOptionVo optionVo : list) {
+				Map map = new HashMap();
+				map.put("seq", optionVo.getSeq());
+				map.put("loginName", memberVo.getName());
+				model.addAttribute("optionList", itemOptionService.getValueListForSeller(map));
+			}
 		}
 
 
@@ -881,7 +882,7 @@ public class ItemController {
 			model.addAttribute("message", "FAIL[6]");
 			return Const.AJAX_PAGE;
 		}
-
+		System.out.println(">>> insert,"+vo.toString());
 		if (!itemOptionService.insertValueVo(vo)) {
 			model.addAttribute("message", "FAIL[4]");
 			return Const.AJAX_PAGE;
@@ -949,7 +950,7 @@ public class ItemController {
 			model.addAttribute("message", "옵션 항목을 수정하던 도중 오류가 발생했습니다[2]");
 			return Const.ALERT_PAGE;
 		}
-
+		System.out.println(">>>1 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}
@@ -995,7 +996,7 @@ public class ItemController {
 			model.addAttribute("message", "옵션 항목을 수정하던 도중 오류가 발생했습니다[2]");
 			return Const.ALERT_PAGE;
 		}
-
+		System.out.println(">>>2 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}
@@ -1020,7 +1021,7 @@ public class ItemController {
 			model.addAttribute("message", "옵션을 삭제하던 도중 오류가 발생했습니다[2]");
 			return Const.ALERT_PAGE;
 		}
-
+		System.out.println(">>>3 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}
@@ -1064,7 +1065,7 @@ public class ItemController {
 			model.addAttribute("message", "비정상적인 접근입니다!");
 			return Const.ALERT_PAGE;
 		}
-
+		System.out.println(">>>4 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}

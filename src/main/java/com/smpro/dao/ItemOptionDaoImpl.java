@@ -62,6 +62,8 @@ public class ItemOptionDaoImpl implements ItemOptionDao {
 
 	@Override
 	public int insertValueVo(ItemOptionVo vo) {
+
+		System.out.println(">>>vo.:"+vo.toString());
 		return sqlSession.insert("option.insertValueVo", vo);
 	}
 

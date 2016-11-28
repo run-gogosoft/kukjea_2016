@@ -183,7 +183,7 @@
 			NOW(),
 			NOW(),
 			#{sellerSeq},
-			#{freeDeli}
+			#{freeDeli},
 			#{eventAdded}
 		)
 	</insert>

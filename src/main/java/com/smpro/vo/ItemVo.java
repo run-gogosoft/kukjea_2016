@@ -244,6 +244,14 @@ public class ItemVo extends PagingVo {
 
 	private String nameMaker="";
 
+
+	/** 이벤트 추가 */
+	private String eventAdded;
+
+	/** 무료 배송 여부 */
+	private String freeDeli = "N";
+
+
 	public void setNameMaker(String nameMaker){ this.nameMaker = nameMaker;}
 	public String getNameMaker(){return this.nameMaker;}
 
@@ -1201,6 +1209,23 @@ public class ItemVo extends PagingVo {
 	public void setListStyle(String listStyle) {
 		this.listStyle = listStyle;
 	}
+
+
+	public String getEventAdded() {
+		return eventAdded;
+	}
+
+	public void setEventAdded(String eventAdded) {
+		this.eventAdded = eventAdded;
+	}
+	public String getFreeDeli() {
+		return freeDeli;
+	}
+
+	public void setFreeDeli(String freeDeli) {
+		this.freeDeli = freeDeli;
+	}
+
 
 	@Override
 	public String toString() {

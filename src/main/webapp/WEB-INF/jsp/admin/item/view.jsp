@@ -25,12 +25,15 @@
 			<li><a href="/admin/index"><i class="fa fa-dashboard"></i> Home</a></li>
 			<li>상품 관리</li>
 			<li>상품 리스트</li>
-			<li class="active">상품 상세 정보</li>
+			<li class="active">상품 상세  정보</li>
 		</ol>
 	</section>
 	<!-- 콘텐츠 -->
 	<section class="content">
 		<div class="row">
+			<form id="validation-form" class="form-horizontal" method="post" action="<c:if test="${vo eq null}">/admin/item/form/new</c:if><c:if test="${vo ne null}">/admin/item/form/modify</c:if>" target="zeroframe" onsubmit="return submitProc(this)">
+				<input type="hidden" id="updateType" name="updateType" />
+				<input type="hidden" name="searchText" value="${param.search}" />
 			<div class="col-xs-12">
 				<div class="box">
 					<!-- 제목 -->
@@ -42,7 +45,6 @@
 							<a href="/admin/item/form/${vo.seq}" onclick="location.href='/admin/item/form/${vo.seq}?pageNum=${pageNum}&search='+encodeURIComponent('${param.search}');return false;" class="btn btn-sm btn-primary">수정하기</a>
 						</c:if>
 						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
-							<%--관리자일 경우에만 노출 --%>
 							<button type="button" onclick="deleteItem('${vo.statusCode}','${sessionScope.loginType}')" class="btn btn-sm btn-danger">삭제하기</button>
 							&nbsp;&nbsp;
 						</c:if>
@@ -50,7 +52,10 @@
 						</div>
 					</div>
 					<!-- 내용 -->
-					<div class="box-body">
+					<div  class="box-body" >
+						<c:if test="${vo ne null}">
+							<input id="seq" type="hidden" name="seq" value="${vo.seq}" />
+						</c:if>
 						<table id="view1" class="table table-bordered">
 							<colgroup>
 								<col style="width:15%;"/>
@@ -304,11 +309,13 @@
 						</table>
 					</div>
 				</div>
+
 				<div class="box">
 					<div class="box-header with-border">
 						<h3 class="box-title">상품 가격 / 재고량 정보 </h3>
 					</div>
 					<!-- 내용 -->
+
 					<div class="box-body">
 						<table class="table table-striped table-bordered">
 							<colgroup>
@@ -339,7 +346,7 @@
 							</thead>
 							<tbody>
 							<c:forEach var="item" items="${optionList}" varStatus="status" begin="0" step="1">
-								<tr>
+								<tr >
 									<td class="text-center">병원몰</td>
 									<td class="text-center">${item.valueName}</td>
 									<td class="text-center"><fmt:formatNumber value="${item.optionPrice}" pattern="#,###" /> 원</td>
@@ -356,16 +363,16 @@
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(optionList)==0 }">
-								<tr><td class="text-center" colspan="9">조회된 데이터가 없습니다.</td></tr>
+								<tr ><td class="text-center" colspan="9">조회된 데이터가 없습니다.</td></tr>
 							</c:if>
-
 							</tbody>
 						</table>
-						<c:if test="${ fn:length(optionList)==0 }">
+						<c:if test="${ sessionScope.loginType eq 'S' and fn:length(optionList)==0 }">
 							<button type="button" id="OptionAddBtn" onclick="EBOption.showAddModal(${vo.seq})" class="btn btn-info pull-right">상품가격추가</button>
 						</c:if>
 					</div>
 				</div>
+
 				<div class="box">
 					<!-- 제목 -->
 					<div class="box-header with-border">
@@ -379,6 +386,7 @@
 					</div>
 				</div>
 			</div>
+			</form>
 		</div>
 	</section>
 </div>
@@ -510,7 +518,7 @@
 					<div class="form-group">
 						<label class="col-md-3 control-label">이벤트</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" name="eventAdded" maxlength="5" value="" class="numeric" alt="이벤트" />
+							<input type="text" class="form-control" name="eventAdded" maxlength="10" value="" class="numeric" alt="이벤트"  />
 						</div>
 					</div>
 
@@ -582,7 +590,7 @@
 						<div class="col-md-9">
 							<%--<input type="text" class="form-control" name="freeDe;o" value="Y" maxlength="5" class="numeric" alt="무료배송"  />--%>
 							<div class="checkbox">
-							<label><input type="checkbox" name="freeDeli" value="N">무료배송</label>
+							<label><input type="checkbox" name="freeDeli" value="N" >무료배송</label>
 							</div>
 						</div>
 					</div>
@@ -649,7 +657,6 @@
 				<div class="modal-body">
 					<legend>"<%="${valueName}"%>" 항목 수정하기</legend>
 					<div class="alert alert-danger">이 작업은 <strong>바로 데이터베이스에 적용</strong>됩니다</div>
-
 
 					<div class="form-group">
 						<label class="col-md-3 control-label">쇼핑몰명</label>
@@ -739,52 +746,173 @@
 <div id="optionModal" class="modal"></div>
 
 <%@ include file="/WEB-INF/jsp/admin/include/footer.jsp" %>
+
 <script type="text/javascript" src="/assets/js/admin/item/form.js"></script>
+<script type="text/javascript" src="/assets/js/libs/numeral.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-	goPage(0);
-	<c:if test="${vo eq null}">
-	setTimeout(function(){
-		EBCategory.renderList(1, 0, 0);
-	}, 100);
-	EBOption.add(); //옵션추가
-	EBOption.addChild($('.optionValueAdd'));
-
-	</c:if>
-
-	<c:if test="${vo ne null}">
-		//옵션
-		EBOption.renderList(${vo.seq});
-	</c:if>
-});
-var deleteItem = function(statusCode, loginType) {
-	if(loginType === 'S' && statusCode === 'H' || loginType === 'S' && statusCode === 'Y') {
-		alert('가승인,판매중 상태의 제품은 삭제 할 수 없습니다.');
-		return;
-	}
-	$('#deleteModal').modal();
-};
-var goPage = function(page) {
-	$.ajax({
-		url:"/admin/item/view/${vo.seq}/log/ajax",
-		type:"get",
-		data:{pageNum:page},
-		dataType:"text",
-		success:function(data) {
-			$("#logTable").html(data);
-		},
-		error:function(error) {
-			alert( error.status + ":" +error.statusText );
+	var optionSubmitProc = function(obj) {
+		var stockCount = $(obj).find('input[name=stockCount]');
+		if(stockCount.val() === '') {
+			stockCount.val(0);
 		}
-	});
-};
-var convertAgain = function(filename) {
-	$("#zeroframe").attr("src", "/admin/item/image/resize/again?filename=" + filename);
-};
-var showLog = function(seq){
-	$('#'+seq).toggle();
-};
+		return true;
+	};
 
+	var copyBtnId;
+	var doSubmit = function(obj){
+		//상품 수정페이지에서 상품수정인지 상품복사인지 버튼의 ID값으로 판단한다.
+		copyBtnId = $(obj).attr('id');
+		$('#validation-form').submit();
+	}
+
+	var deleteItem = function(statusCode, loginType) {
+		if(loginType === 'S' && statusCode === 'H' || loginType === 'S' && statusCode === 'Y') {
+			alert('가승인,판매중 상태의 제품은 삭제 할 수 없습니다.');
+			return;
+		}
+		$('#deleteModal').modal();
+	};
+
+	var submitProc = function(obj) {
+		var flag = true;
+		<c:if test="${vo eq null}">
+		if($('#lv1').val() === '') {
+			alert('대분류 카테고리는 필수값입니다');
+			flag = false;
+			$('#lv1').focus();
+		}
+		</c:if>
+
+		$(obj).find("input[alt], textarea[alt], select[alt]").each( function() {
+			if(flag && $(this).val() == "") {
+				alert($(this).attr("alt") + "란을 입력(선택) 해주세요!");
+				flag = false;
+				$(this).focus();
+			}
+		});
+
+		<c:if test="${vo eq null}">
+		$('input[name="stockCount"]').each(function(){
+			var stockCount = parseInt($(this).val(),10) || 0;
+			if(flag && stockCount < 1) {
+				alert('재고량을 1이상 입력해주세요.');
+				flag = false;
+			}
+		});
+		</c:if>
+
+		if(flag && $('input[name=deliTypeCode]:checked').val() === '10' && (parseInt($('input[name=deliCost]').val(),10) || 0) === 0){
+			flag = false;
+			alert('유료배송 일 때 배송비는 반드시 입력하여야 합니다.');
+			$('input[name=deliCost]').focus();
+		}
+
+		//조건부 무료값은 유료배송일때 반드시 입력해야할 값은 아니고 공백으로 값이 넘어가는 상황이 발생하여 에러가 발생 할 수도 있기 때문에 0으로 초기화 한다.
+		if((parseInt($('input[name=deliFreeAmount]').val(),10) || 0) === 0){
+			$('input[name=deliFreeAmount]').val(0);
+		}
+
+
+		if(flag) {
+			// 더블클릭 방지
+			$("#submitButtons button").attr("disabled", "disabled");
+			setTimeout(function(){
+				$("#submitButtons button").attr("disabled", false);
+			}, 5000);
+
+			//상품등록시 옵션이 항목이 한개 이상있을경우 controller에서 bind가 되지 않아서 에러가 발생한다.
+			//그래서 submit 상품기본정보를 submit할때는 option필드를 disable시켜 폼전송에서 제외시키고 callbackproc에서 sable시켜 활성화시킨다.
+			//flag가 true일때만 disable시킨다.
+			EBOption.disableOptionField();
+			CHItemPropInfo.disablePropInfoField();
+			setTimeout(function(){
+				EBOption.sableOptionField();
+				CHItemPropInfo.sablePropInfoField();
+			}, 5000);
+		}
+
+		if(flag === true) {
+			if (copyBtnId === 'copyBtn') {
+				if (confirm('해당 상품정보로 신규 생성하시겠습니까?')) {
+					$('#updateType').val('copy');
+					$('#validation-form').attr('action', '/admin/item/form/new');
+				} else {
+					$('#updateType').val('');
+					$('#validation-form').attr('action', '/admin/item/form/modify');
+					EBOption.sableOptionField();
+					CHItemPropInfo.sablePropInfoField();
+					flag = false;
+				}
+			}
+		}
+
+		//세분류가 선택되지 않았다면 disabled 처리한다.
+		if(parseInt($('input[name=cateLv4Seq]').val(),10) === 0) {
+			$('select[name=cateLv4Seq]').prop('disabled',true);
+			$('input[name=cateLv4Seq]').prop('disabled',true);
+		} else {
+			$('select[name=cateLv4Seq]').prop('disabled',false);
+			$('input[name=cateLv4Seq]').prop('disabled',false);
+		}
+
+		//유효성검사가 모두 끝난 후 수정시 임시몰의 판매가와 상태코드가 중복(sellPrice,statusCode)되므로 에러가 발생되기 때문에 임시몰 부분을 disabled처리한다.
+		if(flag === true) {
+			$('#tempMall').find('input[name=sellPrice]').prop('disabled',true);
+			//$('#tempMall').find('select[name=statusCode]').prop('disabled',true);
+		}
+		return flag;
+	};
+
+	var goPage = function(page) {
+		$.ajax({
+			url:"/admin/item/view/${vo.seq}/log/ajax",
+			type:"get",
+			data:{pageNum:page},
+			dataType:"text",
+			success:function(data) {
+				$("#logTable").html(data);
+			},
+			error:function(error) {
+				alert( error.status + ":" +error.statusText );
+			}
+		});
+	};
+	var convertAgain = function(filename) {
+		$("#zeroframe").attr("src", "/admin/item/image/resize/again?filename=" + filename);
+	};
+	var showLog = function(seq){
+		$('#'+seq).toggle();
+	};
+
+	$(document).ready(function(){
+		showDatepicker("yyyy-mm-dd");
+		/* 견적상품일 경우 판매가를 숨긴다 */
+		setTypeCode();
+
+		goPage(0);
+		<c:if test="${vo eq null}">
+			setTimeout(function(){
+				EBCategory.renderList(1, 0, 0);
+			}, 100);
+			EBOption.add(); //옵션추가
+			EBOption.addChild($('.optionValueAdd'));
+
+		</c:if>
+
+		<c:if test="${vo ne null}">
+			//옵션
+			EBOption.renderList(${vo.seq});
+		</c:if>
+	});
+
+	var setTypeCode = function() {
+		var typecode = $('input[name=typeCode]:checked').val();
+		if(typecode === 'E') {
+			$('#sellPrice').val(1).parents('.form-group').hide();
+		} else {
+			$('#sellPrice').val(${vo eq null ? 0 : vo.sellPrice}).parents('.form-group').show();
+		}
+	};
 </script>
 </body>
 </html>

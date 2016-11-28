@@ -42,8 +42,8 @@
                 <td class="lt" ><%="${valueName}"%></td>
                 <td>
                     <span class="icons">
-                        {{if sellPrice >50000}}<span class="icon icon_txt icon_txt_gray">무료배송</span>{{/if}}
-                        <!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
+                        {{if freeDeli =='Y'}}<span class="icon icon_txt icon_txt_gray">무료배송</span>{{/if}}
+                        {{if eventAdded !=''}}<span class="icon icon_txt icon_txt_yellow"><%="${eventAdded}"%></span>{{/if}}
                         {{if salePercent <100 && salePercent >0}}<span class="icon icon_txt icon_txt_red"><%="${salePercent}"%>%</span>{{/if}}
                     </span>
                 </td>

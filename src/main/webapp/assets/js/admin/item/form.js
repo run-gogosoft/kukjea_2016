@@ -325,15 +325,16 @@ var callbackProc = function(msg) {
 						}
 					});
 				},
-				error:function(error) {
-					alert( error.status + ":" +error.statusText );
-				}
+				// error:function(error) {
+				// 	alert( error.status + ":" +error.statusText );
+				// }
 			});
 		});
 	} else if(msg === "OPTION") {
 		EBOption.renderList($("#seq").val());
 		$("#optionModal").modal("hide");
 		$('#OptionAddBtn').show();
+		document.location.reload();
 	} else if(msg.split(":")[0] === "DETAIL") {
 		uploadDetailProc(msg.split(":")[1], msg.split(":")[2]);
 	} else if(msg.split("^")[0] === "EDITOR") {
@@ -462,11 +463,15 @@ var EBOption = {
 			, salePeriod: parseInt($(obj).find("input[name=salePeriod]").val(), 10) || 0
 			, stockCount:parseInt($(obj).find("input[name=stockCount]").val(), 10) || 0
 			, stockFlag:$(obj).find("input[name=stockFlag]:checked").val()
+			, freeDeli:$(obj).find("input[name=freeDeli]").val()
+			, eventAdded:$(obj).find("input[name=eventAdded]").val()
 		};
 	}
 
 	/** 해당 아이템의 모든 옵션을 다시 그린다 */
 	, renderList:function(seq) {
+		// alert( "renderList!! seq :" +seq);
+
 		$("#eb-eb-option-list").html('<tr><td class="muted text-center" colspan="20">데이터를 불러오고 있습니다 <img src="/assets/img/common/ajaxloader.gif" alt="" /></td></tr>');
 		$.ajax({
 			url:"/admin/item/option/json/"+seq,
@@ -586,13 +591,13 @@ var EBOption = {
 		} else if($.trim(vo.valueName) === "") {
 			alert("공급자명은 반드시 입력되어야 합니다");
 			return;
+		} else  if($.trim(vo.optionPrice) == "0") {
+			alert("제품 가격을 입력해주세요")
+			return;
 		} else if($.trim(vo.stockCount) === "0") {
 			alert("재고수량을 1이상 입력해주세요.");
 			return;
-		} else  if($.trim(vo.optionPrice) == "0") {
-			alert("제품 가격을 입력해주세요")
 		}
-
 			for(var i=0; i<$('#filterCount').val(); i++){
 				if ($.trim(vo.optionName).indexOf($('#filter'+i).val()) != -1) {
 					alert('상품옵션명에 금지어 ' + $('#filter'+i).val() + '이 포함되어 있습니다!');
@@ -641,6 +646,7 @@ var EBOption = {
 						} else {
 							$("#optionModal").modal("hide");
 							EBOption.renderList($("#seq").val());
+							document.location.reload();
 						}
 					},
 					error:function(error) {
@@ -719,6 +725,8 @@ var EBOption = {
 			$(this).find("input[name=salePeriod]").prop('disabled',true);
 			$(this).find("input[name=stockCount]").prop('disabled',true);
 			$(this).find("input[name=stockFlag]").prop('disabled',true);
+			$(this).find("input[name=freeDeli]").prop('disabled',true);
+			$(this).find("input[name=eventAdded]").prop('disabled',true);
 		});
 	}
 	, sableOptionField:function(){
@@ -735,6 +743,8 @@ var EBOption = {
 			$(this).find("input[name=salePeriod]").prop('disabled',true);
 			$(this).find("input[name=stockCount]").prop('disabled',false);
 			$(this).find("input[name=stockFlag]").prop('disabled',false);
+			$(this).find("input[name=freeDeli]").prop('disabled',false);
+			$(this).find("input[name=eventAdded]").prop('disabled',false);
 		});
 	}
 };

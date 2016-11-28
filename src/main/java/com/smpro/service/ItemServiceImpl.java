@@ -429,7 +429,7 @@ public class ItemServiceImpl implements ItemService {
 	public Workbook writeExcelItemList(ItemVo vo, String type,HttpSession session) {
 		Workbook wb;
 		String loginType = (String) session.getAttribute("loginType");
-		int arrSize = loginType.equals("S")?24:18;
+		int arrSize = loginType.equals("S")?26:18;
 
 		/* 타이틀 항목 생성 */
 		String[] strTitle = new String[arrSize];
@@ -460,6 +460,8 @@ public class ItemServiceImpl implements ItemService {
 			strTitle[idx++] = "할인 가격";
 			strTitle[idx++] = "할인 기간";
 			strTitle[idx++] = "재고 수량";
+			strTitle[idx++] = "무료배송(Y/N)";
+			strTitle[idx++] = "이벤트";
 		}
 
 		/* 상품리스트 */
@@ -510,6 +512,8 @@ public class ItemServiceImpl implements ItemService {
 							cell.add(optionVoList.get(j).getSalePrice());
 							cell.add(optionVoList.get(j).getSalePeriod());
 							cell.add(optionVoList.get(j).getStockCount());
+							cell.add(optionVoList.get(j).getFreeDeli());
+							cell.add(optionVoList.get(j).getEventAdded());
 						}
 					}
 					if(cell.size()<arrSize){

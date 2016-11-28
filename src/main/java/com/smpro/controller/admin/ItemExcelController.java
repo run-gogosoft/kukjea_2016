@@ -114,7 +114,7 @@ public class ItemExcelController {
 		int OPTION_SIZE = 0;
 		if(loginType.equals("S")) {
 			//공급사인경우
-			OPTION_SIZE = 6;
+			OPTION_SIZE = 8;
 		}
 		
 
@@ -391,6 +391,8 @@ public class ItemExcelController {
 				ovo.setSalePeriod(optionList.get(i).getSalePeriod());
 				ovo.setStockCount(optionList.get(i).getStockCount());
 				ovo.setStockFlag(optionList.get(i).getStockFlag());
+				ovo.setFreeDeli(optionList.get(i).getFreeDeli());
+				ovo.setEventAdded(optionList.get(i).getEventAdded());
 
 				if (!itemOptionService.insertValueVo(ovo)) {
 					model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
@@ -409,6 +411,7 @@ public class ItemExcelController {
 					System.out.println(">>>sellerSeq:" + ovo.getSellerSeq());
 					System.out.println(">>>>ovo.getValueName():" + ovo.getValueName());
 					System.out.println(">>(String)session.getAttribute(\"loginSeq\")):" + (Integer) session.getAttribute("loginSeq"));
+					if(ovo.getSellerSeq()==0) continue;
 					if (ovo.getSellerSeq() == ((Integer) session.getAttribute("loginSeq"))) {
 						//update
 						ovo.setOptionPrice(optionList.get(i).getOptionPrice());
@@ -416,6 +419,8 @@ public class ItemExcelController {
 						ovo.setSalePeriod(optionList.get(i).getSalePeriod());
 						ovo.setStockCount(optionList.get(i).getStockCount());
 						ovo.setStockFlag(optionList.get(i).getStockFlag());
+						ovo.setFreeDeli(optionList.get(i).getFreeDeli());
+						ovo.setEventAdded(optionList.get(i).getEventAdded());
 						ovo.setSellerSeq( (Integer) session.getAttribute("loginSeq"));
 						if (!itemOptionService.updateValueVo(ovo)) {
 							model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
@@ -431,6 +436,8 @@ public class ItemExcelController {
 						ovo.setSalePeriod(optionList.get(i).getSalePeriod());
 						ovo.setStockCount(optionList.get(i).getStockCount());
 						ovo.setStockFlag(optionList.get(i).getStockFlag());
+						ovo.setFreeDeli(optionList.get(i).getFreeDeli());
+						ovo.setEventAdded(optionList.get(i).getEventAdded());
 						ovo.setSellerSeq( (Integer) session.getAttribute("loginSeq"));
 						if (!itemOptionService.insertValueVo(ovo)) {
 							model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
@@ -889,7 +896,9 @@ public class ItemExcelController {
 		index++;//TODO salePeriod
 
 		System.out.println("setStockCount:"+list.get(index));
-		vo.setStockCount(Integer.valueOf("" +list.get(index++)));
+		vo.setStockCount(Integer.valueOf("" +list.get(index++)));//sockcount
+		vo.setFreeDeli(""+list.get(index++));//freeDeli
+		vo.setEventAdded(""+list.get(index++));//eventAdded
 
 		return vo;
 	}
