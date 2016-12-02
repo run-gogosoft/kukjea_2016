@@ -24,6 +24,8 @@
 		, "optionName":"<c:if test="${!(item.optionCount eq 1 and item.optionPrice eq 0)}">${item.optionName}</c:if>"
 		, "valueName":"<c:if test="${!(item.optionCount eq 1 and item.optionPrice eq 0)}">${item.valueName}</c:if>"
 		, "count":"${item.count}"
+		, "freeDeli":"${item.freeDeli}"
+		, "eventAdded":"${item.eventAdded}"
 		, "sellPrice":"${item.sellPrice}"
 		, "sellPriceText":"<fmt:formatNumber value="${item.sellPrice}" pattern="#,###" />"
 		, "totalPriceText":"<fmt:formatNumber value="${(item.sellPrice)*item.count}" pattern="#,###" />"

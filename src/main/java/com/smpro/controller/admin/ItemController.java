@@ -67,7 +67,7 @@ public class ItemController {
 
 	@Autowired
 	private SystemService systemService;
-	
+
 	@Autowired
 	DataSourceTransactionManager transactionManager;
 	public void setTransactionManager(
@@ -81,7 +81,7 @@ public class ItemController {
 		model.addAttribute("title", "베스트상품 관리");
 		return "/best/form.jsp";
 	}
-	
+
 	@CheckGrade(controllerName = "itemController", controllerMethod = "view")
 	@RequestMapping("/item/view/{seq}")
 	public String view(@PathVariable Integer seq, Integer pageNum, HttpSession session, Model model)  throws  Exception {
@@ -107,7 +107,7 @@ public class ItemController {
 
 		MemberVo memberVo = memberService.getData(loginSeq);
 
-		if ("A".equals(memberVo.getTypeCode())) {
+		if ("A".equals(loginType)) {
 			model.addAttribute("optionList", itemOptionService.getList(seq));
 		}
 		else{
@@ -194,7 +194,7 @@ public class ItemController {
 	@RequestMapping("/item/list")
 	public String list(HttpServletRequest request, ItemVo vo, Model model) {
 		HttpSession session = request.getSession(false);
-		
+
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
@@ -210,14 +210,14 @@ public class ItemController {
 			cvo.setParentSeq(vo.getCateLv1Seq());
 			model.addAttribute("cateLv2List", categoryService.getList(cvo));
 		}
-		
+
 		//소분류
 		if (vo.getCateLv1Seq() != null && vo.getCateLv2Seq() != null) {
 			cvo.setDepth(3);
 			cvo.setParentSeq(vo.getCateLv2Seq());
 			model.addAttribute("cateLv3List", categoryService.getList(cvo));
 		}
-		
+
 		//세분류
 		if (vo.getCateLv1Seq() != null && vo.getCateLv2Seq() != null && vo.getCateLv3Seq() != null) {
 			cvo.setDepth(4);
@@ -228,7 +228,7 @@ public class ItemController {
 		if (vo.getRowCount() == 20) {
 			vo.setRowCount(50);
 		}
-		
+
 		// 인증구분
 		if(!"".equals(vo.getAuthCategory()) ) {
 			vo.setAuthCategoryArr( vo.getAuthCategory().split(",") );
@@ -246,7 +246,7 @@ public class ItemController {
 		svo.setTypeCode("D");
 		svo.setRowCount(9999);
 		model.addAttribute("masterList", sellerService.getList(svo));*/
-		
+
 		// 인증구분 공통코드
 		model.addAttribute("authCategoryList", systemService.getCommonListOrderByValue(new Integer(35)));
 		return "/item/list.jsp";
@@ -286,7 +286,7 @@ public class ItemController {
 		// todo : 아이템을 수정할 수 있는 권한이 있는지 검사하여야 함
 		model.addAttribute("title", "상품 수정");
 		model.addAttribute("vo", itemService.getVo(seq));
-		model.addAttribute("typeInfoList", itemService.getTypeInfoList()); // 상품 고시정보 분류 목록		
+		model.addAttribute("typeInfoList", itemService.getTypeInfoList()); // 상품 고시정보 분류 목록
 		model.addAttribute("propInfo", itemService.getInfo(seq)); // 해당 상품에 저장된 상품고시정보
 		model.addAttribute("filterList", itemService.getFilterList());
 		model.addAttribute("authCategoryList", systemService.getCommonListOrderByValue(new Integer(35)));
@@ -297,14 +297,14 @@ public class ItemController {
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public String insert(ItemVo vo, HttpServletRequest request, Model model) throws IOException {
 		HttpSession session = request.getSession(false);
-		
+
 		//파라메타 유효성 검증
 		String reqParamErrMsg = checkReqParam(vo, session, "new");
 		if(reqParamErrMsg != null) {
 			model.addAttribute("message", reqParamErrMsg);
 			return Const.ALERT_PAGE;
 		}
-		
+
 		//판매상태 기본 승인 대기
 		vo.setStatusCode("H");
 		/*
@@ -318,13 +318,13 @@ public class ItemController {
 		// 복사할 대상 상품의 데이터를 가지고 오기 위해 새로운 시퀀스를 생성해서 seq변수에 적용하기전 form으로부터 넘겨받은
 		// seq값을 임시 저장한다.
 		Integer originSeq = vo.getSeq();
-		
+
 		//시퀀스 생성
 		if(itemService.createSeq(vo) != 1) {
 			model.addAttribute("message", "상품 일련번호 생성에 실패하였습니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		String realPath = Const.UPLOAD_REAL_PATH + "/item";
 		/** 상품 복사 일때 저장된 이미지 경로를 가져온다. */
 		if ("copy".equals(vo.getUpdateType())) {
@@ -406,7 +406,7 @@ public class ItemController {
 
 				vo.setDetailImg3(itemService.imageDetailProc(realPath, "3",	String.valueOf(vo.getSeq()) + ivo.getDetailImg3().substring(ivo.getDetailImg3().lastIndexOf(".")), vo.getSeq()));
 			}
-			
+
 			//에디터로 업로드한 이미지 복사
 			vo.setContent(copyEditorImage(originSeq, vo.getSeq(), vo.getContent()));
 		} else {
@@ -432,7 +432,7 @@ public class ItemController {
 			if (!"".equals(vo.getDetailImg3())) {
 				vo.setDetailImg3(itemService.imageDetailProc(realPath, "3", vo.getDetailImg3().replace("/upload/item/temp/", ""), vo.getSeq()));
 			}
-			
+
 			//에디터 업로드 이미지 처리
 			vo.setContent(EditorUtil.procImage(vo.getContent(), vo.getSeq(), "item"));
 		}
@@ -527,7 +527,7 @@ public class ItemController {
 	public String copyItemImageUpload(String urlString, Integer fileName) throws IOException {
 		String fileExt = urlString.substring(urlString.lastIndexOf("."));
 		String savePath = Const.UPLOAD_REAL_PATH + "/item/temp/";
-		
+
 		InputStream origin = null;
 		OutputStream target = null;
 		try {
@@ -546,20 +546,20 @@ public class ItemController {
 			e.printStackTrace();
 		} finally {
 			if(origin != null) origin.close();
-			if(target != null) target.close();			
+			if(target != null) target.close();
 		}
-		
+
 		return "";
 	}
-	
+
 	/** 에디터로 업로드된 이미지 복사 */
 	private String copyEditorImage(Integer originSeq, Integer seq, String content) throws IOException {
 		String newContent = content;
-		
+
 		String dirHome = Const.UPLOAD_REAL_PATH + "/editor/item/";
 		String originDirName = dirHome + EditorUtil.calcPerSeq(originSeq);
 		String newDirName = dirHome + EditorUtil.calcPerSeq(seq);
-		//원본 디렉토리		
+		//원본 디렉토리
 		File originDir = new File(originDirName);
 		//원본 파일들
 		File[] originFiles = originDir.listFiles(new ImageFileNameFilter(String.valueOf(originSeq)));
@@ -582,21 +582,21 @@ public class ItemController {
 					e.printStackTrace();
 				} finally {
 					if(origin != null) origin.close();
-					if(target != null) target.close();			
+					if(target != null) target.close();
 				}
-				
+
 				String originUrl = "http://" + Const.DOMAIN+Const.UPLOAD_PATH + originDirName.replace(Const.UPLOAD_REAL_PATH, "") + "/" + originFileName;
-				String newUrl = "http://" + Const.DOMAIN+Const.UPLOAD_PATH + newDirName.replace(Const.UPLOAD_REAL_PATH, "") + "/" + newFileName; 
-				
+				String newUrl = "http://" + Const.DOMAIN+Const.UPLOAD_PATH + newDirName.replace(Const.UPLOAD_REAL_PATH, "") + "/" + newFileName;
+
 				log.debug("### originUrl : " + originUrl);
 				log.debug("### newUrl : " + newUrl);
 				newContent = newContent.replace(originUrl, newUrl);
 			}
 		}
-		
+
 		return newContent;
 	}
-	
+
 	@RequestMapping(value = "/item/upload/detail", method = RequestMethod.POST)
 	public String uploadDetail(@RequestParam int idx,
 			HttpServletRequest request, Model model) {
@@ -630,7 +630,7 @@ public class ItemController {
 		model.addAttribute("callback", files);
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	@RequestMapping("/item/image/resize/again")
 	public static String resizeAgain(String filename, Model model) {
 		// todo : 수정할 수 있는 권한이 있는지 검사
@@ -654,7 +654,7 @@ public class ItemController {
 		model.addAttribute("message", "이미지가 다시 변환되었습니다. 새로고침을 해보세요");
 		return Const.ALERT_PAGE;
 	}
-	
+
 	@RequestMapping(value = "/item/img/delete", method = RequestMethod.POST)
 	public String imgDelete(@RequestParam int idx, @RequestParam String imgPath, @RequestParam Integer imageSeq, Model model) {
 		if(imageSeq == null) {
@@ -667,12 +667,12 @@ public class ItemController {
 			model.addAttribute("message", "이미지 경로가 존재하지 않습니다.");
 			return Const.ALERT_PAGE;
 		}
-		
-		
+
+
 		if (!itemService.imgDelete(idx, imgPath, model)) {
 			return Const.ALERT_PAGE;
 		}
-		
+
 		ItemVo vo = new ItemVo();
 		if(idx == 1) {
 			vo.setImg1(imgPath);
@@ -688,7 +688,7 @@ public class ItemController {
 			model.addAttribute("message", "이미지 경로 삭제가 실패하였습니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		// 업로드된 파일 리스트를 던진다
 		String imgText = "";
 		if(idx == 1) {
@@ -700,7 +700,7 @@ public class ItemController {
 		model.addAttribute("returnUrl", "/admin/item/form/"+imageSeq);
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	@RequestMapping(value = "/item/img/delete/detail", method = RequestMethod.POST)
 	public String detailImgDelete(@RequestParam int idx, @RequestParam String imgPath, @RequestParam Integer imageSeq, Model model) {
 		if(imageSeq == null) {
@@ -713,11 +713,11 @@ public class ItemController {
 			model.addAttribute("message", "상세 이미지 경로가 존재하지 않습니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		if (!itemService.detailImgDelete(idx, imgPath, model)) {
 			return Const.ALERT_PAGE;
 		}
-		
+
 		ItemVo vo = new ItemVo();
 		if(idx == 1) {
 			vo.setDetailImg1(imgPath);
@@ -731,13 +731,13 @@ public class ItemController {
 			model.addAttribute("message", "상세 이미지 경로 삭제가 실패하였습니다.");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		// 업로드된 파일 리스트를 던진다
 		model.addAttribute("message", "[상세이미지"+idx+"] 정상적으로 삭제되었습니다.");
 		model.addAttribute("returnUrl", "/admin/item/form/"+imageSeq);
 		return Const.REDIRECT_PAGE;
 	}
-	
+
 	@RequestMapping("/item/form/modify")
 	public String update(ItemVo vo, String searchText, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession(false);
@@ -781,10 +781,10 @@ public class ItemController {
 		if (!"".equals(vo.getDetailImg3())) {
 			vo.setDetailImg3(itemService.imageDetailProc(realPath, "3", vo.getDetailImg3().replace("/upload/item/temp/", ""), vo.getSeq()));
 		}
-		
+
 		//에디터 업로드 이미지 처리
 		vo.setContent(EditorUtil.procImage(vo.getContent(), vo.getSeq(), "item"));
-		
+
 		ItemVo ivo = itemLogCheck(vo);
 
 		// 데이터베이스에 삽입한다
@@ -809,7 +809,7 @@ public class ItemController {
 			model.addAttribute("message", "데이터 삽입 도중 오류가 발생했습니다[3]");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		String search = searchText.replaceAll("=", "%3D");
 		search = search.replaceAll("&amp;", "%26");
 
@@ -1072,7 +1072,7 @@ public class ItemController {
 
 	/**
 	 * 옵션의 모든 리스트를 반환
-	 * 
+	 *
 	 * @param seq
 	 * @param model
 	 * @return
@@ -1081,6 +1081,7 @@ public class ItemController {
 	public String getOptionList(@PathVariable Integer seq, Model model, HttpSession session) throws  Exception {
 
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
+		String typeCode = (String)session.getAttribute("loginType");
 		if (loginSeq == null) {
 			throw new Exception("비정상적인 접근입니다");
 		}
@@ -1090,12 +1091,9 @@ public class ItemController {
 		}
 
 		List<ItemOptionVo> list = itemOptionService.getOptionList(seq);
+		//System.out.println(">>>typeCode:"+memberVo.getTypeCode()+", typeCode:"+typeCode);
+		if (!"A".equals(typeCode)) {
 
-		if ("A".equals(memberVo.getTypeCode())) {
-			for (ItemOptionVo vo : list) {
-				vo.setValueList(itemOptionService.getValueList(vo.getSeq()));
-			}
-		} else {
 			for (ItemOptionVo vo : list) {
 				Map map = new HashMap();
 				map.put("seq", vo.getSeq());
@@ -1122,7 +1120,7 @@ public class ItemController {
 
 	/**
 	 * 일괄 삭제
-	 * 
+	 *
 	 * @param procSeq
 	 * @param searchText
 	 * @param model
@@ -1174,7 +1172,7 @@ public class ItemController {
 
 	/**
 	 * 일괄 상태 변경
-	 * 
+	 *
 	 * @param procSeq
 	 * @param statusCode
 	 * @param searchText
@@ -1292,8 +1290,8 @@ public class ItemController {
 			} else if (vo.getSupplyPrice() > 0 && vo.getSupplyPrice() >= ivo.getSellPrice()) {
 				model.addAttribute("message", "공급가는 판매가 보다 클 수 없습니다.");
 				return Const.ALERT_PAGE;
-			} 
-			
+			}
+
 			if (vo.getSellPrice() > 0 && vo.getSellPrice() < ivo.getSupplyPrice() ) {
 				model.addAttribute("message", "판매가는 공급가보다 작을 수 없습니다.");
 				return Const.ALERT_PAGE;
@@ -1305,8 +1303,8 @@ public class ItemController {
 			} else if (vo.getMarketPrice() > 0 && vo.getMarketPrice() < ivo.getSellPrice()) {
 				model.addAttribute("message", "시중가는 판매가보다 작을 수 없습니다.");
 				return Const.ALERT_PAGE;
-			} 
-			
+			}
+
 			if (vo.getSellPrice() > 0 && vo.getSellPrice() > ivo.getMarketPrice() ) {
 				model.addAttribute("message", "판매가는 시중가보다 클 수 없습니다.");
 				return Const.ALERT_PAGE;
@@ -1332,7 +1330,7 @@ public class ItemController {
 		return Const.REDIRECT_PAGE;
 	}
 
-	/** 일괄 상품 복사하기 
+	/** 일괄 상품 복사하기
 	 * @throws IOException */
 	@CheckGrade(controllerName = "itemController", controllerMethod = "batchDuplicate")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
@@ -1344,7 +1342,7 @@ public class ItemController {
 			model.addAttribute("message", "대분류 카테고리의 입력이 잘못되었습니다");
 			return Const.ALERT_PAGE;
 		}
-		
+
 		// 이제 하나하나 넣는다
 		for (int i = 0; i < procSeq.length; i++) {
 			ItemVo ivo = new ItemVo();
@@ -1356,12 +1354,12 @@ public class ItemController {
 				model.addAttribute("message", "상품 시퀀스 생성에 실패하였습니다.");
 				return Const.ALERT_PAGE;
 			}
-			
+
 			vo.setCateLv1Seq(cateLv1Seq);
 			vo.setCateLv2Seq(cateLv2Seq);
 			vo.setCateLv3Seq(cateLv3Seq);
 			vo.setCateLv4Seq(cateLv4Seq);
-			
+
 			String realPath = Const.UPLOAD_REAL_PATH + "/item";
 			String errMsg = "";
 
@@ -1460,7 +1458,7 @@ public class ItemController {
 					propValList.add(String.valueOf(map.get("prop_val" + k)));
 				}
 			}
-			
+
 			ItemInfoNoticeVo pvo = new ItemInfoNoticeVo();
 			pvo.setItemSeq(vo.getSeq());
 			pvo.setPropValList(propValList);
@@ -2161,7 +2159,7 @@ public class ItemController {
 			message += " 상세정보=" + vo.getContent();
 			column += " 상세정보";
 		}
-	
+
 		column += " )";
 		ivo.setModContent(message);
 		ivo.setColumn(column);
@@ -2227,7 +2225,7 @@ public class ItemController {
 		ovo.setColumn(column);
 		return ovo;
 	}
-	
+
 	//상품 정보 request parameter 유효성 검증
 	private String checkReqParam(ItemVo vo, HttpSession session, String type) {
 		/* 입점업체 검증 */
@@ -2237,29 +2235,29 @@ public class ItemController {
 			//입점업체 로그인일 경우 세션값에서 입점업체명을 가져와 제조사 항목에 값을 셋팅한다.
 			/*vo.setMaker((String)session.getAttribute("loginName"));*/
 		}
-		
+
 		///if(vo.getSellerSeq() == null) {
 		//	return "입점업체가 선택되지 않았습니다.";
 		//}
-		
+
 		//SellerVo seller = sellerService.getVoSimple(vo.getSellerSeq());
 		//if(seller == null) {
 		//	return "입점업체가 존재하지 않습니다.";
 		//}
-		
+
 		/* 기본값 설정 */
 		//함께누리몰은 공급가가 존재하지 않으므로 판매가와 동일하게 설정한다.
 		vo.setSupplyPrice(0);
-		
+
 		//함께누리몰은 총판 공급가가존재하지 않으므로 입점업체 공급가와 동일하게 설정
 		vo.setSupplyMasterPrice(0);
-		
-		
+
+
 		// 받은 A/S 전화번호 합치기
 		if (!"".equals(vo.getAsTel1())	&& !"".equals(vo.getAsTel2())	&& !"".equals(vo.getAsTel3())) {
 			vo.setAsTel(vo.getAsTel1() + "-" + vo.getAsTel2() + "-"	+ vo.getAsTel3());
 		}
-		
+
 		/* 필수값 체크 */
 		/*if ("".equals(vo.getTypeCode())) {
 			return "상품타입은 반드시 입력되어야 합니다";
@@ -2288,7 +2286,7 @@ public class ItemController {
 		/* 금액 체크 */
 		if (vo.getMarketPrice() < 0) {
 			return "시중가는 음수 값이 될 수 없습니다";
-		} 
+		}
 		//if (vo.getSellPrice() <= 0) {
 		//	return "판매가는 0원 이하가 될 수 없습니다";
 		//}
@@ -2298,13 +2296,13 @@ public class ItemController {
 		if ("10".equals(vo.getDeliTypeCode()) && vo.getDeliCost() == 0) {
 			return "착불 일 때 배송비는 반드시 입력하여야 합니다";
 		}
-		
+
 		/* 금지어 검사 */
 		String validFilterErrMsg = validFilter(vo);
 		if (!"".equals(validFilterErrMsg)) {
 			return validFilterErrMsg;
-		} 
-		
+		}
+
 		return null;
 	}
 }

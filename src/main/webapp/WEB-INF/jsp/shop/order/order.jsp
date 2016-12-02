@@ -31,11 +31,11 @@
                         <colgroup>
                             <col width="8%"/>
                             <col width="*"/>
-                            <col width="10%"/>
+                            <col width="15%"/>
                             <col width="7%"/>
-                            <col width="12%"/>
-                            <col width="12%"/>
-                            <col width="12%"/>
+                            <col width="15%"/>
+                            <col width="15%"/>
+                            <col width="15%"/>
                         </colgroup>
                         <thead>
                         <tr>
@@ -43,7 +43,7 @@
                             <th>판매가</th>
                             <th>수량</th>
                             <th>상품 금액</th>
-                            <th>배송정보</th>
+                            <th></th>
                             <th>업체</th>
                         </tr>
                         </thead>
@@ -59,10 +59,10 @@
                                     </c:if>
                                 </td>
                                 <td class="text-left item-name">
-                                        ${item.name}
+                                    ${item.name}
                                     <c:if test="${item.estimateCount > 0}"> ( x ${item.estimateCount} 개 )</c:if>
                                     <br/>
-                                    <span class="option-name">${item.optionName}: ${item.valueName}</span><br/>
+                                    <span class="option-name">${item.valueName}</span><br/>
                                 </td>
                                 <td>
                                     <span><fmt:formatNumber value="${item.sellPrice}" pattern="#,###" />원</span>
@@ -74,31 +74,39 @@
                                     <fmt:formatNumber value="${rowSum}" pattern="#,###" />원
                                 </td>
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${item.deliCost == 0}">
-                                            <c:choose>
-                                                <c:when test="${item.packageDeliCost > 0}">무료<br/>(묶음배송 할인)</c:when>
-                                                <c:otherwise>
-                                                    무료
-                                                    <c:if test="${item.deliFreeAmount >0}">
-                                                        <br/><fmt:formatNumber value="${item.deliFreeAmount}" pattern="#,###" />원 이상 구매
-                                                    </c:if>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <fmt:formatNumber value="${item.deliCost}" pattern="#,###" />원
-                                            <c:choose>
-                                                <c:when test="${item.deliPrepaidFlag eq 'Y'}">
-                                                    <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice + item.deliCost}" />
-                                                    <br/>선결제
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <br/>착불
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <c:if test="${item.freeDeli == 'Y'}">
+                                        <span class="icon icon_txt icon_txt_gray"> 무료배송  </span>
+                                    </c:if>
+
+                                    <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
+                                        <span class="icon icon_txt icon_txt_yellow">  ${item.eventAdded}  </span>
+                                    </c:if>
+
+                                <%--<c:choose>--%>
+                                        <%--<c:when test="${item.deliCost == 0}">--%>
+                                            <%--<c:choose>--%>
+                                                <%--<c:when test="${item.packageDeliCost > 0}">무료<br/>(묶음배송 할인)</c:when>--%>
+                                                <%--<c:otherwise>--%>
+                                                    <%--무료--%>
+                                                    <%--<c:if test="${item.deliFreeAmount >0}">--%>
+                                                        <%--<br/><fmt:formatNumber value="${item.deliFreeAmount}" pattern="#,###" />원 이상 구매--%>
+                                                    <%--</c:if>--%>
+                                                <%--</c:otherwise>--%>
+                                            <%--</c:choose>--%>
+                                        <%--</c:when>--%>
+                                        <%--<c:otherwise>--%>
+                                            <%--<fmt:formatNumber value="${item.deliCost}" pattern="#,###" />원--%>
+                                            <%--<c:choose>--%>
+                                                <%--<c:when test="${item.deliPrepaidFlag eq 'Y'}">--%>
+                                                    <%--<c:set var="totalDeliveryPrice" value="${totalDeliveryPrice + item.deliCost}" />--%>
+                                                    <%--<br/>선결제--%>
+                                                <%--</c:when>--%>
+                                                <%--<c:otherwise>--%>
+                                                    <%--<br/>착불--%>
+                                                <%--</c:otherwise>--%>
+                                            <%--</c:choose>--%>
+                                        <%--</c:otherwise>--%>
+                                    <%--</c:choose>--%>
                                 </td>
                                 <td>
                                     ${item.sellerName}

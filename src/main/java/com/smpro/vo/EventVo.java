@@ -89,6 +89,29 @@ public class EventVo extends PagingVo {
 
 	private String maker = "";
 
+	/** item free deli & event added **/
+	/** 이벤트 추가 */
+	private String eventAdded;
+
+	/** 무료 배송 여부 */
+	private String freeDeli = "N";
+
+	public String getEventAdded() {
+		return eventAdded;
+	}
+
+	public void setEventAdded(String eventAdded) {
+		this.eventAdded = eventAdded;
+	}
+	public String getFreeDeli() {
+		return freeDeli;
+	}
+
+	public void setFreeDeli(String freeDeli) {
+		this.freeDeli = freeDeli;
+	}
+
+
 	@Override
 	public String getSearch() {
 		// TODO Auto-generated method stub

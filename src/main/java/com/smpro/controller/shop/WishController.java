@@ -109,17 +109,40 @@ public class WishController extends MyPage {
 
 	/** 장바구니 등록 */
 	@RequestMapping("/wish/cart/proc")
-	public String regCart(@RequestParam Integer[] wishSeq, Model model) {
+	public String regCart(@RequestParam Integer[] wishSeq,HttpSession session,  Model model) {
 		List<ItemVo> list = new ArrayList<>();
 		for(int i=0; i<wishSeq.length; i++) {
 			ItemVo vo = wishService.getData(wishSeq[i]);
 			list.add(vo);
 		}
 
-		for(int i=0; i<list.size(); i++){
-			list.get(i).setDirectFlag("N");
-			list.get(i).setCount(1);
-			cartService.insertVo(list.get(i));
+		ItemVo vo = new ItemVo();
+		vo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
+		List<ItemVo> cartList = cartService.getList(vo);
+
+		System.out.println(">>>> cartList.size():"+cartList.size());
+		for(ItemVo wish:list){
+			wish.setDirectFlag("N");
+			if(cartList.size()>0) {
+				for (ItemVo cart : cartList) {
+					System.out.println(">>>> wish.getItemSeq():"+wish.getItemSeq());
+					System.out.println(">>>> cart.getItemSeq():"+cart.getItemSeq());
+					System.out.println(">>>> wish.getOptionValueSeq():"+wish.getOptionValueSeq());
+					System.out.println(">>>> cart.getOptionValueSeq():"+cart.getOptionValueSeq());
+					if ((wish.getItemSeq() == cart.getItemSeq()) &&
+							(wish.getOptionValueSeq() == cart.getOptionValueSeq())) {
+						cart.setCount(cart.getCount() + 1);
+						cartService.updateVo(cart);
+					} else {
+						wish.setCount(1);
+						cartService.insertVo(wish);
+					}
+				}
+			}
+			else {
+				wish.setCount(1);
+				cartService.insertVo(wish);
+			}
 		}
 
 		model.addAttribute("message", "장바구니에 등록 되었습니다.");

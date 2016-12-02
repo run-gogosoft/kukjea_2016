@@ -108,7 +108,7 @@ button.btn_gray {min-width:100px; height:32px; line-height:normal !important;}
 button.btn_lightgray {min-width:100px; height:32px; line-height:normal !important;} 
 button.btn_blue {height:32px; line-height:normal !important;} 
 button.btn.btn_sm {height:30px;}
-button.btn.btn_xs {height:24px;}
+button.btn.btn_xs {height:30px;}
 
 .btn_gray.active {border-color:#585b61; background:#343f5c; color:#fff;}
 

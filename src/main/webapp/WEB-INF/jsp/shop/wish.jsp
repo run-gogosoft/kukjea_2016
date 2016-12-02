@@ -34,6 +34,7 @@
                         <tr>
                             <th><input type="checkbox" id="allChk" onclick="WishUtil.checkProc(this)"/></th>
                             <th colspan="2">상품정보</th>
+                            <th></th>
                             <th>판매가</th>
                             <th>업체</th>
                             <th>선택</th>
@@ -69,6 +70,10 @@
                                         <span class="option-name">${item.optionName}: ${item.valueName}</span><br/>
                                         </a>
                                     </td>
+                                <td>
+                                    <span class="icon icon_txt icon_txt_gray">무료배송</span><br/>
+                                    <span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>
+                                </td>
 
                                 <td class="item-price">
                                     <fmt:formatNumber value="${ item.sellPrice }" pattern="#,###"/>원

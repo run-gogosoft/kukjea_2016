@@ -125,6 +125,7 @@
                             <col width="10%"/>
                             <col width="10%"/>
                             <col width="15%"/>
+                            <col width="15%"/>
                             <col width="10%"/>
                         </colgroup>
                         <thead>
@@ -134,6 +135,7 @@
                             <th>수량</th>
                             <th>주문금액</th>
                             <th>업체</th>
+                            <th></th>
                             <th>배송정보</th>
                         </tr>
                         </thead>
@@ -157,6 +159,15 @@
                                     <fmt:formatNumber value="${(item.sellPrice)*item.orderCnt}"/>원
                                 </td>
                                 <td>${item.sellerName}</td>
+                                <td>
+                                    <%--<c:if test="${item.freeDeli == 'Y'}">--%>
+                                        <span class="icon icon_txt icon_txt_gray"> 무료배송  </span>
+                                    <%--</c:if>--%>
+                                    <%--<c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">--%>
+                                        <%--<span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>--%>
+                                            <span class="icon icon_txt icon_txt_yellow"> 10+1 </span>
+                                    <%--</c:if>--%>
+                                </td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${vo.payMethod eq 'OFFLINE' or fn:startsWith(vo.payMethod,'NP')}">

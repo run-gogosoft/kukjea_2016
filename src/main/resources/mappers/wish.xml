@@ -8,6 +8,8 @@
 			w.member_seq AS memberSeq,
 			w.item_seq AS itemSeq,
 			w.option_value_seq AS optionValueSeq,
+			ov.free_deli AS freeDeli,
+	  		ov.event_added AS eventAdded,
 			w.deli_prepaid_flag AS deliPrepaidFlag,
 			(SELECT value_name FROM sm_item_option_value WHERE seq=w.option_value_seq) AS optionName,
 			(SELECT stock_cnt FROM sm_item_option_value WHERE seq=w.option_value_seq) AS stockCount,

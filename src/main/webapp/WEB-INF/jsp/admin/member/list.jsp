@@ -48,7 +48,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label">회원 구분</label>
+								<label class="col-md-2 control-label">회원 등급</label>
 								<div class="col-md-2">
 									<select class="form-control" name="memberTypeCode">
 										<option value="">---전체---</option>

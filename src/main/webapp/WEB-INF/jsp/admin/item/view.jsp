@@ -40,7 +40,7 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">주요 정보</h3>
 						<div class="pull-right">
-						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3) or sessionScope.loginType eq 'S'}">
+						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3) }">
 							<%--관리자, 입점업체일 경우에만 노출 --%>
 							<a href="/admin/item/form/${vo.seq}" onclick="location.href='/admin/item/form/${vo.seq}?pageNum=${pageNum}&search='+encodeURIComponent('${param.search}');return false;" class="btn btn-sm btn-primary">수정하기</a>
 						</c:if>
@@ -356,10 +356,14 @@
 									<td class="text-center">${item.freeDeli}</td>
 									<td class="text-center">${item.eventAdded}</td>
 									<%--<td class="text-center">${item.stockFlag eq "Y" ? "재고관리":"재고관리 안함" }</td>--%>
+
 									<td class="text-center">
-										<button type="button" class="btn btn-sm btn-default" onclick="EBOption.showUpdateOptionValueModal(this, '${item.seq}')">수정</button>
-										<button type="button" class="btn btn-sm btn-danger" onclick="EBOption.showDeleteOptionValueModal(this, '${item.seq}')">삭제</button>
+										<c:if test="${ sessionScope.loginType eq 'S'}">
+											<button type="button" class="btn btn-sm btn-default" onclick="EBOption.showUpdateOptionValueModal(this, '${item.seq}')">수정</button>
+											<button type="button" class="btn btn-sm btn-danger" onclick="EBOption.showDeleteOptionValueModal(this, '${item.seq}')">삭제</button>
+										</c:if>
 									</td>
+
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(optionList)==0 }">

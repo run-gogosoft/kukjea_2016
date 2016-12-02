@@ -31,6 +31,7 @@
                                 <th>상품 금액</th>
                                 <th>업체</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody id="cartBody">
@@ -89,7 +90,8 @@
 
                     <%="${name}"%><br/>
                     <span class="option-name">
-                        <%="${optionName}"%>{{if optionName !== ''}} : {{/if}}<%="${valueName}"%>
+                        <%--<%="${optionName}"%>{{if optionName !== ''}} : {{/if}}<%="${valueName}"%>--%>
+                        <%="${valueName}"%>
                     </span><br/>
                     <input type="hidden" name="stockCount" value="<%="${stockCount}"%>"/>
                     <input type="hidden" name="stockFlag" value="<%="${stockFlag}"%>"/>
@@ -113,6 +115,10 @@
         </td>
         <td>
             <%="${sellerName}"%>
+        </td>
+        <td>
+            {{if freeDeli==="Y"}}<span class="icon icon_txt icon_txt_gray">무료배송</span>{{/if}}
+            {{if eventAdded !="" && eventAdded !=" " && eventAdded !="0"}}<span class="icon icon_txt icon_txt_yellow"><%="${eventAdded}"%></span>{{/if}}
         </td>
         <td>
             <div class="item-delete" remove-value="<%="${seq}"%>" style="cursor:pointer" onclick="Cart.oneRemoveSelected(this)">

@@ -118,8 +118,8 @@
 									<span class="thumb">
 										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="이벤트상품" />
 										<span class="icons">
-											<!--span class="icon icon_txt icon_txt_gray">무료배송</span-->
-											<!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
+											<%--<span class="icon icon_txt icon_txt_gray">${itemList.freeDeli}</span>--%>
+											<%--<span class="icon icon_txt icon_txt_yellow">${itemList.eventAdded}</span>--%>
 											<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 												<span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
 											</c:if>

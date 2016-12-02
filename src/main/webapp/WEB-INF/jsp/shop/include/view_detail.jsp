@@ -35,6 +35,7 @@
             </thead>
             <tbody class="optionList">
             {{each optionList}}
+
             <tr class="optionItem">
                 <td>
                     <input type="radio" class="radio" title="상품 선택" name="goods" value="<%="${optionSeq}"%>" onclick="PriceLB.changeProc(this);PriceLB.calcOrderAmt();" data-option-value="<%="${seq}"%>" data-option-price="<%="${optionPrice}"%>" data-stock-count="<%="${stockCount}"%>" data-stock-flag="<%="${stockFlag}"%>"/>
@@ -43,7 +44,7 @@
                 <td>
                     <span class="icons">
                         {{if freeDeli =='Y'}}<span class="icon icon_txt icon_txt_gray">무료배송</span>{{/if}}
-                        {{if eventAdded !=''}}<span class="icon icon_txt icon_txt_yellow"><%="${eventAdded}"%></span>{{/if}}
+                        {{if eventAdded !='' && eventAdded !=' ' && eventAdded !='0'}}<span class="icon icon_txt icon_txt_yellow"><%="${eventAdded}"%></span>{{/if}}
                         {{if salePercent <100 && salePercent >0}}<span class="icon icon_txt icon_txt_red"><%="${salePercent}"%>%</span>{{/if}}
                     </span>
                 </td>
@@ -57,6 +58,7 @@
                     <input type="text" class="intxt wfull" title="수량 입력" value="1" />
                 </td>
             </tr>
+
             {{/each}}
             </tbody>
         </table>

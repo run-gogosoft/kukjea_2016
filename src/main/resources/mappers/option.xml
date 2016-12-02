@@ -30,6 +30,7 @@
 		ON A.seq=B.option_seq
 		WHERE 1=1
 		AND item_seq=#{value}
+		AND stock_flag='Y'
 		ORDER BY A.seq ASC, B.seq ASC
 	</select>
 
@@ -70,6 +71,7 @@
 		FROM sm_item_option_value
 		WHERE 1=1
 		AND option_seq=#{value}
+		AND stock_flag='Y'
 		ORDER BY seq ASC
 	</select>
 

@@ -93,7 +93,7 @@
                                     <option value="type" <c:if test="${itemSearchVo.itemSearchType eq 'type'}">selected</c:if>>규격</option>
                                 </select>
 
-                                <input class="form-control" type="text" id="itemSearchValue" name="itemSearchValue" value="${itemSearchVo.itemSearchValue}" maxlength="20"/>
+                                <input class="intxt"  type="text" id="itemSearchValue" name="itemSearchValue" value="${itemSearchVo.itemSearchValue}" maxlength="20"/>
 
                             <button type="submit" class="btn btn_gray btn_xs">검색</button>
                         </div>
@@ -183,7 +183,8 @@
                                     <c:forEach var="item" items="${list}">
                                         <tr data-seq="${item.seq}">
                                             <td><input type="checkbox" class="check" title="상품 선택" /></td>
-                                            <c:if test="${itemSearchVo.listStyle eq 'all'}"><td>
+                                            <c:if test="${itemSearchVo.listStyle eq 'all'}">
+                                                <td>
                                                 <a href="/shop/detail/${item.seq}" onclick="view(${item.seq});return false;">
                                                 <span class="thumb">
                                                     <img src="/upload${fn:replace(item.img1, 'origin', 's60')}" alt="" onerror="noImage(this)" />
@@ -197,7 +198,7 @@
                                             </td>
                                             <td>
                                                 <%--<c:if test="${item.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>--%>
-                                                <%--<span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>--%>
+                                                <%--<c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:if>--%>
                                                 <c:if test="${item.salePercent <100 && item.salePercent >0 }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                             </td>
                                             <td class="text-center">

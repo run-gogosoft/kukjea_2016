@@ -1,10 +1,7 @@
 package com.smpro.controller.admin;
 
 import com.smpro.component.admin.annotation.CheckGrade;
-import com.smpro.service.FilenameService;
-import com.smpro.service.ItemService;
-import com.smpro.service.SellerService;
-import com.smpro.service.SystemService;
+import com.smpro.service.*;
 import com.smpro.util.*;
 import com.smpro.vo.*;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +41,12 @@ public class SellerController {
 
 	@Autowired
 	private FilenameService filenameService;
+
+	@Autowired
+	private ItemOptionService itemOptionService;
+
+	@Autowired
+	private MemberService memberService;
 	
 	/** 총판/입점업체 리스트 */
 	@CheckGrade(controllerName = "sellerController", controllerMethod = "getList")
@@ -405,7 +408,7 @@ public class SellerController {
 	
 	/** 승인/폐점 처리 */
 	@RequestMapping(value = "/seller/status/update")
-	public String updateStatus(HttpSession session, SellerVo vo, Model model) {
+	public String updateStatus(HttpSession session, SellerVo vo, Model model) throws Exception{
 		boolean flag = false;
 		try {
 			flag = sellerService.updateStatus(vo);
@@ -413,35 +416,60 @@ public class SellerController {
 			e.printStackTrace();
 			flag = false;
 		}
-		
+		System.out.println(">>>seller updateStatus, flag:"+flag);
 		//폐점처리일 경우 상품 판매중지 처리
-		if(flag && "X".equals(vo.getStatusCode())) {
+		if(flag) {
 			ItemVo pvo = new ItemVo();
-			pvo.setSellerSeq(vo.getSeq());
-			List<ItemVo> originList = itemService.getListForSelling(pvo);
-			
+			pvo.setLoginType((String) session.getAttribute("loginType"));
+			pvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
+			//pvo.setSellerSeq(vo.getSeq()); : 모든 상품을 검사해야한다.
+
+			pvo.setRowCount(itemService.getListTotalCount(pvo));
+
+			List<ItemVo> originList = itemService.getList(pvo);
+
+			MemberVo memger  = memberService.getData(vo.getSeq());
+			String loginName = memger.getName();
+			System.out.println(">>>seller updateStatus,seller:"+loginName+", vo.getSeq():"+vo.getSeq());
+			System.out.println(">>>seller updateStatus,originList size:"+originList.size());
 			if(originList != null) {
 				for(int i=0; i<originList.size(); i++) {
-					ItemVo originVo = originList.get(i); 
-					
-					ItemVo paramVo = new ItemVo();
-					paramVo.setSeq(originVo.getSeq());
-					paramVo.setStatusCode("N");
-					itemService.updateStatusCode(paramVo);
-					
-					String message = getLogMessage(originVo);
-					if(!"".equals(message)) {
-						// 로그 이력 생성
-						ItemLogVo logVo = new ItemLogVo();
-						logVo.setItemSeq(originVo.getSeq());
-						logVo.setAction("업체 폐점 처리");
-						logVo.setContent("statusCode="+paramVo.getStatusCode());
-						logVo.setModContent(message);
-						logVo.setLoginSeq(Integer.valueOf(String.valueOf(session.getAttribute("loginSeq"))));
-						logVo.setLoginType(String.valueOf(session.getAttribute("loginType")));
-						itemService.insertLogVo(logVo);
+					ItemVo originVo = originList.get(i);
+					//해당 item의 seller option value를 가져왓 값을 수정한다.
+					List<ItemOptionVo> list = itemOptionService.getOptionList(originVo.getSeq());
+
+					for (ItemOptionVo optionVo : list) {
+						Map map = new HashMap();
+						map.put("seq", optionVo.getSeq());
+						map.put("loginName",loginName);
+						List<ItemOptionVo> optionVoList = itemOptionService.getValueListForSeller(map);
+						System.out.println(">>>seller updateStatus,seq:"+originVo.getSeq()+", optionVoList size:"+optionVoList.size());
+						for(ItemOptionVo optionValueVo:optionVoList){
+							optionValueVo.setStockFlag(("X".equals(vo.getStatusCode()))? "N":"Y");
+							optionValueVo.toString();
+							itemOptionService.updateValueVo(optionValueVo);
+						}
 					}
+
+//					ItemVo paramVo = new ItemVo();
+//					paramVo.setSeq(originVo.getSeq());
+//					paramVo.setStatusCode("N");
+//					itemService.updateStatusCode(paramVo);
 					
+//					String message = getLogMessage(originVo);
+//					System.out.println(">>>seller updateStatus,message:"+message);
+//					if(!"".equals(message)) {
+//						// 로그 이력 생성
+//						ItemLogVo logVo = new ItemLogVo();
+//						logVo.setItemSeq(originVo.getSeq());
+//						logVo.setAction(("X".equals(vo.getStatusCode()))? "업체 폐점 처리":"업체 입점처리");
+////						logVo.setContent("statusCode="+paramVo.getStatusCode());
+//						logVo.setContent("["+loginName+"] 옵션값 stock_flag N 처리적용");
+//						logVo.setModContent(message);
+//						logVo.setLoginSeq(Integer.valueOf(String.valueOf(session.getAttribute("loginSeq"))));
+//						logVo.setLoginType(String.valueOf(session.getAttribute("loginType")));
+//						itemService.insertLogVo(logVo);
+//					}
 				}
 			}
 		}

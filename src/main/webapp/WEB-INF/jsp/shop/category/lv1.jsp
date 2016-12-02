@@ -68,7 +68,7 @@
                             </select>
 
 
-                            <input class="form-control" type="text" id="itemSearchValue" name="itemSearchValue" value="${vo.itemSearchValue}" maxlength="20"/>
+                            <input class="intxt"   type="text" id="itemSearchValue" name="itemSearchValue" value="${vo.itemSearchValue}" maxlength="20"/>
                             <button type="submit" class="btn btn_gray btn_xs">검색</button>
                         </div>
 
