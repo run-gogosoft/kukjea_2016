@@ -40,6 +40,16 @@ public class MemberDeliveryVo {
 	/** 검색조건 */
 	private String search = "";
 	private String findword = "";
+	//이메일 정보
+	private String email = "";
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	public Integer getSeq() {
 		return seq;

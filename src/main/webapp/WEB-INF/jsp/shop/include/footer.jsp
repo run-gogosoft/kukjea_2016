@@ -18,7 +18,9 @@
 	<p class="address">(우) 06949, 서울시 동작구 상도로 15길 83 (상도동, 영우사빌딩제비1호) 국제메디팜 대표이사 최태봉</p>
 	<p class="address"> 사업자 등록번호 : 108-20-93951 | 통신판매업신고 : 제2016-서울동작-0254호</p>
 	<p class="address"> 개인정보보호 책임자 최태봉 | 전화 : 070-4693-1971 | FAX : 02-3280-8007 | kukjea@empal.com</p>
+	<p class="account"> 무통장입금 계좌 [ KB국민은행:029301-04-193023  |  예금주: 국제메디팜 최태봉 ] </p>
 	<p class="copyright">Copyright Kukjemedipharm. All right reserved</p>
+	<p class="escrow_logo"><a href="/pg/lguplus/escrow.html" target="_blank" ><img src="/images/common/escrow_logo.jpg" alt="국제몰" /></a></p>
 
 </div>
 

@@ -24,6 +24,7 @@
 	, "addr1" : "${item.addr1}"
 	, "addr2" : "${item.addr2}"
 	, "defaultFlag" : "${item.defaultFlag}"
+	, "email": "${item.email}"
 	}
 </c:forEach>
 ]

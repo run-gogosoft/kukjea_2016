@@ -811,7 +811,8 @@ public class MyPageController extends MyPage {
 		model.addAttribute("date1", pvo.getSearchDate1());
 		model.addAttribute("date2", pvo.getSearchDate2());
 
-		return "/mypage/review.jsp";
+		model.addAttribute("returnUrl","/shop/mypage/order/list");
+		return Const.REDIRECT_PAGE;
 	}
 
 	/**
@@ -1435,6 +1436,7 @@ public class MyPageController extends MyPage {
 		String cell = vo.getReceiverCell();
 		String tel = vo.getReceiverTel();
 		String addr2 = vo.getReceiverAddr2();
+		String email = vo.getReceiverEmail();
 
 		if(!orderService.updateAddr(vo)){
 			model.addAttribute("result", "false");
@@ -1446,6 +1448,7 @@ public class MyPageController extends MyPage {
 		vo.setReceiverCell(cell);
 		vo.setReceiverTel(tel);
 		vo.setReceiverAddr2(addr2);
+		vo.setReceiverEmail(email);
 		model.addAttribute("vo", vo);
 		return "/ajax/get-deli-addr.jsp";
 	}

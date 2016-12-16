@@ -4,6 +4,7 @@ import com.smpro.service.MemberDeliveryService;
 import com.smpro.service.OrderService;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
+import com.smpro.util.crypt.CrypteUtil;
 import com.smpro.vo.MemberDeliveryVo;
 import com.smpro.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,9 @@ public class MyPageDeliveryController extends MyPage {
 			return Const.ALERT_PAGE;
 		} else if(StringUtil.isBlank(vo.getAddr1()) || StringUtil.isBlank(vo.getAddr2())) {
 			model.addAttribute("message", "주소를 입력해주세요");
+			return Const.ALERT_PAGE;
+		} else if(StringUtil.isBlank(vo.getEmail())) {
+			model.addAttribute("message", "이메일 주소를 입력해주세요");
 			return Const.ALERT_PAGE;
 		}
 
@@ -224,6 +228,14 @@ public class MyPageDeliveryController extends MyPage {
 					tmpVo.setCell3(tmp[2]);
 				}
 			}
+
+//			try {
+//				tmpVo.setEmail(CrypteUtil.encrypt(tmpVo.getEmail(), Const.ARIA_KEY, Const.ARIA_KEY.length * 8, null));
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				model.addAttribute("message", "암호화 처리 중 오류가 발생했습니다.");
+//				return Const.ALERT_PAGE;
+//			}
 		}
 		model.addAttribute("list", list);
 		return "/ajax/get-delivery-list.jsp";

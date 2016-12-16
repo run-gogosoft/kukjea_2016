@@ -26,7 +26,7 @@ public class OrderStatsDaoImpl implements OrderStatsDao {
 
 	@Override
 	public List<OrderVo> getListByCategoryDetail(OrderVo vo) {
-		return sqlSession.selectOne("order_stats.getListByCategoryDetail", vo);
+		return sqlSession.selectList("order_stats.getListByCategoryDetail", vo);
 	}
 
 	@Override

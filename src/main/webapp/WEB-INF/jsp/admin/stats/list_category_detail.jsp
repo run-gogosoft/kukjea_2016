@@ -90,7 +90,7 @@
 										<div class="text-danger">취소 일자</div>
 									</th>
 									<th>기관 구분</th>
-									<th>기관명</th>
+									<th>공급자</th>
 									<th>
 										부서명
 										<div class="text-warning">직책</div>
@@ -120,7 +120,7 @@
 										<div class="text-danger">${fn:substring(item.c99Date,0,10)}</div>
 									</td>
 									<td class="text-center">${item.investFlag eq 'Y' ? '투자출연기관':'공공기관'}</td>
-									<td>${item.groupName}</td>
+									<td>${item.optionValue}</td>
 									<td>
 										${item.deptName}
 										<div class="text-warning">${item.posName}</div>

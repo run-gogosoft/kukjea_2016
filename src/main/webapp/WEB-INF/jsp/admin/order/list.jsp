@@ -107,10 +107,11 @@
 								<col style="width:7%;"/>
 								<col style="width:*"/>
 								<col style="width:*"/>
-								<col style="width:6%"/>
+								<col style="width:4%"/>
 								<col style="width:5%"/>
 								<col style="width:5%"/>
 								<col style="width:6%"/>
+								<col style="width:7%"/>
 								<col style="width:10%;"/>
 								<col style="width:8%"/>
 							</colgroup>
@@ -145,6 +146,7 @@
 									</th>
 									<th>합계</th>
 									<th>배송비</th>
+									<th>이벤트</th>
 									<th>송장번호</th>
 									<th>
 										<div class="text-primary">입점업체명</div>
@@ -208,10 +210,7 @@
 										<span class="text-primary">${item.receiverName}</span>
 									</td>
 									<td>
-
-										<%-- <div>상품번호 : <a href="/admin/item/view/${item.itemSeq}" target="_blank"><strong>${item.itemSeq}</strong></a></div> --%>
-										<%-- <c:if test="${item.sellerItemCode ne ''}">업체상품번호 : <span class="text-warning"><strong>${item.sellerItemCode}</strong></span><br/></c:if> --%>
-										${item.itemName}
+										${item.itemName}</br>
 										<div class="text-primary">${item.taxName}</div>
 									</td>
 									<td>${item.optionValue}</td>
@@ -223,12 +222,14 @@
 									<td class="text-right"><fmt:formatNumber value="${((item.sellPrice) * item.orderCnt)}"/></td>
 									<td class="text-right">
 										<c:choose>
-											<c:when test="${item.deliCost eq 0}">무료</c:when>
-											<c:otherwise>
-												<fmt:formatNumber value="${item.deliCost}"/>
-												<c:if test="${item.deliPrepaidFlag eq 'Y'}"><br/>선결제</c:if>
-												<c:if test="${item.deliPrepaidFlag eq 'N'}"><br/>착불</c:if>
-											</c:otherwise>
+											<c:when test="${item.freeDeli eq 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:when>
+											<c:otherwise><span class="icon icon_txt icon_txt_gray">착불</span></c:otherwise>
+										</c:choose>
+									</td>
+									<td class="text-right">
+										<c:choose>
+											<c:when test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:when>
+											<c:otherwise><span class="icon icon_txt icon_txt_yellow">이벤트없음</span></c:otherwise>
 										</c:choose>
 									</td>
 									<td>
@@ -248,7 +249,7 @@
 								<c:set var="i" value="${i+1}"/>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">
-								<tr><td class="text-center" colspan="15">등록된 내용이 없습니다.</td></tr>
+								<tr><td class="text-center" colspan="16">등록된 내용이 없습니다.</td></tr>
 							</c:if>
 							</tbody>
 						</table>

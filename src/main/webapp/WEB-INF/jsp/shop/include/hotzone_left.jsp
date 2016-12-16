@@ -8,5 +8,6 @@
         <li <c:if test="${on eq '04'}">class="on"</c:if>><a href="/shop/event/plan/plansub/4">관심 상품 BEST</a></li>
         <li <c:if test="${on eq '05'}">class="on"</c:if>><a href="/shop/event/plan/plansub/1">오늘만 이가격</a></li>
         <li <c:if test="${on eq '06'}">class="on"</c:if>><a href="/shop/event/plan/plansub/5">최근 신규상품</a></li>
+        <li <c:if test="${on eq '07'}">class="on"</c:if>><a href="/shop/event/plan/plansub/19">인기 구매 상품 100</a></li>
 </ul>
 </div>

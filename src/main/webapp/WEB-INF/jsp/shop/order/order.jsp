@@ -185,7 +185,7 @@
                                             <input type="text" class="intxt w180" name="memberEmail" value="<smp:decrypt value="${sessionScope.loginEmail}"/>" maxlength="100" placeholder="example@example.com" alt="이메일" readonly/>
                                         </c:when>
                                         <c:otherwise>
-                                            <input type="text" class="intxt w180" name="memberEmail" value="${memberVo.email}" maxlength="100" placeholder="example@example.com" alt="이메일"/>
+                                            <input type="text" class="intxt w180" name="memberEmail" value="${memberVo.email1}@${memberVo.email2}" maxlength="100" placeholder="example@example.com" alt="이메일"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -242,7 +242,7 @@
                             <tr>
                                 <th scope="row"><label>이메일</label></th>
                                 <td>
-                                    <input type="text" class="intxt w180" name="receiverEmail" value="" maxlength="100" placeholder="example@example.com" data-name="email" />
+                                    <input type="text" class="intxt w180" name="receiverEmail" value="" maxlength="100" placeholder="example@example.com" data-name="email1" />
                                 </td>
                             </tr>
                             <tr>

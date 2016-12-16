@@ -347,7 +347,7 @@ public class ItemExcelController {
 				} else {
 					// 존재하는 아이템인 경우. 수정
 					itemService.updateVo(list.get(i));
-					itemService.updateDetailVo(list.get(i));
+					//itemService.updateDetailVo(list.get(i));
 
 					// 로그 (이력)
 					lvo.setAction("수정");

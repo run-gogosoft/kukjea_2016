@@ -65,9 +65,11 @@ public class EventServiceImpl implements EventService {
 
 	public List<EventVo> getItemList(EventVo vo) {
 		List<EventVo> eventItemListVo = eventDao.getItemList(vo);
-		for (int i = 0; i < eventItemListVo.size(); i++) {
-			eventItemListVo.get(i).setItemName(
-					StringUtil.cutString(eventItemListVo.get(i).getItemName(),
+		for (EventVo event:eventItemListVo) {
+			System.out.println(">>>event.getFreeDeli:"+event.getFreeDeli());
+			System.out.println(">>>event.getEventAdded:"+event.getEventAdded());
+			event.setItemName(
+					StringUtil.cutString(event.getItemName(),
 							100));
 		}
 		return eventItemListVo;

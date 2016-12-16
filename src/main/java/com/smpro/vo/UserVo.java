@@ -420,10 +420,10 @@ public class UserVo extends PagingVo {
 		this.controllerDescription = controllerDescription;
 	}
 
-	
+
 	public String getEmail() {
 		if(email != null) {
-			email = email.trim(); 
+			email = email.trim();
 		}
 		return email;
 	}

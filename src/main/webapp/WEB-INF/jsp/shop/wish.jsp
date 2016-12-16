@@ -71,8 +71,9 @@
                                         </a>
                                     </td>
                                 <td>
-                                    <span class="icon icon_txt icon_txt_gray">무료배송</span><br/>
-                                    <span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>
+
+                                    <c:if test="${item.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송</span><br/></c:if>
+                                    <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:if>
                                 </td>
 
                                 <td class="item-price">

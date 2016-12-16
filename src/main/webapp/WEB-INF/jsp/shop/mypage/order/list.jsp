@@ -43,7 +43,7 @@
                             <col width="*"/>
                             <col width="10%"/>
                             <col width="5%"/>
-                            <%--<col width="10%"/>--%>
+                            <col width="10%"/>
                             <col width="10%"/>
                             <col width="10%"/>
                         </colgroup>
@@ -54,7 +54,7 @@
                             <th colspan="2">상품정보</th>
                             <th>상품 금액</th>
                             <th>수량</th>
-                            <%--<th>비교견적</th>--%>
+                            <th>이벤트</th>
                             <th>배송정보</th>
                             <th>확인/취소</th>
                         </tr>
@@ -71,8 +71,8 @@
                                         <input type="hidden" name="detailSeq" value="${vo.seq}"/>
 
                                         <div class="ch-writebox-item-info">
-                                            <img src="/upload${fn:replace(vo.img1, '/origin/', '/s60/')}" style="display:inline-block;width:70px;height:70px;border:1px solid #CCC;" alt="" />
-                                            <div style="height:120px;display:inline-block;margin-left:18px;">
+                                            <img src="/upload${fn:replace(vo.img1, '/origin/', '/s110/')}" style="display:inline-block;width:110px;height:110px;border:1px solid #CCC;" alt="" />
+                                            <div style="height:120px;display:inline-block;margin-left:25px;">
                                                 <span class="ch-item-name">${vo.itemName}</span><br/>
                                                 <span class="ch-item-value-name">
                                                     <c:if test="${vo.valueName ne ''}">
@@ -125,10 +125,10 @@
                                         </div>
 
                                         <div class="hh-writebox-answer">
-                                            <div class="input-group" style="height: 260px;">
-                                                <span class="input-group-addon" style="width: 154px; height:260px; line-height:200px;"><p>상품후기</p></span>
+                                            <div class="input-group" style="width: 260px;">
+                                                <span class="input-group-addon"><p>상품후기</p></span>
                                                 <!-- <span id="contentLength" style="color:#00bff3;">0</span>&nbsp;/&nbsp;<span style="font-size:12px;">500자</span></span> -->
-                                                <textarea id="reviewContent" class="form-control" name="review" style="display:inline-block; height: 260px; resize: none;" alt="상품후기"></textarea>
+                                                <textarea id="reviewContent" class="form-control" name="review"  style="width:500px; height: 210px;" alt="상품후기"></textarea>
                                             </div>
                                         </div>
 
@@ -175,7 +175,7 @@
                                 <fmt:formatNumber value="${(vo.sellPrice)*vo.orderCnt}"/>원
                             </td>
                             <td>${vo.orderCnt}</td>
-                            <%--<td>--%>
+                            <td>
                                 <%--<c:choose>--%>
                                     <%--<c:when test="${vo.estimateCompareCnt > 0}">완료</c:when>--%>
                                     <%--<c:otherwise>--%>
@@ -183,20 +183,29 @@
                                     <%--</c:otherwise>--%>
                                 <%--</c:choose>--%>
                             <%--</td>--%>
+                                <c:choose>
+                                    <c:when test="${vo.eventAdded ne '0' and vo.eventAdded ne '' and vo.eventAdded ne ' '}">
+                                        ${vo.eventAdded}
+                                    </c:when>
+                                    <c:otherwise>
+                                       이벤트 없음
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${vo.deliCost eq 0}">
-                                        무료
+                                    <c:when test="${vo.freeDeli eq 'Y'}">
+                                        무료배송
                                     </c:when>
                                     <c:otherwise>
                                         <fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
                                         <br/>
-                                        <c:if test="${vo.deliPrepaidFlag eq 'Y'}">
+                                        <%--<c:if test="${vo.deliPrepaidFlag eq 'Y'}">--%>
                                             선결제
-                                        </c:if>
-                                        <c:if test="${vo.deliPrepaidFlag eq 'N'}">
-                                            착불
-                                        </c:if>
+                                        <%--</c:if>--%>
+                                        <%--<c:if test="${vo.deliPrepaidFlag eq 'N'}">--%>
+                                            <%--착불--%>
+                                        <%--</c:if>--%>
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -280,7 +289,6 @@
                 <input type="hidden" id="orderSeq" name="orderSeq" />
                 <input type="hidden" id="statusCode" name="statusCode" />
                 <input type="hidden" id="cancelType" name="cancelType" />
-
                 <script id="itemTemplate" type="text/html">
                     <img src="<%="${img1}"%>" style="display:inline-block;width:70px;height:70px;border:1px solid #d7d7d7;" alt="" />
                     <div class="item-info-wrap">

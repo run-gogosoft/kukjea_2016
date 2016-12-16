@@ -125,12 +125,9 @@ public class WishController extends MyPage {
 			wish.setDirectFlag("N");
 			if(cartList.size()>0) {
 				for (ItemVo cart : cartList) {
-					System.out.println(">>>> wish.getItemSeq():"+wish.getItemSeq());
-					System.out.println(">>>> cart.getItemSeq():"+cart.getItemSeq());
-					System.out.println(">>>> wish.getOptionValueSeq():"+wish.getOptionValueSeq());
-					System.out.println(">>>> cart.getOptionValueSeq():"+cart.getOptionValueSeq());
-					if ((wish.getItemSeq() == cart.getItemSeq()) &&
-							(wish.getOptionValueSeq() == cart.getOptionValueSeq())) {
+
+					if ((wish.getItemSeq().intValue() == cart.getItemSeq().intValue()) &&
+							(wish.getOptionValueSeq().intValue() == cart.getOptionValueSeq().intValue())) {
 						cart.setCount(cart.getCount() + 1);
 						cartService.updateVo(cart);
 					} else {

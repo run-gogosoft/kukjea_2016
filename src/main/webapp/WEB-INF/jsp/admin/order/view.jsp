@@ -128,6 +128,7 @@
 								<col style="width:5%;"/>
 								<col style="width:6%;"/>
 								<col style="width:6%;"/>
+								<col style="width:6%;"/>
 							</colgroup>
 							<thead>
 								<tr>
@@ -148,6 +149,7 @@
 									<th>옵션가</th>
 									<th>수량</th>
 									<th>배송비</th>
+									<th>이벤트</th>
 									<th>합계</th>
 								</tr>
 							</thead>
@@ -192,18 +194,30 @@
 									<td class="text-right">${vo.orderCnt}</td>
 									<td class="text-center">
 										<c:choose>
-											<c:when test="${vo.deliCost eq 0}">
+											<c:when test="${vo.freeDeli eq 'Y'}">
 												무료
 											</c:when>
 											<c:otherwise>
-												<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
+												<c:if test="${vo.deliCost > 0}">
+													<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
+												</c:if>
 												<br/>
 												<c:if test="${vo.deliPrepaidFlag eq 'Y'}">
 													선결제
 												</c:if>
-												<c:if test="${vo.deliPrepaidFlag eq 'N'}">
+												<c:if test="${vo.deliPrepaidFlag eq 'N' or vo.freeDeli ne 'Y'}">
 													착불
 												</c:if>
+											</c:otherwise>
+										</c:choose>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
+												<span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>
+											</c:when>
+											<c:otherwise>
+												<span class="icon icon_txt icon_txt_yellow">이벤트없음</span>
 											</c:otherwise>
 										</c:choose>
 									</td>
@@ -218,7 +232,7 @@
 								</tr>
 							</c:forEach>
 								<tr>
-									<th colspan="12">주문 합계 금액</th>
+									<th colspan="13">주문 합계 금액</th>
 									<td class="text-right"><fmt:formatNumber value="${total}"/></td>
 								</tr>
 							</tbody>

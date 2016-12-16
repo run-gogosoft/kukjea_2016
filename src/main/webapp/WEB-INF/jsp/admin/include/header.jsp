@@ -6,7 +6,9 @@
 <% pageContext.setAttribute("newLine","\n"); %>
 <% pageContext.setAttribute("carriageReturn","\r"); %>
 <meta charset="UTF-8">
-<title><c:if test="${title ne null}"> ${title} : </c:if> 국제몰 어드민</title>
+<title><c:if test="${title ne null}"> ${title} : </c:if> 국제몰어드민
+    <%--<c:if test="${sessionScope.loginType ne 'A'}">${sessionScope.loginName}</c:if>--%>
+</title>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <!-- Tell the browser to be responsive to screen width -->

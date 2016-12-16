@@ -31,6 +31,8 @@
 		"salesEmail":"${item.salesEmail}",
 		"regDate":"${fn:substring(item.regDate,0,10)}",
 		"deliPrepaidFlag":"${item.deliPrepaidFlag}",
+		"freeDeli":"${item.freeDeli}",
+		"eventAdded":"${item.eventAdded}",
 		"index":"${status.index}"
 		}
 	</c:forEach>

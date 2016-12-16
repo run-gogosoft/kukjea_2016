@@ -20,6 +20,7 @@ public class MemberVo extends UserVo {
 	private String cell3 = "";
 	
 	/** 이메일 수신동의 */
+	private String email = "";
 	private String emailFlag = "";
 	private String emailFlagDate = "";
 	/** SMS 수신동의 */
@@ -159,7 +160,14 @@ public class MemberVo extends UserVo {
 	public void setCell3(String cell3) {
 		this.cell3 = cell3;
 	}
-	
+
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getEmailFlag() {
 		return emailFlag;
 	}

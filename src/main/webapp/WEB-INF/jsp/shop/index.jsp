@@ -57,7 +57,7 @@
 				</c:otherwise>
 				</c:choose>
 				<ul class="bann_list">
-					<li><a href="#"><img src="/images/contents/btn_popular_product.png" alt="인기구매 상품 100" /></a></li>
+					<li><a href="/shop/event/plan/plansub/19"><img src="/images/contents/btn_popular_product.png" alt="인기구매 상품 100" /></a></li>
 					<li><a href="/shop/wish/list"><img src="/images/contents/btn_my_product.png" alt="나의 관심상품" /></a></li>
 				</ul>
 			</div>
@@ -70,24 +70,12 @@
 								<img src="/upload${item.thumbImg}" alt="${item.title}" onerror="noImage(this)" />
 							</a></li>
 						</c:forEach>
-						<%--<li><a href="/shop/event/plan/plansub/13"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
-						<%--<li><a href="/shop/event/plan/plansub/14"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
-						<%--<li><a href="/shop/event/plan/plansub/15"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
-						<%--<li><a href="/shop/event/plan/plansub/16"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
-						<%--<li><a href="/shop/event/plan/plansub/17"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
-						<%--<li><a href="/shop/event/plan/plansub/18"><img src="/images/thumb/thumb_promotion.jpg" alt="한가위 이지메티컴 할인이벤트" /></a></li>--%>
 					</ul>
 				</div>
 				<ul class="slider_control">
 					<c:forEach var="item" items="${eventList}" varStatus="status" begin="0" step="1">
 						<li><a href="#"><span>${item.title}</span></a></li>
 					</c:forEach>
-					<%--<li><a href="#" class="on"><span>한가위 할인 이벤트</span></a></li>--%>
-					<%--<li><a href="#"><span>영우메디컬</span></a></li>--%>
-					<%--<li><a href="#"><span>에이원메디컬</span></a></li>--%>
-					<%--<li><a href="#"><span>제이웰팜</span></a></li>--%>
-					<%--<li><a href="#"><span>한국메디텍</span></a></li>--%>
-					<%--<li><a href="#"><span>이지메디컴</span></a></li>--%>
 				</ul>
 			</div>
 		</div>
@@ -118,8 +106,12 @@
 									<span class="thumb">
 										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="이벤트상품" />
 										<span class="icons">
-											<%--<span class="icon icon_txt icon_txt_gray">${itemList.freeDeli}</span>--%>
-											<%--<span class="icon icon_txt icon_txt_yellow">${itemList.eventAdded}</span>--%>
+											<c:if test="${itemList.freeDeli eq 'Y'}">
+												<span class="icon icon_txt icon_txt_gray">무료배송</span>
+											</c:if>
+											<c:if test="${itemList.eventAdded ne'' and itemList.eventAdded ne' ' and itemList.eventAdded ne'0'}">
+												<span class="icon icon_txt icon_txt_yellow">${itemList.eventAdded}</span>
+											</c:if>
 											<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 												<span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
 											</c:if>
@@ -150,8 +142,10 @@
 									<span class="thumb">
 										<img src="/upload${fn:replace(itemList.img1, 'origin', 's170')}" onerror="noImage(this)" alt="" />
 										<span class="icons">
-											<!--span class="icon icon_txt icon_txt_gray">무료배송</span-->
-											<!--span class="icon icon_txt icon_txt_yellow">10+1</span-->
+											<c:if test="${itemList.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:if>
+											<c:if test="${itemList.eventAdded ne'' and itemList.eventAdded ne' ' and itemList.eventAdded ne'0'}">
+												<span class="icon icon_txt icon_txt_yellow">${itemList.eventAdded}</span>
+											</c:if>
 											<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 												<span class="icon icon_discount"><em>${itemList.salePercent} </em>%</span>
 											</c:if>
@@ -295,9 +289,9 @@
 				<dl class="quick_service">
 					<dt>빠른 서비스</dt>
 					<dd><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/common/icon_quick_service01.png" alt="거래내역서 출력" /></a></dd>
-					<dd><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/common/icon_quick_service02.png" alt="배송&middot;환불&middot;반품안내" /></a></dd>
+					<dd><a href="/shop/cscenter/list/faq?categoryCode=30"><img src="/images/common/icon_quick_service02.png" alt="배송&middot;환불&middot;반품안내" /></a></dd>
 					<dd><a href="/shop/about/board/detail/list/2"><img src="/images/common/icon_quick_service03.png" alt="제휴 및 입점 안내" /></a></dd>
-					<dd><a href="#" onclick="alert('준비중입니다');return false;"><img src="/images/common/icon_quick_service04.png" alt="세금계산서 발급안내" /></a></dd>
+					<dd><a href="/shop/cscenter/list/faq?categoryCode=40"><img src="/images/common/icon_quick_service04.png" alt="세금계산서 발급안내" /></a></dd>
 					<dd><a href="/shop/mypage/order/list"><img src="/images/common/icon_quick_service05.png" alt="주문/배송 조회" /></a></dd>
 					<dd><a href="/shop/mypage/direct/list"><img src="/images/common/icon_quick_service06.png" alt="1:1 문의게시판" /></a></dd>
 				</dl>

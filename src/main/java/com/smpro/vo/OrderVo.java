@@ -409,7 +409,27 @@ public class OrderVo extends PagingVo {
 	private String npPayDate1 = "";
 	private String npPayDate2 = "";
 
-	
+	/** 이벤트 추가 */
+	private String eventAdded;
+
+	/** 무료 배송 여부 */
+	private String freeDeli = "N";
+
+	public String getEventAdded() {
+		return eventAdded;
+	}
+
+	public void setEventAdded(String eventAdded) {
+		this.eventAdded = eventAdded;
+	}
+	public String getFreeDeli() {
+		return freeDeli;
+	}
+
+	public void setFreeDeli(String freeDeli) {
+		this.freeDeli = freeDeli;
+	}
+
 	public String getNpPayDate1() {
 		return npPayDate1;
 	}

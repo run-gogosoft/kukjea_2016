@@ -133,7 +133,7 @@
 						<th>상품<br/>주문번호
 						<th>상품<br/>번호</th>
 						<th>상품명</th>
-						<th>부가세</th>
+						<th>이벤트</th>
 						<th>주문상태</th>
 						<th>입점업체명</th>
 						<th>판매가</th>
@@ -155,7 +155,16 @@
 								( ${vo.optionValue} )
 							</c:if>
 						</td>
-						<td class="text-center"><strong class="text-warning">${vo.taxName}</strong></td>
+						<td class="text-center">
+							<strong class="text-warning">
+								<c:choose>
+									<c:when test="${vo.eventAdded ne '' && vo.eventAdded ne ' ' && vo.eventAdded ne '0'}">
+										${vo.eventAdded}
+									</c:when>
+									<c:otherwise>이벤트없음</c:otherwise>
+								</c:choose>
+							</strong>
+						</td>
 						<td class="text-center">${vo.statusText}</td>
 						<td>${vo.sellerName}</td>
 						<td class="text-right"><fmt:formatNumber value="${vo.sellPrice}"/></td>
@@ -163,7 +172,7 @@
 						<td class="text-right">${vo.orderCnt}</td>
 						<td class="text-center">
 							<c:choose>
-								<c:when test="${vo.deliCost eq 0}">
+								<c:when test="${vo.freeDeli eq 'Y'}">
 									무료
 								</c:when>
 								<c:otherwise>

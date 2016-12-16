@@ -37,8 +37,8 @@ public class OrderStatsController {
 	/** 상품 카테고리별 매출 통계 */
 	@CheckGrade(controllerName = "orderStatsController", controllerMethod = "getListByCategory")
 	@RequestMapping("/stats/list/category")
-	public String getListByCategory(OrderVo vo, Model model) {
-		
+	public String getListByCategory(HttpSession session, OrderVo vo, Model model) {
+
 		//기본 조회기간 한달
 		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
 			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
@@ -56,6 +56,14 @@ public class OrderStatsController {
 		//cvo.setShowFlag("Y");
 		vo.setCategoryList(categoryService.getListSimple(cvo));
 
+		System.out.println(">>> login Type :"+session.getAttribute("loginType"));
+		System.out.println(">>> loginSeq :"+(Integer)session.getAttribute("loginSeq"));
+		System.out.println(">>> loginName :"+(String)session.getAttribute("loginName"));
+
+			vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
+			vo.setSellerName((String)session.getAttribute("loginName"));
+
+
 		model.addAttribute("list", orderStatsService.getListByCategory(vo));
 		model.addAttribute("lv1CategoryList", vo.getCategoryList());
 		model.addAttribute("data", orderStatsService.getSumByCategory(vo));
@@ -66,9 +74,16 @@ public class OrderStatsController {
 	/** 상품 카테고리별 매출 통계 상세 */
 	@CheckGrade(controllerName = "orderStatsController", controllerMethod = "getListByCategoryDetail")
 	@RequestMapping("/stats/list/category/detail")
-	public String getListByCategoryDetail(OrderVo vo, Model model) {
-		
-		model.addAttribute("list", orderStatsService.getListByCategoryDetail(vo));
+	public String getListByCategoryDetail(HttpSession session,OrderVo vo, Model model) {
+		System.out.println(">>> login Type :"+session.getAttribute("loginType"));
+		System.out.println(">>> loginSeq :"+(Integer)session.getAttribute("loginSeq"));
+		System.out.println(">>> loginName :"+(String)session.getAttribute("loginName"));
+
+		vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
+		vo.setSellerName((String)session.getAttribute("loginName"));
+
+		List<OrderVo> list = orderStatsService.getListByCategoryDetail(vo);
+		model.addAttribute("list", list);
 		model.addAttribute("orderSum", orderStatsService.getListByCategoryDetailSum(vo));
 		model.addAttribute("orderCancelSum", orderStatsService.getListByCategoryDetailCancelSum(vo));		
 		model.addAttribute("vo", vo);
@@ -322,8 +337,14 @@ public class OrderStatsController {
 	/** 상품별 누적 판매수 */
 	@CheckGrade(controllerName = "orderStatsController", controllerMethod = "getListByItem")
 	@RequestMapping("/stats/list/item")
-	public String getListByItem(OrderVo vo, Model model) {
-		
+	public String getListByItem(HttpSession session, OrderVo vo, Model model) {
+		System.out.println(">>> login Type :"+session.getAttribute("loginType"));
+		System.out.println(">>> loginSeq :"+(Integer)session.getAttribute("loginSeq"));
+		System.out.println(">>> loginName :"+(String)session.getAttribute("loginName"));
+
+		vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
+		vo.setSellerName((String)session.getAttribute("loginName"));
+
 		//기본 조회기간 한달
 		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
 			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
@@ -354,11 +375,11 @@ public class OrderStatsController {
 
 
 		lists=orderStatsService.getListByItemForSellerJachigu(vo);
-		System.out.print("getListByItemForJachigu size :"+lists.size());
+		System.out.println("getListByItemForJachigu size :"+lists.size());
 		for(int i = 0;i<lists.size();i++) {
 			System.out.print(">>"+lists.get(i).getSellerName());
 			System.out.print(">>"+lists.get(i).getOrderCnt());
-			System.out.print(">>"+lists.get(i).getSumPrice());
+			System.out.println(">>"+lists.get(i).getSumPrice());
 		}
 
 		model.addAttribute("lists", lists);

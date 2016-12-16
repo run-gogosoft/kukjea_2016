@@ -14,10 +14,10 @@
 			SELECT
 		<choose>
 			<when test="searchDateType eq 'month'">
-				DATE_FORMAT(d.c10_date,'%Y-%m') pay_date,
+				DATE_FORMAT(d.c10_date,'%Y%m') pay_date,
 			</when>
 			<otherwise>
-				DATE_FORMAT(d.c10_date,'%Y-%m-%d') pay_date,
+				DATE_FORMAT(d.c10_date,'%Y%m%d') pay_date,
 			</otherwise>
 		</choose>
 				i.cate_lv1_seq,
@@ -30,18 +30,21 @@
 				<if test="searchDate1 != '' and searchDate2 != ''">
 				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 				</if>
+				<if test="sellerSeq > 2">
+				AND d.seller_seq =#{sellerSeq}
+				</if>
 			<!-- /정상 주문건 -->
 			
 			UNION ALL
 			
-			<!-- 취소 주문건  -->
+			<!-- 취소  주문건  -->
 			SELECT
 		<choose>
 			<when test="searchDateType eq 'month'">
-				DATE_FORMAT(d.c99_date,'%Y-%m') pay_date,
+				DATE_FORMAT(d.c99_date,'%Y%m') pay_date,
 			</when>
 			<otherwise>
-				DATE_FORMAT(d.c99_date,'%Y-%m-%d') pay_date,
+				DATE_FORMAT(d.c99_date,'%Y%m%d') pay_date,
 			</otherwise>
 		</choose>
 				i.cate_lv1_seq,
@@ -53,6 +56,9 @@
 				d.c10_date IS NOT NULL
 				<if test="searchDate1 != '' and searchDate2 != ''">
 				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+				</if>
+				<if test="sellerSeq > 2">
+				AND d.seller_seq =#{sellerSeq}
 				</if>
 				AND d.status_code = '99'
 			<!-- /취소 주문건 -->
@@ -81,7 +87,9 @@
 				<if test="searchDate1 != '' and searchDate2 != ''">
 				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 				</if>
-			
+				<if test="sellerSeq > 2">
+					AND d.seller_seq =#{sellerSeq}
+				</if>
 			UNION ALL
 			
 			<!-- 취소 주문건 -->
@@ -97,6 +105,9 @@
 				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 				</if>
 				AND d.status_code = '99'
+				<if test="sellerSeq > 2">
+					AND d.seller_seq =#{sellerSeq}
+				</if>
 			) t
 	</select>
 	
@@ -135,7 +146,10 @@
 				sm_item i on (d.item_seq = i.seq)
 			WHERE
 				d.c10_date IS NOT NULL
-				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') = #{payDate}
+				AND DATE_FORMAT(d.c10_date, '%Y%m%d') = #{payDate}
+				<if test="sellerSeq > 2">
+					AND d.seller_seq =#{sellerSeq}
+				</if>
 			
 			UNION ALL
 			
@@ -171,8 +185,11 @@
 				sm_item i on (d.item_seq = i.seq)
 			WHERE
 				d.c10_date IS NOT NULL
-				AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') = #{payDate}
+				AND DATE_FORMAT(d.c99_date, '%Y%m%d') = #{payDate}
 				AND d.status_code = '99'
+				<if test="sellerSeq > 2">
+					AND d.seller_seq =#{sellerSeq}
+				</if>
 		) t
 		ORDER BY t.seq ASC
 	</select>
@@ -192,7 +209,10 @@
 			sm_item i on (d.item_seq = i.seq)
 		WHERE
 			d.c10_date IS NOT NULL
-			AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') = #{payDate}
+			AND DATE_FORMAT(d.c10_date, '%Y%m%d') = #{payDate}
+			<if test="sellerSeq > 2">
+				AND d.seller_seq =#{sellerSeq}
+			</if>
 	</select>
 	
 	<!--  상품 카테고리별 매출 현황 상세 - 취소주문 합 -->
@@ -210,8 +230,11 @@
 			sm_item i on (d.item_seq = i.seq)
 		WHERE
 			d.c10_date IS NOT NULL
-			AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') = #{payDate}
+			AND DATE_FORMAT(d.c99_date, '%Y%m%d') = #{payDate}
 			AND d.status_code = '99'
+			<if test="sellerSeq > 2">
+				AND d.seller_seq =#{sellerSeq}
+			</if>
 	</select>
 
 	<!-- 인증 구분별 매출 통계 -->
@@ -225,10 +248,10 @@
 			SELECT
 		<choose>
 			<when test="searchDateType eq 'month'">
-				DATE_FORMAT(d.c10_date,'%Y-%m') pay_date,
+				DATE_FORMAT(d.c10_date,'%Y%m') pay_date,
 			</when>
 			<otherwise>
-				DATE_FORMAT(d.c10_date,'%Y-%m-%d') pay_date,
+				DATE_FORMAT(d.c10_date,'%Y%m%d') pay_date,
 			</otherwise>
 		</choose>
 				i.auth_category,
@@ -241,17 +264,17 @@
 				<if test="searchDate1 != '' and searchDate2 != ''">
 				AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 				</if>
-				
+
 			UNION ALL
 			
 			<!-- 취소 주문건 -->
 			SELECT
 		<choose>
 			<when test="searchDateType eq 'month'">
-				DATE_FORMAT(d.c99_date,'%Y-%m') pay_date,
+				DATE_FORMAT(d.c99_date,'%Y%m') pay_date,
 			</when>
 			<otherwise>
-				DATE_FORMAT(d.c99_date,'%Y-%m-%d') pay_date,
+				DATE_FORMAT(d.c99_date,'%Y%m%d') pay_date,
 			</otherwise>
 		</choose>
 				i.auth_category,
@@ -319,7 +342,7 @@
 				DATE_FORMAT(d.c10_date,'%Y-%m') pay_date,
 			</when>
 			<otherwise>
-				DATE_FORMAT(d.c10_date,'%Y-%m-%d') pay_date,
+				DATE_FORMAT(d.c10_date,'%Y%m%d') pay_date,
 			</otherwise>
 		</choose>
 				m.member_type_code,
@@ -340,10 +363,10 @@
 			SELECT
 		<choose>
 			<when test="searchDateType eq 'month'">
-				DATE_FORMAT(d.c99_date,'%Y-%m') pay_date,
+				DATE_FORMAT(d.c99_date,'%Y%m') pay_date,
 			</when>
 			<otherwise>
-				DATE_FORMAT(d.c99_date,'%Y-%m-%d') pay_date,
+				DATE_FORMAT(d.c99_date,'%Y%m%d') pay_date,
 			</otherwise>
 		</choose>
 				m.member_type_code,
@@ -419,6 +442,9 @@
 					<if test="searchDate1 != '' and searchDate2 != ''">
 					AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 					</if>
+					<if test="sellerSeq > 2">
+						AND d.seller_seq =#{sellerSeq}
+					</if>
 				
 				UNION ALL
 				
@@ -432,6 +458,9 @@
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">
 					AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+					</if>
+					<if test="sellerSeq > 2">
+						AND d.seller_seq =#{sellerSeq}
 					</if>
 			) t
 			GROUP BY t.item_name
@@ -454,6 +483,9 @@
 			<if test="searchDate1 != '' and searchDate2 != ''">
 			AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 			</if>
+			<if test="sellerSeq > 2">
+				AND d.seller_seq =#{sellerSeq}
+			</if>
 	</select>
 	
 	<!-- 상품 누적 판매 통계 기간별 취소주문 매출액 합계 -->
@@ -470,6 +502,9 @@
 			AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 			</if>
 			AND d.status_code='99'
+			<if test="sellerSeq > 2">
+				AND d.seller_seq =#{sellerSeq}
+			</if>
 	</select>
 	
 	<!-- 자치구별 상품 판매수 통계(판매자) -->

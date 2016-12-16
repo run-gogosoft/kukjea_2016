@@ -112,8 +112,8 @@
                                     <span class="thumb">
                                         <img src="/upload${fn:replace(item.img1, 'origin', 's110')}" alt="" onerror="noImage(this)" />
                                         <span class="icons">
-                                            <%--<c:if test="${item.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송${item.freeDeli}</span></c:if>--%>
-                                            <%--<c:if test="${fn:length(item.eventAdded)>1}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:if>--%>
+                                            <c:if test="${item.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송${item.freeDeli}</span></c:if>
+                                            <c:if test="${fn:length(item.eventAdded)>1}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:if>
                                             <c:if test="${ item.salePercent <100 && item.salePercent >0  }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                         </span>
                                     </span>
@@ -171,8 +171,8 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <%--<c:if test="${item.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송${item.freeDeli}</span></c:if>--%>
-                                    <%--<c:if test="${fn:length(item.eventAdded)>1}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:if>--%>
+                                    <c:if test="${item.freeDeli == 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송${item.freeDeli}</span></c:if>
+                                    <c:if test="${fn:length(item.eventAdded)>1}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:if>
                                     <c:if test="${item.salePercent <100 && item.salePercent >0 }"><span class="icon icon_txt icon_txt_red"><em>${item.salePercent}</em>%</span></span></c:if>
                                 </td>
                                 <td class="text-center">

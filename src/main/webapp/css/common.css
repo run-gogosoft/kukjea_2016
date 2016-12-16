@@ -603,7 +603,9 @@ em.must {color:#ef3f3b;}
 #footer .foot_menu li a {color:#333; font-size:13px;}
 #footer .kukje_info {position:relative; height:70px; padding-top:19px;}
 #footer .kukje_info .logo {position:absolute; top:24px; left:22px;}
+#footer .kukje_info .escrow_logo {position:absolute; top:24px; right:22px;}
 #footer .kukje_info .address, #footer .kukje_info .copyright {margin-top:5px; padding-left:160px;}
+#footer .kukje_info .account {margin-top:5px; font-weight:bold; padding-left:160px;color:#2e67ccff;}
 #footer .kukje_info .certified_mark {position:absolute; top:25px; right:15px; }
 #footer .kukje_info .certified_mark li {float:left; margin-left:12px; padding-left:10px; background:url('../images/common/bar_mark.png') no-repeat 0 5px;}
 #footer .kukje_info .certified_mark li:first-child {margin:0; padding:0; background:none;}

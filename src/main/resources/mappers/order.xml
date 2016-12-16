@@ -67,11 +67,14 @@
 	c.dept_name AS deptName,
 	g.name AS groupName,
 	dc.company_name AS deliName,
-	tr.request_flag AS requestFlag
+	tr.request_flag AS requestFlag,
+	ov.free_deli AS freeDeli,
+	ov.event_added AS eventAdded
 	FROM
 	sm_order_detail d LEFT OUTER JOIN
 	sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
 	sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
+	sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 	sm_order_pay p ON (o.seq=p.order_seq) LEFT OUTER JOIN
 	sm_point_history ph ON (o.seq=ph.order_seq AND ph.status_code='U') LEFT OUTER JOIN
 	sm_mall m ON (o.mall_seq=m.seq) LEFT OUTER JOIN
@@ -461,12 +464,15 @@
 			d.reg_date AS regDate,
 			o.receiver_name AS receiverName,
 			o.member_name AS memberName,
+		    ov.free_deli AS freeDeli,
+			ov.event_added AS eventAdded,
 			(SELECT img1 FROM sm_item WHERE seq=d.item_seq) img1,
 			(SELECT name FROM sm_common WHERE group_code=6 AND value=d.status_code) statusText,
 			(SELECT u.name FROM sm_user u WHERE u.seq=o.mall_seq AND u.type_code='M') AS mallName
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
 			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
+			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 			sm_item i ON (d.item_seq=i.seq)
 		WHERE 1=1
 		<choose>
@@ -635,11 +641,14 @@
 			c.cell AS memberCell,
 			o.pay_method AS payMethod,
 			c1.name AS payMethodName,
+			ov.free_deli AS freeDeli,
+			ov.event_added AS eventAdded,
 			(SELECT u.id FROM sm_user u WHERE u.seq=o.mall_seq AND u.type_code='M') AS mallId,
 			(SELECT u.name FROM sm_user u WHERE u.seq=o.mall_seq AND u.type_code='M') AS mallName
 		FROM
 			sm_order o LEFT OUTER JOIN
 			sm_order_detail d ON (o.seq=d.order_seq) LEFT OUTER JOIN
+			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 			sm_point_history p ON (o.seq=p.order_seq AND p.status_code='U') LEFT OUTER JOIN
 			sm_user u ON (o.member_seq=u.seq) LEFT OUTER JOIN
 			sm_member c ON (u.seq=c.seq) LEFT OUTER JOIN
@@ -688,9 +697,12 @@
 			i.img1,
 			c1.name AS statusText,
 			c2.name AS taxName,
-			s.sales_tel AS salesTel
+			s.sales_tel AS salesTel,
+			ov.free_deli AS freeDeli,
+			ov.event_added AS eventAdded
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
+			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 			sm_order o ON(d.order_seq=o.seq) LEFT OUTER JOIN
 			sm_item i ON(d.item_seq=i.seq) LEFT OUTER JOIN
 			sm_item_category c ON (i.cate_lv1_seq=c.seq) LEFT OUTER JOIN
@@ -753,10 +765,13 @@
 			o.receiver_addr1 AS receiverAddr1,
 			o.receiver_addr2 AS receiverAddr2,
 			o.receiver_tel AS receiverTel,
-			o.receiver_cell AS receiverCell
+			o.receiver_cell AS receiverCell,
+			ov.free_deli AS freeDeli,
+			ov.event_added AS eventAdded
 		FROM
 		    sm_order o LEFT OUTER JOIN
-			sm_order_detail d ON (o.seq=d.order_seq)
+			sm_order_detail d ON (o.seq=d.order_seq) LEFT OUTER JOIN
+			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 		WHERE
 			d.status_code='20' AND
 			d.seller_seq=#{sellerSeq}
@@ -1645,9 +1660,12 @@
 			o.device_type AS deviceType,
 			c.dept_name AS deptName,
 			c1.name AS payMethodName,
-			g.name AS groupName
+			g.name AS groupName,
+			ov.free_deli AS freeDeli,
+			ov.event_added AS eventAdded
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
+			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 			sm_order o ON(o.seq=d.order_seq) LEFT OUTER JOIN
 			sm_point_history ph ON (o.seq=ph.order_seq AND ph.status_code='U') LEFT OUTER JOIN
 			sm_item i ON(d.item_seq=i.seq) LEFT OUTER JOIN
@@ -1907,6 +1925,7 @@
 			(SELECT name FROM sm_common WHERE group_code=6 AND value=d.status_code) statusText
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
+			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 			sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
 			sm_order o ON (d.order_seq=o.seq)
 		WHERE
@@ -2044,9 +2063,12 @@
 			o.receiver_postcode AS receiverPostcode,
 			o.receiver_addr1 AS receiverAddr1,
 			o.receiver_addr2 AS receiverAddr2,
+			ov.free_deli AS freeDeli,
+			ov.event_added AS eventAdded,
 			(SELECT COUNT(*) FROM sm_order_detail WHERE order_seq=o.seq) AS orderCount
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
+			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN
 			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
 			sm_point_history ph ON (ph.status_code='U' AND o.seq=ph.order_seq) LEFT OUTER JOIN
 			sm_order_pay p ON(o.seq=p.order_seq) LEFT OUTER JOIN

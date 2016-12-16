@@ -130,7 +130,9 @@
 					<ul class="treeview-menu">
 						<li ${naviSub eq '/stats/list/category' ? "class='active'":""}><a href="/admin/stats/list/category"><i class="fa fa-caret-right"></i> 상품 카테고리별 매출 현황</a></li>
 						<li ${naviSub eq '/stats/list/item' ? "class='active'":""}><a href="/admin/stats/list/item"><i class="fa fa-caret-right"></i> 기간별 상품 판매 현황</a></li>
+						<c:if test="${sessionScope.loginType eq 'A' }">
 						<li ${naviSub eq '/stats/list/item/jachigu/seller' ? "class='active'":""}><a href="/admin/stats/list/item/jachigu/seller"><i class="fa fa-caret-right"></i> 기간별 상품 판매 현황(입점업체)</a></li>
+						</c:if>
 					</ul>
 				</li>
 				<%--</c:if>--%>
