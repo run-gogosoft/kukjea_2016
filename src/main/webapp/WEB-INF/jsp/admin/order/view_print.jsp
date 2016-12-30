@@ -145,6 +145,7 @@
 				</thead>
 				<tbody>
 				<c:set var="total" value="0"/>
+				<c:set var="totlaDeliCost" value="0"/>
 				<c:forEach var="vo" items="${list}" varStatus="status">
 					<tr <c:if test="${vo.seq==pvo.seq}"> class="tr-selected" </c:if>>
 						<td class="text-center">${vo.seq}</td>
@@ -178,19 +179,19 @@
 								<c:otherwise>
 									<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
 									<br/>
-									<c:if test="${vo.deliPrepaidFlag eq 'Y'}">
+									<%--<c:when test="${vo.deliPrepaidFlag eq 'N'}">--%>
+										<%--착불--%>
+									<%--</c:when>--%>
+									<%--<c:otherwise>--%>
 										선결제
-									</c:if>
-									<c:if test="${vo.deliPrepaidFlag eq 'N'}">
-										착불
-									</c:if>
+									<%--</c:otherwise>--%>
 								</c:otherwise>
 							</c:choose>
 						</td>
 						<td class="text-right">
 							<c:set var="subTotal" value="${vo.sellPrice  * vo.orderCnt}"/>
-							<c:if test="${vo.deliPrepaidFlag eq 'Y'}">
-								<c:set var="subTotal" value="${subTotal + vo.deliCost}"/>
+							<c:if test="${vo.deliCost > 0}">
+								<c:set var="totlaDeliCost" value="${vo.deliCost}"/>
 							</c:if>
 							<c:set var="total" value="${total + subTotal}"/>
 							<fmt:formatNumber value="${subTotal}"/>
@@ -198,8 +199,22 @@
 					</tr>
 				</c:forEach>
 					<tr>
-						<th colspan="10">주문 합계 금액</th>
-						<td class="text-right"><fmt:formatNumber value="${total}"/></td>
+						<th colspan="10">
+							주문 합계 금액
+							<c:if test="${totla>50000}">
+								<br/>(50000 만원 이상 무료배송)
+							</c:if>
+						</th>
+						<td class="text-right">
+							<c:choose>
+								<c:when test="${total>50000}">
+									<fmt:formatNumber value="${total}"/>
+								</c:when>
+								<c:otherwise>
+									<fmt:formatNumber value="${total+totlaDeliCost}"/>
+								</c:otherwise>
+							</c:choose>
+						</td>
 					</tr>
 				</tbody>
 			</table>

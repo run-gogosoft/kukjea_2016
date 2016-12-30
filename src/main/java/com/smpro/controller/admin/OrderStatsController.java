@@ -35,6 +35,7 @@ public class OrderStatsController {
 	private CategoryService categoryService;
 
 	/** 상품 카테고리별 매출 통계 */
+	/** 상품 카테고리별 매출 통계 */
 	@CheckGrade(controllerName = "orderStatsController", controllerMethod = "getListByCategory")
 	@RequestMapping("/stats/list/category")
 	public String getListByCategory(HttpSession session, OrderVo vo, Model model) {

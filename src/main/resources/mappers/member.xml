@@ -150,7 +150,7 @@
 			u.reg_date AS regDate,
 			(SELECT name FROM sm_common WHERE group_code=30 AND value=m.member_type_code) AS memberTypeName,
 			g.name AS groupName,
-			m.email
+			m.email,
 			g.invest_flag AS investFlag
 		FROM
 			sm_user u LEFT OUTER JOIN

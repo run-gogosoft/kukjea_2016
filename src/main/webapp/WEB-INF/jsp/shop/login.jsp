@@ -40,7 +40,7 @@
 							<span>|</span>
 							<a href="/shop/cscenter/search/id" class="btn_find_idpw">ID / PW 찾기</a>
 						</div>
-						<p>- 로그인을 하시면, 국제실업쇼핑몰의 서비스를 보다 원활하게 이용하실 수 있습니다.</p>
+						<p>- 로그인을 하시면, 국제몰닷컴의 서비스를 보다 원활하게 이용하실 수 있습니다.</p>
 
 						<button type="submit" class="btn_login">로그인</button>
 					</fieldset>

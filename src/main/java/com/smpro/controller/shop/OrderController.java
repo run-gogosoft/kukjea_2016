@@ -169,6 +169,14 @@ public class OrderController {
 		// 수신자 주소 set
 		vo.setReceiverAddr1(vo.getAddr1());
 
+		// 수신자 email set
+		vo.setReceiverEmail(vo.getMemberEmail());
+
+		if(StringUtil.isBlank(vo.getReceiverEmail())){
+			model.addAttribute("message", "이메일을  입력해주세요.");
+			model.addAttribute("callback", "fail");
+			return Const.ALERT_PAGE;
+		}
 
 		// 휴대폰번호와 전화번호가 잘라져서 넘어오기 때문에 번호가 맞지 않으면 안되므로 검증을 한다.
 		if(StringUtil.isBlank(vo.getReceiverTel1()) || StringUtil.isBlank(vo.getReceiverTel2()) || StringUtil.isBlank(vo.getReceiverTel3())){
@@ -750,12 +758,22 @@ public class OrderController {
 				totalPrice += list.get(i).getSellPrice();
 			} else {
 				totalPrice += list.get(i).getSellPrice() * list.get(i).getCount();
-				if ("Y".equals(list.get(i).getDeliPrepaidFlag())) {
-					totalPrice += list.get(i).getDeliCost();
-				}
+//				if (!("Y".equals(list.get(i).getFreeDeli()))) {
+//					totalPrice += list.get(i).getDeliCost();
+//				}
 			}
 		}
 
+		if(totalPrice<50000) {
+			for (int i = 0; i < list.size(); i++) {
+				if (!"Y".equals(estimateFlag)) {
+					if (!("Y".equals(list.get(i).getFreeDeli()))) {
+						totalPrice += list.get(i).getDeliCost();
+						break;
+					}
+				}
+			}
+		}
 		return totalPrice;
 	}
 

@@ -1,5 +1,7 @@
 package com.smpro.vo;
 
+import com.smpro.util.Const;
+
 public class AdjustVo extends PagingVo {
 	// 시퀀스
 	private Integer seq;
@@ -22,7 +24,7 @@ public class AdjustVo extends PagingVo {
 	// 주문 수량
 	private int orderCnt;
 	// 선결제 배송비
-	private int deliCost;
+	private int deliCost= Const.DELI_COST;
 	// 과세여부 (1=과세, 2=면세)
 	private String taxCode = "";
 	// 쇼핑몰명

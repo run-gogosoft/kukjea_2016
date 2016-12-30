@@ -42,7 +42,7 @@ public class ItemOptionVo {
 	private String eventAdded;
 
 	/** 무료 배송 여부 */
-	private String freeDeli = "Y";
+	private String freeDeli = "N";
 
 	// ------- 추가 필드 ---------
 	private List<ItemOptionVo> valueList;

@@ -338,7 +338,7 @@
 								<th>할인가격</th>
 								<th>할인기간</th>
 								<th>재고량</th>
-								<th>무료배송여부</th>
+								<th>배송료</th>
 								<th>이벤트</th>
 								<th></th>
 								<%--<th>재고관리</th>--%>
@@ -353,10 +353,26 @@
 									<td class="text-center"><fmt:formatNumber value="${item.salePrice}" pattern="#,###" /> 원</td>
 									<td class="text-center">${item.salePeriod}</td>
 									<td class="text-center">${item.stockCount}</td>
-									<td class="text-center">${item.freeDeli}</td>
-									<td class="text-center">${item.eventAdded}</td>
-									<%--<td class="text-center">${item.stockFlag eq "Y" ? "재고관리":"재고관리 안함" }</td>--%>
-
+									<td class="text-center">
+										<c:choose>
+											<c:when test="${item.freeDeli eq 'Y'}">
+												무료배송
+											</c:when>
+											<c:otherwise>
+												선결제<br/>4000원
+											</c:otherwise>
+										</c:choose>
+									</td>
+									<td class="text-center">
+										<c:choose>
+											<c:when test="${item.eventAdded ne '0' and item.eventAdded ne '' and item.eventAdded ne ' '}">
+												${item.eventAdded}
+											</c:when>
+											<c:otherwise>
+												이벤트 없음
+											</c:otherwise>
+										</c:choose>
+									</td>
 									<td class="text-center">
 										<c:if test="${ sessionScope.loginType eq 'S'}">
 											<button type="button" class="btn btn-sm btn-default" onclick="EBOption.showUpdateOptionValueModal(this, '${item.seq}')">수정</button>

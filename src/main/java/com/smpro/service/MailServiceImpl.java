@@ -170,7 +170,14 @@ public class MailServiceImpl implements MailService {
 			itemList.append("</td>");
 			itemList.append("</tr>");
 			totalSellPrice += (list.get(i).getSellPrice()) * list.get(i).getOrderCnt();
-			totalDeliveryPrice += list.get(i).getDeliCost();
+//			totalDeliveryPrice += list.get(i).getDeliCost();
+		}
+
+		for (int i = 0; i < list.size(); i++) {
+			if(list.get(i).getDeliCost() != 0) {
+				totalDeliveryPrice += list.get(i).getDeliCost();
+				break;
+			}
 		}
 
 		if (vo.getPoint() > 0) {

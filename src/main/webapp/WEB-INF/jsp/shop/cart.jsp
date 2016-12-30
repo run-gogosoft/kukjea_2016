@@ -30,13 +30,14 @@
                                 <th>수량</th>
                                 <th>상품 금액</th>
                                 <th>업체</th>
-                                <th></th>
+                                <th>배송료</th>
+                                <th>이벤트</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody id="cartBody">
                             <tr>
-                                <td colspan="9" class="text-center" style="padding:50px;">
+                                <td colspan="10" class="text-center" style="padding:50px;">
                                     데이터를 불러오고 있습니다. 잠시만 기다려 주세요... <img src="/front-assets/images/common/ajaxloader.gif" alt="로딩중.." />
                                 </td>
                             </tr>
@@ -80,8 +81,8 @@
             {{/if}}
         </td>
 
-            <td class="text-left item-name">
-                <a href="/shop/search?seq=<%="${itemSeq}"%>">
+        <td class="text-left item-name">
+            <a href="/shop/search?seq=<%="${itemSeq}"%>">
                     {{if stockCount==="0"}}
                     <span class="text-danger" data-danger="true">품절</span>
                     {{else stockFlag =="Y" && parseInt(stockCount,10) < count}}
@@ -96,9 +97,8 @@
                     <input type="hidden" name="stockCount" value="<%="${stockCount}"%>"/>
                     <input type="hidden" name="stockFlag" value="<%="${stockFlag}"%>"/>
                     <input type="hidden" name="optionValueSeq" value="<%="${optionValueSeq}"%>"/>
-                </a>
-            </td>
-
+            </a>
+        </td>
         <td>
             <span><%="${sellPriceText}"%>원</span>
         </td>
@@ -117,8 +117,15 @@
             <%="${sellerName}"%>
         </td>
         <td>
-            {{if freeDeli==="Y"}}<span class="icon icon_txt icon_txt_gray">무료배송</span>{{/if}}
-            {{if eventAdded !="" && eventAdded !=" " && eventAdded !="0"}}<span class="icon icon_txt icon_txt_yellow"><%="${eventAdded}"%></span>{{/if}}
+            {{if freeDeli=="Y"}}<span class="icon icon_txt icon_txt_gray">무료배송</span>
+            {{else}}<%="${deliCost}"%> 원
+            {{/if}}
+        </td>
+        <td>
+            {{if eventAdded !="" && eventAdded !=" " && eventAdded !="0"}}
+                <span class="icon icon_txt icon_txt_yellow"><%="${eventAdded}"%></span>
+            {{else}}없음
+            {{/if}}
         </td>
         <td>
             <div class="item-delete" remove-value="<%="${seq}"%>" style="cursor:pointer" onclick="Cart.oneRemoveSelected(this)">

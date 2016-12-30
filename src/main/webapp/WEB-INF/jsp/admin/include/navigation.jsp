@@ -58,7 +58,7 @@
 							<!--li ${naviSub eq '/system/delivery/list' ? "class='active'":""}><a href="/admin/system/delivery/list"><i class="fa fa-caret-right"></i>배송업체 관리</a></li-->
 							<li ${naviSub eq '/system/admin/list' ? "class='active'":""}><a href="/admin/system/admin/list"><i	class="fa fa-caret-right"></i>어드민 관리자</a></li>
 							<%--<li ${naviSub eq '/system/notice/popup/list' ? "class='active'":""}><a href="/admin/system/notice/popup/list"><i class="fa fa-caret-right"></i>공지팝업창 관리</a></li>--%>
-							<%--<li ${naviSub eq '/sms/list' ? "class='active'":""}><a href="/admin/sms/list"><i class="fa fa-caret-right"></i>SMS 관리</a></li>--%>
+							<li ${naviSub eq '/sms/list' ? "class='active'":""}><a href="/admin/sms/list"><i class="fa fa-caret-right"></i>SMS 관리</a></li>
 						</ul>
 					</li>
 				</c:if>

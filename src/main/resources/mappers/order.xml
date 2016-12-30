@@ -20,7 +20,7 @@
 	d.supply_master_price AS supplyMasterPrice,
 	d.coupon_price AS couponPrice,
 	d.order_cnt AS orderCnt,
-	d.deli_cost AS deliCost,
+	<!--d.deli_cost AS deliCost,-->
 	d.deli_prepaid_flag AS deliPrepaidFlag,
 	d.deli_seq AS deliSeq,
 	d.deli_no AS deliNo,
@@ -314,10 +314,11 @@
 	
 	<select id="getSumPrice" parameterType="com.smpro.vo.OrderVo" resultType="long">
 		SELECT
-			SUM(((d.sell_price+d.option_price) * d.order_cnt) + (CASE WHEN d.deli_prepaid_flag ='Y' THEN d.deli_cost ELSE 0 END)) AS sumPrice
+			SUM(((d.option_price) * d.order_cnt) + (CASE WHEN ov.free_deli ='Y' THEN d.deli_cost ELSE 0 END)) AS sumPrice
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
 			sm_item i ON (d.item_seq=i.seq) LEFT OUTER JOIN
+			sm_item_option_value ov ON (ov.seq=d.option_value_seq) LEFT OUTER JOIN
 			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
 			sm_user u ON (o.member_seq=u.seq) LEFT OUTER JOIN
 			sm_member c ON (u.seq=c.seq) LEFT OUTER JOIN
@@ -449,7 +450,7 @@
 			d.option_price AS optionPrice,
 			d.supply_price AS supplyPrice,
 			d.order_cnt AS orderCnt,
-			d.deli_cost AS deliCost,
+			<!--d.deli_cost AS deliCost,-->
 			d.deli_prepaid_flag AS deliPrepaidFlag,
 			d.tax_code AS taxCode,
 			d.seller_seq AS sellerSeq,
@@ -673,7 +674,7 @@
 			d.supply_master_price AS supplyMasterPrice,
 			d.coupon_price AS couponPrice,
 			d.order_cnt AS orderCnt,
-			d.deli_cost AS deliCost,
+			<!--d.deli_cost AS deliCost,-->
 			d.deli_prepaid_flag AS deliPrepaidFlag,
 			d.deli_seq AS deliSeq,
 			(SELECT company_name FROM sm_deli_company WHERE seq=d.deli_seq) AS deliCompanyName,
@@ -754,7 +755,7 @@
 			d.sell_price AS sellPrice,
 			d.supply_price AS supplyPrice,
 			d.order_cnt AS orderCnt,
-			d.deli_cost AS deliCost,
+			<!--d.deli_cost AS deliCost,-->
 			d.deli_prepaid_flag AS deliPrepaidFlag,
 			d.seller_seq AS sellerSeq,
 			d.seller_name AS sellerName,
@@ -1001,7 +1002,7 @@
 			supply_master_price,
 			coupon_price,
 			order_cnt,
-			deli_cost,
+			<!--deli_cost,-->
 			deli_prepaid_flag,
 			package_deli_cost,
 			tax_code,
@@ -1026,7 +1027,7 @@
 			#{supplyMasterPrice},
 			#{couponPrice},
 			#{orderCnt},
-			#{deliCost},
+			<!--#{deliCost},-->
 			#{deliPrepaidFlag},
 			#{packageDeliCost},
 			#{taxCode},
@@ -1586,7 +1587,7 @@
 			<!-- (d.order_cnt * d.sell_price) AS sumSellPrice,
 			(d.order_cnt * d.supply_price) AS sumSupplyPrice,
 			(d.order_cnt * d.option_price) AS sumOptionPrice, -->
-			d.deli_cost AS deliCost,
+			<!--d.deli_cost AS deliCost,-->
 			IFNULL(((
 			SELECT SUM(((x.sell_price+IFNULL(x.option_price,0))*x.order_cnt)+x.deli_cost)
 			FROM sm_order_detail x
@@ -1914,7 +1915,7 @@
 			d.status_code AS statusCode,
 			d.sell_price AS sellPrice,
 			d.order_cnt AS orderCnt,
-			d.deli_cost AS deliCost,
+			<!--d.deli_cost AS deliCost,-->
 			d.deli_seq AS deliSeq,
 			d.deli_no AS deliNo,
 			d.seller_name AS sellerName,
@@ -2056,7 +2057,7 @@
 			d.option_price AS optionPrice,
 			d.order_cnt AS orderCnt,
 			d.deli_prepaid_flag AS deliPrepaidFlag,
-			CASE WHEN d.deli_prepaid_flag = 'Y' THEN d.deli_cost ELSE 0 END deliCost,
+			<!--CASE WHEN d.deli_prepaid_flag = 'Y' THEN d.deli_cost ELSE 0 END deliCost,-->
 			d.status_code AS statusCode,
 			c2.name AS statusText,
 			c3.name AS taxName,

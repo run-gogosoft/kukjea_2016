@@ -36,6 +36,7 @@
                             <col width="15%"/>
                             <col width="15%"/>
                             <col width="15%"/>
+                            <col width="15%"/>
                         </colgroup>
                         <thead>
                         <tr>
@@ -43,7 +44,8 @@
                             <th>판매가</th>
                             <th>수량</th>
                             <th>상품 금액</th>
-                            <th></th>
+                            <th>배송료</th>
+                            <th>이벤트</th>
                             <th>업체</th>
                         </tr>
                         </thead>
@@ -77,9 +79,17 @@
                                     <c:if test="${item.freeDeli == 'Y'}">
                                         <span class="icon icon_txt icon_txt_gray"> 무료배송  </span>
                                     </c:if>
-
+                                    <c:if test="${item.freeDeli != 'Y'}">
+                                        <c:set var="totalDeliveryPrice" value="${item.deliCost}" />
+                                        ${item.deliCost} 원
+                                    </c:if>
+                                </td>
+                                <td>
                                     <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
                                         <span class="icon icon_txt icon_txt_yellow">  ${item.eventAdded}  </span>
+                                    </c:if>
+                                    <c:if test="${item.eventAdded =='' || item.eventAdded ==' ' || item.eventAdded =='0'}">
+                                        이벤트 없음
                                     </c:if>
 
                                 <%--<c:choose>--%>
@@ -88,9 +98,9 @@
                                                 <%--<c:when test="${item.packageDeliCost > 0}">무료<br/>(묶음배송 할인)</c:when>--%>
                                                 <%--<c:otherwise>--%>
                                                     <%--무료--%>
-                                                    <%--<c:if test="${item.deliFreeAmount >0}">--%>
-                                                        <%--<br/><fmt:formatNumber value="${item.deliFreeAmount}" pattern="#,###" />원 이상 구매--%>
-                                                    <%--</c:if>--%>
+                                                    <%--&lt;%&ndash;<c:if test="${item.deliFreeAmount >0}">&ndash;%&gt;--%>
+                                                        <%--&lt;%&ndash;<br/><fmt:formatNumber value="${item.deliFreeAmount}" pattern="#,###" />원 이상 구매&ndash;%&gt;--%>
+                                                    <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
                                                 <%--</c:otherwise>--%>
                                             <%--</c:choose>--%>
                                         <%--</c:when>--%>
@@ -117,7 +127,7 @@
                         </tbody>
                         <tfoot>
                         <tr class="total_price">
-                            <td colspan="7">
+                            <td colspan="8">
                                 <div class="total">
                                     <dl>
                                         <dt>총 판매가</dt>
@@ -126,13 +136,31 @@
                                         </dd>
                                         <dt>배송비 합계</dt>
                                         <dd>
-                                            <strong><fmt:formatNumber value="${totalDeliveryPrice}" pattern="#,###" /></strong>원
+                                            <c:choose>
+                                                <c:when test="${totalSellPrice>50000}">
+                                                    <strong><fmt:formatNumber value="0" pattern="#,###" /></strong>원 ( 50,000 만원 이상 무료배송)
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <strong><fmt:formatNumber value="${totalDeliveryPrice}" pattern="#,###" /></strong>원
+                                                </c:otherwise>
+                                            </c:choose>
                                         </dd>
-                                        <dt>할인금액</dt>
-                                        <dd><span><strong id="discountPriceText">0</strong>원</span></dd>
+                                        <%--<dt>할인금액</dt>--%>
+                                        <%--<dd><span><strong id="discountPriceText">0</strong>원</span></dd>--%>
                                     </dl>
                                     <div class="price">
-                                        <span>총 구매금액: <em id="totalPriceText"><fmt:formatNumber value="${totalSellPrice + totalDeliveryPrice}" pattern="#,###" /></em> 원</span>
+                                       <span>
+                                            총 구매금액: <em id="totalPriceText">
+                                            <c:choose>
+                                                <c:when test="${totalSellPrice>50000}">
+                                                    <fmt:formatNumber value="${totalSellPrice}" pattern="#,###" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${totalSellPrice + totalDeliveryPrice}" pattern="#,###" />
+                                                </c:otherwise>
+                                            </c:choose>
+                                           </em> 원
+                                       </span>
                                     </div>
                                 </div>
                             </td>
@@ -185,7 +213,7 @@
                                             <input type="text" class="intxt w180" name="memberEmail" value="<smp:decrypt value="${sessionScope.loginEmail}"/>" maxlength="100" placeholder="example@example.com" alt="이메일" readonly/>
                                         </c:when>
                                         <c:otherwise>
-                                            <input type="text" class="intxt w180" name="memberEmail" value="${memberVo.email1}@${memberVo.email2}" maxlength="100" placeholder="example@example.com" alt="이메일"/>
+                                            <input type="text" class="intxt w180" name="memberEmail" value="${memberVo.email}" maxlength="100" placeholder="example@example.com" alt="이메일"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -242,7 +270,7 @@
                             <tr>
                                 <th scope="row"><label>이메일</label></th>
                                 <td>
-                                    <input type="text" class="intxt w180" name="receiverEmail" value="" maxlength="100" placeholder="example@example.com" data-name="email1" />
+                                    <input type="text" class="intxt w180" name="receiverMail"  data-name="" value="" maxlength="100" placeholder="example@example.com" />
                                 </td>
                             </tr>
                             <tr>

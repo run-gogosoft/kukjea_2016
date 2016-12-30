@@ -90,6 +90,7 @@ public class MyPageController extends MyPage {
 		pvo.setRowCount(ROW_COUNT);
 		pvo.setBoardType("order");
 
+
 		pvo.setTotalRowCount(orderService.getListCount(pvo));
 
 		List<OrderVo> list;
@@ -174,8 +175,6 @@ public class MyPageController extends MyPage {
 	/** 회원수정,탈퇴 전 검증 **/
 	@RequestMapping("/mypage/confirm/proc")
 	public String confirmPassword(String member, HttpServletRequest request, HttpSession session, UserVo vo, Model model){
-
-
 		vo.setId((String)session.getAttribute("loginId"));
 
 		if(StringUtil.isBlank(vo.getPassword())) {
@@ -594,8 +593,9 @@ public class MyPageController extends MyPage {
 	 * @return
 	 */
 	@RequestMapping("/mypage/order/detail/{orderSeq}")
-	public String myPageOrderDetail(HttpSession session, @PathVariable Integer orderSeq, Model model) {
-
+	public String myPageOrderDetail(HttpServletRequest request,  @PathVariable Integer orderSeq, Model model) {
+		String viewType = request.getParameter("view_type");
+		HttpSession session = request.getSession();
 		initMypage(session, model);
 
 		OrderVo pvo = new OrderVo();
@@ -636,7 +636,7 @@ public class MyPageController extends MyPage {
 		model.addAttribute("title", "구매 상세정보");
 		model.addAttribute("on", "06");
 
-		return "/mypage/order/detail.jsp";
+		return (viewType == null) ? "/mypage/order/detail.jsp":"/mypage/order/view_print.jsp";
 	}
 
 	/**
@@ -732,8 +732,8 @@ public class MyPageController extends MyPage {
 	 * 주문 취소 상세 페이지
 	 */
 	@RequestMapping("/mypage/cancel/detail/{orderSeq}")
-	public String myPageCancelDetail(HttpSession session, @PathVariable Integer orderSeq, Model model) {
-		myPageOrderDetail(session, orderSeq, model);
+	public String myPageCancelDetail(HttpServletRequest request, @PathVariable Integer orderSeq, Model model) {
+		myPageOrderDetail(request, orderSeq, model);
 		return "/mypage/order/detail_cancel.jsp";
 	}
 
@@ -1205,6 +1205,7 @@ public class MyPageController extends MyPage {
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
 		pvo.setRowCount(ROW_COUNT);
+		model.addAttribute("title", "취소리스트");
 		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", pvo);
 
@@ -1468,8 +1469,8 @@ public class MyPageController extends MyPage {
 	 * 비교견적요청관리 상세 (공공기관일 경우에만)
 	 */
 	@RequestMapping("/mypage/compare/detail/{orderSeq}")
-	public String myPageCompareDetail(HttpSession session, @PathVariable Integer orderSeq, Model model) {
-		myPageOrderDetail(session, orderSeq, model);
+	public String myPageCompareDetail(HttpServletRequest request, @PathVariable Integer orderSeq, Model model) {
+		myPageOrderDetail(request, orderSeq, model);
 		return "/mypage/order/detail_compare.jsp";
 	}
 
@@ -1488,8 +1489,8 @@ public class MyPageController extends MyPage {
 	 * 세금계산서 상세 (공공기관일 경우에만)
 	 */
 	@RequestMapping("/mypage/taxrequest/detail/{orderSeq}")
-	public String myPageTaxRequestDetail(HttpSession session, @PathVariable Integer orderSeq, Model model) {
-		myPageOrderDetail(session, orderSeq, model);
+	public String myPageTaxRequestDetail(HttpServletRequest request, @PathVariable Integer orderSeq, Model model) {
+		myPageOrderDetail(request, orderSeq, model);
 		return "/mypage/order/detail_taxrequest.jsp";
 	}
 

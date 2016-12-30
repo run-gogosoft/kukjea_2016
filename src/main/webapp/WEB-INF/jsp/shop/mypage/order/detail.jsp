@@ -33,8 +33,8 @@
                             <c:set var="addrButton" value="${addrButton+1}" />
                         </c:if>
                         <%--착불 배송비 제외--%>
-                        <c:if test="${item.deliPrepaidFlag eq 'Y'}">
-                            <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice + item.deliCost}" />
+                        <c:if test="${item.deliCost >0}">
+                            <c:set var="totalDeliveryPrice" value="${item.deliCost}" />
                         </c:if>
                         <c:set var="totalSellPrice" value="${totalSellPrice + (item.sellPrice  * item.orderCnt)}" />
                     </c:forEach>
@@ -60,7 +60,16 @@
                         <tr>
                             <td>${vo.orderSeq}</td>
                             <td><fmt:formatNumber value="${totalSellPrice}"/>원</td>
-                            <td><fmt:formatNumber value="${totalDeliveryPrice}"/>원</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${totalSellPrice>50000}">
+                                        <fmt:formatNumber value="0"/>원
+                                    </c:when>
+                                    <c:otherwise>
+                                        <fmt:formatNumber value="${totalDeliveryPrice}"/>원
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                             <td><fmt:formatNumber value="${vo.point}"/>원</td>
                             <td><strong><fmt:formatNumber value="${vo.payPrice}"/>원</strong></td>
                         </tr>
@@ -160,13 +169,13 @@
                                 </td>
                                 <td>${item.sellerName}</td>
                                 <td>
-                                    <%--<c:if test="${item.freeDeli == 'Y'}">--%>
+                                    <c:if test="${item.freeDeli == 'Y'}">
                                         <span class="icon icon_txt icon_txt_gray"> 무료배송  </span>
-                                    <%--</c:if>--%>
-                                    <%--<c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">--%>
+                                    </c:if>
+                                    <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
                                         <%--<span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>--%>
                                             <span class="icon icon_txt icon_txt_yellow"> 10+1 </span>
-                                    <%--</c:if>--%>
+                                    </c:if>
                                 </td>
                                 <td>
                                     <c:choose>

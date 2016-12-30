@@ -47,6 +47,9 @@ public class Const {
 	public static final String OS;
 	public static final String TEMP_DIR;
 
+	//배송료
+	public static final int DELI_COST = 4000;
+
 	/* 도메인 */
 	public static final String DOMAIN;
 	static {

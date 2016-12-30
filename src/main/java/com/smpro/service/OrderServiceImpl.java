@@ -708,11 +708,7 @@ public class OrderServiceImpl implements OrderService {
 				if(ovo.getDeliCost() == 0) {
 					cell.add("무료");
 				} else {
-					if ("Y".equals(ovo.getDeliPrepaidFlag())) {
-						cell.add("선결제");
-					} else if ("N".equals(ovo.getDeliPrepaidFlag())) {
-						cell.add("착불");
-					} 
+					cell.add("선결제");
 				}
 
 				// 현재 로그인한 타입이 어드민일때만 보여준다

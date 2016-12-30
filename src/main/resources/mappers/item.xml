@@ -33,7 +33,7 @@
 			A.insurance_code AS insuranceCode,
 			A.subject_type AS subjectType,
 			A.deli_type_code AS deliTypeCode,
-			A.deli_cost AS deliCost,
+			<!--A.deli_cost AS deliCost,-->
 			A.deli_free_amount AS deliFreeAmount,
 			A.deli_prepaid_flag AS deliPrepaidFlag,
 			A.deli_package_flag AS deliPackageFlag,
@@ -55,21 +55,21 @@
 			c2.name AS typeName,
 			c3.name AS taxName,
 			A.auth_category AS authCategory,
-			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS optionPrice,
-			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS salePrice,
+			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS optionPrice,
+			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS salePrice,
 			CASE
 				WHEN (
 					SELECT sale_price
 					FROM sm_item_option_value v
 					LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-					WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1) > 0
+					WHERE o.item_seq=A.seq AND v.stock_flag='Y'
+					ORDER BY v.option_price LIMIT 1) > 0
 					THEN (
 					SELECT sale_price
 					FROM sm_item_option_value v
 					LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-					WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1
+					WHERE o.item_seq=A.seq AND v.stock_flag='Y'
+					ORDER BY v.option_price LIMIT 1
 				)
 				ELSE (
 					SELECT option_price
@@ -77,12 +77,12 @@
 					LEFT OUTER JOIN sm_item_option o
 					ON (o.seq=v.option_seq)
 					WHERE o.item_seq=A.seq AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1
+					ORDER BY v.option_price LIMIT 1
 				)
 			END AS sellPrice,
-			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS freeDeli,
-			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq  AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS eventAdded,
-			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y'  ORDER BY v.option_price,v.sale_price LIMIT 1) ) AS salePercent
+			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS freeDeli,
+			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq  AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS eventAdded,
+			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y'  ORDER BY v.option_price LIMIT 1) ) AS salePercent
 		FROM
 			sm_item A LEFT OUTER JOIN
 			sm_item_category B	ON A.cate_lv1_seq=B.seq LEFT OUTER JOIN
@@ -338,21 +338,21 @@
 			, o.option_name as optionName
 			, (SELECT value_name FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS valueName
 			, (SELECT stock_cnt FROM sm_item_option_value WHERE seq=#{optionValueSeq}) AS stockCount
-			, (SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS optionPrice,
-			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS salePrice,
+			, (SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS optionPrice,
+			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS salePrice,
 			CASE
 				WHEN (
 					SELECT sale_price
 					FROM sm_item_option_value v
 					LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-					WHERE o.item_seq=a.seq AND v.sale_price>0 AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1) > 0
+					WHERE o.item_seq=a.seq AND v.stock_flag='Y'
+					ORDER BY v.option_price LIMIT 1) > 0
 					THEN (
 					SELECT sale_price
 					FROM sm_item_option_value v
 					LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-					WHERE o.item_seq=a.seq AND v.sale_price>0 AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1
+					WHERE o.item_seq=a.seq AND v.stock_flag='Y'
+					ORDER BY v.option_price LIMIT 1
 				)
 				ELSE (
 					SELECT option_price
@@ -360,12 +360,12 @@
 					LEFT OUTER JOIN sm_item_option o
 					ON (o.seq=v.option_seq)
 					WHERE o.item_seq=a.seq AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1
+					ORDER BY v.option_price LIMIT 1
 				)
 			END AS sellPrice,
-			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS freeDeli,
-			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq  AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS eventAdded,
-			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y'  ORDER BY v.option_price,v.sale_price LIMIT 1) ) AS salePercent
+			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS freeDeli,
+			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq  AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS eventAdded,
+			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=a.seq AND v.stock_flag='Y'  ORDER BY v.option_price LIMIT 1) ) AS salePercent
 		FROM
 			sm_item a LEFT OUTER JOIN
 			sm_item_option o on(a.seq=o.item_seq) LEFT OUTER JOIN
@@ -388,21 +388,21 @@
 			, i.type_code AS typeCode
 			, (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = i.seq) AS itemGrade
 			, (SELECT COUNT(*) FROM sm_item_review WHERE item_seq = i.seq) AS reviewCount
-			, (SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS optionPrice,
-			  (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS salePrice,
+			, (SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS optionPrice,
+			  (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS salePrice,
 				CASE
 					WHEN (
 						SELECT sale_price
 						FROM sm_item_option_value v
 						LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-						WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y'
-						ORDER BY v.option_price,v.sale_price LIMIT 1) > 0
+						WHERE o.item_seq=i.seq AND v.stock_flag='Y'
+						ORDER BY v.option_price LIMIT 1) > 0
 						THEN (
 						SELECT sale_price
 						FROM sm_item_option_value v
 						LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-						WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y'
-						ORDER BY v.option_price,v.sale_price LIMIT 1
+						WHERE o.item_seq=i.seq AND v.stock_flag='Y'
+						ORDER BY v.option_price LIMIT 1
 					)
 					ELSE (
 						SELECT option_price
@@ -410,12 +410,12 @@
 						LEFT OUTER JOIN sm_item_option o
 						ON (o.seq=v.option_seq)
 						WHERE o.item_seq=i.seq AND v.stock_flag='Y'
-						ORDER BY v.option_price,v.sale_price LIMIT 1
+						ORDER BY v.option_price LIMIT 1
 					)
 				END AS sellPrice,
-				(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS freeDeli,
-				(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq  AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS eventAdded,
-				(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y'  ORDER BY v.option_price,v.sale_price LIMIT 1) ) AS salePercent
+				(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS freeDeli,
+				(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq  AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS eventAdded,
+				(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y'  ORDER BY v.option_price LIMIT 1) ) AS salePercent
 		FROM
 			sm_item i LEFT OUTER JOIN (
 				SELECT
@@ -473,7 +473,7 @@
 			A.mod_date AS modDate,
 			A.reg_date AS regDate,
 			A.deli_type_code AS deliTypeCode,
-			A.deli_cost AS deliCost,
+			<!--A.deli_cost AS deliCost,-->
 			A.deli_free_amount AS deliFreeAmount,
 			A.deli_prepaid_flag AS deliPrepaidFlag,
 			A.deli_package_flag AS deliPackageFlag,
@@ -500,21 +500,21 @@
 			c1.name AS statusName,
 			c2.name AS typeName,
 			A.img_banner_code AS imgBannerCode,
-			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS optionPrice,
-				(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS salePrice,
+			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS optionPrice,
+				(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS salePrice,
 				CASE
 					WHEN (
 						SELECT sale_price
 						FROM sm_item_option_value v
 						LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-						WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y'
-						ORDER BY v.option_price,v.sale_price LIMIT 1) > 0
+						WHERE o.item_seq=A.seq AND v.stock_flag='Y'
+						ORDER BY v.option_price LIMIT 1) > 0
 						THEN (
 						SELECT sale_price
 						FROM sm_item_option_value v
 						LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-						WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y'
-						ORDER BY v.option_price,v.sale_price LIMIT 1
+						WHERE o.item_seq=A.seq AND v.stock_flag='Y'
+						ORDER BY v.option_price LIMIT 1
 					)
 					ELSE (
 						SELECT option_price
@@ -522,12 +522,12 @@
 						LEFT OUTER JOIN sm_item_option o
 						ON (o.seq=v.option_seq)
 						WHERE o.item_seq=A.seq AND v.stock_flag='Y'
-						ORDER BY v.option_price,v.sale_price LIMIT 1
+						ORDER BY v.option_price LIMIT 1
 					)
 				END AS sellPrice,
-				(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS freeDeli,
-				(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq  AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS eventAdded,
-				(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y'  ORDER BY v.option_price,v.sale_price LIMIT 1) ) AS salePercent
+				(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS freeDeli,
+				(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq  AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS eventAdded,
+				(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y'  ORDER BY v.option_price LIMIT 1) ) AS salePercent
 		FROM
 			sm_item A INNER JOIN 
 			sm_item_detail B ON A.seq=B.item_seq LEFT OUTER JOIN 
@@ -640,7 +640,7 @@
 			#{img4},
 			#{taxCode},
 			#{deliTypeCode},
-			#{deliCost},
+			<!--#{deliCost},-->
 			#{deliFreeAmount},
 			#{deliPrepaidFlag},
 			#{deliPackageFlag},
@@ -766,7 +766,7 @@
 		, subject_type=#{subjectType}
 		, insurance_code=#{insuranceCode}
 		, deli_type_code=#{deliTypeCode}
-		, deli_cost=#{deliCost}
+		<!--, deli_cost=#{deliCost}-->
 		, deli_free_amount=#{deliFreeAmount}
 		, deli_prepaid_flag=#{deliPrepaidFlag}
 		, deli_package_flag=#{deliPackageFlag}
@@ -871,9 +871,9 @@
 		<if test="deliTypeCode != ''">
 			, deli_type_code=#{deliTypeCode}
 		</if>
-		<if test="deliCost > 0">
-			, deli_cost=#{deliCost}
-		</if>
+		<!--<if test="deliCost > 0">-->
+			<!--, deli_cost=#{deliCost}-->
+		<!--</if>-->
 		<if test="deliFreeAmount > 0">
 			, deli_free_amount=#{deliFreeAmount}
 		</if>
@@ -1075,21 +1075,21 @@
 
 	<select id="getListSimple" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
 		  SELECT
-			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS optionPrice,
-			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS salePrice,
+			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS optionPrice,
+			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS salePrice,
 			CASE
 				WHEN (
 				SELECT sale_price
 				FROM sm_item_option_value v
 				LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-				WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y'
-				ORDER BY v.option_price,v.sale_price LIMIT 1) > 0
+				WHERE o.item_seq=i.seq AND v.stock_flag='Y'
+				ORDER BY v.option_price LIMIT 1) > 0
 				THEN (
 				SELECT sale_price
 				FROM sm_item_option_value v
 				LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-				WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y'
-				ORDER BY v.option_price,v.sale_price LIMIT 1
+				WHERE o.item_seq=i.seq AND v.stock_flag='Y'
+				ORDER BY v.option_price LIMIT 1
 				)
 				ELSE (
 					SELECT option_price
@@ -1097,12 +1097,12 @@
 					LEFT OUTER JOIN sm_item_option o
 					ON (o.seq=v.option_seq)
 					WHERE o.item_seq=i.seq AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1
+					ORDER BY v.option_price LIMIT 1
 				)
 			END AS sellPrice,
-			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS freeDeli,
-			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq  AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS eventAdded,
-			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y'  ORDER BY v.option_price,v.sale_price LIMIT 1) ) AS salePercent,
+			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS freeDeli,
+			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq  AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS eventAdded,
+			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y'  ORDER BY v.option_price LIMIT 1) ) AS salePercent,
 
 			(SELECT cate_name FROM sm_item_category A WHERE i.seq=i.cate_lv1_seq) AS cateLv1Name,
 			(SELECT cate_name FROM sm_item_category B WHERE B.seq=i.cate_lv2_seq) AS cateLv2Name,
@@ -1125,7 +1125,7 @@
 			i.insurance_code AS insuranceCode,
 			i.subject_type AS subjectType,
 			i.deli_type_code AS deliTypeCode,
-			i.deli_cost AS deliCost,
+			<!--i.deli_cost AS deliCost,-->
 			i.maker,
 			u.name AS sellerName,
 			u.nickname,
@@ -1417,7 +1417,7 @@
 			A.insurance_code AS insuranceCode,
 			A.subject_type AS subjectType,
 			A.deli_type_code AS deliTypeCode,
-			A.deli_cost AS deliCost,
+			<!--A.deli_cost AS deliCost,-->
 			A.deli_free_amount AS deliFreeAmount,
 			A.deli_prepaid_flag AS deliPrepaidFlag,
 			A.deli_package_flag AS deliPackageFlag,
@@ -1437,21 +1437,21 @@
 			(SELECT GROUP_CONCAT(v.option_price SEPARATOR ',') FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq ORDER BY v.seq ASC) AS optionPrices,
 			(SELECT GROUP_CONCAT(v.stock_cnt SEPARATOR ',') FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq ORDER BY v.seq ASC) AS stockCounts,
 			A.type_code AS typeCode,
-			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS optionPrice,
-			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS salePrice,
+			(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS optionPrice,
+			(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS salePrice,
 			CASE
 				WHEN (
 					SELECT sale_price
 					FROM sm_item_option_value v
 					LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-					WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1) > 0
+					WHERE o.item_seq=A.seq AND v.stock_flag='Y'
+					ORDER BY v.option_price LIMIT 1) > 0
 				THEN (
 					SELECT sale_price
 					FROM sm_item_option_value v
 					LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-					WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1
+					WHERE o.item_seq=A.seq AND v.stock_flag='Y'
+					ORDER BY v.option_price LIMIT 1
 				)
 				ELSE (
 					SELECT option_price
@@ -1459,12 +1459,12 @@
 					LEFT OUTER JOIN sm_item_option o
 					ON (o.seq=v.option_seq)
 					WHERE o.item_seq=A.seq AND v.stock_flag='Y'
-					ORDER BY v.option_price,v.sale_price LIMIT 1
+					ORDER BY v.option_price LIMIT 1
 				)
 			END AS sellPrice,
-			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS freeDeli,
-			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq  AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1) AS eventAdded,
-			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.sale_price>0 AND v.stock_flag='Y' ORDER BY v.option_price,v.sale_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y'  ORDER BY v.option_price,v.sale_price LIMIT 1) ) AS salePercent
+			(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS freeDeli,
+			(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq  AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS eventAdded,
+			(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y'  ORDER BY v.option_price LIMIT 1) ) AS salePercent
 		FROM
 			sm_item A LEFT OUTER JOIN
 			sm_item_category B	ON A.cate_lv1_seq=B.seq LEFT OUTER JOIN

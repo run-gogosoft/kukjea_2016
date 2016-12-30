@@ -222,14 +222,14 @@
 									<td class="text-right"><fmt:formatNumber value="${((item.sellPrice) * item.orderCnt)}"/></td>
 									<td class="text-right">
 										<c:choose>
-											<c:when test="${item.freeDeli eq 'Y'}"><span class="icon icon_txt icon_txt_gray">무료배송</span></c:when>
-											<c:otherwise><span class="icon icon_txt icon_txt_gray">착불</span></c:otherwise>
+											<c:when test="${item.freeDeli eq 'Y'}">무료배송</c:when>
+											<c:otherwise>선결제</c:otherwise>
 										</c:choose>
 									</td>
 									<td class="text-right">
 										<c:choose>
-											<c:when test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}"><span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span></c:when>
-											<c:otherwise><span class="icon icon_txt icon_txt_yellow">이벤트없음</span></c:otherwise>
+											<c:when test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">${item.eventAdded}</c:when>
+											<c:otherwise>이벤트없음</c:otherwise>
 										</c:choose>
 									</td>
 									<td>

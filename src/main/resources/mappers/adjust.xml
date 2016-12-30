@@ -10,10 +10,10 @@
       (d.sell_price + IFNULL(d.option_price,0)) AS sellPrice,
       d.supply_price AS supplyPrice,
       d.order_cnt AS orderCnt,
-      CASE
+      <!--CASE
         WHEN d.deli_prepaid_flag='Y' THEN d.deli_cost
         ELSE 0
-      END AS deliCost,
+      END AS deliCost,-->
       d.tax_code AS taxCode,
       d.seller_seq AS sellerSeq,
       DATE_FORMAT(d.c10_date, '%Y%m') AS orderYm,
@@ -39,7 +39,7 @@
       a.sell_price AS sellPrice,
       a.supply_price AS supplyPrice,
       a.order_cnt AS orderCnt,
-      a.deli_cost AS deliCost,
+      <!--a.deli_cost AS deliCost,-->
       a.tax_code AS taxCode,
       a.seller_seq AS sellerSeq,
       a.order_ym AS orderYm,
@@ -61,12 +61,12 @@
   <insert id="regVo" parameterType="com.smpro.vo.AdjustVo">
     INSERT INTO sm_adjust (
       order_detail_seq, mall_seq, adjust_grade_code, cancel_flag,
-      sell_price, supply_price, order_cnt, deli_cost,
+      sell_price, supply_price, order_cnt,
       tax_code, seller_seq,
       order_ym, adjust_date, reg_date, reason
     ) VALUES (
       #{orderDetailSeq}, #{mallSeq}, 'C', #{cancelFlag},
-      #{sellPrice}, #{supplyPrice}, #{orderCnt}, #{deliCost},
+      #{sellPrice}, #{supplyPrice}, #{orderCnt},
       #{taxCode}, #{sellerSeq},
       #{orderYm}, #{adjustDate}, NOW(), #{reason}
     )
@@ -91,7 +91,7 @@
 				a.complete_flag AS completeFlag,
 				SUM( CASE WHEN a.cancel_flag = 'Y' THEN -a.sell_price   ELSE a.sell_price END  * a.order_cnt)   sellPrice,
 				SUM( CASE WHEN a.cancel_flag = 'Y' THEN -a.supply_price ELSE a.supply_price END * a.order_cnt ) supplyPrice,
-				SUM( CASE WHEN a.cancel_flag = 'Y' THEN -a.deli_cost   ELSE a.deli_cost END ) deliCost
+				<!--SUM( CASE WHEN a.cancel_flag = 'Y' THEN -a.deli_cost   ELSE a.deli_cost END ) deliCost-->
 			FROM
 				sm_adjust a
 			WHERE a.adjust_date=#{adjustDate}
@@ -140,7 +140,7 @@
 			a.sell_price AS sellPrice,
 			a.supply_price AS supplyPrice,
 			a.order_cnt AS orderCnt,
-			a.deli_cost AS deliCost,
+			<!--a.deli_cost AS deliCost,-->
 			u.name AS sellerName,
 			o.member_name AS memberName,
 			o.receiver_name AS receiverName,

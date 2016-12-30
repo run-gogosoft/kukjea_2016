@@ -23,7 +23,7 @@
 
                     <div class="privacy_intro">
                         <dl>
-                            <dt>국제실업 이용약관</dt>
+                            <dt>국제몰닷컴 이용약관</dt>
                             <dd></dd>
                         </dl>
                         <p>회사의 이용약관은 다음과 같은 내용을 담고 있습니다.</p>

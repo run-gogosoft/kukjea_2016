@@ -135,8 +135,7 @@
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
 				((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
-				(d.supply_price * d.order_cnt) AS supplyPrice,
-				d.deli_cost AS deliCost
+				(d.supply_price * d.order_cnt) AS supplyPrice
 			FROM
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -174,8 +173,7 @@
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
 				-((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
-				-(d.supply_price * d.order_cnt) AS supplyPrice,
-				d.deli_cost AS deliCost
+				-(d.supply_price * d.order_cnt) AS supplyPrice
 			FROM
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -198,8 +196,8 @@
 	<select id="getListByCategoryDetailSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
-			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
-			SUM(d.deli_cost) AS deliCost
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice
+			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
 			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -219,8 +217,8 @@
 	<select id="getListByCategoryDetailCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
-			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
-			SUM(d.deli_cost) AS deliCost
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice
+			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
 			sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -474,8 +472,8 @@
 	<select id="getListByItemSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
-			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
-			SUM(d.deli_cost) AS deliCost
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice
+			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM 
 			sm_order_detail d
 		WHERE
@@ -492,8 +490,8 @@
 	<select id="getListByItemCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
-			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
-			SUM(d.deli_cost) AS deliCost
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice
+			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM 
 			sm_order_detail d
 		WHERE
@@ -764,7 +762,7 @@
 				d.order_cnt AS orderCnt,
 				((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
 				(d.supply_price * d.order_cnt) AS supplyPrice,
-				d.deli_cost AS deliCost,
+				<!--d.deli_cost AS deliCost,-->
 				u.name AS sellerName,
 				i.auth_category AS authCategory,
 				s.biz_no AS bizNo
@@ -803,7 +801,7 @@
 				d.order_cnt AS orderCnt,
 				-((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
 				-(d.supply_price * d.order_cnt) AS supplyPrice,
-				d.deli_cost AS deliCost,
+				<!--d.deli_cost AS deliCost,-->
 				u.name AS sellerName,
 				i.auth_category AS authCategory,
 				s.biz_no AS bizNo

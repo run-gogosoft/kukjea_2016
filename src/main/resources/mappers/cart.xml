@@ -4,15 +4,15 @@
 	<select id="getList" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.ItemVo">
 	SELECT
 		t.*,
-		CASE
-			WHEN p.deli_cost > 0 THEN
-			<!-- 묶음 배송비가 존재할 경우 그룹별로 처음에만 배송비 설정, 나머지는 0원 설정 -->
-				CASE
-					WHEN t.seq=p.min_package_seq THEN p.deli_cost
-					ELSE 0
-				END
-			ELSE t.calc_deli_cost
-		END deliCost,
+		<!--CASE-->
+			<!--WHEN p.deli_cost > 0 THEN-->
+			<!--&lt;!&ndash; 묶음 배송비가 존재할 경우 그룹별로 처음에만 배송비 설정, 나머지는 0원 설정 &ndash;&gt;-->
+				<!--CASE-->
+					<!--WHEN t.seq=p.min_package_seq THEN p.deli_cost-->
+					<!--ELSE 0-->
+				<!--END-->
+			<!--ELSE t.calc_deli_cost-->
+		<!--END deliCost,-->
 		IFNULL(p.deli_cost,0) packageDeliCost
 	FROM (
 		SELECT
@@ -56,7 +56,7 @@
 			ic.cate_name AS cateLv1Name
         FROM
 			sm_cart c INNER JOIN
-			sm_item_option_value ov ON c.option_value_seq=ov.seq INNER JOIN
+			sm_item_option_value ov ON c.option_value_seq=ov.seq AND  ov.stock_flag='Y' INNER JOIN
 			sm_item_option o       ON ov.option_seq=o.seq AND o.show_flag='Y' INNER JOIN
 			sm_item i ON c.item_seq=i.seq LEFT OUTER JOIN
 			sm_item_category ic ON (i.cate_lv1_seq=ic.seq) LEFT OUTER JOIN
@@ -142,7 +142,7 @@
       COUNT(*) AS cnt
     FROM
       sm_cart a INNER JOIN
-      sm_item_option_value b ON a.option_value_seq=b.seq INNER JOIN
+      sm_item_option_value b ON a.option_value_seq=b.seq AND  b.stock_flag='Y'INNER JOIN
       sm_item_option c       ON b.option_seq=c.seq INNER JOIN
       sm_item d              ON c.item_seq=d.seq
     WHERE
@@ -178,7 +178,7 @@
       b.seller_seq AS sellerSeq,
       d.tax_code AS taxCode,
       d.deli_type_code AS deliTypeCode,
-      d.deli_cost AS deliCost,
+      <!--d.deli_cost AS deliCost,-->
       d.deli_free_amount AS deliFreeAmount,
       d.deli_prepaid_flag AS deliPrepaidFlag,
       d.deli_package_flag AS deliPackageFlag,

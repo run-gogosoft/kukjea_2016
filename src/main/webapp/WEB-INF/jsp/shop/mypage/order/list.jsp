@@ -153,9 +153,9 @@
                                 <a href="/shop/mypage/order/detail/${vo.orderSeq}"><strong>${vo.orderSeq}</strong></a><br/>
                                 (${fn:substringBefore(vo.regDate,' ')})
                                 <div class="cancelDiv" style="margin-top:3px;"></div>
-                                <c:if test="${vo.tid ne ''}">
-                                    <button type="button" onclick="showReceipt('${vo.tid}')" class="btn btn_xs btn_default">영수증 출력</button>
-                                </c:if>
+                                <%--<c:if test="${vo.tid ne ''}">--%>
+                                    <button type="button" onclick="doPrint(${vo.orderSeq})" class="btn btn_xs btn_default">거래명세서</button>
+                                <%--</c:if>--%>
                             </td>
                             <!--td data-detail-merge-flag="${vo.orderSeq}" data-detail-merge-flag-statuscode="${vo.statusCode}">
                                 <a href="/shop/mypage/order/detail/${vo.orderSeq}"><i class="fa fa-building-o fa-3x" style="color:#e5be34;"></i></a>
@@ -200,12 +200,7 @@
                                     <c:otherwise>
                                         <fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
                                         <br/>
-                                        <%--<c:if test="${vo.deliPrepaidFlag eq 'Y'}">--%>
-                                            선결제
-                                        <%--</c:if>--%>
-                                        <%--<c:if test="${vo.deliPrepaidFlag eq 'N'}">--%>
-                                            <%--착불--%>
-                                        <%--</c:if>--%>
+                                        선결제
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -267,6 +262,7 @@
                             </td>
                         </tr>
                         </c:forEach>
+                        </tbody>
                     </table>
                     <div class="board_action">${paging}</div>
                 </div>
@@ -351,10 +347,10 @@
         </c:forEach>
     });
 
-    var showReceipt = function(tid) {
-        var receiptUrl = "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noMethod=1&noTid="+tid;
-        window.open(receiptUrl,"receipt","width=430,height=700");
-    };
+    /** 인쇄용 팝업창 열기 */
+    var doPrint = function(orderSeq) {
+        window.open("/shop/mypage/order/detail/"+orderSeq+"?view_type=print","print_order_detail","scrollbars=yes,width=770,height=800");
+    }
 </script>
 </body>
 </html>

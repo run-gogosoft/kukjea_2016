@@ -22,7 +22,7 @@
 				ELSE ov.option_price
 			END AS sellPrice,
 
-			i.deli_cost AS deliCost,
+			<!--i.deli_cost AS deliCost,-->
 			i.deli_type_code AS deliTypeCode,
 			i.deli_free_amount AS deliFreeAmount,
 			i.deli_package_flag AS deliPackageFlag,
@@ -34,6 +34,7 @@
 			sm_item i ON (w.item_seq=i.seq) LEFT OUTER JOIN
 			sm_user u ON (i.seller_seq=u.seq)
 		WHERE w.member_seq=#{memberSeq}
+		AND ov.stock_flag='Y'
 		ORDER BY w.seq DESC 
 	</select>
 	<!-- 등록 -->

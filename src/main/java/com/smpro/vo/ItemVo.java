@@ -1,5 +1,7 @@
 package com.smpro.vo;
 
+import com.smpro.util.Const;
+
 import java.util.List;
 
 public class ItemVo extends PagingVo {
@@ -197,13 +199,13 @@ public class ItemVo extends PagingVo {
 	/** 배송 구분 */
 	private String deliTypeCode = "";
 	/** 배송비 */
-	private int deliCost;
+	private int deliCost = Const.DELI_COST;
 	/** 무료배송 조건금액 */
 	private int deliFreeAmount;
 	/** 선결제 여부 */
-	private String deliPrepaidFlag = "";
+	private String deliPrepaidFlag = "Y";
 	/** 묶음배송 가능 여부 */
-	private String deliPackageFlag = "";
+	private String deliPackageFlag = " Y";
 	/** 묶음배송비 */
 	private int packageDeliCost;
 	/** 상품타입(N:일반상품, C:쿠폰상품, E:견적상품) */

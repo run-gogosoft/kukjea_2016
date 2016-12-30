@@ -1,5 +1,7 @@
 package com.smpro.vo;
 
+import com.smpro.util.Const;
+
 import java.util.List;
 
 public class OrderVo extends PagingVo {
@@ -138,16 +140,16 @@ public class OrderVo extends PagingVo {
 	private int sumOptionPrice;
 
 	/** 배송비 */
-	private int deliCost;
+	private int deliCost = Const.DELI_COST;
 	
 	/** 배송 메세지 */
 	private String deliMsg = "";
 	
 	/** 묶음배송 가능 여부 */
-	private String deliPackageFlag = "";
+	private String deliPackageFlag = "Y";
 	
 	/** 배송선결제 여부(착불/선결제선택가능:null,선결제필수:Y,선결제불가:N) */
-	private String deliPrepaidFlag = "";
+	private String deliPrepaidFlag = "Y";
 	
 	/** 묶음 배송비 */
 	private int packageDeliCost;
@@ -926,10 +928,12 @@ public class OrderVo extends PagingVo {
 	}
 
 	public int getDeliCost() {
+		System.out.println(">>getDeliCost:"+deliCost);
 		return deliCost;
 	}
 
 	public void setDeliCost(int deliCost) {
+		System.out.println(">>setDeliCost:"+deliCost);
 		this.deliCost = deliCost;
 	}
 

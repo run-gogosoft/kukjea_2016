@@ -31,12 +31,9 @@ var Cart = {
 		};
 		for(var i=0; i<Cart.list.length; i++) {
 			vo.itemTotalPrice += parseInt(Cart.list[i].sellPrice, 10) * parseInt(Cart.list[i].count, 10);
-
-			//배송비가 선결제 일때만 배송비를 더한다.
-			if(Cart.list[i].deliPrepaidFlag==="Y"){
-				vo.deliCost += parseInt(Cart.list[i].deliCost, 10);
-			}
+			vo.deliCost += parseInt(Cart.list[i].deliCost, 10);
 		}
+		
 		vo.total += vo.itemTotalPrice + vo.deliCost;
 		$("#totalBody").html( $("#totalTemplate").tmpl(vo) );
 	}

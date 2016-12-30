@@ -94,18 +94,18 @@
 									<td class="text-right">${item.orderCnt}</td>
 									<td class="text-center">
 										<c:choose>
-											<c:when test="${item.deliCost eq 0}">
+											<c:when test="${item.freeDeli eq 'Y'}">
 												무료
 											</c:when>
 											<c:otherwise>
 												<fmt:formatNumber value="${item.deliCost}" pattern="#,###" />
 												<br/>
-												<c:if test="${item.deliPrepaidFlag eq 'Y'}">
+												<%--<c:when test="${item.deliPrepaidFlag eq 'N'}">--%>
+													<%--착불--%>
+												<%--</c:when>--%>
+												<%--<c:otherwise>--%>
 													선결제
-												</c:if>
-												<c:if test="${item.deliPrepaidFlag eq 'N'}">
-													착불
-												</c:if>
+												<%--</c:otherwise>--%>
 											</c:otherwise>
 										</c:choose>
 									</td>

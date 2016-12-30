@@ -30,15 +30,15 @@
 	<td class="text-right">
 		<%="${orderCnt}"%> 개
 		<p>
-			{{if deliCost == 0}}
+			{{if freeDeli == "Y"}}
 				무료
 			{{else}}
 				<%="${deliCost}"%> 원
-				{{if deliPrepaidFlag == "Y"}}
+				<%--{{if deliPrepaidFlag == "N"}}--%>
+				<%--<br/>착불--%>
+				<%--{{else}}--%>
 				<br/>선결제
-				{{else deliPrepaidFlag == "N"}}
-				<br/>착불
-				{{/if}}
+				<%--{{/if}}--%>
 			{{/if}}
 		</p>
 	</td>

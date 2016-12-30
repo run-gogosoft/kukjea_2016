@@ -155,6 +155,7 @@
 							</thead>
 							<tbody>
 							<c:set var="total" value="0"/>
+							<c:set var="totlaDeliCost" value="0"/>
 							<c:set var="count10" value="0" />
 							<c:forEach var="vo" items="${list}" varStatus="status">
 								<c:if test="${vo.statusCode eq '10'}">
@@ -194,27 +195,19 @@
 									<td class="text-right">${vo.orderCnt}</td>
 									<td class="text-center">
 										<c:choose>
-											<c:when test="${vo.freeDeli eq 'Y'}">
-												무료
-											</c:when>
+											<c:when test="${vo.freeDeli eq 'Y'}">무료</c:when>
 											<c:otherwise>
 												<c:if test="${vo.deliCost > 0}">
 													<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
 												</c:if>
-												<br/>
-												<c:if test="${vo.deliPrepaidFlag eq 'Y'}">
-													선결제
-												</c:if>
-												<c:if test="${vo.deliPrepaidFlag eq 'N' or vo.freeDeli ne 'Y'}">
-													착불
-												</c:if>
+												<br/>선결제
 											</c:otherwise>
 										</c:choose>
 									</td>
 									<td>
 										<c:choose>
-											<c:when test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
-												<span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>
+											<c:when test="${vo.eventAdded !='' && vo.eventAdded !=' ' && vo.eventAdded !='0'}">
+												<span class="icon icon_txt icon_txt_yellow">${vo.eventAdded}</span>
 											</c:when>
 											<c:otherwise>
 												<span class="icon icon_txt icon_txt_yellow">이벤트없음</span>
@@ -223,8 +216,8 @@
 									</td>
 									<td class="text-right">
 										<c:set var="subTotal" value="${vo.sellPrice * vo.orderCnt}"/>
-										<c:if test="${vo.deliPrepaidFlag eq 'Y'}">
-											<c:set var="subTotal" value="${subTotal + vo.deliCost}"/>
+										<c:if test="${vo.deliCost > 0}">
+											<c:set var="totlaDeliCost" value="${vo.deliCost}"/>
 										</c:if>
 										<c:set var="total" value="${total + subTotal}"/>
 										<fmt:formatNumber value="${subTotal}"/>
@@ -233,7 +226,16 @@
 							</c:forEach>
 								<tr>
 									<th colspan="13">주문 합계 금액</th>
-									<td class="text-right"><fmt:formatNumber value="${total}"/></td>
+									<td class="text-right">
+										<c:choose>
+											<c:when test="${total> 50000}">
+												<fmt:formatNumber value="${total}"/>
+											</c:when>
+											<c:otherwise>
+												<fmt:formatNumber value="${total+totlaDeliCost}"/>
+											</c:otherwise>
+										</c:choose>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -267,9 +269,11 @@
 												</c:otherwise>
 											</c:choose>
 										</c:if>
+									</c:if>
 										<c:if test="${statusCode eq '30'}">
 											<button type="button" onclick="updateStatus('50');" class="btn btn-sm btn-info">배송완료</button>
 										</c:if>
+										<c:if test="${sessionScope.loginType eq 'A'}">
 										<c:if test="${statusCode eq '60' or statusCode eq '61' or statusCode eq '70' or statusCode eq '71'}">
 										<%-- <c:if test="${statusCode eq '60' or statusCode eq '61' or statusCode eq '70' or statusCode eq '71' or statusCode eq '90'}"> --%>
 											<button type="button" onclick="updateStatus('10');" class="btn btn-sm btn-info">결제완료</button>

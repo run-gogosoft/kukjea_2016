@@ -31,7 +31,7 @@ div.dataTables_info {
 }
 
 div.dataTables_paginate {
-	margin: 0;
+	margin: 2px;
 	white-space: nowrap;
 	text-align: right;
 }

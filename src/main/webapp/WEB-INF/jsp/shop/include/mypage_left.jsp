@@ -8,6 +8,7 @@
         <%-- li <c:if test="${on eq '04'}">class="on"</c:if>><a href="">내구매통계</a></li --%>
         <li <c:if test="${on eq '05'}">class="on"</c:if>><a href="/shop/cart">장바구니</a></li>
         <li <c:if test="${on eq '06'}">class="on"</c:if>><a href="/shop/mypage/order/list">구매리스트</a></li>
+        <li <c:if test="${on eq '06'}">class="on"</c:if>><a href="/shop/mypage/cancel/list">취소리스트</a></li>
         <li <c:if test="${on eq '07'}">class="on"</c:if>><a href="/shop/wish/list">관심상품</a></li>
         <%-- li <c:if test="${on eq '08'}">class="on"</c:if>><a href="">둘러본상품</a></li --%>
         <%-- li <c:if test="${on eq '09'}">class="on"</c:if>><a href="">내검색결과</a></li --%>
