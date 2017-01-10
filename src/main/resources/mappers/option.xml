@@ -20,11 +20,8 @@
 			, B.seller_seq AS sellerSeq
 			, B.free_deli AS freeDeli
 			, B.event_added AS eventAdded
-			,100-(100 * B.sale_price)/B.option_price AS salePercent
-			, CASE
-				  WHEN B.sale_price > 0 THEN B.sale_price
-				  ELSE B.option_price
-			  END AS sellPrice
+			, B.sale_percent AS salePercent
+			, B.sell_price AS sellPrice
 		FROM sm_item_option A
 		INNER JOIN sm_item_option_value B
 		ON A.seq=B.option_seq
@@ -63,16 +60,13 @@
 			, event_added AS eventAdded
 			, mod_date AS modDate
 			, reg_date AS regDate
-			,100-(100 * sale_price)/option_price AS salePercent
-			, CASE
-				  WHEN sale_price > 0 THEN sale_price
-				  ELSE option_price
-			  END AS sellPrice
+			, sale_percent AS salePercent
+			, sell_price AS sellPrice
 		FROM sm_item_option_value
 		WHERE 1=1
 		AND option_seq=#{value}
 		AND stock_flag='Y'
-		ORDER BY seq ASC
+		ORDER BY sellPrice ASC
 	</select>
 
 	<select id="getValueListForSeller" parameterType="Map" resultType="com.smpro.vo.ItemOptionVo">
@@ -90,6 +84,8 @@
 		, event_added AS eventAdded
 		, mod_date AS modDate
 		, reg_date AS regDate
+		, sell_price AS sellPrice
+		, sale_percent AS salePercent
 		FROM sm_item_option_value
 		WHERE 1=1
 		AND option_seq=#{seq}
@@ -134,11 +130,8 @@
 			, B.item_seq AS itemSeq
 			, B.show_flag AS showFlag
 			, A.seller_seq AS sellerSeq
-			,100-(100 * A.sale_price)/A.option_price AS salePercent
-			, CASE
-				  WHEN A.sale_price > 0 THEN A.sale_price
-				  ELSE A.option_price
-			  END AS sellPrice
+			, A.sale_percent AS salePercent
+			, A.sell_price AS sellPrice
 		FROM sm_item_option_value A
 		INNER JOIN sm_item_option B
 			ON A.option_seq=B.seq
@@ -174,7 +167,9 @@
 			reg_date,
 			seller_seq,
 			free_deli,
-			event_added
+			event_added,
+			sell_price,
+			sale_percent
 		) VALUES (
 			#{optionSeq},
 			#{valueName},
@@ -186,7 +181,12 @@
 			NOW(),
 			#{sellerSeq},
 			#{freeDeli},
-			#{eventAdded}
+			#{eventAdded},
+			CASE
+				WHEN sale_price>0 THEN sale_price
+				ELSE option_price
+			END,
+			(100-(sell_price * 100)/option_price)
 		)
 	</insert>
 

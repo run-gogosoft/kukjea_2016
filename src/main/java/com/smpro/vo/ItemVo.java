@@ -267,8 +267,7 @@ public class ItemVo extends PagingVo {
 		return this.salePercent;
 	}
 	public void setSalePercent(int salePercent){
-		if(!(salePercent >1 && salePercent <100)) this.salePercent = 0;
-		else this.salePercent =  salePercent;
+		this.salePercent =  salePercent;
 	}
 	public String getSoldOutFlag() {
 		return soldOutFlag;

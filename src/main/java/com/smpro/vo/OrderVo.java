@@ -417,6 +417,23 @@ public class OrderVo extends PagingVo {
 	/** 무료 배송 여부 */
 	private String freeDeli = "N";
 
+	/** 규격 */
+	private String type1 = "";
+	private String type2 = "";
+	private String type3 = "";
+
+	public void setType1(String type){ this.type1 = type;}
+
+	public String getType1() { return type1;}
+
+	public void setType2(String type){ this.type2 = type;}
+
+	public String getType2() { return type2;}
+
+	public void setType3(String type){ this.type3 = type;}
+
+	public String getType3() { return type3;}
+
 	public String getEventAdded() {
 		return eventAdded;
 	}

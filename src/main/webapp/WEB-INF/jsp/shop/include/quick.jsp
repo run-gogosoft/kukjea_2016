@@ -25,5 +25,6 @@
         <li><a href="/shop/mypage/direct/list">문의게시판</a></li>
         <li class="cs"><a href="/shop/cscenter/list/notice">고객센터<em>070-4693-1971</em></a></li>
         <li class="cs"><a href="/shop/cscenter/fax">FAX 주문하기<em>02-3280-8007</em></a></li>
+        <li class="cs"><a href="#">무통장입금 계좌<em>KB국민은행</em><em>029301-04-206349</em><em>최태봉</em><em>국제메디팜</em></a></li>
     </ul>
 </div>

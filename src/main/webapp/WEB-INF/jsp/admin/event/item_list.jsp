@@ -94,6 +94,7 @@
 									<th>상품번호</th>
 									<th>정렬순서</th>
 									<th>상품명</th>
+									<th>규격</th>
 									<th>가격</th>
 									<th>상태</th>
 									<th></th>
@@ -111,6 +112,10 @@
 									</td>
 									<td class="text-center"><input type="text" name="orderNo" value="${item2.itemOrderNo}" onblur="numberCheck(this);" style="margin-top:7px; width:50px; text-align:center;" maxlength="3" /></td>
 									<td>${item2.itemName}</td>
+									<td>${item2.type1}
+										<c:if test="${item2.type2 ne ''}">, ${item2.type2}</c:if>
+										<c:if test="${item2.type3 ne ''}">, ${item2.type3}</c:if>
+									</td>
 									<td class="text-center"><fmt:formatNumber value="${item2.sellPrice}" pattern="#,###" />원</td>
 									<td class="text-center">${item2.statusFlag}</td>
 									<td class="text-center">
@@ -227,11 +232,12 @@
 									<th>상품가격</th>
 									<th>상품코드</th>
 									<th>상품명</th>
+									<th>규격</th>
 									<th>입점업체</th>
 								</tr>
 							</thead>
 							<tbody id="boardTarget">
-									<td colspan="7" class="text-center">등록된 내용이 없습니다.</td>
+									<td colspan="9" class="text-center">등록된 내용이 없습니다.</td>
 							</tbody>
 						</table>
 						<div id="paging" style="text-align:center"></div>
@@ -353,17 +359,23 @@
 		<td style="width:10%" class="text-center">
 			<img src="<%="${img1}"%>" alt="" style="width:60px;height:60px" />
 		</td>
-		<td style="width:10%" class="text-center">
+		<td style="width:5%" class="text-center">
 			<%="${sellPrice}"%>원
 		</td>
-		<td style="width:15%" class="text-center">
+		<td style="width:10%" class="text-center">
 			<p><%="${seq}"%>
 			</p>
 			<%--<a href="/shop/detail/<%="${seq}"%>" target="_blank" class="btn btn-mini"--%>
 			   <%--data-toggle="tooltip" title="미리보기"><i class="icon-search"></i></a>--%>
 		</td>
-		<td style="width:30%">
+		<td style="width:20%">
 			<p><%="${name}"%>
+			</p>
+		</td>
+		<td style="width:20%">
+			<p><%="${type1}"%>
+				{{if type2 !== ""}}, <%="${type2}"%>{{/if}}
+				{{if type3 !== ""}}, <%="${type3}"%>{{/if}}
 			</p>
 		</td>
 		<td style="width:10%" class="text-center">
@@ -709,7 +721,7 @@ var CHPlan = {
 				if (vo.list.length != 0) {
 					$("#boardTarget").html($("#trTemplate").tmpl(vo.list));
 				} else {
-					$("#boardTarget").html("<tr><td class='text-center' colspan='7'>등록된 내용이 없습니다.</td></tr>");
+					$("#boardTarget").html("<tr><td class='text-center' colspan='8'>등록된 내용이 없습니다.</td></tr>");
 				}
 
 				$("#totalRowCount").html(vo.total);

@@ -11,7 +11,7 @@
         <li <c:if test="${on eq '07'}">class="on"</c:if>><a href="/shop/cscenter/reject/email/collection">이메일무단수집거부</a></li>
         <li <c:if test="${on eq '08'}">class="on"</c:if>><a href="/shop/about/board/detail/list/1">판매요청</a></li>
         <li <c:if test="${on eq '09'}">class="on"</c:if>><a href="/shop/about/board/detail/list/2">제휴신청</a></li>
-        <li <c:if test="${on eq '10'}">class="on"</c:if>><a href="/shop/cscenter/price">가격제안</a></li>
+        <li <c:if test="${on eq '10'}">class="on"</c:if>><a href="/shop/about/board/detail/list/10">가격제안</a></li>
         <li <c:if test="${on eq '11'}">class="on"</c:if>><a href="/shop/cscenter/fax">FAX 주문</a></li>
         <c:if test="${sessionScope.loginSeq eq null || sessionScope.loginSeq eq 0}">
         <li <c:if test="${on eq '12'}">class="on"</c:if>><a href="/shop/cscenter/member/start">회원가입</a></li>

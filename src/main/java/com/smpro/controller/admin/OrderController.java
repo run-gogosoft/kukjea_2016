@@ -387,35 +387,29 @@ public class OrderController {
 				ovo.setSeq(seq[i]);
 				ovo.setDeliSeq(deliSeq[i]);
 				ovo = orderService.getOrderInfo(ovo);
-				/*
+
 				MallVo mallVo = mallService.getMainInfo(ovo.getMallId());
 				if (deliSeq[i].intValue() != 25) {
 					SmsVo smvo = new SmsVo();
 					smvo.setStatusCode("30");
 					smvo.setStatusType("O");
-					SmsVo svo = smsService.getContent(smvo);
-					String content = svo.getContent();
+					String content= smsService.getContent(smvo);
 					content = content
-							.replaceAll("mallName", mallVo.getName())
-							.replaceAll("memberName", ovo.getReceiverName())
-							.replaceAll("itemName", ovo.getItemName())
 							.replaceAll("orderSeq", "" + ovo.getOrderSeq())
-							.replaceAll("mallId", ovo.getMallId())
 							.replaceAll("deliNo", deliNo[i])
 							.replaceAll("deliCompanyName", ovo.getDeliCompanyName());
-					svo.setTrSendStat("0");
-					svo.setTrMsgType("0");
-					svo.setTrPhone(ovo.getReceiverCell().replace("-", ""));
-					svo.setTrCallBack("1234-1234");
-					svo.setTrMsg(content);
+					smvo.setTrSendStat("0");
+					smvo.setTrMsgType("0");
+					smvo.setTrMsg(content);
+					smvo.setTrPhone(ovo.getReceiverCell().replace("-", ""));
 					try {
-						smsService.insertSmsSendVo(svo);
+						smsService.insertSmsSendVo(smvo);
 					} catch (Exception e) {
 						e.printStackTrace();
 						log.info("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
 					}
 				}
-				*/
+
 			}
 			procCnt = orderService.updateStatusForDelivery(seq, statusCode,	loginSeq, deliSeq, deliNo);
 		} else {
@@ -621,6 +615,7 @@ public class OrderController {
 			procCnt = orderService.updateStatusForDelivery(seq, "30", loginSeq,
 					deliSeq, deliNo, sellerSeq);
 		}
+		
 
 		if (procCnt > 0) {
 			model.addAttribute("message", procCnt + "건 처리되었습니다.");

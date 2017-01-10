@@ -517,11 +517,10 @@ public class ItemServiceImpl implements ItemService {
 						}
 					}
 					if(cell.size()<arrSize){
-
+						int gg = arrSize - cell.size();
+						for(int g = 0;g<gg;g++) {
 							cell.add("");
-							cell.add("");
-							cell.add("");
-							cell.add("");
+						}
 					}
 				}
 

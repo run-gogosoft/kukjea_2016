@@ -179,12 +179,7 @@
 								<c:otherwise>
 									<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
 									<br/>
-									<%--<c:when test="${vo.deliPrepaidFlag eq 'N'}">--%>
-										<%--착불--%>
-									<%--</c:when>--%>
-									<%--<c:otherwise>--%>
 										선결제
-									<%--</c:otherwise>--%>
 								</c:otherwise>
 							</c:choose>
 						</td>

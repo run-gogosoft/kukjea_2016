@@ -700,7 +700,10 @@
 			c2.name AS taxName,
 			s.sales_tel AS salesTel,
 			ov.free_deli AS freeDeli,
-			ov.event_added AS eventAdded
+			ov.event_added AS eventAdded,
+			i.type1 AS type1,
+			i.type2 AS type2,
+			i.type3 AS type3
 		FROM
 			sm_order_detail d LEFT OUTER JOIN
 			sm_item_option_value ov on (d.option_value_seq=ov.seq) LEFT OUTER JOIN

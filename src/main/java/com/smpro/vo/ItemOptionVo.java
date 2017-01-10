@@ -241,6 +241,7 @@ public class ItemOptionVo {
 				+ ", optionSeq=" + optionSeq + ", valueName=" + valueName
 				+ ", stockCount=" + stockCount + ", stockFlag=" + stockFlag + ", optionPrice=" + optionPrice
 				+ ", salePrice=" + salePrice +", salePeriod=" + salePeriod + ", eventAdded="+ eventAdded
+				+ ", sellPrice=" + sellPrice +", salePercent="+ salePercent
 				+ ", valueList=" + valueList + ", count=" + count +",freeDeli=" + freeDeli
 				+ ", modContent=" + modContent + ", column=" + column + "]";
 	}

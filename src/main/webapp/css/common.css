@@ -584,8 +584,8 @@ em.must {color:#ef3f3b;}
 #footer .cs_service .quick_service dt {float:left; width:105px; height:80px; padding-top:4px; color:#333; font-size:18px;}
 #footer .cs_service .quick_service dd {float:left; width:86px; margin-right:4px;}
 #footer .cs_service .cs_center {float:right; width:325px; padding:12px 0 0 0; font-weight:300;}
-#footer .cs_service .cs_center dt {float:left; width:80px; height:35px; padding-top:5px; font-size:14px}
-#footer .cs_service .cs_center dd {float:left; font-size:14px}
+#footer .cs_service .cs_center dt {float:left; width:80px; height:35px; padding-top:5px; font-size:18px}
+#footer .cs_service .cs_center dd {float:left; font-size:18px}
 #footer .cs_service .cs_center dd.tel {width:215px; height:40px; color:#ef3f3b; font-size:27px;}
 #footer .cs_service .cs_center dd.time {padding-top:5px;}
 #footer .cs_service .cs_center dd.time span {margin-right:15px;}
@@ -640,8 +640,9 @@ em.must {color:#ef3f3b;}
 .img_list_type01 li > a .thumb .icons {position:absolute; top:0; left:-8px; width:66px;}
 .img_list_type01 li > a .thumb .icons .icon_txt {width:50px; margin-left:8px}
 .img_list_type01 li > a .thumb .icons .icon_txt_yellow {font-size:12px;}
-.img_list_type01 li > a .tit {display:block; height:30px; line-height:15px; overflow:hidden;}
-.img_list_type01 li > a .price {display:block; margin-top:13px; overflow:hidden}
+.img_list_type01 li > a .tit {display:block; height:25px; line-height:15px; overflow:hidden;}
+.img_list_type01 li > a .type {display:block; height:25px; line-height:15px; overflow:hidden;}
+.img_list_type01 li > a .price {display:block; margin-top:5px; font-size:14px;}
 .img_list_type01 li > a del {float:left;}
 .img_list_type01 li > a .sale {float:right; color:#333; font-size:14px;}
 

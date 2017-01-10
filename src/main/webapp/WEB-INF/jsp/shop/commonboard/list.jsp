@@ -82,6 +82,7 @@
                             <c:choose>
                                 <c:when test="${vo.commonBoardSeq eq 1}">판매요청하기</c:when>
                                 <c:when test="${vo.commonBoardSeq eq 2}">제휴문의</c:when>
+                                <c:when test="${vo.commonBoardSeq eq 10}">가격요청하기</c:when>
                             </c:choose>
                         </button>
                     </div>

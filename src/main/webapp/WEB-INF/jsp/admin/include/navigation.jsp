@@ -55,7 +55,7 @@
 						<a href="#"><i class="fa fa-cogs"></i> <span>시스템 관리</span><i class="fa fa-angle-left pull-right"></i></a>
 						<ul class="treeview-menu">
 							<%--<li ${naviSub eq '/mall/list' ? "class='active'":""}><a href="/admin/mall/list"><i class="fa fa-caret-right"></i>쇼핑몰 관리</a></li>--%>
-							<!--li ${naviSub eq '/system/delivery/list' ? "class='active'":""}><a href="/admin/system/delivery/list"><i class="fa fa-caret-right"></i>배송업체 관리</a></li-->
+							<%--<!--li ${naviSub eq '/system/delivery/list' ? "class='active'":""}><a href="/admin/system/delivery/list"><i class="fa fa-caret-right"></i>배송업체 관리</a></li-->--%>
 							<li ${naviSub eq '/system/admin/list' ? "class='active'":""}><a href="/admin/system/admin/list"><i	class="fa fa-caret-right"></i>어드민 관리자</a></li>
 							<%--<li ${naviSub eq '/system/notice/popup/list' ? "class='active'":""}><a href="/admin/system/notice/popup/list"><i class="fa fa-caret-right"></i>공지팝업창 관리</a></li>--%>
 							<li ${naviSub eq '/sms/list' ? "class='active'":""}><a href="/admin/sms/list"><i class="fa fa-caret-right"></i>SMS 관리</a></li>
@@ -70,12 +70,12 @@
 						<li ${naviSub eq '/member/stats' ? "class='active'":""}><a href="/admin/member/stats"><i class="fa fa-caret-right"></i>회원 현황</a></li>
 						</c:if>
 						<li ${naviSub eq '/member/list' ? "class='active'":""}><a href="/admin/member/list"><i class="fa fa-caret-right"></i>회원 리스트</a></li>
-						<li ${naviSub eq '/member/list/not_access' ? "class='active'":""}><a href="/admin/member/list/not_access"><i class="fa fa-caret-right"></i>회원 리스트(1년이상 미접속자)</a></li>
+						<%--<li ${naviSub eq '/member/list/not_access' ? "class='active'":""}><a href="/admin/member/list/not_access"><i class="fa fa-caret-right"></i>회원 리스트(1년이상 미접속자)</a></li>--%>
 						<c:if test="${sessionScope.loginType eq 'A'}">
 							<li ${naviSub eq '/point/list' ? "class='active'":""}><a href="/admin/point/list"><i class="fa fa-caret-right"></i>포인트 적립/사용내역</a></li>
 							<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/point/excel/list"><i class="fa fa-caret-right"></i>포인트 내역 엑셀 다운로드</a></li>
 							<li ${naviSub eq '/point/all/list' ? "class='active'":""}><a href="/admin/point/all/list"><i class="fa fa-caret-right"></i>포인트 상세 내역</a></li>
-							<li ${naviSub eq '/point/excel/list' ? "class='active'":""}><a href="/admin/member/grade"><i class="fa fa-caret-right"></i>회원등급관리</a></li>
+							<li ${naviSub eq '/member/grade' ? "class='active'":""}><a href="/admin/member/grade"><i class="fa fa-caret-right"></i>회원등급관리</a></li>
 							<%--<li ${naviSub eq '/point/all/list' ? "class='active'":""}><a href="/admin/member/list"><i class="fa fa-caret-right"></i>그룹관리</a></li>--%>
 						</c:if>
 					</ul>
@@ -94,15 +94,15 @@
 					<a href="#"><i class="fa fa-gift"></i> <span>상품 관리</span><i class="fa fa-angle-left pull-right"></i></a>
 					<ul class="treeview-menu">
 						<li ${naviSub eq '/item/list' ? "class='active'":""}><a href="/admin/item/list"><i class="fa fa-caret-right"></i>상품 리스트</a></li>
-					<c:if test="${sessionScope.loginType eq 'A'}">
-						<%-- 관리자--%>
-						<li ${naviSub eq '/item/form' ? "class='active'":""}><a href="/admin/item/form"><i class="fa fa-caret-right"></i>상품 등록</a></li>
-					</c:if>
+						<c:if test="${sessionScope.loginType eq 'A'}">
+							<%-- 관리자--%>
+							<li ${naviSub eq '/item/form' ? "class='active'":""}><a href="/admin/item/form"><i class="fa fa-caret-right"></i>상품 등록</a></li>
+						</c:if>
 						<li ${naviSub eq '/item/excel/form' ? "class='active'":""}><a href="/admin/item/excel/form"><i class="fa fa-caret-right"></i>상품 대량 등록</a></li>
-					<c:if test="${sessionScope.loginType eq 'A'}">
-						<li ${naviSub eq '/event/list' ? "class='active'":""}><a href="/admin/event/list"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>
-						<li ${naviSub eq '/category' ? "class='active'":""}><a href="/admin/category"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>
-					</c:if>
+						<c:if test="${sessionScope.loginType eq 'A'}">
+							<li ${naviSub eq '/event/list' ? "class='active'":""}><a href="/admin/event/list"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>
+							<li ${naviSub eq '/category' ? "class='active'":""}><a href="/admin/category"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>
+						</c:if>
 					</ul>
 				</li>
 				<c:if test="${sessionScope.loginType eq 'A'  or sessionScope.loginType eq 'S' or sessionScope.loginType eq 'D'}">

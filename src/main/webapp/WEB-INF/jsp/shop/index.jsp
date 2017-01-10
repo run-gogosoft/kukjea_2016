@@ -82,18 +82,18 @@
 		<div id="contents" class="main_contents">
 			<!-- 국제 TOP10 -->
 			<div class="best_ranking">
-				<h2>국제 <strong>TOP10</strong></h2>
+				<h2>국제몰 <strong>기획전</strong></h2>
 				<ul>
-					<li class="latest"><a href="/shop/event/plan/plansub/2">최신 판매 랭킹</a></li>
-					<li class="month"><a href="/shop/event/plan/plansub/3">월간 상품별 판매 랭킹</a></li>
-					<li class="member_best"><a href="/shop/event/plan/plansub/4">회원이 뽑은 관심상품 Best</a></li>
+					<li class="latest"><a href="/shop/event/plan/plansub/2">묶음특가</a></li>
+					<li class="month"><a href="/shop/event/plan/plansub/3">카톤이벤트</a></li>
+					<li class="member_best"><a href="/shop/event/plan/plansub/4">상품별이벤트</a></li>
 				</ul>
 			</div>
 			<!-- //국제 TOP10 -->
 			<!-- 메인 상품목록 -->
 			<div class="tab_wrap product_tab">
 				<ul class="tab">
-					<li class="tab1"><a href="#today_product">오늘만 이가격<span></span></a></li>
+					<li class="tab1"><a href="#today_product"><span>이달의 특가</span></a></li>
 					<li class="tab2"><a href="#new_product">신규상품<span></span></a></li>
 					<li class="tab3"><a href="#offer_price">가격제안<span></span></a></li>
 				</ul>
@@ -117,7 +117,11 @@
 											</c:if>
 										</span>
 									</span>
-									<span class="tit">${itemList.itemName}</span>
+									<span class="tit"><strong>${itemList.itemName}</strong></span>
+									<span class="type">${itemList.type1}
+										<c:if test="${itemList.type2 ne ''}">, ${itemList.type2}</c:if>
+										<c:if test="${itemList.type3 ne ''}">, ${itemList.type3}</c:if>
+									</span>
 									<span class="price">
 										<%-- del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del --%>
 										<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
@@ -132,7 +136,7 @@
 							</li>
 						</c:forEach>
 						</ul>
-						<a href="/shop/event/plan/plansub/1" class="btn_more_full"><span>오늘만 이가격 상품 전체보기</span></a>
+						<a href="/shop/event/plan/plansub/1" class="btn_more_full"><span>이달의 특가 상품 전체보기</span></a>
 					</div>
 					<div id="new_product" class="img_list_type01">
 						<ul>
@@ -151,7 +155,11 @@
 											</c:if>
 										</span>
 									</span>
-									<span class="tit">${itemList.name}</span>
+									<span class="tit"><strong>${itemList.name}</strong></span>
+									<span class="type">${itemList.type1}
+										<c:if test="${itemList.type2 ne ''}">, ${itemList.type2}</c:if>
+										<c:if test="${itemList.type3 ne ''}">, ${itemList.type3}</c:if>
+									</span>
 									<span class="price">
 										<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 											<del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
@@ -300,7 +308,7 @@
 					<dd class="tel"><span>070-4693-1971</span></dd>
 					<dd class="time">
 						<span>평 일 : 09:00~18:00</span>
-						<span>토요일 : 09:00~13:00</span>
+						<%--<span>토요일 : 09:00~13:00</span>--%>
 					</dd>
 				</dl>
 			</div>

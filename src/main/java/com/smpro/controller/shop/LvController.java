@@ -115,7 +115,7 @@ public class LvController {
 		vo.setCateLv1Seq(seq);
 		vo.setStatusCode("Y");
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
-			vo.setRowCount(10);
+			vo.setRowCount(vo.getRowCount());
 		}
 		if(request.getParameter("listStyle") == null || "".equals(request.getParameter("listStyle").trim())) {
 			vo.setListStyle(vo.getListStyle());
@@ -228,9 +228,9 @@ public class LvController {
 		}
 		vo.setStatusCode("Y"); // 판매가 가능한 리스트만 보여야 한다
 
-		if(vo.getRowCount()==20) {
-			vo.setRowCount(30);
-		}
+//		if(vo.getRowCount()==20) {
+//			vo.setRowCount(30);
+//		}
 
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
 
@@ -315,9 +315,9 @@ public class LvController {
 		}
 		vo.setStatusCode("Y"); // 판매가 가능한 리스트만 보여야 한다
 
-		if(vo.getRowCount()==20) {
-			vo.setRowCount(30);
-		}
+//		if(vo.getRowCount()==20) {
+//			vo.setRowCount(30);
+//		}
 
 		vo.setTotalRowCount(itemService.getListSimpleTotalCount(vo));
 		List<ItemVo> list = itemService.getListSimple(vo);
@@ -377,9 +377,9 @@ public class LvController {
 		}
 		vo.setStatusCode("Y"); // 판매가 가능한 리스트만 보여야 한다
 
-		if(vo.getRowCount()==20) {
-			vo.setRowCount(30);
-		}
+//		if(vo.getRowCount()==20) {
+//			vo.setRowCount(30);
+//		}
 
 		vo.setJachiguCode(jachiguCode);
 		//자치구 코드가 00이라면 전체라는 의미로 사용하고 값을 초기화시킨다.

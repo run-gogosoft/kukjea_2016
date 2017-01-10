@@ -104,15 +104,17 @@
 					<div class="box-body">
 						<table class="table table-bordered table-striped">
 							<colgroup>
-								<col style="width:25%;"/>
-								<col style="width:25%;"/>
-								<col style="width:25%;"/>
-								<col style="width:25%;"/>
+								<col style="width:15%;"/>
+								<col style="width:*;"/>
+								<col style="width:15%;"/>
+								<col style="width:15%;"/>
+								<col style="width:15%;"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<th>No.</th>
 									<th>상품명</th>
+									<th>규격</th>
 									<th>판매 수량</th>
 									<th>판매 금액</th>
 								</tr>
@@ -122,6 +124,7 @@
 								<tr>
 									<td class="text-center">${status.index + 1}</td>
 									<td>${item.itemName}</td>
+									<td>${item.type1}</td>
 									<td class="text-right"><fmt:formatNumber value="${item.orderCnt}"/></td>
 									<td class="text-right"><fmt:formatNumber value="${item.sumPrice}"/></td>
 								</tr>

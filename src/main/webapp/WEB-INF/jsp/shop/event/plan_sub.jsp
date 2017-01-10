@@ -56,7 +56,11 @@
                                                     <span class="icon icon_txt icon_txt_gray">무료배송</span>
                                                 </c:if>
                                             </span>
-                                            <span class="tit">${itemList.itemName}</span>
+                                            <span class="tit"><strong>${itemList.itemName}</strong></span>
+                                            <span class="type">${itemList.type1}
+                                                <c:if test="${itemList.type2 ne ''}">, ${itemList.type2}</c:if>
+                                                <c:if test="${itemList.type3 ne ''}">, ${itemList.type3}</c:if>
+                                            </span>
                                             <span class="price">
                                                 <c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
                                                     <del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>

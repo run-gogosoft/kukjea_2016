@@ -222,8 +222,15 @@
 									<td class="text-right"><fmt:formatNumber value="${((item.sellPrice) * item.orderCnt)}"/></td>
 									<td class="text-right">
 										<c:choose>
-											<c:when test="${item.freeDeli eq 'Y'}">무료배송</c:when>
-											<c:otherwise>선결제</c:otherwise>
+											<c:when test="${((item.sellPrice) * item.orderCnt) >= 50000}">
+												무료배송
+											</c:when>
+											<c:otherwise>
+												<c:choose>
+													<c:when test="${item.freeDeli eq 'Y'}">무료배송</c:when>
+													<c:otherwise>선결제</c:otherwise>
+												</c:choose>
+											</c:otherwise>
 										</c:choose>
 									</td>
 									<td class="text-right">

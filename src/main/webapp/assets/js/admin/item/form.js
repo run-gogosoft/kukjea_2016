@@ -463,7 +463,7 @@ var EBOption = {
 			, salePeriod: parseInt($(obj).find("input[name=salePeriod]").val(), 10) || 0
 			, stockCount:parseInt($(obj).find("input[name=stockCount]").val(), 10) || 0
 			, stockFlag:$(obj).find("input[name=stockFlag]:checked").val()
-			, freeDeli:$(obj).find("input[name=freeDeli]").val()
+			, freeDeli:$(obj).find("input[name=freeDeli]:checked").val()
 			, eventAdded:$(obj).find("input[name=eventAdded]").val()
 		};
 	}

@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -62,7 +59,7 @@ public class OrderController {
 	private SystemService systemService;
 
 	@Autowired
-	private ItemService itemService;
+	private ItemService x;
 
 	@Autowired
 	private SmsService smsService;
@@ -355,6 +352,7 @@ public class OrderController {
 			cartService.deleteVo(list);
 
 			//SMS 발송
+			//1. 사용자에게 주문완료 알림
 			SmsVo svo = new SmsVo();
 			svo.setStatusCode("10");
 			svo.setStatusType("O");
@@ -367,6 +365,47 @@ public class OrderController {
 
 			try {
 				smsService.insertSmsSendVo(svo);
+			} catch(Exception e) {
+				e.printStackTrace();
+				log.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+			}
+
+			//2.관리자에게 주문 접수 알림
+			SmsVo ssvo = new SmsVo();
+			ssvo.setStatusCode("00");
+			ssvo.setStatusType("O");
+			content = smsService.getContent(ssvo);
+			content = content.replaceAll("mallName", mallVo.getName()).replaceAll("memberName", ovo.getMemberName()).replaceAll("itemName", ovo.getItemName()).replaceAll("orderSeq", ""+ovo.getOrderSeq());
+			ssvo.setTrSendStat("0");
+			ssvo.setTrMsgType("0");
+			ssvo.setTrMsg(content);
+
+			try {
+				//2-1 관리자 핸드폰 번호 가져옮
+				List<AdminVo> adminList = systemService.getAdminList();
+				for(AdminVo admin:adminList){
+					admin = systemService.getAdminData(admin);
+					String cellNum=admin.getCell();
+					if(cellNum!=null && cellNum.length()>0) {
+						ssvo.setTrPhone(cellNum);
+						smsService.insertSmsSendVo(ssvo);
+					}
+				}
+				//2-2 공급자 핸드폰 번호 가져옮
+				List<String> sellersCellNum = new ArrayList<>();
+				for(OrderVo detail:details){
+					String sellerCell = sellerService.getData(detail.getSellerSeq()).getSalesCell();
+					if(sellerCell !=null && sellerCell.length()>0){
+						if(sellersCellNum.contains(sellerCell)) continue;
+						sellersCellNum.add(sellerCell);
+					}
+				}
+
+				for(String sell:sellersCellNum){
+						ssvo.setTrPhone(sell);
+						smsService.insertSmsSendVo(ssvo);
+				}
+
 			} catch(Exception e) {
 				e.printStackTrace();
 				log.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");

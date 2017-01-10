@@ -223,6 +223,9 @@
 				  , i.img2 AS img2
 				  , i.img3 AS img3
 				  , i.img4 AS img4
+				  , i.type1 AS type1
+				  , i.type2 AS type2
+				  , i.type3 AS type3
 			      , i.maker
 			      , (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = ei.item_seq) AS reviewGrade
 			      , CASE WHEN i.status_code = 'H' THEN '가승인'
@@ -230,35 +233,13 @@
 				         WHEN i.status_code = 'N' THEN '판매중지'
 				    END AS statusFlag
 				  , i.img_banner_code AS imgBannerCode
-				  ,(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS optionPrice
-				  ,(SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND  v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS salePrice
-				  ,CASE
-						WHEN (
-						SELECT sale_price
-						FROM sm_item_option_value v
-						LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-						WHERE o.item_seq=i.seq AND  v.stock_flag='Y'
-						ORDER BY v.option_price LIMIT 1) > 0
-						THEN (
-						SELECT sale_price
-						FROM sm_item_option_value v
-						LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq)
-						WHERE o.item_seq=i.seq AND v.stock_flag='Y'
-						ORDER BY v.option_price LIMIT 1
-						)
-						ELSE (
-						SELECT option_price
-						FROM sm_item_option_value v
-						LEFT OUTER JOIN sm_item_option o
-						ON (o.seq=v.option_seq)
-						WHERE o.item_seq=i.seq AND v.stock_flag='Y'
-						ORDER BY v.option_price LIMIT 1
-						)
-					END AS sellPrice
-					,(SELECT v.free_deli FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS freeDeli
-					,(SELECT v.event_added FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq  AND v.stock_flag='Y' ORDER BY v.option_price LIMIT 1) AS eventAdded
-					,(100-(100 * (SELECT sale_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND  v.stock_flag='Y' ORDER BY v.option_price LIMIT 1))/(SELECT option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y'  ORDER BY v.option_price LIMIT 1) ) AS salePercent
-				FROM
+				  ,(SELECT v.option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS optionPrice
+				  ,(SELECT v.sale_price FROM sm_item_option_value v   LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS salePrice
+				  ,(SELECT v.sell_price FROM sm_item_option_value v   LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS sellPrice
+				  ,(SELECT v.free_deli FROM sm_item_option_value v    LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS freeDeli
+				  ,(SELECT v.event_added FROM sm_item_option_value v  LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS eventAdded
+				  ,(SELECT v.sale_percent FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS salePercent
+			  FROM
 			   		sm_event_group eg LEFT OUTER JOIN
 			   		sm_event_item ei ON (eg.seq = ei.group_seq) LEFT OUTER JOIN
 			   		sm_item i ON (ei.item_seq = i.seq)

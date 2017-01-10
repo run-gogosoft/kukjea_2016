@@ -217,13 +217,12 @@ public class ItemExcelController {
 				}
 				*/
 				list.add(i - 1, vo);
-				System.out.println(">>>>>>OPTION_SIZE:"+OPTION_SIZE);
+
 				if(OPTION_SIZE>0) {
 					ItemOptionVo ovo = optionMapper(v.get(i), LIST_SIZE, OPTION_SIZE);
 					if(ovo != null) {
 						ovo.setValueName((String) session.getAttribute("loginName"));
-						optionList.add(i - 1, ovo);
-						System.out.println("optionList added size is:" + optionList.size());
+						optionList.add(optionList.size(), ovo);
 					}
 				}
 			} catch (Exception e) {
@@ -268,7 +267,6 @@ public class ItemExcelController {
 						e.printStackTrace();
 						imgSeq = -1;
 					}
-					System.out.println("list.get(i).getSeq() :"+list.get(i).getSeq() +", lastSlashIndex:" + lastSlashIndex + ",jpgIndexL:" + jpgIndex + "imgString:" + imgString + ", imgSeq:" + imgSeq);
 
 					// 현재 아이템의 ID와 상품 이미지 링크값이 같은경우, 현재 이미지 유지
 					// 현재 아이템 ID와 상품 이미지 링크값이 다른경우, 아이템 이미지 변경 > 업로드 폴더에서 해당 이미지 검색
@@ -369,10 +367,6 @@ public class ItemExcelController {
 				Integer optionSeq;
 				ItemOptionVo ovo;
 
-				System.out.println(">>> ovo sequence:" + optionList.get(i).getItemSeq());
-				System.out.println(">>> optionVoList:" + optionVoList.size());
-
-
 //				if(itemOptionService.getSeq(optionList.get(i).getItemSeq()) <=0){
 
 				if (optionVoList == null || optionVoList.size() <= 0) {
@@ -425,10 +419,6 @@ public class ItemExcelController {
 
 						optionSeq = optionVoList.get(ov).getSeq();
 						ovo = optionVoList.get(ov);
-						System.out.println(">>>optionSeq:" + optionSeq);
-						System.out.println(">>>sellerSeq:" + ovo.getSellerSeq());
-						System.out.println(">>>>ovo.getValueName():" + ovo.getValueName());
-						System.out.println(">>(String)session.getAttribute(\"loginSeq\")):" + (Integer) session.getAttribute("loginSeq"));
 						if (ovo.getSellerSeq() == 0) continue;
 						if (ovo.getSellerSeq() == ((Integer) session.getAttribute("loginSeq"))) {
 							//update

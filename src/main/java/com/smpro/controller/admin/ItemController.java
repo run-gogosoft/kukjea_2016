@@ -111,7 +111,6 @@ public class ItemController {
 			model.addAttribute("optionList", itemOptionService.getList(seq));
 		}
 		else{
-
 			List<ItemOptionVo> list = itemOptionService.getOptionList(seq);
 			for (ItemOptionVo optionVo : list) {
 				Map map = new HashMap();
@@ -192,7 +191,7 @@ public class ItemController {
 
 	@CheckGrade(controllerName = "itemController", controllerMethod = "list")
 	@RequestMapping("/item/list")
-	public String list(HttpServletRequest request, ItemVo vo, Model model) {
+	public String list(HttpServletRequest request, ItemVo vo, Model model) throws Exception {
 		HttpSession session = request.getSession(false);
 
 		vo.setLoginType((String) session.getAttribute("loginType"));
@@ -225,7 +224,7 @@ public class ItemController {
 			model.addAttribute("cateLv4List", categoryService.getList(cvo));
 		}
 
-		if (vo.getRowCount() == 20) {
+		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
 			vo.setRowCount(50);
 		}
 
@@ -237,6 +236,32 @@ public class ItemController {
 		vo.setTotalRowCount(itemService.getListTotalCount(vo));
 
 		List<ItemVo> list = itemService.getList(vo);
+
+
+		String loginType = (String) session.getAttribute("loginType");
+		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
+		MemberVo memberVo = memberService.getData(loginSeq);
+
+
+		/**공급자가 상품 리스트를 가져올때 최저가와 공급가를 같이 볼 수 있도록 추가 구현함 **/
+		if (!"A".equals(loginType)) {
+			for(ItemVo item:list) {
+				List<ItemOptionVo> optionVoList = itemOptionService.getOptionList(item.getSeq());
+
+				for(ItemOptionVo optionVo:optionVoList){
+					System.out.println(">>>>>>> option seq :"+optionVo.getSeq());
+					Map map = new HashMap();
+					map.put("seq", optionVo.getSeq());
+					map.put("loginName", memberVo.getName());
+					List<ItemOptionVo> optionVoValueList = itemOptionService.getValueListForSeller(map);
+					for(ItemOptionVo optionValueVo:optionVoValueList){
+						System.out.println(">>>>>>optionValueVo name : "+optionValueVo.toString());
+						item.setTempSellPrice(optionValueVo.getSellPrice());
+					}
+				}
+			}
+		}
+
 		model.addAttribute("list",list);
 		model.addAttribute("vo", vo);
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
@@ -742,11 +767,11 @@ public class ItemController {
 	public String update(ItemVo vo, String searchText, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession(false);
 		// todo : 권한 검사
-		if ("S".equals(session.getAttribute("loginType"))) {
-			if (vo.getSellPrice() != vo.getTempSellPrice()) {
-				vo.setStatusCode("H");
-			}
-		}
+//		if ("S".equals(session.getAttribute("loginType"))) {
+//			if (vo.getSellPrice() != vo.getTempSellPrice()) {
+//				vo.setStatusCode("H");
+//			}
+//		}
 
 		//파라메타 유효성 검증
 		String reqParamErrMsg = checkReqParam(vo, session, "modify");
@@ -883,6 +908,12 @@ public class ItemController {
 			return Const.AJAX_PAGE;
 		}
 		System.out.println(">>> insert,"+vo.toString());
+		vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
+
+		if(vo.getFreeDeli().equals("on")){
+			vo.setFreeDeli("Y");
+		}
+
 		if (!itemOptionService.insertValueVo(vo)) {
 			model.addAttribute("message", "FAIL[4]");
 			return Const.AJAX_PAGE;
@@ -974,6 +1005,12 @@ public class ItemController {
 		}
 
 		ItemOptionVo ivo = optionValueLogCheck(vo);
+
+		vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
+
+		if(vo.getFreeDeli().equals("on")){
+			vo.setFreeDeli("Y");
+		}
 
 		if (!itemOptionService.updateValueVo(vo)) {
 			model.addAttribute("message", "옵션 항목을 수정하던 도중 오류가 발생했습니다[1]");

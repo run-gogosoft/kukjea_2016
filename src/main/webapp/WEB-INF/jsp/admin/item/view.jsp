@@ -531,7 +531,7 @@
 						<label class="col-md-3 control-label">무료배송</label>
 						<div class="col-md-9">
 							<div class="checkbox">
-								<label><input type="checkbox" name="freeDeli" value="N">무료배송</label>
+								<label><input type="checkbox" name="freeDeli">무료배송</label>
 							</div>
 						</div>
 					</div>
@@ -565,26 +565,26 @@
 					<div class="form-group">
 						<label class="col-md-3 control-label">쇼핑몰명</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" name="valueName" value="병원몰" alt="쇼핑몰명" readonly="readonly" />
+							<input type="text" class="form-control" name="valueName"  alt="쇼핑몰명" readonly="readonly" />
 						</div>
 					</div>
 
 					<div class="form-group">
 						<label class="col-md-3 control-label">공급자명</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" name="valueName" value="<%="${valueName}"%>"  alt="고급자명"  readonly="readonly"/>
+							<input type="text" class="form-control" name="valueName"  alt="고급자명"  readonly="readonly"/>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-md-3 control-label">상품 가격</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" name="optionPrice" value="0" alt="금액" onblur="numberCheck(this);"/>
+							<input type="text" class="form-control" name="optionPrice" alt="금액" onblur="numberCheck(this);"/>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-md-3 control-label">할인 가격</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" name="salePrice" value="0" alt="할인가격" onblur="numberCheck(this);"/>
+							<input type="text" class="form-control" name="salePrice"  alt="할인가격" onblur="numberCheck(this);"/>
 						</div>
 					</div>
 					<div class="form-group">
@@ -599,7 +599,7 @@
 					<div class="form-group">
 						<label class="col-md-3 control-label">재고수량</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" name="stockCount" value="999" maxlength="5" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
+							<input type="text" class="form-control" name="stockCount" maxlength="5" class="numeric" alt="재고수량" onblur="numberCheck(this);" />
 							<%--<div class="checkbox">--%>
 							<%--<label><input type="checkbox" name="stockFlag" value="N"> 재고관리 안함</label>	--%>
 							<%--</div>--%>
@@ -610,7 +610,7 @@
 						<div class="col-md-9">
 							<%--<input type="text" class="form-control" name="freeDe;o" value="Y" maxlength="5" class="numeric" alt="무료배송"  />--%>
 							<div class="checkbox">
-							<label><input type="checkbox" name="freeDeli" value="N" >무료배송</label>
+							<label><input type="checkbox" name="freeDeli">무료배송</label>
 							</div>
 						</div>
 					</div>
@@ -618,7 +618,6 @@
 						<label class="col-md-3 control-label">이벤트</label>
 						<div class="col-md-9">
 							<input type="text" class="form-control" name="eventAdded" value="" maxlength="10" class="numeric" alt="이벤트"  />
-
 						</div>
 					</div>
 				</div>
@@ -631,6 +630,7 @@
 	</div>
 	</form>
 </script>
+
 <script id="optionUpdateTemplate" type="text/html">
 	<form action="<%="${action}"%>" id="optionDiv" class="form-horizontal" method="post" target="zeroframe">
 		<input type="hidden" name="seq" value="<%="${seq}"%>" />
@@ -726,7 +726,7 @@
 						<div class="col-md-9">
 							<%--<input type="text" class="form-control" name="freeDe;o" value="Y" maxlength="5" class="numeric" alt="무료배송"  />--%>
 							<div class="checkbox">
-								<label><input type="checkbox" name="freeDeli" value="<%="${freeDeli}"%>">무료배송</label>
+								<label><input type="checkbox" name="freeDeli" {{if freeDeli == 'Y'}}checked{{/if}}>무료배송</label>
 							</div>
 						</div>
 					</div>

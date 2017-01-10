@@ -82,6 +82,9 @@
 										</c:if>
 									</th>
 									<th><div class="text-primary">최저가</div></th>
+									<c:if test="${sessionScope.loginType eq 'S'}">
+										<th><div class="text-primary">공급가</div></th>
+									</c:if>
 								</tr>
 							</thead>
 							<tbody id="itemList">
@@ -139,6 +142,11 @@
 									<td class="text-center">
 										<div class="text-warning">${item.sellPrice}</div>
 									</td>
+									<c:if test="${sessionScope.loginType eq 'S'}">
+										<td class="text-center">
+											<div class="text-warning"><strong>${item.tempSellPrice}</strong></div>
+										</td>
+									</c:if>
 								</tr>
 							</c:forEach>
 							<c:if test="${fn:length(list)==0}">

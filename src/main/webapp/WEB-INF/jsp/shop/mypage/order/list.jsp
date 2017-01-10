@@ -302,9 +302,9 @@
                 </div>
 
                 <div class="hh-writebox-answer">
-                    <div class="input-group" style="height: 70px;">
-                        <span class="input-group-addon" style="width: 70px;"><p id="reasonText"></p></span>
-                        <textarea class="form-control reason" id="reason" name="reason" style="width:335px;height: 170px; resize: none;"></textarea>
+                    <div class="input-group" style="height: 300px;">
+                        <span class="input-group-addon" style="width: 400px;"><p id="reasonText"  style="font-size: 15px; margin: 10px;"></p></span>
+                        <textarea class="form-control reason" id="reason" name="reason" style="width:400px;height: 300px; resize: none;"></textarea>
                     </div>
                 </div>
 

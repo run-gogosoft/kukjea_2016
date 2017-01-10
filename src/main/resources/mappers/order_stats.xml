@@ -445,12 +445,12 @@
 					</if>
 				
 				UNION ALL
-				
+
 				SELECT
 					d.item_name,
 					-d.order_cnt,
 					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
-				FROM 
+				FROM
 					sm_order_detail d
 				WHERE
 					d.c10_date IS NOT NULL

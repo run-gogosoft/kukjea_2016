@@ -115,7 +115,7 @@
 						<c:set var="sellerSeq" value=""/>
 						<table class="table table-bordered">
 							<colgroup>
-								<col style="width:12%;"/>
+								<col style="width:7%;"/>
 								<col style="width:7%;"/>
 								<col style="width:7%;"/>
 								<col style="width:*;"/>
@@ -137,7 +137,9 @@
 									</th>
 									<th>상품번호</th>
 									<th>이미지</th>
-									<th>상품명</th>
+									<th>
+										상품명
+										<div class="text-primary">규격</div>
 									<th>옵션</th>
 									<th>부가세</th>
 									<th>주문상태</th>
@@ -182,7 +184,11 @@
 											<img src="/upload${fn:replace(vo.img1, 'origin', 's60')}" alt="" style="width:60px;height:60px" />
 										</c:if>
 									</td>
-									<td>${vo.itemName}</td>
+									<td><strong>${vo.itemName}</strong><br/>
+										${vo.type1}
+										<c:if test="${vo.type2 ne ''}">,${vo.type2}</c:if>
+										<c:if test="${vo.type3 ne ''}">,${vo.type3}</c:if>
+									</td>
 									<td>${vo.optionValue}</td>
 									<td class="text-center"><strong class="text-warning">${vo.taxName}</strong></td>
 									<td class="text-center">${vo.statusText}</td>
@@ -195,12 +201,19 @@
 									<td class="text-right">${vo.orderCnt}</td>
 									<td class="text-center">
 										<c:choose>
-											<c:when test="${vo.freeDeli eq 'Y'}">무료</c:when>
+											<c:when test="${(vo.sellPrice * vo.orderCnt) >= 50000}">
+												무료배송
+											</c:when>
 											<c:otherwise>
-												<c:if test="${vo.deliCost > 0}">
-													<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
-												</c:if>
-												<br/>선결제
+												<c:choose>
+													<c:when test="${vo.freeDeli eq 'Y'}">무료배송</c:when>
+													<c:otherwise>
+														<c:if test="${vo.deliCost > 0}">
+															<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
+														</c:if>
+														<br/>선결제
+													</c:otherwise>
+												</c:choose>
 											</c:otherwise>
 										</c:choose>
 									</td>
@@ -225,10 +238,22 @@
 								</tr>
 							</c:forEach>
 								<tr>
-									<th colspan="13">주문 합계 금액</th>
+									<th colspan="13">
+										주문 합계 금액(
+										상품금액[<fmt:formatNumber value="${total}"/>] + 배송료[
+										<c:choose>
+											<c:when test="${total>= 50000}">
+												0
+											</c:when>
+											<c:otherwise>
+												<fmt:formatNumber value="${totlaDeliCost}"/>
+											</c:otherwise>
+										</c:choose>
+										])
+									</th>
 									<td class="text-right">
 										<c:choose>
-											<c:when test="${total> 50000}">
+											<c:when test="${total>= 50000}">
 												<fmt:formatNumber value="${total}"/>
 											</c:when>
 											<c:otherwise>
