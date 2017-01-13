@@ -209,6 +209,12 @@
 			, seller_seq=#{sellerSeq}
 			, free_deli=#{freeDeli}
 			, event_added=#{eventAdded}
+			, sell_price =
+				CASE
+					WHEN sale_price>0 THEN sale_price
+					ELSE option_price
+				END
+			, sale_percent = (100-(sell_price * 100)/option_price)
 			, mod_date=NOW()
 		WHERE 1=1
 		AND seq=#{seq}

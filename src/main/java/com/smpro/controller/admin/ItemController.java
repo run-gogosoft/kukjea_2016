@@ -116,7 +116,12 @@ public class ItemController {
 				Map map = new HashMap();
 				map.put("seq", optionVo.getSeq());
 				map.put("loginName", memberVo.getName());
-				model.addAttribute("optionList", itemOptionService.getValueListForSeller(map));
+				List<ItemOptionVo> optionVoList = itemOptionService.getValueListForSeller(map);
+				System.out.println("### optionVoList:"+optionVoList.size());
+				if(optionVoList.size()>0) {
+					model.addAttribute("optionList", itemOptionService.getValueListForSeller(map));
+					break;
+				}
 			}
 		}
 
@@ -1130,7 +1135,6 @@ public class ItemController {
 		List<ItemOptionVo> list = itemOptionService.getOptionList(seq);
 		//System.out.println(">>>typeCode:"+memberVo.getTypeCode()+", typeCode:"+typeCode);
 		if (!"A".equals(typeCode)) {
-
 			for (ItemOptionVo vo : list) {
 				Map map = new HashMap();
 				map.put("seq", vo.getSeq());
