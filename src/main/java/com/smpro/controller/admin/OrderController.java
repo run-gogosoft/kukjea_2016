@@ -73,10 +73,10 @@ public class OrderController {
 	public String getList(HttpSession session, OrderVo pvo, Model model) {
 		session.setAttribute("cs", "");
 		
-		//기본 조회기간 일주일
+		//기본 조회기간 1개월
 		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
 			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+			pvo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
 		}
 
 		//기본 50개씩 조회

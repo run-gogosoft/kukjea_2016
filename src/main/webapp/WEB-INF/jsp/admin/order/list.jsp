@@ -411,7 +411,7 @@
 						return flag;
 					}
 					if(flag && parseDeliSeq !== 19) {
-						alert("직접배송인 주문만 배송완료로 변경 할수있습니다.");
+						alert("직접수령인 주문만 배송완료로 변경 할수있습니다.");
 						flag=false;
 						return flag;
 					}

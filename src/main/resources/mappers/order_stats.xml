@@ -427,14 +427,21 @@
 			SELECT 
 				t.item_name AS itemName,
 				SUM(t.order_cnt) AS orderCnt,
-				SUM(t.sell_price) AS sumPrice
+				SUM(t.sell_price) AS sumPrice,
+				t.type1,
+				t.type2,
+				t.type3
 			FROM (
 				SELECT
 					d.item_name,
 					d.order_cnt,
-					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					((d.sell_price + d.option_price) * d.order_cnt) sell_price,
+					i.type1,
+					i.type2,
+					i.type3
 				FROM 
-					sm_order_detail d
+					sm_order_detail d LEFT OUTER JOIN
+					sm_item i ON i.seq=d.item_seq
 				WHERE
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">
@@ -449,9 +456,13 @@
 				SELECT
 					d.item_name,
 					-d.order_cnt,
-					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					-((d.sell_price + d.option_price) * d.order_cnt) sell_price,
+					i.type1,
+					i.type2,
+					i.type3
 				FROM
-					sm_order_detail d
+					sm_order_detail d LEFT OUTER JOIN
+					sm_item i ON i.seq=d.item_seq
 				WHERE
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">

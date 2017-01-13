@@ -106,7 +106,7 @@
 							<colgroup>
 								<col style="width:15%;"/>
 								<col style="width:*;"/>
-								<col style="width:15%;"/>
+								<col style="width:*;"/>
 								<col style="width:15%;"/>
 								<col style="width:15%;"/>
 							</colgroup>
@@ -124,7 +124,10 @@
 								<tr>
 									<td class="text-center">${status.index + 1}</td>
 									<td>${item.itemName}</td>
-									<td>${item.type1}</td>
+									<td>${item.type1}
+										<c:if test="${item.type2 ne ''}">,${item.type2}</c:if>
+										<c:if test="${item.type3 ne ''}">,${item.type3}</c:if>
+									</td>
 									<td class="text-right"><fmt:formatNumber value="${item.orderCnt}"/></td>
 									<td class="text-right"><fmt:formatNumber value="${item.sumPrice}"/></td>
 								</tr>

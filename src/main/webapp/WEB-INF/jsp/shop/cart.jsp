@@ -117,7 +117,7 @@
             <%="${sellerName}"%>
         </td>
         <td>
-            {{if freeDeli=="Y"}}<span class="icon icon_txt icon_txt_gray">무료배송</span>
+            {{if freeDeli=="Y" || (sellPrice * count) >50000}}무료배송
             {{else}}<%="${deliCost}"%> 원
             {{/if}}
         </td>

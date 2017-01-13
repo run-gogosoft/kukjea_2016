@@ -76,13 +76,15 @@
                                     <fmt:formatNumber value="${rowSum}" pattern="#,###" />원
                                 </td>
                                 <td>
-                                    <c:if test="${item.freeDeli == 'Y'}">
-                                        <span class="icon icon_txt icon_txt_gray"> 무료배송  </span>
-                                    </c:if>
-                                    <c:if test="${item.freeDeli != 'Y'}">
-                                        <c:set var="totalDeliveryPrice" value="${item.deliCost}" />
-                                        ${item.deliCost} 원
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${item.freeDeli == 'Y' || (item.sellPrice * item.count) >50000}">
+                                            무료배송
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="totalDeliveryPrice" value="${item.deliCost}" />
+                                            ${item.deliCost} 원
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                                 <td>
                                     <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
@@ -91,32 +93,6 @@
                                     <c:if test="${item.eventAdded =='' || item.eventAdded ==' ' || item.eventAdded =='0'}">
                                         이벤트 없음
                                     </c:if>
-
-                                <%--<c:choose>--%>
-                                        <%--<c:when test="${item.deliCost == 0}">--%>
-                                            <%--<c:choose>--%>
-                                                <%--<c:when test="${item.packageDeliCost > 0}">무료<br/>(묶음배송 할인)</c:when>--%>
-                                                <%--<c:otherwise>--%>
-                                                    <%--무료--%>
-                                                    <%--&lt;%&ndash;<c:if test="${item.deliFreeAmount >0}">&ndash;%&gt;--%>
-                                                        <%--&lt;%&ndash;<br/><fmt:formatNumber value="${item.deliFreeAmount}" pattern="#,###" />원 이상 구매&ndash;%&gt;--%>
-                                                    <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
-                                                <%--</c:otherwise>--%>
-                                            <%--</c:choose>--%>
-                                        <%--</c:when>--%>
-                                        <%--<c:otherwise>--%>
-                                            <%--<fmt:formatNumber value="${item.deliCost}" pattern="#,###" />원--%>
-                                            <%--<c:choose>--%>
-                                                <%--<c:when test="${item.deliPrepaidFlag eq 'Y'}">--%>
-                                                    <%--<c:set var="totalDeliveryPrice" value="${totalDeliveryPrice + item.deliCost}" />--%>
-                                                    <%--<br/>선결제--%>
-                                                <%--</c:when>--%>
-                                                <%--<c:otherwise>--%>
-                                                    <%--<br/>착불--%>
-                                                <%--</c:otherwise>--%>
-                                            <%--</c:choose>--%>
-                                        <%--</c:otherwise>--%>
-                                    <%--</c:choose>--%>
                                 </td>
                                 <td>
                                     ${item.sellerName}

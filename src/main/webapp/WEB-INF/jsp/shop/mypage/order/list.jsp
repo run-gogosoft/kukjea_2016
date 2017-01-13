@@ -176,13 +176,6 @@
                             </td>
                             <td>${vo.orderCnt}</td>
                             <td>
-                                <%--<c:choose>--%>
-                                    <%--<c:when test="${vo.estimateCompareCnt > 0}">완료</c:when>--%>
-                                    <%--<c:otherwise>--%>
-                                        <%--${vo.estimateCompareFlag eq 'Y' ? "요청접수":"신청안함"}--%>
-                                    <%--</c:otherwise>--%>
-                                <%--</c:choose>--%>
-                            <%--</td>--%>
                                 <c:choose>
                                     <c:when test="${vo.eventAdded ne '0' and vo.eventAdded ne '' and vo.eventAdded ne ' '}">
                                         ${vo.eventAdded}
@@ -194,7 +187,7 @@
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${vo.freeDeli eq 'Y'}">
+                                    <c:when test="${vo.freeDeli eq 'Y' || (vo.sellPrice*vo.orderCnt)>50000}">
                                         무료배송
                                     </c:when>
                                     <c:otherwise>

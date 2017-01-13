@@ -169,7 +169,7 @@
                                 </td>
                                 <td>${item.sellerName}</td>
                                 <td>
-                                    <c:if test="${item.freeDeli == 'Y'}">
+                                    <c:if test="${item.freeDeli == 'Y' || (item.sellPrice*item.orderCnt)>50000}">
                                         <span class="icon icon_txt icon_txt_gray"> 무료배송  </span>
                                     </c:if>
                                     <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">

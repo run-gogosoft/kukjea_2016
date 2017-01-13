@@ -129,7 +129,6 @@ public class ItemController {
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("title", "상품");
 		model.addAttribute("vo", itemService.getVo(seq));
-
 		model.addAttribute("propList", itemService.getPropList(vo.getTypeCd()));
 		model.addAttribute("propInfo", itemService.getInfo(seq));
 		model.addAttribute("authCategoryList", systemService.getCommonListOrderByValue(new Integer(35)));

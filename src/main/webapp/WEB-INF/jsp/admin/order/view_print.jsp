@@ -173,13 +173,19 @@
 						<td class="text-right">${vo.orderCnt}</td>
 						<td class="text-center">
 							<c:choose>
-								<c:when test="${vo.freeDeli eq 'Y'}">
-									무료
+								<c:when test="${(vo.sellPrice * vo.orderCnt) >= 50000}">
+									무료배송
 								</c:when>
 								<c:otherwise>
-									<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
-									<br/>
-										선결제
+									<c:choose>
+										<c:when test="${vo.freeDeli eq 'Y'}">무료배송</c:when>
+										<c:otherwise>
+											<c:if test="${vo.deliCost > 0}">
+												<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
+											</c:if>
+											<br/>선결제
+										</c:otherwise>
+									</c:choose>
 								</c:otherwise>
 							</c:choose>
 						</td>

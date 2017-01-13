@@ -186,6 +186,7 @@
             <th scope="row"><label>사업자번호</label></th>
             <td colspan="3">
                 ${fn:substring(gvo.bizNo,0,3)}-${fn:substring(gvo.bizNo,3,5)}-${fn:substring(gvo.bizNo,5,10)}
+                <br/><br/><em class="must">*</em> 사업자등록증사본을 팩스로 보내주세요.(FAX 02-3280-8007)
             </td>
         </tr>
     </c:when>
@@ -197,6 +198,7 @@
                 <input type="text" id="bizNo1" name="bizNo1" class="intxt w70" onblur="numberCheck(this);" maxlength="3" >&nbsp;-&nbsp;
                 <input type="text" id="bizNo2" name="bizNo2" class="intxt w50" onblur="numberCheck(this);" maxlength="2" >&nbsp;-&nbsp;
                 <input type="text" id="bizNo3" name="bizNo3" class="intxt w90" onblur="numberCheck(this);" maxlength="5" >
+                <br/><br/><em class="must">*</em> 사업자등록증사본을 팩스로 보내주세요.(FAX 02-3280-8007)
             </td>
         </tr>
     </c:otherwise>
