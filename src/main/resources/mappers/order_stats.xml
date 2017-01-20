@@ -450,7 +450,6 @@
 					<if test="sellerSeq > 2">
 						AND d.seller_seq =#{sellerSeq}
 					</if>
-				
 				UNION ALL
 
 				SELECT
@@ -522,16 +521,19 @@
 			SELECT
 				t.name AS sellerName,
 				SUM(t.order_cnt) AS orderCnt,
-				SUM(t.sell_price) AS sumPrice
+				SUM(t.sell_price) AS sumPrice,
+				t.commission AS masterCommission
 			FROM (
 				<!-- 정상주문 -->
 				SELECT
 					s.name,
 					d.order_cnt,
-					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					((d.sell_price + d.option_price) * d.order_cnt) sell_price,
+					ss.commission
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
-					sm_user s ON (d.seller_seq=s.seq)
+					sm_user s ON (d.seller_seq=s.seq) LEFT OUTER JOIN
+					sm_seller ss ON (d.seller_seq=ss.seq)
 				WHERE 
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">
@@ -543,10 +545,12 @@
 				SELECT
 					s.name,
 					-d.order_cnt,
-					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					-((d.sell_price + d.option_price) * d.order_cnt) sell_price,
+					ss.commission
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
-					sm_user s ON (d.seller_seq=s.seq)
+					sm_user s ON (d.seller_seq=s.seq) LEFT OUTER JOIN
+					sm_seller ss ON (d.seller_seq=ss.seq)
 				WHERE
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">

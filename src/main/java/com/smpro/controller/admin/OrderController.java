@@ -25,14 +25,13 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Controller
 public class OrderController {
+	@Autowired
+	private SellerService sellerService;
 
 	@Autowired
 	private OrderService orderService;
@@ -388,7 +387,6 @@ public class OrderController {
 				ovo.setDeliSeq(deliSeq[i]);
 				ovo = orderService.getOrderInfo(ovo);
 
-				MallVo mallVo = mallService.getMainInfo(ovo.getMallId());
 				if (deliSeq[i].intValue() != 25) {
 					SmsVo smvo = new SmsVo();
 					smvo.setStatusCode("30");
@@ -775,7 +773,7 @@ public class OrderController {
 	 */
 	@CheckGrade(controllerName = "orderController", controllerMethod = "cancelOrder")
 	@RequestMapping(value = "/order/cancel", method = RequestMethod.POST)
-	public String cancelOrder(HttpServletRequest request, OrderVo vo, Model model) {
+	public String cancelOrder(HttpServletRequest request, OrderVo vo, Model model) throws Exception {
 		HttpSession session = request.getSession(false);
 
 		boolean flag;
@@ -921,6 +919,67 @@ public class OrderController {
 		}
 
 		if (flag) {
+			List<OrderVo> details = orderService.getListForDetail(vo);
+
+			//1. 구매자에세 취소 처리 완료 알림 문자 발송
+			SmsVo smvo = new SmsVo();
+			smvo.setStatusCode("99");
+			smvo.setStatusType("C");
+			String content= smsService.getContent(smvo);
+			content = content.replaceAll("orderSeq", "" + vo.getOrderSeq());
+			smvo.setTrSendStat("0");
+			smvo.setTrMsgType("0");
+			smvo.setTrMsg(content);
+			smvo.setTrPhone(vo.getReceiverCell().replace("-", ""));
+
+			try {
+				smsService.insertSmsSendVo(smvo);
+			} catch (Exception e) {
+				e.printStackTrace();
+				log.info("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+			}
+
+			//2.관리자에게 취소처리 완료 알림
+			SmsVo ssvo = new SmsVo();
+			ssvo.setStatusCode("99");
+			ssvo.setStatusType("S");
+			content = smsService.getContent(ssvo);
+			content = content.replaceAll("orderSeq", "" + vo.getOrderSeq());
+			ssvo.setTrSendStat("0");
+			ssvo.setTrMsgType("0");
+			ssvo.setTrMsg(content);
+
+			try {
+				//2-1 관리자 핸드폰 번호 가져옮
+				List<AdminVo> adminList = systemService.getAdminList();
+				for(AdminVo admin:adminList){
+					admin = systemService.getAdminData(admin);
+					String cellNum=admin.getCell().replace("-", "");
+					if(cellNum!=null && cellNum.length()>0) {
+						ssvo.setTrPhone(cellNum);
+						smsService.insertSmsSendVo(ssvo);
+					}
+				}
+				//2-2 공급자 핸드폰 번호 가져옮
+				List<String> sellersCellNum = new ArrayList<>();
+				for(OrderVo detail:details){
+					String sellerCell = sellerService.getData(detail.getSellerSeq()).getSalesCell().replace("-", "");
+					if(sellerCell !=null && sellerCell.length()>0){
+						if(sellersCellNum.contains(sellerCell)) continue;
+						sellersCellNum.add(sellerCell);
+					}
+				}
+
+				for(String sell:sellersCellNum){
+					ssvo.setTrPhone(sell);
+					smsService.insertSmsSendVo(ssvo);
+				}
+
+			} catch(Exception e) {
+				e.printStackTrace();
+				log.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+			}
+
 			model.addAttribute("message", "취소 완료 처리 되었습니다.");
 			model.addAttribute("returnUrl", "/admin/order/view/" + vo.getOrderSeq() + "?seq=" + vo.getSeq());
 			return Const.REDIRECT_PAGE;

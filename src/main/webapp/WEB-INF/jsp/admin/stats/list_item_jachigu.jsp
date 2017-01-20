@@ -55,10 +55,10 @@
 		</div>
 
 <%--<c:forEach var="list" items="${lists}" varStatus="listStatus">--%>
-	<c:if test="${listStatus.index == 0 or (listStatus.index+1) % 2== 1}">
+	<%--<c:if test="${listStatus.index == 0 or (listStatus.index+1) % 2== 1}">--%>
 		<div class="row">
-	</c:if>
-			<div class="col-md-6">
+	<%--</c:if>--%>
+			<div class="col-md-12">
 				<div class="box box-warning box-solid">
 					<!-- 내용 -->
 					<div class="box-body">
@@ -67,12 +67,16 @@
 								<col style="width:*;"/>
 								<col style="width:20%;"/>
 								<col style="width:30%;"/>
+								<col style="width:20%;"/>
+								<col style="width:20%;"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<th>공급사명</th>
 									<th>주문횟수</th>
 									<th>매출금액 <br/>(${vo.searchDate1} - ${vo.searchDate2})</th>
+									<th>수수료 %</th>
+									<th>수수료 금액</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -82,7 +86,9 @@
 										<td class="text-center" >${list.sellerName}</td>
 										<td class="text-center" >${list.orderCnt}</td>
 										<td class="text-right"><fmt:formatNumber value="${list.sumPrice}"/>원</td>
-									</tr>
+										<td class="text-center"><fmt:formatNumber value="${list.masterCommission}"/>%</td>
+										<td class="text-right"><fmt:formatNumber value="${list.sumPrice * list.masterCommission / 100}" pattern="#,###"/>원</td>
+								</tr>
 							</c:forEach>
 
 							<c:if test="${ fn:length(lists)==0 }">
@@ -95,9 +101,9 @@
 				</div>
 			</div>
 
-	<c:if test="${listStatus.index > 0 and (listStatus.index+1) % 4 == 0}">
+	<%--<c:if test="${listStatus.index > 0 and (listStatus.index+1) % 4 == 0}">--%>
 		</div>
-	</c:if>
+	<%--</c:if>--%>
 <%--</c:forEach>--%>
 
 	</section>

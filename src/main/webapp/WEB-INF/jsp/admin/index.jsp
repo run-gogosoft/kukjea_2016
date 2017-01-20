@@ -4,7 +4,15 @@
 <head>
 	<%@ include file="/WEB-INF/jsp/admin/include/header.jsp" %>
 </head>
-<body class="skin-blue sidebar-mini">
+<c:choose>
+	<c:when test="${sessionScope.loginType eq 'S'}">
+		<body class="skin-green sidebar-mini">
+	</c:when>
+	<c:otherwise>
+		<body class="skin-blue sidebar-mini">
+	</c:otherwise>
+</c:choose>
+
 <%@ include file="/WEB-INF/jsp/admin/include/navigation.jsp" %>
 <!-- 매출현황 관련 변수 선언 -->
 <c:set var="totalDayOrderCnt" value="0" /> <c:set var="totalDayOrderAmt" value="0" /> <%-- 금일 전체 주문 --%>

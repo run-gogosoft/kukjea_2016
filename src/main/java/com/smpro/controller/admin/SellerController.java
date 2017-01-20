@@ -584,6 +584,8 @@ public class SellerController {
 				return "비밀번호를 20자 이하로 입력해주세요.";
 			} else if (StringUtil.getByteLength(vo.getPassword()) < 8) {
 				return "비밀번호를 8자 이상 입력해주세요.";
+			} else if ("".equals(vo.getCommission())) {
+				return "수수료는 반드시 입력되어야 합니다";
 			} else if (StringUtil.getByteLength(vo.getBizNo1()+vo.getBizNo2()+vo.getBizNo3()) > 10) {
 				return "사업자번호가 10Bytes를 초과하였습니다.";
 			} else if (sellerService.getBizNoCnt(vo.getBizNo1()+vo.getBizNo2()+vo.getBizNo3()) != 0) {
@@ -657,6 +659,7 @@ public class SellerController {
 	
 	private SellerVo getSellerVo(HashMap<String, Object> map) {
 		SellerVo vo = new SellerVo();
+		vo.setCommission(Integer.valueOf((String)map.get("commission")==null? "0":(String)map.get("commission")).intValue());
 		vo.setId((String)map.get("id") == null ? "" : (String)map.get("id"));
 		vo.setName((String)map.get("name") == null ? "" : (String)map.get("name"));
 		vo.setPassword((String)map.get("password") == null ? "" : (String)map.get("password"));

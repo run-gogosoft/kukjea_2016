@@ -371,17 +371,13 @@ public class OrderStatsController {
 		}
 		
 		//자치구별 상품 판매수 리스트 저장 변수		
-		List<OrderVo> lists = new ArrayList<OrderVo>();
-
-
-
-		lists=orderStatsService.getListByItemForSellerJachigu(vo);
-		System.out.println("getListByItemForJachigu size :"+lists.size());
-		for(int i = 0;i<lists.size();i++) {
-			System.out.print(">>"+lists.get(i).getSellerName());
-			System.out.print(">>"+lists.get(i).getOrderCnt());
-			System.out.println(">>"+lists.get(i).getSumPrice());
-		}
+		List<OrderVo> lists = orderStatsService.getListByItemForSellerJachigu(vo);
+//		System.out.println("getListByItemForJachigu size :"+lists.size());
+//		for(int i = 0;i<lists.size();i++) {
+//			System.out.print(">>"+lists.get(i).getSellerName());
+//			System.out.print(">>"+lists.get(i).getOrderCnt());
+//			System.out.println(">>"+lists.get(i).getSumPrice());
+//		}
 
 		model.addAttribute("lists", lists);
 		

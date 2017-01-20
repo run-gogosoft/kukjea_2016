@@ -150,9 +150,9 @@
                         </div>
                         <tr>
                             <td data-merge-flag="${vo.orderSeq}" data-merge-flag-statuscode="${vo.statusCode}" style="letter-spacing:0;">
-                                <a href="/shop/mypage/order/detail/${vo.orderSeq}"><strong>${vo.orderSeq}</strong></a><br/>
+                                <a href="/shop/mypage/order/detail/${vo.orderSeq}"><div style="color:#3b9eff;">${vo.orderSeq}</div></a><br/>
                                 (${fn:substringBefore(vo.regDate,' ')})
-                                <div class="cancelDiv" style="margin-top:3px;"></div>
+                                <%--<div class="cancelDiv" style="margin-top:3px;"></div>--%>
                                 <%--<c:if test="${vo.tid ne ''}">--%>
                                     <button type="button" onclick="doPrint(${vo.orderSeq})" class="btn btn_xs btn_default">거래명세서</button>
                                 <%--</c:if>--%>

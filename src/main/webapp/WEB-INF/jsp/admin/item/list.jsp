@@ -4,7 +4,14 @@
 <head>
 	<%@ include file="/WEB-INF/jsp/admin/include/header.jsp" %>
 </head>
-<body class="skin-blue sidebar-mini">
+<c:choose>
+	<c:when test="${sessionScope.loginType eq 'S'}">
+		<body class="skin-green sidebar-mini">
+	</c:when>
+	<c:otherwise>
+		<body class="skin-blue sidebar-mini">
+	</c:otherwise>
+</c:choose>
 <%@ include file="/WEB-INF/jsp/admin/include/navigation.jsp" %>
 <div class="content-wrapper">
 	<!-- 헤더 -->

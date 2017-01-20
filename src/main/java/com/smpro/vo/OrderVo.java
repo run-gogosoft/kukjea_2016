@@ -422,6 +422,37 @@ public class OrderVo extends PagingVo {
 	private String type2 = "";
 	private String type3 = "";
 
+	/** 제조사 */
+	private String maker = "";
+
+	/** 보험코드 */
+
+	private String insuranceCode = "";
+
+	/** 단위 */
+	private String originCountry = "";
+
+	public String getOriginCountry() {
+		return originCountry;
+	}
+
+	public void setOriginCountry(String originCountry) {
+		this.originCountry = originCountry;
+	}
+
+
+	public String getMaker() {
+		return maker;
+	}
+
+	public void setMaker(String maker) {
+		this.maker = maker;
+	}
+
+	public void setInsuranceCode(String insurance){ this.insuranceCode = insurance;}
+
+	public String getInsuranceCode(){return insuranceCode;}
+
 	public void setType1(String type){ this.type1 = type;}
 
 	public String getType1() { return type1;}

@@ -77,6 +77,13 @@
 								</div>
 							</div>
 
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="commission">수수료<i class="fa fa-check"></i></label>
+								<div class="col-md-2">
+									<input class="form-control" type="text" id="commission" name="commission" placeholder="%" value="${vo.commission}" maxlength="20"    <c:if test="${vo eq null}">data-required-label="수수료"</c:if> />
+								</div>
+							</div>
+
 						<c:if test="${vo ne null}">
 							<%--수정일 경우에만 표시한다. --%>
 							<div class="form-group">

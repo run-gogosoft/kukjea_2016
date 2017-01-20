@@ -42,7 +42,7 @@ public class ItemVo extends PagingVo {
 	private int marketPrice;
 	/** 제조사 */
 	private String maker = "";
-	/** 원산지 */
+	/** 단위 */
 	private String originCountry = "";
 	/** 셀러 시퀀스 */
 	private Integer sellerSeq;
@@ -58,9 +58,9 @@ public class ItemVo extends PagingVo {
 	private Integer cateLv3Seq;
 	/** 세분류 시퀀스 */
 	private Integer cateLv4Seq;
-	/** 브랜드 */
+	/** 발주 */
 	private String brand = "";
-	/** 모델명 */
+	/** 기준재 */
 	private String modelName = "";
 	/** 제조일자 (예:20140815) */
 	private String makeDate = "";
@@ -83,7 +83,7 @@ public class ItemVo extends PagingVo {
 	private String modDate = "";
 	/** 등록일 */
 	private String regDate = "";
-	/** 최소 구매수량 */
+	/** 자동발주 */
 	private int minCnt;
 	/** 최대 구매수량 */
 	private int maxCnt;
@@ -253,6 +253,16 @@ public class ItemVo extends PagingVo {
 	/** 무료 배송 여부 */
 	private String freeDeli = "N";
 
+	/** 판매량 */
+	private int orderCnt=0;
+
+	public int getOrderCount() {
+		return orderCnt;
+	}
+
+	public void setOrderCount(int orderCnt) {
+		this.orderCnt = orderCnt;
+	}
 
 	public void setNameMaker(String nameMaker){ this.nameMaker = nameMaker;}
 	public String getNameMaker(){return this.nameMaker;}

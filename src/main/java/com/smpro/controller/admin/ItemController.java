@@ -117,7 +117,7 @@ public class ItemController {
 				map.put("seq", optionVo.getSeq());
 				map.put("loginName", memberVo.getName());
 				List<ItemOptionVo> optionVoList = itemOptionService.getValueListForSeller(map);
-				System.out.println("### optionVoList:"+optionVoList.size());
+//				System.out.println("### optionVoList:"+optionVoList.size());
 				if(optionVoList.size()>0) {
 					model.addAttribute("optionList", itemOptionService.getValueListForSeller(map));
 					break;
@@ -253,13 +253,13 @@ public class ItemController {
 				List<ItemOptionVo> optionVoList = itemOptionService.getOptionList(item.getSeq());
 
 				for(ItemOptionVo optionVo:optionVoList){
-					System.out.println(">>>>>>> option seq :"+optionVo.getSeq());
+//					System.out.println(">>>>>>> option seq :"+optionVo.getSeq());
 					Map map = new HashMap();
 					map.put("seq", optionVo.getSeq());
 					map.put("loginName", memberVo.getName());
 					List<ItemOptionVo> optionVoValueList = itemOptionService.getValueListForSeller(map);
 					for(ItemOptionVo optionValueVo:optionVoValueList){
-						System.out.println(">>>>>>optionValueVo name : "+optionValueVo.toString());
+//						System.out.println(">>>>>>optionValueVo name : "+optionValueVo.toString());
 						item.setTempSellPrice(optionValueVo.getSellPrice());
 					}
 				}
@@ -911,7 +911,7 @@ public class ItemController {
 			model.addAttribute("message", "FAIL[6]");
 			return Const.AJAX_PAGE;
 		}
-		System.out.println(">>> insert,"+vo.toString());
+//		System.out.println(">>> insert,"+vo.toString());
 		vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
 
 		if(vo.getFreeDeli().equals("on")){
@@ -985,7 +985,7 @@ public class ItemController {
 			model.addAttribute("message", "옵션 항목을 수정하던 도중 오류가 발생했습니다[2]");
 			return Const.ALERT_PAGE;
 		}
-		System.out.println(">>>1 vo.getSeq():"+vo.getSeq());
+//		System.out.println(">>>1 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}
@@ -1037,7 +1037,7 @@ public class ItemController {
 			model.addAttribute("message", "옵션 항목을 수정하던 도중 오류가 발생했습니다[2]");
 			return Const.ALERT_PAGE;
 		}
-		System.out.println(">>>2 vo.getSeq():"+vo.getSeq());
+//		System.out.println(">>>2 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}
@@ -1062,7 +1062,7 @@ public class ItemController {
 			model.addAttribute("message", "옵션을 삭제하던 도중 오류가 발생했습니다[2]");
 			return Const.ALERT_PAGE;
 		}
-		System.out.println(">>>3 vo.getSeq():"+vo.getSeq());
+//		System.out.println(">>>3 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}
@@ -1106,7 +1106,7 @@ public class ItemController {
 			model.addAttribute("message", "비정상적인 접근입니다!");
 			return Const.ALERT_PAGE;
 		}
-		System.out.println(">>>4 vo.getSeq():"+vo.getSeq());
+//		System.out.println(">>>4 vo.getSeq():"+vo.getSeq());
 		model.addAttribute("callback", "OPTION");
 		return Const.REDIRECT_PAGE;
 	}
@@ -1658,8 +1658,8 @@ public class ItemController {
 		// 엑셀 파일명
 		response.setHeader("Content-Disposition", "attachment; filename = item_list_" + StringUtil.getDate(0, "yyyyMMdd") + ".xls");
 		// 워크북
-		System.out.println(">>>> download excel , vo.seq:"+vo.getSeq());
-		System.out.println(">>>> download excel , vo.name:"+vo.getName());
+//		System.out.println(">>>> download excel , vo.seq:"+vo.getSeq());
+//		System.out.println(">>>> download excel , vo.name:"+vo.getName());
 		Workbook wb = itemService.writeExcelItemList(vo, "xls", session);
 
 		// 파일스트림

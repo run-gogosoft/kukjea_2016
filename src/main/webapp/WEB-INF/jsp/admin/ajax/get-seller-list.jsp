@@ -19,6 +19,7 @@
 	, "salesTel":"${item.salesTel}"
 	, "approvalDate":"${fn:substring(item.approvalDate,0,10)}"
 	, "regDate":"${fn:substring(item.regDate,0,10)}"
+	, "commission":"${item.commission}"
 	}
 </c:forEach>
 ]

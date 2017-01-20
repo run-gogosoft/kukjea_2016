@@ -156,9 +156,13 @@
 			sm_user u LEFT OUTER JOIN
 			sm_member m ON (m.seq=u.seq) LEFT OUTER JOIN
 			sm_member_group g ON (m.group_seq=g.seq) 
-		WHERE u.type_code='C'
-
+		WHERE
+			u.type_code='C'
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(u.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			</if>
 	</select>
+
 	<select id="getListCount" parameterType="com.smpro.vo.MemberVo" resultType="int">
 		SELECT
 		  	COUNT(*) cnt
@@ -166,7 +170,11 @@
 		  	sm_user u LEFT OUTER JOIN
 		  	sm_member m ON(m.seq=u.seq) LEFT OUTER JOIN
 			sm_member_group g ON(m.group_seq=g.seq) 
-		WHERE u.type_code='C'
+		WHERE
+			u.type_code='C'
+			<if test="searchDate1 != '' and searchDate2 != ''">
+				AND DATE_FORMAT(u.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+			</if>
 
 	</select>
 

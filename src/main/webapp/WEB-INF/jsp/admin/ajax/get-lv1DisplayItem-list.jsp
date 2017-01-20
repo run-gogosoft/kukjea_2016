@@ -18,6 +18,9 @@
 	, "name":"${item.name}"
 	, "sellerName":"${item.sellerName}"
 	, "img1":"<c:if test="${item.img1 ne ''}">/upload${fn:replace(item.img1, 'origin', 's60')}</c:if>"
+	, "type1":"${item.type1}"
+	, "type2":"${item.type2}"
+	, "type3":"${item.type3}"
 	}
 </c:forEach>
 ],

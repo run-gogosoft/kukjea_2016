@@ -116,7 +116,18 @@ public class SellerVo extends UserVo {
 	private String[] authCategoryArr;
 	
 	private String comment = "";
-	
+
+	private int commission = 0;
+
+	public int getCommission() {
+		return commission;
+	}
+
+	public void setCommission(int commission) {
+		this.commission = commission;
+	}
+
+
 	public String getSocialActivity() {
 		return socialActivity;
 	}

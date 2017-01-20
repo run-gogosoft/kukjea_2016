@@ -10,7 +10,7 @@
 			account_bank, account_no, account_owner,
 			default_deli_company, return_name, return_cell, return_postcode, 
 			return_addr1, return_addr2, intro, main_item, social_activity,
-			adjust_name, adjust_email, adjust_tel, jachigu_code ,auth_category
+			adjust_name, adjust_email, adjust_tel, jachigu_code ,auth_category, commission
 		) VALUES (
 			#{seq}, #{ceoName}, #{bizNo}, #{bizType}, #{bizKind},
 			#{totalSales}, #{amountOfWorker}, #{taxTypeFlag},
@@ -19,7 +19,7 @@
 			#{accountBank}, #{accountNo}, #{accountOwner},
 			#{defaultDeliCompany}, #{returnName}, #{returnCell}, #{returnPostCode},
 			#{returnAddr1}, #{returnAddr2}, #{intro}, #{mainItem}, #{socialActivity},
-			#{adjustName}, #{adjustEmail}, #{adjustTel}, #{jachiguCode}, #{authCategory}
+			#{adjustName}, #{adjustEmail}, #{adjustTel}, #{jachiguCode}, #{authCategory}, #{commission}
 		)
 	</insert>
 	
@@ -57,7 +57,8 @@
 			account_bank=#{accountBank}, account_no=#{accountNo}, account_owner=#{accountOwner},
 			default_deli_company=#{defaultDeliCompany}, return_name=#{returnName}, return_cell=#{returnCell}, return_postcode=#{returnPostCode},
 			return_addr1=#{returnAddr1}, return_addr2=#{returnAddr2}, intro=#{intro}, main_item=#{mainItem}, social_activity=#{socialActivity},
-			adjust_name=#{adjustName}, adjust_email=#{adjustEmail}, adjust_tel=#{adjustTel}, jachigu_code=#{jachiguCode}, auth_category=#{authCategory}
+			adjust_name=#{adjustName}, adjust_email=#{adjustEmail}, adjust_tel=#{adjustTel}, jachigu_code=#{jachiguCode}, auth_category=#{authCategory},
+			commission=#{commission}
 			<if test="loginType eq 'A'.toString() and bizNo != ''">
 			<!-- 관리자일 경우에만 사업자번호를 수정할 수 있다. -->
 			, biz_no=#{bizNo}
@@ -125,7 +126,8 @@
           	    THEN 'Y'
         	  ELSE 'N'
       	  	END isFile,
-      	  	S.auth_category AS authCategory
+      	  	S.auth_category AS authCategory,
+			S.commission AS commission
 		FROM
 			sm_user U LEFT OUTER JOIN
 			sm_seller S ON U.seq=S.seq
@@ -250,6 +252,7 @@
 			s.jachigu_code AS jachiguCode,
 			s.comment AS comment,
 			s.auth_category AS authCategory,
+			s.commission AS commission,
 			CASE
        		  WHEN
           	    (SELECT count(*) FROM sm_filename WHERE parent_code='seller' AND sm_filename.parent_seq=s.seq) > 0

@@ -121,7 +121,7 @@
 								<col style="width:3%;"/>
 								<col style="width:8%;"/>
 								<col style="width:*;"/>
-								<col style="width:5%"/>
+								<col style="width:10%"/>
 								<col style="width:8%"/>
 								<col style="width:10%"/>
 								<col style="width:5%;"/>
@@ -137,7 +137,7 @@
 									<th>No.</th>
 									<th>아이디</th>
 									<th>상호명</th>
-									<th>면세업체<br/>구분</th>
+									<th>수수료(%)</th>
 									<!-- <th>상점명</th> -->
 									<th>등록 상품수<br/>(판매중/전체)</th>
 									<th>인증구분</th>
@@ -167,11 +167,12 @@
 									</td>
 									<td>${item.name}</td>
 									<td class="text-center">
-										<c:choose>
-											<c:when test="${item.taxTypeFlag eq 'Y'}">과세</c:when>
-											<c:when test="${item.taxTypeFlag eq 'N'}">면세</c:when>
-											<c:otherwise><span class="text-muted">--</span></c:otherwise>
-										</c:choose>
+									 	${item.commission}%
+										<%--<c:choose>--%>
+											<%--<c:when test="${item.taxTypeFlag eq 'Y'}">과세</c:when>--%>
+											<%--<c:when test="${item.taxTypeFlag eq 'N'}">면세</c:when>--%>
+											<%--<c:otherwise><span class="text-muted">--</span></c:otherwise>--%>
+										<%--</c:choose>--%>
 									</td>
 									<!-- <td>${item.nickname}</td> -->
 									<td class="text-center">${item.sellItemCount}&nbsp;/&nbsp;${item.totalItemCount}</td>

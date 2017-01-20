@@ -749,15 +749,6 @@ public class MyPageController extends MyPage {
 		ovo.setLoginType((String) session.getAttribute("loginType"));
 		ovo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		if(vo.getGoodGrade()==0){
-			model.addAttribute("message", "평점을 선택해주세요.");
-			return Const.ALERT_PAGE;
-		}
-
-		if(StringUtil.isBlank(vo.getReview())){
-			model.addAttribute("message", "내용을 입력해주세요.");
-			return Const.ALERT_PAGE;
-		}
 		try {
 			boolean flag = orderService.updateStatus(ovo);
 

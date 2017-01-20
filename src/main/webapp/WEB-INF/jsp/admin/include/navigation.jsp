@@ -7,7 +7,10 @@
 		<!-- Logo -->
 		<a href="/admin/index" class="logo"> <!-- mini logo for sidebar mini 50x50 pixels -->
 			<span class="logo-mini">국제몰</span> <!-- logo for regular state and mobile devices -->
-			<span class="logo-lg"><b>국제몰</b> 어드민</span>
+			<span class="logo-lg"><b>국제몰</b>
+				<c:if test="${sessionScope.loginType eq 'A'}">어드민</c:if>
+				<c:if test="${sessionScope.loginType eq 'S'}">입점공급사</c:if>
+			</span>
 		</a>
 		<!-- Header Navbar: style can be found in header.less -->
 		<nav class="navbar navbar-static-top" role="navigation">
