@@ -116,30 +116,32 @@
 			<h4>주문 상품 정보</h4>
 			<table class="table table-bordered">
 				<colgroup>
-					<col style="width:8%;"/>
-					<col style="width:6%;"/>
-					<col style="width:*"/>
 					<col style="width:7%;"/>
-					<col style="width:8%;"/>
+					<col style="width:7%;"/>
+					<col style="width:*;"/>
 					<col style="width:12%;"/>
-					<col style="width:9%;"/>
 					<col style="width:7%;"/>
-					<col style="width:5%;"/>
 					<col style="width:7%;"/>
-					<col style="width:9%;"/>
+					<col style="width:7%;"/>
+					<col style="width:6%;"/>
+					<col style="width:6%;"/>
+					<col style="width:6%;"/>
+					<col style="width:6%;"/>
+					<col style="width:6%;"/>
 				</colgroup>
 				<thead>
 				<tr>
-					<th>상품<br/>주문번호
-					<th>상품<br/>번호</th>
+					<th>상품주문번호</th>
+					<th>상품번호</th>
 					<th>상품명</th>
+					<th>규격</th>
+					<th>단위</th>
+					<th>제조사</th>
 					<th>이벤트</th>
 					<th>주문상태</th>
 					<th>입점업체명</th>
 					<th>판매가</th>
-					<th>옵션가</th>
 					<th>수량</th>
-					<th>배송비</th>
 					<th>합계</th>
 				</tr>
 				</thead>
@@ -150,48 +152,51 @@
 					<tr <c:if test="${vo.seq==pvo.seq}"> class="tr-selected" </c:if>>
 						<td class="text-center">${vo.seq}</td>
 						<td class="text-center">${vo.itemSeq}</td>
-						<td>
-								${vo.itemName}
-							<c:if test="${vo.optionValue ne ''}">
-								( ${vo.optionValue} )
+						<td><strong>${vo.itemName}<br/></strong></td>
+						<td>${vo.type1}
+							<c:if test="${vo.type2 ne ''}">
+								, ${vo.type2}
+							</c:if>
+							<c:if test="${vo.type3 ne ''}">
+								, ${vo.type3}
 							</c:if>
 						</td>
+						<td>${vo.originCountry}</td>
+						<td>${vo.maker}</td>
 						<td class="text-center">
-							<strong class="text-warning">
-								<c:choose>
-									<c:when test="${vo.eventAdded ne '' && vo.eventAdded ne ' ' && vo.eventAdded ne '0'}">
-										${vo.eventAdded}
-									</c:when>
-									<c:otherwise>이벤트없음</c:otherwise>
-								</c:choose>
-							</strong>
+							<c:choose>
+								<c:when test="${vo.eventAdded ne '' && vo.eventAdded ne ' ' && vo.eventAdded ne '0'}">
+									${vo.eventAdded}
+								</c:when>
+								<c:otherwise>이벤트없음</c:otherwise>
+							</c:choose>
 						</td>
 						<td class="text-center">${vo.statusText}</td>
 						<td>${vo.sellerName}</td>
 						<td class="text-right"><fmt:formatNumber value="${vo.sellPrice}"/></td>
-						<td class="text-right"><fmt:formatNumber value="${vo.optionPrice}"/></td>
 						<td class="text-right">${vo.orderCnt}</td>
-						<td class="text-center">
-							<c:choose>
-								<c:when test="${vo.freeDeli eq 'Y' || (vo.sellPrice  * vo.orderCnt)>50000}">
-									무료배송
-								</c:when>
-								<c:otherwise>
-									<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
-									<%--<br/>--%>
-									<%--<c:when test="${vo.deliPrepaidFlag eq 'N'}">--%>
-										<%--착불--%>
-									<%--</c:when>--%>
-									<%--<c:otherwise>--%>
-										<%--선결제--%>
-									<%--</c:otherwise>--%>
-								</c:otherwise>
-							</c:choose>
-						</td>
+							<%--<td class="text-center">--%>
+							<%--<c:choose>--%>
+							<%--<c:when test="${(vo.sellPrice * vo.orderCnt) >= 50000}">--%>
+							<%--무료배송--%>
+							<%--</c:when>--%>
+							<%--<c:otherwise>--%>
+							<%--<c:choose>--%>
+							<%--<c:when test="${vo.freeDeli eq 'Y'}">무료배송</c:when>--%>
+							<%--<c:otherwise>--%>
+							<%--<c:if test="${vo.deliCost > 0}">--%>
+							<%--<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />--%>
+							<%--</c:if>--%>
+							<%--<br/>선결제--%>
+							<%--</c:otherwise>--%>
+							<%--</c:choose>--%>
+							<%--</c:otherwise>--%>
+							<%--</c:choose>--%>
+							<%--</td>--%>
 						<td class="text-right">
 							<c:set var="subTotal" value="${vo.sellPrice  * vo.orderCnt}"/>
-							<c:if test="${vo.deliCost >0}">
-								<c:set var="totalDeliCost" value="${vo.deliCost}"/>
+							<c:if test="${vo.deliCost > 0}">
+								<c:set var="totlaDeliCost" value="${vo.deliCost}"/>
 							</c:if>
 							<c:set var="total" value="${total + subTotal}"/>
 							<fmt:formatNumber value="${subTotal}"/>
@@ -199,17 +204,28 @@
 					</tr>
 				</c:forEach>
 				<tr>
-					<th colspan="10">주문 합계 금액</th>
+					<th colspan="11" style="font-size:15px;">
+						주문 합계 금액 :
+						상품금액(<fmt:formatNumber value="${total}"/>원) + 배송료(
+						<c:choose>
+							<c:when test="${total>= 50000}">
+								무료배송
+							</c:when>
+							<c:otherwise>
+								<fmt:formatNumber value="${totlaDeliCost}"/>원
+							</c:otherwise>
+						</c:choose>
+						)
+					</th>
 					<td class="text-right">
 						<c:choose>
-							<c:when test="${total>50000}">
+							<c:when test="${total>= 50000}">
 								<fmt:formatNumber value="${total}"/>
 							</c:when>
 							<c:otherwise>
-								<fmt:formatNumber value="${total+totalDeliCost}"/>
+								<fmt:formatNumber value="${total+totlaDeliCost}"/>
 							</c:otherwise>
 						</c:choose>
-
 					</td>
 				</tr>
 				</tbody>

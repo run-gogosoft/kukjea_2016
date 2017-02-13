@@ -29,18 +29,6 @@
 	<td class="text-right"><%="${sellPrice}"%></td>
 	<td class="text-right">
 		<%="${orderCnt}"%> 개
-		<p>
-			{{if freeDeli == "Y"}}
-				무료
-			{{else}}
-				<%="${deliCost}"%> 원
-				<%--{{if deliPrepaidFlag == "N"}}--%>
-				<%--<br/>착불--%>
-				<%--{{else}}--%>
-				<br/>선결제
-				<%--{{/if}}--%>
-			{{/if}}
-		</p>
 	</td>
 	<td>
 		<%="${deliName}"%>

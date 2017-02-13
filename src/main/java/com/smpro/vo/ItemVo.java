@@ -256,6 +256,17 @@ public class ItemVo extends PagingVo {
 	/** 판매량 */
 	private int orderCnt=0;
 
+	/** mall id **/
+	private int mallId=1;
+
+	public int getMallId() {
+		return mallId;
+	}
+
+	public void setMallId(int mallId) {
+		this.mallId = mallId;
+	}
+
 	public int getOrderCount() {
 		return orderCnt;
 	}

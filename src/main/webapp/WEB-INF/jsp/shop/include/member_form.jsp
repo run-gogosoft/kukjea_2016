@@ -123,7 +123,7 @@
     <c:choose>
     <c:when test="${sessionScope.loginSeq > 0}">
         <tr>
-            <th scope="row"><label>병원명</label></th>
+            <th scope="row"><label>업체명</label></th>
             <td colspan="3">
                 ${gvo.name}
                 <input type="hidden" name="groupSeq" value="${vo.groupSeq}"> <%--공공기관, 기업 회원일경우 그룹 시퀀스가 존재하기때문에 넘겨줘야한다.--%>
@@ -132,9 +132,9 @@
     </c:when>
     <c:otherwise>
         <tr>
-            <th scope="row"><label>병원명</label></th>
+            <th scope="row"><label>업체명</label></th>
             <td colspan="3">
-                <input type="text" class="intxt w180" name="groupName" maxlength="30" alt="병원명" value="" />
+                <input type="text" class="intxt w180" name="groupName" maxlength="30" alt="업체명" value="" />
             </td>
         </tr>
     </c:otherwise>

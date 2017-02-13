@@ -70,6 +70,20 @@
 							</colgroup>
 							<tbody>
 								<tr>
+									<th>쇼핑몰</th>
+									<td>
+										<c:if test="${vo.mallId eq 1}">
+											병원몰
+										</c:if>
+										<c:if test="${vo.mallId eq 6}">
+											약국몰
+										</c:if>
+										<c:if test="${vo.mallId eq 35}">
+											B2B몰
+										</c:if>
+									</td>
+								</tr>
+								<tr>
 									<th>카테고리</th>
 									<td>
 										${vo.cateLv1Name}
@@ -366,7 +380,7 @@
 												무료배송
 											</c:when>
 											<c:otherwise>
-												선결제<br/>4000원
+												선결제<br/>3,300원
 											</c:otherwise>
 										</c:choose>
 									</td>

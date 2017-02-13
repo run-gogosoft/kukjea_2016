@@ -4,6 +4,8 @@ import com.smpro.component.admin.annotation.CheckGrade;
 import com.smpro.service.*;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
+import com.smpro.util.exception.ImageIsNotAvailableException;
+import com.smpro.util.exception.ImageSizeException;
 import com.smpro.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -311,4 +317,42 @@ public class MallController {
 		model.addAttribute("returnUrl", "/admin/mall/list");
 		return Const.REDIRECT_PAGE;
 	}
+
+//	@RequestMapping(value ="/mall/form/upload", method = RequestMethod.POST)
+//	public String upload(HttpServletRequest request, Model model) {
+//		// todo : 업로드할 수 있는 권한이 있는지 검사
+//
+//		Map<String, String> fileMap;
+//		try {
+//			fileMap = mallService.uploadImagesByMap(request);
+//		} catch (IOException ie) {
+//			log.error(ie.getMessage());
+//			model.addAttribute("message", "서버상의 문제가 발생했습니다. 관리자에게 문의하여 주십시오.");
+//			ie.printStackTrace();
+//			return Const.ALERT_PAGE;
+//		} catch (MaxUploadSizeExceededException me) {
+//			model.addAttribute("message", "한번에 너무 큰 용량의 이미지를 첨부하실 수 없습니다");
+//			me.printStackTrace();
+//			return Const.ALERT_PAGE;
+//		} catch (ImageIsNotAvailableException ie) {
+//			model.addAttribute("message", "첨부한 파일은 이미지 파일이 아닙니다");
+//			ie.printStackTrace();
+//			return Const.ALERT_PAGE;
+//		} catch (ImageSizeException se) {
+//			model.addAttribute("message", "이미지의 사이즈가 올바르지 않습니다");
+//			se.printStackTrace();
+//			return Const.ALERT_PAGE;
+//		}
+//
+//		String files = "";
+//		if (fileMap != null) {
+//			if (fileMap.get("file[0]") != null) {
+//				files += "/upload/plan/temp/" + fileMap.get("file[0]");
+//
+//			}
+//		}
+//		// 업로드된 파일 리스트를 던진다
+//		model.addAttribute("callback", files);
+//		return Const.REDIRECT_PAGE;
+//	}
 }

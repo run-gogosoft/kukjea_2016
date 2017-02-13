@@ -95,6 +95,7 @@
 									<th>정렬순서</th>
 									<th>상품명</th>
 									<th>규격</th>
+									<th>단위</th>
 									<th>가격</th>
 									<th>상태</th>
 									<th></th>
@@ -116,6 +117,7 @@
 										<c:if test="${item2.type2 ne ''}">, ${item2.type2}</c:if>
 										<c:if test="${item2.type3 ne ''}">, ${item2.type3}</c:if>
 									</td>
+									<td>${item2.originCountry}</td>
 									<td class="text-center"><fmt:formatNumber value="${item2.sellPrice}" pattern="#,###" />원</td>
 									<td class="text-center">${item2.statusFlag}</td>
 									<td class="text-center">
@@ -233,11 +235,11 @@
 									<th>상품코드</th>
 									<th>상품명</th>
 									<th>규격</th>
-									<th>입점업체</th>
+									<th>단위</th>
 								</tr>
 							</thead>
 							<tbody id="boardTarget">
-									<td colspan="9" class="text-center">등록된 내용이 없습니다.</td>
+									<td colspan="10" class="text-center">등록된 내용이 없습니다.</td>
 							</tbody>
 						</table>
 						<div id="paging" style="text-align:center"></div>
@@ -359,10 +361,10 @@
 		<td style="width:10%" class="text-center">
 			<img src="<%="${img1}"%>" alt="" style="width:60px;height:60px" />
 		</td>
-		<td style="width:5%" class="text-center">
+		<td style="width:10%" class="text-center">
 			<%="${sellPrice}"%>원
 		</td>
-		<td style="width:10%" class="text-center">
+		<td style="width:5%" class="text-center">
 			<p><%="${seq}"%>
 			</p>
 			<%--<a href="/shop/detail/<%="${seq}"%>" target="_blank" class="btn btn-mini"--%>
@@ -379,7 +381,7 @@
 			</p>
 		</td>
 		<td style="width:10%" class="text-center">
-			<p><%="${sellerName}"%>
+			<p><%="${originCountry}"%>
 			</p>
 		</td>
 	</tr>

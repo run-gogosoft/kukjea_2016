@@ -48,6 +48,20 @@
 						<%--상품 수정시에만 해당 항목을 보여줌--%>
 						<c:if test="${vo ne null}">
 							<div class="form-group">
+								<label class="col-md-2 control-label">쇼핑몰</label>
+								<div class="col-md-2 form-control-static">
+									<c:if test="${vo.mallId eq 1}">
+										병원몰
+									</c:if>
+									<c:if test="${vo.mallId eq 6}">
+										약국몰
+									</c:if>
+									<c:if test="${vo.mallId eq 35}">
+										B2B몰
+									</c:if>
+								</div>
+							</div>
+							<div class="form-group">
 								<label class="col-md-2 control-label">상품 코드</label>
 								<div class="col-md-2 form-control-static">${vo.seq}</div>
 							</div>
@@ -79,33 +93,42 @@
 								{{/each}}
 							</script>
 							<c:if test="${vo eq null}">
-							<div class="form-group">
-								<label class="col-md-2 control-label">대분류 <i class="fa fa-check"></i></label>
-								<div class="col-md-3">
-									<select class="form-control col-md-2" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
-								</div>
-							</div>
+								<%--<div class="form-group">--%>
+									<%--<label class="col-md-2 control-label">쇼핑몰<i class="fa fa-check"></i></label>--%>
+									<%--<div class="radio">--%>
+										<%--<label><input type="radio" onclick="setMallId()" name="mallName" value="Y" ${vo eq null or vo.mallId eq '1' ? "checked":""} alt="병원몰" /> 병원몰</label>--%>
+										<%--<label><input type="radio" onclick="setMallId()" name="mallName" value="N" ${vo eq null or vo.mallId eq '6' ? "checked":""} alt="약국몰" /> 약국몰</label>--%>
+										<%--<label><input type="radio" onclick="setMallId()" name="mallName" value="N" ${vo eq null or vo.mallId eq '35' ? "checked":""} alt="B2B몰" /> B2B몰</label>--%>
+									<%--</div>--%>
+								<%--</div>--%>
 
-							<div class="form-group">
-								<label class="col-md-2 control-label">중분류</label>
-								<div class="col-md-3">
-									<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+								<div class="form-group">
+									<label class="col-md-2 control-label">대분류 <i class="fa fa-check"></i></label>
+									<div class="col-md-3">
+										<select class="form-control col-md-2" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+									</div>
 								</div>
-							</div>
 
-							<div class="form-group">
-								<label class="col-md-2 control-label">소분류</label>
-								<div class="col-md-3">
-									<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+								<div class="form-group">
+									<label class="col-md-2 control-label">중분류</label>
+									<div class="col-md-3">
+										<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+									</div>
 								</div>
-							</div>
 
-							<div id="regFormLv4SelectBox" class="form-group">
-								<label class="col-md-2 control-label">세분류</label>
-								<div class="col-md-3">
-									<select class="form-control" id="lv4" name="cateLv4Seq"></select>
+								<div class="form-group">
+									<label class="col-md-2 control-label">소분류</label>
+									<div class="col-md-3">
+										<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+									</div>
 								</div>
-							</div>
+
+								<div id="regFormLv4SelectBox" class="form-group">
+									<label class="col-md-2 control-label">세분류</label>
+									<div class="col-md-3">
+										<select class="form-control" id="lv4" name="cateLv4Seq"></select>
+									</div>
+								</div>
 
 							</c:if>
 							<c:if test="${vo ne null}">
@@ -1208,6 +1231,17 @@
 			$('#sellPrice').val(1).parents('.form-group').hide();
 		} else {
 			$('#sellPrice').val(${vo eq null ? 0 : vo.sellPrice}).parents('.form-group').show();
+		}
+	};
+
+	var setMallId = function() {
+		var mallName = $('input[name=mallName]:checked').val();
+		if(mallName === '병원몰') {
+
+		} if(mallName === '약국몰') {
+
+		} else {//B2b몰
+
 		}
 	};
 </script>

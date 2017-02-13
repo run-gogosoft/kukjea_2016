@@ -125,6 +125,14 @@
 <script type="text/javascript" src="/front-assets/js/mypage/mypage.js"></script>
 <script type="text/javascript" src="/front-assets/js/plugin/account.js"></script>
 <script type="text/javascript">
+    var callbackProc = function(msg) {
+        if(msg === "OK") {
+            if(confirm('장바구니에 등록되었습니다.\n장바구니로 이동하시겠습니까?')) {
+                parent.location.href = '/shop/cart';
+            }
+        }
+    }
+
     var goPage = function (page) {
         location.href = location.pathname + "?pageNum=" + page + "&" + $("#search_form").serialize();
     };

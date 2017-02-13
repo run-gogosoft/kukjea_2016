@@ -13,5 +13,5 @@
 	, "receiverPostcode":"${vo.receiverPostcode}"
 	, "receiverAddr1":"${vo.receiverAddr1}"
 	, "receiverAddr2":"${vo.receiverAddr2}"
-	, "receiverEmail":"${vo.receiverEmail}"
+	, "receiverEmail":"${vo.email}"
 	}

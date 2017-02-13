@@ -66,6 +66,7 @@
 								<col style="width:8%"/>
 								<col style="width:*%"/>
 								<col style="width:8%"/>
+								<col style="width:8%"/>
 								<col style="width:10%"/>
 								<col style="width:8%"/>
 								<col style="width:8%"/>
@@ -81,6 +82,7 @@
 										<div class="text-primary">상품명</div>
 									</th>
 									<th>규격</th>
+									<th>단위</th>
 									<th>제조사</th>
 									<th>
 										<a href="#" onclick="searchOrderBy('A.status_code','${vo.orderByType}'); return false;">판매상태</a>
@@ -136,6 +138,9 @@
 										<div class="text-warning">${item.type3}</div>
 									</td>
 									<td class="text-center">
+										<div class="text-warning">${item.originCountry}</div>
+									</td>
+									<td class="text-center">
 										<div class="text-warning">${item.maker}</div>
 									</td>
 									<td class="text-center">
@@ -157,7 +162,7 @@
 								</tr>
 							</c:forEach>
 							<c:if test="${fn:length(list)==0}">
-								<tr><td colspan="15" class="text-center muted">등록된 내용이 없습니다</td></tr>
+								<tr><td colspan="16" class="text-center muted">등록된 내용이 없습니다</td></tr>
 							</c:if>
 							</tbody>
 						</table>

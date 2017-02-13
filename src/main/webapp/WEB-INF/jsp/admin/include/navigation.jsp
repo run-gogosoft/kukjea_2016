@@ -57,10 +57,10 @@
 					<li class="${navi eq 'system' ? 'active':''} treeview">
 						<a href="#"><i class="fa fa-cogs"></i> <span>시스템 관리</span><i class="fa fa-angle-left pull-right"></i></a>
 						<ul class="treeview-menu">
-							<%--<li ${naviSub eq '/mall/list' ? "class='active'":""}><a href="/admin/mall/list"><i class="fa fa-caret-right"></i>쇼핑몰 관리</a></li>--%>
+							<li ${naviSub eq '/mall/list' ? "class='active'":""}><a href="/admin/mall/list"><i class="fa fa-caret-right"></i>쇼핑몰 관리</a></li>
 							<%--<!--li ${naviSub eq '/system/delivery/list' ? "class='active'":""}><a href="/admin/system/delivery/list"><i class="fa fa-caret-right"></i>배송업체 관리</a></li-->--%>
 							<li ${naviSub eq '/system/admin/list' ? "class='active'":""}><a href="/admin/system/admin/list"><i	class="fa fa-caret-right"></i>어드민 관리자</a></li>
-							<%--<li ${naviSub eq '/system/notice/popup/list' ? "class='active'":""}><a href="/admin/system/notice/popup/list"><i class="fa fa-caret-right"></i>공지팝업창 관리</a></li>--%>
+							<li ${naviSub eq '/system/notice/popup/list' ? "class='active'":""}><a href="/admin/system/notice/popup/list"><i class="fa fa-caret-right"></i>공지팝업창 관리</a></li>
 							<li ${naviSub eq '/sms/list' ? "class='active'":""}><a href="/admin/sms/list"><i class="fa fa-caret-right"></i>SMS 관리</a></li>
 						</ul>
 					</li>
@@ -106,8 +106,57 @@
 							<li ${naviSub eq '/event/list' ? "class='active'":""}><a href="/admin/event/list"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>
 							<li ${naviSub eq '/category' ? "class='active'":""}><a href="/admin/category"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>
 						</c:if>
+
+						<%--<c:forEach var="mall" items="${sessionScope.mallList}" varStatus="status" begin="0" step="1">--%>
+							<%--<li class="${navi eq 'item' ? 'active':''} treeview">--%>
+								<%--<a href="#"><i class="fa fa-gift"></i> <span>${mall.name}</span><i class="fa fa-angle-left pull-right"></i></a>--%>
+								<%--<ul class="treeview-menu">--%>
+									<%--<li ${naviSub eq '/item/list/${mall.seq}' ? "class='active'":""}><a href="/admin/item/list/${mall.seq}"><i class="fa fa-caret-right"></i>상품 리스트</a></li>--%>
+									<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
+										<%--<li ${naviSub eq '/item/form/new/${mall.seq}' ? "class='active'":""}><a href="/admin/item/form/new/${mall.seq}"><i class="fa fa-caret-right"></i>상품 등록</a></li>--%>
+									<%--</c:if>--%>
+									<%--<li ${naviSub eq '/item/excel/form/${mall.seq}' ? "class='active'":""}><a href="/admin/item/excel/form/${mall.seq}"><i class="fa fa-caret-right"></i>상품 대량 등록</a></li>--%>
+									<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
+										<%--<li ${naviSub eq '/event/list/' ? "class='active'":""}><a href="/admin/event/list/"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>--%>
+										<%--<li ${naviSub eq '/category/' ? "class='active'":""}><a href="/admin/category/"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>--%>
+									<%--</c:if>--%>
+								<%--</ul>--%>
+							<%--</li>--%>
+						<%--</c:forEach>--%>
+
+						<%--<li class="${navi eq 'itemParm' ? 'active':''} treeview">--%>
+							<%--<a href="#"><i class="fa fa-gift"></i> <span>약국몰</span><i class="fa fa-angle-left pull-right"></i></a>--%>
+							<%--<ul class="treeview-menu">--%>
+								<%--<li ${naviSub eq '/item/list/2' ? "class='active'":""}><a href="/admin/item/list/2"><i class="fa fa-caret-right"></i>상품 리스트</a></li>--%>
+								<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
+									<%--<li ${naviSub eq '/item/form' ? "class='active'":""}><a href="/admin/item/form"><i class="fa fa-caret-right"></i>상품 등록</a></li>--%>
+								<%--</c:if>--%>
+								<%--<li ${naviSub eq '/item/excel/form' ? "class='active'":""}><a href="/admin/item/excel/form"><i class="fa fa-caret-right"></i>상품 대량 등록</a></li>--%>
+								<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
+									<%--<li ${naviSub eq '/event/list' ? "class='active'":""}><a href="/admin/event/list"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>--%>
+									<%--<li ${naviSub eq '/category' ? "class='active'":""}><a href="/admin/category"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>--%>
+								<%--</c:if>--%>
+							<%--</ul>--%>
+						<%--</li>--%>
+
+						<%--<li class="${navi eq 'itemParm' ? 'active':''} treeview">--%>
+							<%--<a href="#"><i class="fa fa-gift"></i> <span>B2B몰</span><i class="fa fa-angle-left pull-right"></i></a>--%>
+							<%--<ul class="treeview-menu">--%>
+								<%--<li ${naviSub eq '/item/list/3' ? "class='active'":""}><a href="/admin/item/list/35"><i class="fa fa-caret-right"></i>상품 리스트</a></li>--%>
+								<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
+									<%--<li ${naviSub eq '/item/form' ? "class='active'":""}><a href="/admin/item/form"><i class="fa fa-caret-right"></i>상품 등록</a></li>--%>
+								<%--</c:if>--%>
+								<%--<li ${naviSub eq '/item/excel/form' ? "class='active'":""}><a href="/admin/item/excel/form"><i class="fa fa-caret-right"></i>상품 대량 등록</a></li>--%>
+								<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
+									<%--<li ${naviSub eq '/event/list' ? "class='active'":""}><a href="/admin/event/list"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>--%>
+									<%--<li ${naviSub eq '/category' ? "class='active'":""}><a href="/admin/category"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>--%>
+								<%--</c:if>--%>
+							<%--</ul>--%>
+						<%--</li>--%>
+
 					</ul>
 				</li>
+
 				<c:if test="${sessionScope.loginType eq 'A'  or sessionScope.loginType eq 'S' or sessionScope.loginType eq 'D'}">
 				<li class="${navi eq 'order' ? 'active':''} treeview">
 					<a href="#"><i class="fa fa-won"></i> <span>판매 관리</span><i class="fa fa-angle-left pull-right"></i></a>

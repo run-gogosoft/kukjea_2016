@@ -1,6 +1,7 @@
 package com.smpro.interceptor.admin;
 
 import com.smpro.service.LoginService;
+import com.smpro.service.MallService;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.UserVo;
 
@@ -21,6 +22,8 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 	
 	@Autowired
 	private LoginService loginService;
+	@Autowired
+	private MallService mallService;
 
 	public void setLoginService(LoginService loginService) {
 		this.loginService = loginService;
@@ -39,20 +42,35 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 		
 		String naviPos = "";
 		String naviPosSub = "";
-		
+		String mallid = "";
 		LOGGER.info("### requestURI : " + requestURI);
 		LOGGER.debug("### handler : " + handler.toString());
+
 		if (!StringUtil.isBlank(requestURI)	&& requestURI.split("/").length >= 3) {
 			naviPos = requestURI.split("/")[2];
+			try{
+				mallid = requestURI.split("/")[4];
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			naviPosSub = requestURI.substring(requestURI.indexOf(naviPos)-1);
 		}
 		// 다른이름의 페이지 navi 조정
-		if ("display".equals(naviPos) || "mall".equals(naviPos) || "category".equals(naviPos) || "sms".equals(naviPos) || "menu".equals(naviPos)) {
+//		if ("display".equals(naviPos) || "mall".equals(naviPos) || "category".equals(naviPos) || "sms".equals(naviPos) || "menu".equals(naviPos)) {
+		if ("display".equals(naviPos) || "mall".equals(naviPos) || "sms".equals(naviPos) || "menu".equals(naviPos)) {
 			naviPos = "system";
 		} else if ("review".equals(naviPos)) {
 			naviPos = "board";
-		} else if ("event".equals(naviPos) || "best".equals(naviPos)) {
+		} else if ("event".equals(naviPos) || "category".equals(naviPos) || "best".equals(naviPos)) {
 			naviPos = "item";
+//			LOGGER.debug("### mallid : " + mallid);
+//			if(mallid.equals("2")){
+//				naviPos = "itemParm";
+//			}
+//			else if(mallid.equals("3")){
+//				naviPos = "itemParm";
+//			}
+
 		} else if ("point".equals(naviPos)) {
 			naviPos = "member";
 		}
@@ -103,6 +121,7 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 				session.setAttribute("loginName", vo.getName());
 				session.setAttribute("gradeCode", vo.getGradeCode());
 				session.setAttribute("loginType", vo.getLoginType()); // 사용자 유형 설정 (관리자)
+
 				/* 재 로그인 정보 로그기록 */
 				LOGGER.info("[loginInterceptor seq:id:name:grade:token] " + vo.getLoginSeq() + ":" + vo.getId() + ":" + vo.getName() + ":" + vo.getGradeCode() + ":" + vo.getLoginType());
 			}

@@ -140,7 +140,7 @@
 							<thead>
 								<tr>
 									<th>
-										<div style="color:#6495ed;">상품주문번호</div>
+										<div style="color:#72afd2;">상품주문번호</div>
 									</th>
 									<th>상품번호</th>
 									<th>이미지</th>
@@ -167,7 +167,7 @@
 								</c:if>
 								<tr <c:if test="${vo.seq==pvo.seq}"> class="tr-selected" </c:if>>
 									<td class="text-center">
-										<a href="/admin/order/view/${vo.orderSeq}?seq=${vo.seq}" style="color:#6495ed;">${vo.seq}</a>
+										<strong><a href="/admin/order/view/${vo.orderSeq}?seq=${vo.seq}" style="color:#72afd2;">${vo.seq}</a></strong>
 										<c:if test="${vo.seq==pvo.seq}">
 											<br/>(현재 주문)
 											<%-- 현재 상세 주문의 배송정보 관련 데이터를 담는다. --%>

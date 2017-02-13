@@ -178,6 +178,7 @@
 						<a href="/admin/member/mod/${vo.seq}" class="btn btn-sm btn-info">수정하기</a>
 						<button type="button" class="btn btn-sm btn-danger" onclick="leaveMember();">탈퇴하기</button>
 						<button type="button" class="btn btn-sm btn-default" onclick="history.go(-1);">목록보기</button>
+						<%--<button type="button" class="btn btn-sm btn-default" onclick="addPoint()">포인트지급</button>--%>
 					</div>
 					</c:if>
 				</div>
@@ -229,7 +230,7 @@
 									<th>상품명</th>
 									<th>옵션</th>
 									<th>판매단가</th>
-									<th>수량<div style="margin-top:5px;color:#6495ed">배송비</div></th>
+									<th>수량</th>
 									<th>송장번호</th>
 									<th>입점업체명</th>
 									<th>주문일자</th>
@@ -363,6 +364,40 @@
 					success: function(data) {
 						if(data.result === "true") {
 							location.replace('/admin/member/view/${vo.seq}');
+						} else {
+							$.msgbox(data.message, {type: "error"});
+						}
+					}
+				})
+			}
+		});
+	};
+
+	var addPoint = function() {
+		$.msgbox("<p>포인트지급</p>", {
+			type    : "prompt",
+			inputs  : [
+				{type: "text", label: "지급포인트:", required: true},
+				{type: "text", label: "지급사유:", required: true}
+			],
+			buttons : [
+				{type: "submit", value: "OK"},
+				{type: "cancel", value: "Exit"}
+			]
+		}, function(addPoint, addResone) {
+			if(password) {
+				$.ajax({
+					type: 'POST',
+					data: {
+						seq:${vo.seq},
+						addPoint:addPoint,
+						addResone:addResone
+					},
+					dataType: 'json',
+					url: '/admin/system/member/password/update/ajax',
+					success: function(data) {
+						if(data.result === "true") {
+							$.msgbox(data.message, {type: "info"});
 						} else {
 							$.msgbox(data.message, {type: "error"});
 						}

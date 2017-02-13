@@ -640,8 +640,9 @@ em.must {color:#ef3f3b;}
 .img_list_type01 li > a .thumb .icons {position:absolute; top:0; left:-8px; width:66px;}
 .img_list_type01 li > a .thumb .icons .icon_txt {width:50px; margin-left:8px}
 .img_list_type01 li > a .thumb .icons .icon_txt_yellow {font-size:12px;}
-.img_list_type01 li > a .tit {display:block; height:25px; line-height:15px; overflow:hidden;}
+.img_list_type01 li > a .tit {display:block; height:30px; line-height:15px; overflow:hidden;font-size:13px;}
 .img_list_type01 li > a .type {display:block; height:25px; line-height:15px; overflow:hidden;}
+.img_list_type01 li > a .type2 {display:block; height:25px; line-height:15px; overflow:hidden; color:#a4a5a0;}
 .img_list_type01 li > a .price {display:block; margin-top:5px; font-size:14px;}
 .img_list_type01 li > a del {float:left;}
 .img_list_type01 li > a .sale {float:right; color:#333; font-size:14px;}
@@ -959,6 +960,8 @@ dl.attention.align_top dt {vertical-align:top;}
 .today_sale li > a .thumb .icons .icon_txt {width:50px; margin-left:8px}
 .today_sale li > a .thumb .icons .icon_txt_yellow {font-size:12px;}
 .today_sale li > a .tit {display:block; height:30px; line-height:15px; overflow:hidden;}
+.today_sale li > a .type {display:block; height:25px; line-height:15px; overflow:hidden;}
+.today_sale li > a .type2 {display:block; height:25px; line-height:15px; overflow:hidden; color:#a4a5a0;}
 .today_sale li > a .price {display:block; margin-top:13px; overflow:hidden}
 .today_sale li > a del {float:left;}
 .today_sale li > a .sale {float:right; color:#333; font-size:14px;}

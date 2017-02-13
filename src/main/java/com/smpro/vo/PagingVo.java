@@ -190,7 +190,7 @@ public abstract class PagingVo {
 	public String drawPagingNavigation(String jsFunctionName) {
 		StringBuffer _sb = new StringBuffer();
 		int totalPageCnt = totalRowCount / rowCount;
-
+		System.out.println("$$$$ totalRowCount:"+totalRowCount+", rowCount:"+rowCount+". pageNum:"+pageNum);
 		if (totalRowCount % rowCount > 0) {
 			totalPageCnt = totalPageCnt + 1;
 		}
@@ -199,7 +199,9 @@ public abstract class PagingVo {
 		if (pageNum / pageCount != totalPageCnt / pageCount) {
 			endPageNum = startPageNum + pageCount;
 		}
-		
+
+
+		System.out.println("$$$$ totalPageCnt:"+totalPageCnt+", startPageNum:"+startPageNum+", endPageNum:"+endPageNum);
 		_sb.append("<div class='paging'>");
 		if (startPageNum >= pageCount) {
 			_sb.append("<a href='#' class='prev' onclick='");
@@ -233,6 +235,8 @@ public abstract class PagingVo {
 			_sb.append(");return false;'>다음</a>");
 		}
 		_sb.append("</div>");
+
+		System.out.println("$$$$ _sb.tostring:"+_sb.toString());
 		return _sb.toString();
 	}
 

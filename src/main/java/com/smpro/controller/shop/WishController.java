@@ -120,7 +120,7 @@ public class WishController extends MyPage {
 		vo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
 		List<ItemVo> cartList = cartService.getList(vo);
 
-		System.out.println(">>>> cartList.size():"+cartList.size());
+//		System.out.println(">>>> cartList.size():"+cartList.size());
 		for(ItemVo wish:list){
 			wish.setDirectFlag("N");
 			if(cartList.size()>0) {
@@ -142,9 +142,11 @@ public class WishController extends MyPage {
 			}
 		}
 
-		model.addAttribute("message", "장바구니에 등록 되었습니다.");
-		model.addAttribute("returnUrl", "/shop/wish/list");
-		return Const.REDIRECT_PAGE;
+//		model.addAttribute("message", "장바구니에 등록 되었습니다.");
+//		model.addAttribute("returnUrl", "/shop/wish/list");
+//		return Const.REDIRECT_PAGE;
+		model.addAttribute("callback", "OK");
+		return Const.ALERT_PAGE;
 	}
 
 	/** 모두 주문 */

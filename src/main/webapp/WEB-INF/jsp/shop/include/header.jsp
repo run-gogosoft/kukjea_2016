@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="layout_inner search_section">
-        <h1><a href="/shop/main"><img src="/images/common/logo.png" alt="국제몰 (KUK JE MALL)" /></a></h1>
+        <h1><a href="/shop/main"><img src="/images/common/logo.gif" alt="국제몰 (KUK JE MALL)" /></a></h1>
         <div class="search">
             <form action="/shop/search" role="form" onsubmit="return checkRequiredValue(this, 'data-required-label');">
                 <fieldset>

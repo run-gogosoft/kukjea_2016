@@ -21,6 +21,7 @@
 	, "type1":"${item.type1}"
 	, "type2":"${item.type2}"
 	, "type3":"${item.type3}"
+	, "originCountry":"${item.originCountry}"
 	}
 </c:forEach>
 ],

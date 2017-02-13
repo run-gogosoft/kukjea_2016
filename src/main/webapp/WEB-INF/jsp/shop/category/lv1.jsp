@@ -74,20 +74,22 @@
 
                         <div class="board_option">
                             <dl class="list_ctn">
-                                <dt>상품 보기</dt>
+                                <%--<dt>상품 보기</dt>--%>
                                 <dd>
                                     <a href="#" <c:if test="${vo.rowCount eq 10}">class="on"</c:if> onclick="changeRowCount(10);return false;">10개</a>
                                     <a href="#" <c:if test="${vo.rowCount eq 20}">class="on"</c:if> onclick="changeRowCount(20);return false;">20개</a>
                                     <a href="#" <c:if test="${vo.rowCount eq 30}">class="on"</c:if> onclick="changeRowCount(30);return false;">30개</a>
                                 </dd>
 
-                                <dt>&nbsp;&nbsp;상품 정렬</dt>
+                                <dt>&nbsp;&nbsp;|</dt>
                                 <dd>
                                     <a href="#" <c:if test="${vo.orderType eq 'lowprice'}">class="on"</c:if> onclick="changeOrderType('lowprice');return false;">낮은가격</a>
                                     <a href="#" <c:if test="${vo.orderType eq 'highprice'}">class="on"</c:if> onclick="changeOrderType('highprice');return false;">높은가격</a>
                                     <a href="#" <c:if test="${vo.orderType eq 'name'}">class="on"</c:if> onclick="changeOrderType('name');return false;">상품명</a>
                                     <a href="#" <c:if test="${vo.orderType eq 'maker'}">class="on"</c:if> onclick="changeOrderType('maker');return false;">제조사</a>
+                                    <a href="#" <c:if test="${vo.orderType eq 'toporder'}">class="on"</c:if> onclick="changeOrderType('toporder');return false;">판매순</a>
                                 </dd>
+
                                 <input type="hidden" name="orderType" value="${vo.orderType}" />
                                 <input type="hidden" name="rowCount" value="${vo.rowCount}" />
                             </dl>
@@ -135,10 +137,11 @@
                                 <col style="width:25px" />
                                 <c:if test="${vo.listStyle eq 'all'}"><col style="width:70px" /></c:if>
                                 <col style="width:auto" />
-                                <col style="width:80px" />
-                                <col style="width:80px" />
-                                <col style="width:80px" />
-                                <col style="width:80px" />
+                                <col style="width:70px" />
+                                <col style="width:70px" />
+                                <col style="width:70px" />
+                                <col style="width:70px" />
+                                <col style="width:70px" />
                             </colgroup>
 
                             <thead>
@@ -150,6 +153,7 @@
                                 <th scope="col">상품명</th>
                                 <th scope="col"></th>
                                 <th scope="col">규격</th>
+                                <th scope="col">단위</th>
                                 <th scope="col">제조사</th>
                                 <th scope="col">가격</th>
                             </tr>
@@ -180,6 +184,7 @@
                                     <div class="text-warning">${item.type2}</div>
                                     <div class="text-warning">${item.type3}</div>
                                 </td>
+                                <td>${item.originCountry}</td>
                                 <td>${item.maker}</td>
                                 <td><span class="price"><strong><fmt:formatNumber value="${item.sellPrice}"/></strong>원</span></td>
                             </tr>

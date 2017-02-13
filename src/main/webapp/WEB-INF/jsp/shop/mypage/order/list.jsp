@@ -226,8 +226,8 @@
                                             </c:choose>
                                         </c:if>
                                         <c:if test="${vo.statusCode eq 50}">
-                                            <!-- <button class="btn btn-danger btn-xs" onclick="updateOrderStatus('${vo.seq}','${vo.orderSeq}','55');" style="width: 75px;margin-top: 2px;">구매확정</button> -->
-                                            <button class="btn btn_red btn_xs" onclick="CHBoardUtil.writeButton('${status.count}')" style="width: 75px;margin-top: 2px;">구매확정</button>
+                                            <button class="btn btn_red btn_xs" onclick="updateOrderStatus('${vo.seq}','${vo.orderSeq}','55');" style="width: 75px;margin-top: 2px;">구매확정</button>
+                                            <%--<button class="btn btn_red btn_xs" onclick="CHBoardUtil.writeButton('${status.count}')" style="width: 75px;margin-top: 2px;">구매확정</button>--%>
                                         </c:if>
                                         <%--<c:if test="${vo.statusCode <= 50}">--%>
                                             <%--<button class="btn btn_default btn_xs" onclick="hhWrite.writeButton('70',${vo.seq}, ${vo.orderSeq},'');">반품신청</button>--%>

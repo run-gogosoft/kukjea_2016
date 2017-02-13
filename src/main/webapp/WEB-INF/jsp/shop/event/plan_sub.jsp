@@ -24,8 +24,8 @@
                     <div class="privacy_intro">
                         <em>이벤트 기간 </em>
                         <span class="date">
-                            <fmt:parseDate value="${vo.regDate}" var="regDate" pattern="yyyy-mm-dd"/>
-                            <fmt:formatDate value="${regDate}" pattern="yyyy-mm-dd"/>
+                            <fmt:parseDate value="${vo.startDate}" var="startDate" pattern="yyyy-mm-dd"/>
+                            <fmt:formatDate value="${startDate}" pattern="yyyy-mm-dd"/>
                             ~
                             <fmt:parseDate value="${vo.endDate}" var="endDate" pattern="yyyymmdd"/>
                             <fmt:formatDate value="${endDate}" pattern="yyyy-mm-dd"/>
@@ -61,6 +61,7 @@
                                                 <c:if test="${itemList.type2 ne ''}">, ${itemList.type2}</c:if>
                                                 <c:if test="${itemList.type3 ne ''}">, ${itemList.type3}</c:if>
                                             </span>
+                                            <span class="type2">단위 : ${itemList.originCountry}</span>
                                             <span class="price">
                                                 <c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
                                                     <del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>

@@ -33,9 +33,9 @@
                     </div>
 
                     <h4 class="tit_style"><em class="must">*</em> 사용리스트</h4>
-                    <div class="inner" style="margin:0">
-                        <%@ include file="/WEB-INF/jsp/shop/include/mypage_search.jsp" %>
-                    </div>
+                    <%--<div class="inner" style="margin:0">--%>
+                        <%--<%@ include file="/WEB-INF/jsp/shop/include/mypage_search.jsp" %>--%>
+                    <%--</div>--%>
                     <table class="board_list">
                         <caption>포인트 사용리스트</caption>
                         <colgroup>
@@ -55,7 +55,7 @@
                         <tbody>
                         <c:forEach var="item" items="${list}" varStatus="status">
                         <tr>
-                            <td>${item.seq}</td>
+                            <td class="text-center">${status.index + 1}</td>
                             <td>${item.statusName}</td>
                             <td class="rt">
                                 <span class="txt_sub_point">

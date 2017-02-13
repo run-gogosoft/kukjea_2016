@@ -3,7 +3,7 @@
 	<!-- 소제목 -->
 	<!-- <div class="box-header"><h3 class="box-title"></h3></div> -->
 	<!-- 내용 -->
-	<form id="searchForm" action="/admin/item/list" class="form-horizontal" method="get" onsubmit="search(this);">
+	<form id="searchForm" action="/admin/item/list/${mallSeq}" class="form-horizontal" method="get" onsubmit="search(this);">
 		<input type="hidden" name="pageNum"  id="pageNum" value="${vo.pageNum}"/>
 		<input type="hidden" name="orderByName" id="orderByName" value="${vo.orderByName}"/>
 		<input type="hidden" name="orderByType" id="orderByType" value="${vo.orderByType}"/>
@@ -55,7 +55,8 @@
 						<option value="S" <c:if test="${vo.statusCode eq 'S'}">selected="selected"</c:if>>품절</option>
 					</select>
 				</div>
-
+			</div>
+			<div class="form-group">
 				<label class="col-md-2 control-label">정렬방식</label>
 				<div class="col-md-2">
 					<select class="form-control" id="orderType" name="orderType">
@@ -64,23 +65,26 @@
 						<option value="highprice" <c:if test="${vo.orderType eq 'highprice'}">selected="selected"</c:if>>높은가격</option>
 						<option value="name" <c:if test="${vo.orderType eq 'name'}">selected="selected"</c:if>>상품명</option>
 						<option value="maker" <c:if test="${vo.orderType eq 'maker'}">selected="selected"</c:if>>제조사</option>
+						<option value="toporder" <c:if test="${vo.orderType eq 'toporder'}">selected="selected"</c:if>>판매순</option>
 					</select>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-md-2 control-label">상품명/상품코드/제조사</label>
+				<label class="col-md-2 control-label">상품명/상품코드/제조사/규격</label>
 				<div class="col-md-2">
 					<select class="form-control" id="itemSearchType" name="itemSearchType">
 						<option value="">---구분---</option>
 						<option value="seq"  <c:if test="${vo.itemSearchType eq 'seq'}">selected</c:if>>상품코드</option>
 						<option value="name" <c:if test="${vo.itemSearchType eq 'name'}">selected</c:if>>상품명</option>
 						<option value="maker" <c:if test="${vo.itemSearchType eq 'maker'}">selected</c:if>>제조사</option>
-						<%--<option value="type" <c:if test="${vo.itemSearchType eq 'type'}">selected</c:if>>규격</option>--%>
+						<option value="type" <c:if test="${vo.itemSearchType eq 'type'}">selected</c:if>>규격</option>
 					</select>
 				</div>
 				<div class="col-md-2">
 					<input class="form-control" type="text" id="itemSearchValue" name="itemSearchValue" value="${vo.itemSearchValue}" maxlength="20"/>
 				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-md-2 control-label">한페이지출력수</label>
 				<div class="col-md-2">
 					<select class="form-control" id="rowCount" name="rowCount">
@@ -99,7 +103,7 @@
 				<c:if test="${sessionScope.loginType eq 'A'  or sessionScope.loginType eq 'S'}">
 					<button type="button" onclick="CHExcelDownload.excelDownCheck()" class="btn btn-success btn-sm">엑셀다운</button>
 				</c:if>
-				<button type="button" onclick="location.href='/admin/item/list'" class="btn btn-sm btn-warning">검색초기화</button>
+				<button type="button" onclick="location.href='/admin/item/list/${mallSeq}'" class="btn btn-sm btn-warning">검색초기화</button>
 			</div>
 		</div>
 	</form>

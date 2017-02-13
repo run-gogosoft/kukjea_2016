@@ -41,10 +41,10 @@ public class OrderStatsController {
 	public String getListByCategory(HttpSession session, OrderVo vo, Model model) {
 
 		//기본 조회기간 한달
-		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
-			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
-		}
+//		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
+//			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
+//		}
 		
 		//기본 일별 조회
 		if("".equals(vo.getSearchDateType())) {
@@ -196,10 +196,10 @@ public class OrderStatsController {
 	public String getListByMember(OrderVo vo, Model model) {
 		
 		//기본 조회기간 한달
-		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
-			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
-		}
+//		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
+//			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
+//		}
 		
 		//기본 일별 조회
 		if("".equals(vo.getSearchDateType())) {
@@ -218,10 +218,10 @@ public class OrderStatsController {
 	public String getListByMemberPublic(OrderVo vo, Model model) {
 		
 		//기본 조회기간 한달
-		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
-			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
-		}
+//		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
+//			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
+//		}
 
 		model.addAttribute("list", orderStatsService.getListByMemberPublic(vo));
 		model.addAttribute("vo", vo);
@@ -347,10 +347,10 @@ public class OrderStatsController {
 		vo.setSellerName((String)session.getAttribute("loginName"));
 
 		//기본 조회기간 한달
-		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
-			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
-		}
+//		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
+//			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
+//		}
 
 		model.addAttribute("list", orderStatsService.getListByItem(vo));
 		model.addAttribute("itemSum", orderStatsService.getListByItemSum(vo));
@@ -365,10 +365,10 @@ public class OrderStatsController {
 	public String getListByItemForJachigu(@PathVariable String userType, SellerVo vo, Model model) {
 		
 		//기본 조회기간 한달
-		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
-			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
-		}
+//		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
+//			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//			vo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
+//		}
 		
 		//자치구별 상품 판매수 리스트 저장 변수		
 		List<OrderVo> lists = orderStatsService.getListByItemForSellerJachigu(vo);

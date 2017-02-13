@@ -71,135 +71,14 @@
 			sm_item_detail I ON I.item_seq=A.seq LEFT OUTER JOIN
 			sm_common c1 ON (c1.group_code=4 AND c1.value=A.status_code) LEFT OUTER JOIN
 			sm_common c2 ON (c2.group_code=34 AND c2.value=A.type_code) LEFT OUTER JOIN
-			sm_common c3 ON (c3.group_code=5 AND A.tax_code=c3.value)
+			sm_common c3 ON (c3.group_code=5 AND A.tax_code=c3.value) LEFT OUTER JOIN
+			(
+				SELECT item_seq, SUM(order_cnt) cnt FROM sm_order_detail
+				WHERE status_code NOT IN ('90','99')
+			 	GROUP BY item_seq
+			) d ON (A.seq=d.item_seq)
 		WHERE 1=1
-		<choose>
-			<!--
-			<when test="loginType == 'S'.toString()">
-				AND A.seller_seq=#{loginSeq}
-			</when>
-			<when test="loginType == 'D'.toString()">
-				AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
-			</when>-->
-		</choose>
-		<if test="cateLv1Seq != null">
-			<choose>
-				<when test="cateLv1Seq == 0">
-					AND A.cate_lv1_seq IS NULL
-				</when>
-				<otherwise>
-					AND A.cate_lv1_seq=#{cateLv1Seq}
-				</otherwise>
-			</choose>
-		</if>
-		<if test="cateLv2Seq != null">
-			<choose>
-				<when test="cateLv2Seq == 0">
-					AND A.cate_lv2_seq IS NULL
-				</when>
-				<otherwise>
-					AND A.cate_lv2_seq=#{cateLv2Seq}
-				</otherwise>
-			</choose>
-		</if>
-		<if test="cateLv3Seq != null">
-			<choose>
-				<when test="cateLv3Seq == 0">
-					AND A.cate_lv3_seq IS NULL
-				</when>
-				<otherwise>
-					AND A.cate_lv3_seq=#{cateLv3Seq}
-				</otherwise>
-			</choose>
-		</if>
-		<if test="cateLv4Seq != null">
-			<choose>
-				<when test="cateLv4Seq == 0">
-					AND A.cate_lv4_seq IS NULL
-				</when>
-				<otherwise>
-					AND A.cate_lv4_seq=#{cateLv4Seq}
-				</otherwise>
-			</choose>
-		</if>
-		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
-			AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
-		</if>
-		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
-			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
-		</if>
-		<if test="itemSearchType eq 'seq' and itemSearchValue != ''">
-			AND A.seq = #{itemSearchValue}
-		</if>
-		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
-			AND A.maker LIKE CONCAT('%',#{itemSearchValue},'%')
-		</if>
-		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
-			AND (
-			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{nameMaker}),'%')
-			)
-		</if>
-		<if test="sellerSearchType eq 'sellerId' and sellerSearchValue != ''">
-			AND E.id LIKE CONCAT('%',#{sellerSearchValue},'%')
-		</if>
-		<if test="sellerSearchType eq 'sellerName' and sellerSearchValue != ''">
-			AND E.name LIKE CONCAT('%',#{sellerSearchValue},'%')
-		</if>
-		<if test="sellerSeq != null">
-			AND A.seller_seq = #{sellerSeq}
-		</if>
-		<if test="statusCode != ''">
-			AND A.status_code = #{statusCode}
-		</if>
-		<if test="searchDate1 != '' and searchDate2 != ''">
-			AND DATE_FORMAT(A.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
-		</if>
-		<if test="taxCode != ''">
-			AND A.tax_code = #{taxCode}
-		</if>
-		<if test="search != '' and findword != ''">
-			AND ${search} LIKE CONCAT('%',#{findword},'%')
-		</if>
-		<if test="deliTypeCode != ''">
-			AND A.deli_type_code = #{deliTypeCode}
-		</if>
-		<if test="authCategoryArr != null and authCategoryArr.length != 0">
-			AND ( 1=1
-			<foreach collection="authCategoryArr" item="item" >
-				AND A.auth_category LIKE CONCAT('%',#{item},'%')
-			</foreach>
-			)
-		</if>
-		<choose>
-			<when test="orderType == 'highprice'">
-				ORDER BY sellPrice DESC
-			</when>
-			<when test="orderType == 'lowprice'">
-				ORDER BY sellPrice ASC
-			</when>
-			<when test="orderType == 'name'">
-				ORDER BY A.name ASC
-			</when>
-			<when test="orderType == 'maker'">
-				ORDER BY A.maker ASC
-			</when>
-			<otherwise>
-				ORDER BY A.seq DESC
-			</otherwise>
-		</choose>
-		LIMIT ${pageNum * rowCount}, ${rowCount}
-	</select>
-
-	<select id="getListTotalCount" parameterType="com.smpro.vo.ItemVo" resultType="int">
-		SELECT COUNT(*) FROM 
-			sm_item A LEFT OUTER JOIN 
-			sm_user E ON A.seller_seq=E.seq LEFT OUTER JOIN 
-			sm_seller F ON A.seller_seq=F.seq LEFT OUTER JOIN 
-			sm_user G ON F.master_seq=G.seq
-		WHERE 1=1
-
+			AND A.mall_id=#{mallId}
 		<choose>
 			<!--
 			<when test="loginType == 'S'.toString()">
@@ -263,9 +142,139 @@
 		</if>
 		<if test="itemSearchType eq 'type' and itemSearchValue != ''">
 			AND (
-			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{nameMaker}),'%')
+			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
+			)
+		</if>
+		<if test="sellerSearchType eq 'sellerId' and sellerSearchValue != ''">
+			AND E.id LIKE CONCAT('%',#{sellerSearchValue},'%')
+		</if>
+		<if test="sellerSearchType eq 'sellerName' and sellerSearchValue != ''">
+			AND E.name LIKE CONCAT('%',#{sellerSearchValue},'%')
+		</if>
+		<if test="sellerSeq != null">
+			AND A.seller_seq = #{sellerSeq}
+		</if>
+		<if test="statusCode != ''">
+			AND A.status_code = #{statusCode}
+		</if>
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(A.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		<if test="taxCode != ''">
+			AND A.tax_code = #{taxCode}
+		</if>
+		<if test="search != '' and findword != ''">
+			AND ${search} LIKE CONCAT('%',#{findword},'%')
+		</if>
+		<if test="deliTypeCode != ''">
+			AND A.deli_type_code = #{deliTypeCode}
+		</if>
+		<if test="authCategoryArr != null and authCategoryArr.length != 0">
+			AND ( 1=1
+			<foreach collection="authCategoryArr" item="item" >
+				AND A.auth_category LIKE CONCAT('%',#{item},'%')
+			</foreach>
+			)
+		</if>
+		<choose>
+			<when test="orderType == 'highprice'">
+				ORDER BY sellPrice DESC
+			</when>
+			<when test="orderType == 'lowprice'">
+				ORDER BY sellPrice ASC
+			</when>
+			<when test="orderType == 'name'">
+				ORDER BY A.name ASC
+			</when>
+			<when test="orderType == 'maker'">
+				ORDER BY A.maker ASC
+			</when>
+			<when test="orderType == 'toporder'">
+				ORDER BY d.cnt DESC, A.seq DESC
+			</when>
+			<otherwise>
+				ORDER BY A.seq DESC
+			</otherwise>
+		</choose>
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getListTotalCount" parameterType="com.smpro.vo.ItemVo" resultType="int">
+		SELECT COUNT(*) FROM 
+			sm_item A LEFT OUTER JOIN 
+			sm_user E ON A.seller_seq=E.seq LEFT OUTER JOIN 
+			sm_seller F ON A.seller_seq=F.seq LEFT OUTER JOIN 
+			sm_user G ON F.master_seq=G.seq
+		WHERE 1=1
+			AND A.mall_id=#{mallId}
+		<choose>
+			<!--
+			<when test="loginType == 'S'.toString()">
+				AND A.seller_seq=#{loginSeq}
+			</when>
+			<when test="loginType == 'D'.toString()">
+				AND A.seller_seq IN (SELECT seq FROM sm_seller WHERE master_seq=#{loginSeq})
+			</when>-->
+		</choose>
+		<if test="cateLv1Seq != null">
+			<choose>
+				<when test="cateLv1Seq == 0">
+					AND A.cate_lv1_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv1_seq=#{cateLv1Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv2Seq != null">
+			<choose>
+				<when test="cateLv2Seq == 0">
+					AND A.cate_lv2_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv2_seq=#{cateLv2Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv3Seq != null">
+			<choose>
+				<when test="cateLv3Seq == 0">
+					AND A.cate_lv3_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv3_seq=#{cateLv3Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="cateLv4Seq != null">
+			<choose>
+				<when test="cateLv4Seq == 0">
+					AND A.cate_lv4_seq IS NULL
+				</when>
+				<otherwise>
+					AND A.cate_lv4_seq=#{cateLv4Seq}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="itemSearchType eq 'nameMaker' and itemSearchValue != ''">
+			AND (LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR A.maker LIKE CONCAT('%',#{itemSearchValue},'%'))
+		</if>
+		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
+			AND LOWER(A.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
+		</if>
+		<if test="itemSearchType eq 'seq' and itemSearchValue != ''">
+			AND A.seq = #{itemSearchValue}
+		</if>
+		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
+			AND A.maker LIKE CONCAT('%',#{itemSearchValue},'%')
+		</if>
+		<if test="itemSearchType eq 'type' and itemSearchValue != ''">
+			AND (
+			LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+			LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 			)
 		</if>
 		<if test="sellerSearchType eq 'sellerId' and sellerSearchValue != ''">
@@ -363,6 +372,7 @@
 		WHERE 1=1
 			<!-- TODO 추후 주석 해제: AND d.item_seq IS NOT NULL  -->
 			AND i.status_code=#{statusCode}
+			AND i.mall_id=#{mallId}
 		ORDER BY d.cnt DESC, i.reg_date DESC 
 		LIMIT ${rowCount}
 	</select>
@@ -510,7 +520,8 @@
 			subject_type,
 			insurance_code,
 			mod_date,
-			reg_date
+			reg_date,
+			mall_id
 		) VALUES (
 			#{seq},
 			#{name},
@@ -560,7 +571,8 @@
 			#{subjectType},
 			#{insuranceCode},
 			NOW(),
-			NOW()
+			NOW(),
+			#{mallId}
 		)
 	</insert>
 
@@ -983,7 +995,7 @@
 			(SELECT v.free_deli FROM sm_item_option_value v    LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS freeDeli,
 			(SELECT v.event_added FROM sm_item_option_value v  LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS eventAdded,
 			(SELECT v.sale_percent FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=i.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS salePercent,
-			(SELECT cate_name FROM sm_item_category A WHERE i.seq=i.cate_lv1_seq) AS cateLv1Name,
+			(SELECT cate_name FROM sm_item_category A WHERE A.seq=i.cate_lv1_seq) AS cateLv1Name,
 			(SELECT cate_name FROM sm_item_category B WHERE B.seq=i.cate_lv2_seq) AS cateLv2Name,
 			(SELECT cate_name FROM sm_item_category C WHERE C.seq=i.cate_lv3_seq) AS cateLv3Name,
 			(SELECT cate_name FROM sm_item_category D WHERE D.seq=i.cate_lv4_seq) AS cateLv4Name,
@@ -1001,6 +1013,7 @@
 			i.type1 AS type1,
 			i.type2 AS type2,
 			i.type3 AS type3,
+			i.origin_country AS originCountry,
 			i.insurance_code AS insuranceCode,
 			i.subject_type AS subjectType,
 			i.deli_type_code AS deliTypeCode,
@@ -1017,7 +1030,8 @@
 		FROM
 			sm_item i LEFT OUTER JOIN
 			sm_item_category c ON(i.cate_lv1_seq=c.seq) LEFT OUTER JOIN
-			sm_user u	ON i.seller_seq=u.seq	LEFT OUTER JOIN (
+			sm_user u	ON i.seller_seq=u.seq	LEFT OUTER JOIN
+			(
 				SELECT
 					o.item_seq, o.seq AS optionSeq, MAX(ov.stock_cnt) AS stockCount, MIN(o.option_name) AS optionName
 				FROM
@@ -1027,9 +1041,14 @@
 
 				GROUP BY item_seq
 			) o ON o.item_seq=i.seq LEFT OUTER JOIN
-			sm_seller s ON(i.seller_seq=s.seq)
+			sm_seller s ON(i.seller_seq=s.seq) LEFT OUTER JOIN
+			(
+				SELECT item_seq, SUM(order_cnt) cnt FROM sm_order_detail
+				WHERE status_code NOT IN ('90','99')
+				GROUP BY item_seq
+			) d ON (i.seq=d.item_seq)
 		WHERE 1=1
-
+			AND i.mall_id=#{mallId}
 		<if test="cateLv1Seq != null">
 			AND i.cate_lv1_seq=#{cateLv1Seq}
 		</if>
@@ -1048,14 +1067,17 @@
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 		</if>
+		<if test="itemSearchType eq 'seq' and itemSearchValue != ''">
+			AND i.seq = #{itemSearchValue}
+		</if>
 		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
 			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
 		</if>
 		<if test="itemSearchType eq 'type' and itemSearchValue != ''">
 			AND (
-				LOWER(i.type1) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-				LOWER(i.type2) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-				LOWER(i.type3) LIKE CONCAT('%',LOWER(#{nameMaker}),'%')
+				LOWER(i.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(i.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(i.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 			)
 		</if>
 		<if test="nameMaker != ''">
@@ -1123,6 +1145,9 @@
 			<when test="orderType == 'maker'">
 				ORDER BY i.maker ASC
 			</when>
+			<when test="orderType == 'toporder'">
+				ORDER BY d.cnt DESC, i.seq DESC
+			</when>
 			<otherwise>
 				ORDER BY i.seq DESC
 			</otherwise>
@@ -1139,7 +1164,7 @@
 			sm_user u	ON i.seller_seq=u.seq LEFT OUTER JOIN
 			sm_seller s ON(i.seller_seq=s.seq)
 		WHERE 1=1
-
+			AND i.mall_id=#{mallId}
 		<if test="cateLv1Seq != null">
 			AND i.cate_lv1_seq=#{cateLv1Seq}
 		</if>
@@ -1158,14 +1183,17 @@
 		<if test="itemSearchType eq 'name' and itemSearchValue != ''">
 			AND LOWER(i.name) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 		</if>
+		<if test="itemSearchType eq 'seq' and itemSearchValue != ''">
+			AND i.seq = #{itemSearchValue}
+		</if>
 		<if test="itemSearchType eq 'maker' and itemSearchValue != ''">
 			AND i.maker LIKE CONCAT('%',#{itemSearchValue},'%')
 		</if>
 		<if test="itemSearchType eq 'type' and itemSearchValue != ''">
 			AND (
-				LOWER(i.type1) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-				LOWER(i.type2) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-				LOWER(i.type3) LIKE CONCAT('%',LOWER(#{nameMaker}),'%')
+				LOWER(i.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(i.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+				LOWER(i.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 			)
 		</if>
 		<if test="maker != ''">
@@ -1331,6 +1359,7 @@
 			sm_seller F	ON A.seller_seq=F.seq	LEFT OUTER JOIN
 			sm_item_detail I ON I.item_seq=A.seq
 		WHERE 1=1
+			AND A.mall_id=#{mallId}
 			<choose>
 				<!--
 				<when test="loginType eq 'S'.toString()">
@@ -1354,9 +1383,9 @@
 			</if>
 			<if test="itemSearchType eq 'type' and itemSearchValue != ''">
 				AND (
-					LOWER(A.type1) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-					LOWER(A.type2) LIKE CONCAT('%',LOWER(#{nameMaker}),'%') OR
-					LOWER(A.type3) LIKE CONCAT('%',LOWER(#{nameMaker}),'%')
+					LOWER(A.type1) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+					LOWER(A.type2) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%') OR
+					LOWER(A.type3) LIKE CONCAT('%',LOWER(#{itemSearchValue}),'%')
 				)
 			</if>
 			<if test="cateLv1Seq != null">
@@ -1451,6 +1480,7 @@
 		FROM
 			sm_item i
 		WHERE status_code = 'Y'
+			AND i.mall_id=#{mallId}
  		<if test="sellerSeq != null">
 			AND i.seller_seq=#{sellerSeq}
  		</if>

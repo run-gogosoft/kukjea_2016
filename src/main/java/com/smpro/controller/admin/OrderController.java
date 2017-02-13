@@ -31,6 +31,8 @@ import java.util.*;
 @Controller
 public class OrderController {
 	@Autowired
+	private GradeService gradeService;
+	@Autowired
 	private SellerService sellerService;
 
 	@Autowired
@@ -72,14 +74,14 @@ public class OrderController {
 	public String getList(HttpSession session, OrderVo pvo, Model model) {
 		session.setAttribute("cs", "");
 		
-		//기본 조회기간 1개월
-		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
-			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-			pvo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
-		}
+//		//기본 조회기간 1개월
+//		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+//			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//			pvo.setSearchDate1(StringUtil.getDate(-30, "yyyy-MM-dd"));
+//		}
 
 		//기본 50개씩 조회
-		if (pvo.getRowCount() == 20) {
+		if (pvo.getRowCount() == 10) {
 			pvo.setRowCount(50);
 		}
 		
@@ -148,7 +150,7 @@ public class OrderController {
 		HttpSession session = request.getSession(false);	
 		
 		//기본 50개씩 조회
-		if (pvo.getRowCount() == 20) {
+		if (pvo.getRowCount() == 10) {
 			pvo.setRowCount(50);
 		}
 		
@@ -230,7 +232,7 @@ public class OrderController {
 			}
 		}
 
-		if (pvo.getRowCount() == 20) {
+		if (pvo.getRowCount() == 10) {
 			pvo.setRowCount(50);
 		}
 
@@ -513,19 +515,85 @@ public class OrderController {
 
 				//입점업체 주문확인 메일 발송
 				mailService.sendMailToSellerForOrder(orderService.getData(vo), request.getServletContext().getRealPath("/"));
-				
+
+				/** CASH 결제의 경우, 포인트 적립처리 **/
+				OrderVo ovo;
+				try {
+					ovo = orderService.getData(vo);
+				} catch(Exception e) {
+					e.printStackTrace();
+					model.addAttribute("message", "회원 정보 복호화에 실패했습니다.["+e.getMessage()+"]");
+					return Const.ALERT_PAGE;
+				}
+
+				/** 구매 금액에 적립률을 얻어온다 **/
+				Integer memberSeq = ovo.getMemberSeq();
+
+				int totlaOrderPrice = 0;
+				int grade_point = 0;
+				if(orderService.getTotalOrderFinishPrice(memberSeq) !=null){
+					totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(memberSeq));
+				}
+				GradeVo gradeVo = new GradeVo();
+				List<GradeVo> grades = gradeService.getList(gradeVo);
+				for(GradeVo gradeVo1:grades){
+					if(gradeVo1.getPayCondition()<totlaOrderPrice) {
+						grade_point = gradeVo1.getPointPercent();
+						break;
+					}
+				}
+
+				if(ovo != null) {
+					//구매 후 포인트 적립 : 구입액 * 1%
+					//포인트 유효기가 30일
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+					Calendar cl = new GregorianCalendar();
+					Date date = new Date();
+					cl.setTime(date);
+					cl.add(cl.DATE, 30);
+					String endDate = sdf.format(cl.getTime());
+					PointVo orderPoint = new PointVo();
+					orderPoint.setStatusCode("S");
+					orderPoint.setMemberSeq(memberSeq);
+					orderPoint.setEndDate(endDate);
+					orderPoint.setPoint((int) (ovo.getPayPrice() * grade_point * 0.01));
+					orderPoint.setValidFlag("Y");
+					orderPoint.setReserveCode("B");//회원가입 : N, 구매 : B  , 이벤트 : E
+					orderPoint.setTypeCode("1");
+					orderPoint.setOrderSeq(ovo.getOrderSeq());
+					orderPoint.setNote("구매포인트지급(주문번호 :" + ovo.getOrderSeq() + ")");
+					//orderPoint.setAdminSeq(memberSeq);
+					orderPoint.setUseablePoint(orderPoint.getPoint());
+
+					try {
+						if (!pointService.insertData(orderPoint)) {
+							throw new Exception();
+						}
+
+						orderPoint.setPointSeq(orderPoint.getSeq());
+
+						if (!pointService.insertHistoryData(orderPoint)) {
+							throw new Exception();
+						}
+
+						if (!pointService.insertLogData(orderPoint)) {
+							throw new Exception();
+						}
+					} catch (Exception e) {
+						log.error("POINT FAIL:: ===> " + e.getMessage());
+						e.printStackTrace();
+					}
+				}
+
 				model.addAttribute("message", "결제완료 처리 성공.");
 				model.addAttribute("returnUrl", "/admin/order/view/" + vo.getOrderSeq() + "?seq=" + vo.getSeq());
 				return Const.REDIRECT_PAGE;
 			}
-			
-			model.addAttribute("message", errMsg);
-			return Const.ALERT_PAGE;
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg = errMsg + "[" + e.getMessage() + "]";
 		}
-			
+
 		model.addAttribute("message", errMsg);
 		return Const.ALERT_PAGE;
 	}
@@ -872,7 +940,7 @@ public class OrderController {
 
 		// 해당 주문번호의 포인트 사용내역 조회
 		PointVo pointVo = pointService.getHistoryForCancel(vo.getOrderSeq());
-		if (pointVo != null && pointVo.getCurPoint() > 0) {
+		if (pointVo != null ) {
 			// 취소 적립할 포인트 금액
 			int reservePoint = pointVo.getCurPoint();
 			if (partCancelPoint > 0) {
@@ -906,6 +974,7 @@ public class OrderController {
 			pointVoCancel.setMemberSeq(pointVo.getMemberSeq());
 			pointVoCancel.setAdminSeq((Integer) session.getAttribute("loginSeq"));
 			pointVoCancel.setStatusCode("C");
+			pointVoCancel.setNote("구매포인트취소(주문번호 :" + vo.getOrderSeq() + ")");
 		}
 
 		
@@ -920,7 +989,7 @@ public class OrderController {
 
 		if (flag) {
 			List<OrderVo> details = orderService.getListForDetail(vo);
-
+			OrderVo odv = orderService.getData(vo);
 			//1. 구매자에세 취소 처리 완료 알림 문자 발송
 			SmsVo smvo = new SmsVo();
 			smvo.setStatusCode("99");
@@ -930,8 +999,8 @@ public class OrderController {
 			smvo.setTrSendStat("0");
 			smvo.setTrMsgType("0");
 			smvo.setTrMsg(content);
-			smvo.setTrPhone(vo.getReceiverCell().replace("-", ""));
-
+			smvo.setTrPhone(odv.getMemberCell().replace("-", ""));
+			System.out.print(">>>>>vo.getReceiverCell():"+odv.getMemberCell()+", replace:"+odv.getMemberCell().replace("-", ""));
 			try {
 				smsService.insertSmsSendVo(smvo);
 			} catch (Exception e) {

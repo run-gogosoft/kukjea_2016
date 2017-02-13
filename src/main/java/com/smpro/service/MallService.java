@@ -1,9 +1,14 @@
 package com.smpro.service;
 
+import com.smpro.util.exception.ImageIsNotAvailableException;
+import com.smpro.util.exception.ImageSizeException;
 import com.smpro.vo.MallVo;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface MallService {
@@ -22,5 +27,8 @@ public interface MallService {
 	public boolean modVo(MallVo vo) throws Exception;
 
 	public boolean deleteMall(Integer seq);
+
+	public Map<String, String> uploadImagesByMap(HttpServletRequest request) throws IOException, ImageIsNotAvailableException, ImageSizeException;
+
 
 }

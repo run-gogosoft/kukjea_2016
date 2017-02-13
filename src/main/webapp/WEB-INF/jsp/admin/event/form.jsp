@@ -8,9 +8,9 @@
 	<style type="text/css">
 		.thumbViewimg {padding:0;}
 		.thumbViewimg div {float:left; text-align:center}
-		.thumbViewimg img {margin-right:5px; cursor:pointer; width:804px; height:270px}
+		.thumbViewimg img {margin-right:5px; cursor:pointer; width:804px; height:270px;}
 		.detail-content {display:none}
-		.detail-image {display:none}
+		.detail-image {display:none;}
 	</style>
 </head>
 <body class="skin-blue sidebar-mini">
@@ -70,6 +70,16 @@
 								<div>
 									<button type="button" onclick="showUploadModal()" class="btn btn-info">업로드</button>
 									<label class="col-md-4 control-label"> ! 이미지 크기 804 x 270 </label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="endDate">시작 예정일</label>
+								<div class="col-md-2">
+									<fmt:parseDate value="${vo.startDate}" var="startDate" pattern="yyyymmdd"/>
+									<div class="input-group">
+										<input class="form-control datepicker" type="text" id="startDate" name="startDate" value="<fmt:formatDate value="${startDate}" pattern="yyyy-mm-dd"/>" placeholder="시작 예정일을 입력해주세요."  maxlength="10"/>
+										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+									</div>
 								</div>
 							</div>
 							<div class="form-group">

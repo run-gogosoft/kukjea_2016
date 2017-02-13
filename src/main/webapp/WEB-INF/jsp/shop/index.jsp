@@ -122,6 +122,7 @@
 										<c:if test="${itemList.type2 ne ''}">, ${itemList.type2}</c:if>
 										<c:if test="${itemList.type3 ne ''}">, ${itemList.type3}</c:if>
 									</span>
+									<span class="type2">단위 : ${itemList.originCountry}</span>
 									<span class="price">
 										<%-- del><fmt:formatNumber value="${itemList.sellPrice}" pattern="#,###" />원</del --%>
 										<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
@@ -160,6 +161,7 @@
 										<c:if test="${itemList.type2 ne ''}">, ${itemList.type2}</c:if>
 										<c:if test="${itemList.type3 ne ''}">, ${itemList.type3}</c:if>
 									</span>
+									<span class="type2">단위 : ${itemList.originCountry}</span>
 									<span class="price">
 										<c:if test="${itemList.salePercent <100 && itemList.salePercent >0}">
 											<del><fmt:formatNumber value="${itemList.optionPrice}" pattern="#,###" />원</del>
@@ -335,16 +337,40 @@
 		<%--</div>--%>
 		<%@ include file="/WEB-INF/jsp/shop/include/footer.jsp" %>
 	</div>
+
+	<c:forEach var="item" items="${noticePopup}" varStatus="status">
+		<div id="popupNotice${status.count}" class="popup-writebox" style="display:none;position:absolute;z-index:9999;background-color:#ffffff;display:none;border: 1px solid #CCC; border-radius: 5px; position: absolute; width: ${item.width}px;height:${item.height}px !important; top:${item.topMargin}px; left:${item.leftMargin}px; overflow:hidden">
+			<div class="popup-writebox-wrap" style="width:${item.width-14}px; height:${item.height-30}px;">
+				<div class="popup-writebox-content" style="padding:0;">
+						${item.contentHtml}
+				</div>
+				<div class="popup-writebox-footer text-right" style="padding:5px;">
+					<input type="checkbox" id="popup${status.count}"/><label for="popup${status.count}" style="font-size: 11px;font-weight: normal;"> 하루동안 열지 않기</label>&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onclick="closePopup(${status.count})">닫기</button>
+				</div>
+			</div>
+		</div>
+	</c:forEach>
 </div>
 
 <script>
+	var closePopup = function(num) {
+		if($('#popup'+num).prop('checked')) {
+			$.cookie("closePopup"+num, "disabled", {expires: 1});
+		}
+		$('#popupNotice'+num).hide();
+	};
+
 	$(document).ready(function() {
 		//checked rememberLoginId
 		if($.cookie("lastLoginId") != undefined && $.cookie("lastLoginId") != "") {
 			$("#rememberLoginId").prop("checked", true);
 			$("#loginId").val($.cookie("lastLoginId"));
 		}
-
+		for(var i=1; i<=${fn:length(noticePopup)}; i++) {
+			if ($.cookie("closePopup"+i) !== "disabled") {
+				$('#popupNotice' + i).show();
+			}
+		}
 //		$('input[name="allChk"]').bind('click', function(){
 //			var status = $(this).is(':checked');
 //			$('input[type="checkbox"]').attr('checked', status);

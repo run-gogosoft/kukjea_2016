@@ -123,6 +123,17 @@
 								</div>
 							</div>
 
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="thumbImg">광고 배너 이미지</label>
+								<div class="col-md-4">
+									<input class="form-control" type="text" id="thumbImg" name="thumbImg" placeholder="배너 이미지를 등록해주세요" style="margin-bottom:5px;" readonly="readonly" <c:if test="${vo eq null}">alt="배너 이미지"</c:if>/>
+									<div class="thumbViewimg"></div>
+								</div>
+								<div>
+									<button type="button" onclick="showUploadModal()" class="btn btn-info">업로드</button>
+									<label class="col-md-4 control-label"> ! 이미지 크기 230 x 70 </label>
+								</div>
+							</div>
 							<c:if test="${vo ne null}">
 								<c:if test="${vo.openDate ne ''}">
 									<div class="form-group">
@@ -162,11 +173,44 @@
 			</div>
 		</div>
 	</section>
+
+	<div id="uploadModal" class="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form action="/admin/mall/form/upload" enctype="multipart/form-data" target="zeroframe" method="post">
+					<div class="modal-body">
+						<legend>이미지 업로드</legend>
+						<p>이미지 크기는 <strong> 230 x 70 </strong>으로 업로드해주시기 바랍니다</p>
+						<p>이미지가 아닐 경우 업로드 되지 않습니다</p>
+						<p>이미지는 jpg, jpeg 확장자만 가능합니다</p>
+					</div>
+					<div class="modal-footer">
+						<a data-dismiss="modal" class="btn btn-default" href="#">취소</a>
+				<span class="btn btn-success fileinput-button">
+					<i class="fa fa-plus"></i>
+					<span>이미지 첨부하기...</span>
+					<input type="file" name="file[0]" value="" onchange="submitUploadProc(this);" />
+				</span>
+				<span>
+					<img src="/assets/img/common/ajaxloader.gif" alt=""/>
+				</span>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 <%@ include file="/WEB-INF/jsp/admin/include/footer.jsp" %>
 <script type="text/javascript" src="/assets/js/libs/jquery.alphanumeric.js"></script>
+<!-- CK Editor -->
+<script type="text/javascript" src="/assets/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		CKEDITOR.replace('html',{
+			width:'100%',
+			height:'70',
+			filebrowserImageUploadUrl: '/admin/editor/upload'
+		});
 		//아이디 입력칸 숫자,영문만 입력되도록....
 		$(".alphanumeric").css("ime-mode", "disabled").alphanumeric();
 	});
@@ -243,6 +287,40 @@
 			}
 		})
 	});
+
+	var showUploadModal = function() {
+		$("#uploadModal").modal();
+		$("#uploadModal").find(".fileinput-button").show().next().hide();
+	};
+
+	var callbackProc = function(msg) {
+		if(msg.split("^")[0] === "EDITOR") {
+			CKEDITOR.tools.callFunction(msg.split("^")[1], msg.split("^")[2], '이미지를 업로드 하였습니다.')
+		}  else {
+			uploadProc(msg);
+		}
+	};
+
+
+	var uploadProc = function(filename) {
+		var html = "";
+		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
+
+		$("input[name=thumbImg]").val(filename).parents(".form-group").find(".thumbViewimg").html(html);
+		$("#uploadModal").modal("hide");
+	};
+
+	var uploadMappingProc = function(filename) {
+		var html = "";
+		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
+
+		$("input[name=thumbImg]").parents(".form-group").find(".thumbViewimg").html(html);
+		$("#uploadModal").modal("hide");
+	};
+
+	var imgProc = function(obj, size) {
+		$(obj).css({width:804, height:270});
+	};
 </script>
 </body>
 </html>

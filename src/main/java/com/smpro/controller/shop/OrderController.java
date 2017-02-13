@@ -27,6 +27,8 @@ import java.util.*;
 @Slf4j
 @Controller
 public class OrderController {
+	@Autowired
+	private GradeService gradeService;
 
 	@Autowired
 	private ItemOptionService itemOptionService;
@@ -165,6 +167,7 @@ public class OrderController {
 
 		// 수신자 주소 set
 		vo.setReceiverAddr1(vo.getAddr1());
+		vo.setReceiverAddr2(vo.getAddr2());
 
 		// 수신자 email set
 		vo.setReceiverEmail(vo.getMemberEmail());
@@ -698,7 +701,24 @@ public class OrderController {
 		}
 
 
-		//if(!"CASH".equals(ovo.getPayMethod())) {
+
+		/** 구매 금액에 적립률을 얻어온다 **/
+		int totlaOrderPrice = 0;
+		int grade_point = 0;
+		if(orderService.getTotalOrderFinishPrice(memberSeq) !=null){
+			totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(memberSeq));
+		}
+		GradeVo gradeVo = new GradeVo();
+		List<GradeVo> grades = gradeService.getList(gradeVo);
+		for(GradeVo gradeVo1:grades){
+			if(gradeVo1.getPayCondition()<totlaOrderPrice) {
+				grade_point = gradeVo1.getPointPercent();
+				break;
+			}
+		}
+
+		/** 신용카드 결제의 경우, 포인트 적립 **/
+		if(!"CASH".equals(ovo.getPayMethod())) {
 			//구매 후 포인트 적립 : 구입액 * 1%
 			//포인트 유효기가 30일
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -711,10 +731,11 @@ public class OrderController {
 			orderPoint.setStatusCode("S");
 			orderPoint.setMemberSeq((Integer) session.getAttribute("loginSeq"));
 			orderPoint.setEndDate(endDate);
-			orderPoint.setPoint((int) (ovo.getPayPrice() * 0.01));
+			orderPoint.setPoint((int) (ovo.getPayPrice() * grade_point *0.01));
 			orderPoint.setValidFlag("Y");
 			orderPoint.setReserveCode("B");//회원가입 : N, 구매 : B  , 이벤트 : E
 			orderPoint.setTypeCode("1");
+			orderPoint.setOrderSeq(ovo.getOrderSeq());
 			orderPoint.setNote("구매포인트지급(주문번호 :" + ovo.getOrderSeq() + ")");
 			//orderPoint.setAdminSeq(memberSeq);
 			orderPoint.setUseablePoint(orderPoint.getPoint());
@@ -737,10 +758,12 @@ public class OrderController {
 				log.error("POINT FAIL:: ===> " + e.getMessage());
 				e.printStackTrace();
 			}
-		//}
+		}
 		//메일 중복 발송 방지를 위한 세션값 업데이트
 		session.setAttribute("orderSeq", ovo.getOrderSeq());
+		//회원읜 등급에 따른 적립율을 넘긴다
 
+		model.addAttribute("grade_point",""+grade_point );
 		return "/order/finish.jsp";
 	}
 

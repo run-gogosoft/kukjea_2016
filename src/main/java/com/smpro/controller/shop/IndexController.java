@@ -70,10 +70,10 @@ public class IndexController {
 		}
 		model.addAttribute("title", "홈");
 
-//		NoticePopupVo nvo = new NoticePopupVo();
-//		nvo.setStatusCode("Y");
-//		nvo.setTypeCode("C");
-//		model.addAttribute("noticePopup", systemService.getNoticePopupList(nvo));
+		NoticePopupVo nvo = new NoticePopupVo();
+		nvo.setStatusCode("Y");
+		nvo.setTypeCode("C");
+		model.addAttribute("noticePopup", systemService.getNoticePopupList(nvo));
 
 		DisplayVo vo = new DisplayVo();
 		vo.setMemberTypeCode(memberTypeCode); //회원구분에 따라 템플릿을 가져온다.
@@ -181,8 +181,10 @@ public class IndexController {
 		model.addAttribute("memberVo", mvo);
 
 
-		//배너
+		// top banner
 		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
+		model.addAttribute("mallVo",mallVo);
+		//배너
 		EventVo eventVo = new EventVo();
 		/** 현재 진행중인 기획전 상품리스트를 가져옴 */
 		eventVo.setTypeCode("1");
@@ -211,20 +213,20 @@ public class IndexController {
 		model.addAttribute("eventItemList",eventVoList);
 
 		// 신규상품
-		ItemVo nvo = new ItemVo();
-		nvo.setRowCount(20);
-		nvo.setStatusCode("Y");
+		ItemVo newvo = new ItemVo();
+		newvo.setRowCount(20);
+		newvo.setStatusCode("Y");
 
 		//nvo.setLoginType((String) session.getAttribute("loginType"));
 		//nvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
-		model.addAttribute("newItemList", itemService.getList(nvo));
+		model.addAttribute("newItemList", itemService.getList(newvo));
 
 		OrderVo repeate = new OrderVo();
 		repeate.setRowCount(10);
 		repeate.setLoginType((String) session.getAttribute("loginType"));
 		repeate.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		model.addAttribute("repeatList", orderService.getRepeatOrderList(repeate));
-
+		model.addAttribute("mallList", mallService.getListSimple());
 		return "/index.jsp";
 	}
 
@@ -438,8 +440,6 @@ public class IndexController {
 
 	@RequestMapping("/ranking")
 	public String ranking(Model model) {
-
-
 		OrderVo vo = new OrderVo();
 		vo.setSearchDate1(StringUtil.getDate(-30,"yyyyMMdd"));
 		vo.setSearchDate2(StringUtil.getDate(0,"yyyyMMdd"));

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j
@@ -64,7 +65,7 @@ public class PointController {
 		model.addAttribute("title", "포인트 리스트");
 
 		// 전체 리스트 개수
-		vo.setRowCount(100);
+		vo.setRowCount(10);
 		vo.setTotalRowCount(pointService.getListCount(vo));
 
 		model.addAttribute("mallList", mallService.getListSimple());
@@ -539,5 +540,82 @@ public class PointController {
 			fileOut.flush();
 			fileOut.close();
 		}
+	}
+
+
+	/**
+	 * 포진트지급
+	 */
+	@RequestMapping("/point/insert/ajax")
+	public String insertPoint(MemberVo vo, Model model) {
+		/* 입력값 검증 */
+		if (systemService.getSeqCnt(vo.getSeq()) < 1) {
+			model.addAttribute("result", "false");
+			model.addAttribute("message", "잘못된 접근 입니다.");
+			return "/ajax/get-message-result.jsp";
+		}
+
+//		vo.setStatusCode("S");
+//		if (vo.getMemberSeq() == null) {
+//			model.addAttribute("message", "회원은 반드시 입력 되어야 합니다.");
+//			return Const.ALERT_PAGE;
+//		}
+//		if (StringUtil.isBlank(vo.getEndDate())) {
+//			model.addAttribute("message", "만료일은 반드시 입력 되어야 합니다.");
+//			return Const.ALERT_PAGE;
+//		}
+//		if (vo.getPoint() <= 0) {
+//			model.addAttribute("message", "포인트는 반드시 입력 되어야 합니다.");
+//			return Const.ALERT_PAGE;
+//		}
+//		if (StringUtil.isBlank(vo.getValidFlag())) {
+//			model.addAttribute("message", "사용구분은 반드시 선택 되어야 합니다.");
+//			return Const.ALERT_PAGE;
+//		}
+//		if (StringUtil.isBlank(vo.getReserveCode())) {
+//			model.addAttribute("message", "적립방식은 반드시 선택 되어야 합니다.");
+//			return Const.ALERT_PAGE;
+//		}
+//		if (StringUtil.isBlank(vo.getTypeCode())) {
+//			model.addAttribute("message", "등록구분이 선택되지 않았습니다.");
+//			return Const.ALERT_PAGE;
+//		}
+//
+//		Integer memberSeq = Integer.valueOf(("" + session
+//				.getAttribute("loginSeq")));
+//		vo.setAdminSeq(memberSeq);
+//		vo.setUseablePoint(vo.getPoint());
+//
+//		// Programmatic Transaction management
+//		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+//		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+//		TransactionStatus status = transactionManager.getTransaction(def);
+//		try {
+//			if (!pointService.insertData(vo)) {
+//				throw new Exception();
+//			}
+//
+//			// generateKey로 받은 point seq
+//			vo.setPointSeq(vo.getSeq());
+//
+//			if (!pointService.insertHistoryData(vo)) {
+//				throw new Exception();
+//			}
+//
+//			if (!pointService.insertLogData(vo)) {
+//				throw new Exception();
+//			}
+//
+//			transactionManager.commit(status);
+//		} catch (Exception e) {
+//			log.error(
+//					"POINT FAIL:: ===> " + e.getMessage());
+//			e.printStackTrace();
+//			transactionManager.rollback(status);
+//		}
+
+		model.addAttribute("result", "true");
+		model.addAttribute("message", "포인트가 지급되었습니다.");
+		return "/ajax/get-message-result.jsp";
 	}
 }

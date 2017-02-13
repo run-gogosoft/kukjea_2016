@@ -246,7 +246,7 @@
                             <tr>
                                 <th scope="row"><label>이메일</label></th>
                                 <td>
-                                    <input type="text" class="intxt w180" name="receiverMail"  data-name="" value="" maxlength="100" placeholder="example@example.com" />
+                                    <input type="text" class="intxt w180" name="receiverEmail" data-name="receiverEmail" maxlength="100" placeholder="example@example.com" alt="이메일"/>
                                 </td>
                             </tr>
                             <tr>
@@ -331,14 +331,14 @@
                                                             <input type="radio" name="payMethod" value="${item.value}" onclick="checkPayMethod(this)" />&nbsp;${item.name}
                                                             (
                                                             입금은행: <strong class="text-info">KB국민은행</strong> /
-                                                            계좌번호: <strong class="text-info">029301-04-193023</strong> /
+                                                            계좌번호: <strong class="text-info">029301-04-206349</strong> /
                                                             예금주: <strong class="text-info">국제메디팜 최태봉</strong>
                                                             )
                                                         </div>
                                                     </c:if>
                                                 </c:if>
                                             </c:forEach>
-                                            <input type="hidden" name="accountInfo" value="KB국민은행 029301-04-193023 국제메디팜 최태봉"/>
+                                            <input type="hidden" name="accountInfo" value="KB국민은행 029301-04-206349 국제메디팜 최태봉"/>
                                         </div>
                                     </td>
                                 </tr>

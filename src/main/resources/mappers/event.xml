@@ -46,6 +46,7 @@
 			e.thumb_img AS thumbImg,
 			e.reg_date AS regDate,
 			e.end_date AS endDate,
+			e.start_date AS startDate,
 			ic.cate_name AS cateName,
 			e.coupon_seq AS couponSeq,
 			e.show_flag AS showFlag,
@@ -106,6 +107,7 @@
 			, html
 			, thumb_img
 			, end_date
+			, start_date
 			, reg_date
 		<if test="lv1Seq != null and lv1Seq != 0">
 			, lv1_seq
@@ -123,6 +125,7 @@
 			, #{html}
 			, #{thumbImg}
 			, #{endDate, jdbcType=VARCHAR}
+			, #{startDate, jdbcType=VARCHAR}
 			, NOW()
 		<if test="lv1Seq != null and lv1Seq != 0">
 			, #{lv1Seq}
@@ -159,6 +162,7 @@
 			, html
 			, thumb_img AS thumbImg
 			, end_date AS endDate
+			, start_date AS startDate
 			, reg_date AS regDate
 			, lv1_seq AS lv1Seq
 			, coupon_seq AS couponSeq
@@ -178,6 +182,7 @@
 				, thumb_img = #{thumbImg}
 			</if>
 			, end_date = #{endDate}
+			, start_date = #{startDate}
 			, status_code = #{statusCode}
 			, type_code = #{typeCode}
 		<if test="typeCode == 1">
@@ -226,6 +231,7 @@
 				  , i.type1 AS type1
 				  , i.type2 AS type2
 				  , i.type3 AS type3
+				  , i.origin_country AS originCountry
 			      , i.maker
 			      , (SELECT  MAX(good_grade) FROM sm_item_review WHERE item_seq = ei.item_seq) AS reviewGrade
 			      , CASE WHEN i.status_code = 'H' THEN '가승인'

@@ -27,7 +27,7 @@
 	    sm_user u LEFT OUTER JOIN
 	    sm_mall m ON(u.seq=m.seq)
 	  WHERE u.type_code='M'
-	  ORDER BY u.name ASC, u.seq DESC
+	  ORDER BY u.seq DESC
 	</select>
 
 	<select id="getVo" parameterType="int" resultType="com.smpro.vo.MallVo">

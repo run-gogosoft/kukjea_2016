@@ -20,4 +20,5 @@
 	, "postcode" : "${vo.postcode}"
 	, "addr1" : "${vo.addr1}"
 	, "addr2" : "${vo.addr2}"
+	, "email" : "${vo.email}
 }

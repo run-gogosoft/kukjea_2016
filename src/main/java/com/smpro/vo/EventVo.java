@@ -15,6 +15,8 @@ public class EventVo extends PagingVo {
 	private String thumbImg = "";
 	/** 종료 예정일 */
 	private String endDate = "";
+	/** 시작 예정일 */
+	private String startDate = "";
 	/** 등록일 */
 	private String regDate = "";
 	/** 자동발행 쿠폰 시퀀스 */
@@ -101,6 +103,9 @@ public class EventVo extends PagingVo {
 	private String type2 = "";
 	private String type3 = "";
 
+	/** 단위 */
+	private String originCountry = "";
+
 	public String getEventAdded() {
 		return eventAdded;
 	}
@@ -121,6 +126,14 @@ public class EventVo extends PagingVo {
 	public String getSearch() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String getOriginCountry() {
+		return originCountry;
+	}
+
+	public void setOriginCountry(String originCountry) {
+		this.originCountry = originCountry;
 	}
 
 	public Integer getSeq() {
@@ -177,6 +190,12 @@ public class EventVo extends PagingVo {
 
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getStartDate() { return startDate;}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
 
 	public String getRegDate() {

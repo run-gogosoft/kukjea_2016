@@ -87,7 +87,12 @@ public class MemberController {
 	@RequestMapping("/member/list")
 	public String getList(MemberVo pvo, Model model) throws Exception {
 		model.addAttribute("title", "회원 리스트" + ("Y".equals(pvo.getLongTermNotLoginFlag()) ? "(1년이상 미접속자)":""));
-		
+
+		//기본 50개씩 조회
+		if (pvo.getRowCount() == 10) {
+			pvo.setRowCount(20);
+		}
+
 		/* 공통코드 리스트 가져오기 */
 		CommonVo cvo = new CommonVo();
 		// 상태
@@ -152,11 +157,6 @@ public class MemberController {
 
 		return "/member/view.jsp";
 	}
-
-
-
-
-
 
 
 

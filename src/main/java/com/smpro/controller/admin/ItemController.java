@@ -196,11 +196,15 @@ public class ItemController {
 	@CheckGrade(controllerName = "itemController", controllerMethod = "list")
 	@RequestMapping("/item/list")
 	public String list(HttpServletRequest request, ItemVo vo, Model model) throws Exception {
+
+//		@RequestMapping("/item/list/{mallseq}")
+//	public String list(@PathVariable Integer mallseq, HttpServletRequest request, ItemVo vo, Model model) throws Exception {
 		HttpSession session = request.getSession(false);
 
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
+//		System.out.println(">>>>mallseq:"+mallseq);
 		// 카테고리를 가져온다
 		CategoryVo cvo = new CategoryVo();
 		//대분류
@@ -269,6 +273,7 @@ public class ItemController {
 		model.addAttribute("list",list);
 		model.addAttribute("vo", vo);
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
+//		model.addAttribute("mallSeq", mallseq);
 
 		/* 마스터 벤더
 		SellerVo svo = new SellerVo();
@@ -284,6 +289,9 @@ public class ItemController {
 	@CheckGrade(controllerName = "itemController", controllerMethod = "form")
 	@RequestMapping("/item/form")
 	public String form(Model model) {
+//	@RequestMapping("/item/form/new/{mallseq}")
+//	public String form(@PathVariable Integer mallseq,Model model) {
+//		model.addAttribute("mallseq",mallseq);
 		model.addAttribute("title", "상품 등록");
 		model.addAttribute("typeInfoList", itemService.getTypeInfoList());
 		model.addAttribute("filterList", itemService.getFilterList());
@@ -310,7 +318,6 @@ public class ItemController {
 			return Const.REDIRECT_PAGE;
 		}
 */
-
 		model.addAttribute("pageNum", pageNum);
 		// todo : 아이템을 수정할 수 있는 권한이 있는지 검사하여야 함
 		model.addAttribute("title", "상품 수정");

@@ -159,25 +159,29 @@ public class MailServiceImpl implements MailService {
 			itemList.append("<td style='border-bottom: 1px solid #e1e1e1;text-align:center;font-weight:bold;'>");
 			itemList.append(list.get(i).getOrderCnt()+"개");
 			itemList.append("</td>");
-			itemList.append("<td style='border-bottom: 1px solid #e1e1e1;text-align:center;font-weight:bold;'>");
+//			itemList.append("<td style='border-bottom: 1px solid #e1e1e1;text-align:center;font-weight:bold;'>");
 			
-			if(list.get(i).getDeliCost() != 0) {
-				itemList.append(fmt.format(list.get(i).getDeliCost())+"원");
-			}else {
-				itemList.append("무료");
-			}
+//			if(list.get(i).getDeliCost() != 0) {
+//				itemList.append(fmt.format(list.get(i).getDeliCost())+"원");
+//			}else {
+//				itemList.append("무료");
+//			}
 			
-			itemList.append("</td>");
+//			itemList.append("</td>");
 			itemList.append("</tr>");
 			totalSellPrice += (list.get(i).getSellPrice()) * list.get(i).getOrderCnt();
 //			totalDeliveryPrice += list.get(i).getDeliCost();
 		}
 
-		for (int i = 0; i < list.size(); i++) {
-			if(list.get(i).getDeliCost() != 0) {
-				totalDeliveryPrice += list.get(i).getDeliCost();
-				break;
-			}
+//		for (int i = 0; i < list.size(); i++) {
+//			if(list.get(i).getDeliCost() != 0) {
+//				totalDeliveryPrice += list.get(i).getDeliCost();
+//				break;
+//			}
+//		}
+
+		if(totalSellPrice<=50000){
+			totalDeliveryPrice = Const.DELI_COST;
 		}
 
 		if (vo.getPoint() > 0) {

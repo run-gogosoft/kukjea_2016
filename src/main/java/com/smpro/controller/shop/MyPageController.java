@@ -81,11 +81,11 @@ public class MyPageController extends MyPage {
 		pvo.setLoginName((String)session.getAttribute("loginName"));
 		pvo.setLoginEmail((String)session.getAttribute("loginEmail"));
 
-		//기본 조회기간 일주일
-		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
-			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+//		//기본 조회기간 일주일
+//		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+//			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+//			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//		}
 
 		pvo.setRowCount(ROW_COUNT);
 		pvo.setBoardType("order");
@@ -445,11 +445,11 @@ public class MyPageController extends MyPage {
 		ovo.setLoginType((String) session.getAttribute("loginType"));
 		ovo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		//기본 조회기간 일주일
-		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
-			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+//		//기본 조회기간 일주일
+//		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+//			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+//			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//		}
 
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
 		initMypage(session, model);
@@ -529,11 +529,11 @@ public class MyPageController extends MyPage {
 		vo.setLoginType((String)session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer)session.getAttribute("loginSeq"));
 
-		//기본 조회기간 일주일
-		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
-			vo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+//		//기본 조회기간 일주일
+//		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
+//			vo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+//			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//		}
 
 		vo.setRowCount(ROW_COUNT);
 		vo.setTotalRowCount(orderService.getListNPCount(vo));
@@ -776,11 +776,11 @@ public class MyPageController extends MyPage {
 		povo.setLoginType((String) session.getAttribute("loginType"));
 		povo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		//기본 조회기간 일주일
-		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
-			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+//		//기본 조회기간 일주일
+//		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+//			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+//			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//		}
 
 		initMypage(session, model);
 		OrderVo ovo = new OrderVo();
@@ -817,11 +817,11 @@ public class MyPageController extends MyPage {
 
 		initMypage(session, model);
 
-		//기본 조회기간 일주일
-		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
-			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+//		//기본 조회기간 일주일
+//		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+//			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+//			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//		}
 
 		/** 1:1문의 */
 		pvo.setLoginSeq((Integer)session.getAttribute("loginSeq"));
@@ -1175,10 +1175,10 @@ public class MyPageController extends MyPage {
 		pvo.setLoginEmail((String)session.getAttribute("loginEmail"));
 
 		//기본 조회기간 일주일
-		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
-			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+//		if ("".equals(pvo.getSearchDate1()) || "".equals(pvo.getSearchDate2())) {
+//			pvo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+//			pvo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//		}
 
 		pvo.setRowCount(ROW_COUNT);
 		pvo.setBoardType("cancel");
@@ -1213,11 +1213,11 @@ public class MyPageController extends MyPage {
 		povo.setLoginType((String) session.getAttribute("loginType"));
 		povo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 
-		//기본 조회기간 일주일
-		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
-			vo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
-			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
-		}
+//		//기본 조회기간 일주일
+//		if ("".equals(vo.getSearchDate1()) || "".equals(vo.getSearchDate2())) {
+//			vo.setSearchDate1(StringUtil.getDate(-7, "yyyy-MM-dd"));
+//			vo.setSearchDate2(StringUtil.getDate(0, "yyyy-MM-dd"));
+//		}
 
 		model.addAttribute("loginSeq", session.getAttribute("loginSeq"));
 		/** 게시판에서 검색항목 드롭박스를 선택 안했을시 디폴트로 title를 검색 */

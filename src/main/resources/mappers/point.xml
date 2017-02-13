@@ -13,7 +13,7 @@
 			SELECT
 				p.member_seq,
 				MAX(p.seq) AS seq,
-				SUM(CASE WHEN p.reserve_code = '1' THEN p.point ELSE 0 END) AS POINT,
+				SUM(CASE WHEN p.reserve_code = 'B' THEN p.point ELSE 0 END) AS POINT,
 				SUM(p.useable_point) AS useable_point
 			FROM
 				sm_point p
@@ -361,7 +361,7 @@
 		WHERE
 			valid_flag='Y'
 			AND p.member_seq=#{memberSeq}
-			AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(reg_date, '%Y-%m-%d') AND DATE_FORMAT(end_date, '%Y-%m-%d') <!-- 포인트 유효기간 체크 -->
+			<!--AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(reg_date, '%Y-%m-%d') AND DATE_FORMAT(end_date, '%Y-%m-%d') --><!-- 포인트 유효기간 체크 -->
 		ORDER BY seq ASC
 	</select>
 	<!-- 사용가능 포인트 가져오기 -->
@@ -370,7 +370,7 @@
 		WHERE
 			valid_flag='Y'
 			AND member_seq=#{memberSeq} <!-- 회원시퀀스 -->
-			AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(reg_date, '%Y-%m-%d') AND DATE_FORMAT(end_date, '%Y-%m-%d') <!-- 포인트 유효기간 체크 -->
+			<!--AND DATE_FORMAT(NOW(), '%Y-%m-%d') BETWEEN DATE_FORMAT(reg_date, '%Y-%m-%d') AND DATE_FORMAT(end_date, '%Y-%m-%d') --><!-- 포인트 유효기간 체크 -->
 	</select>
 	<!-- 포인트 취소적립 대상 건 가져오기 -->
 	<select id="getHistoryForCancel" parameterType="Integer" resultType="com.smpro.vo.PointVo">
@@ -381,8 +381,9 @@
 		FROM
 			sm_point_history
 		WHERE
-			status_code IN ('U','C')  <!-- 포인트 사용/취소적립 건 -->
-			AND order_seq=#{orderSeq} <!-- 주문번호 -->
+		<!--status_code IN ('U','C')  포인트 사용/취소적립 건
+			AND -->
+			order_seq=#{orderSeq} <!-- 주문번호 -->
 		GROUP BY
 			member_seq, order_seq
 	</select>

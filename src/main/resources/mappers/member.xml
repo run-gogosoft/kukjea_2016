@@ -161,6 +161,7 @@
 			<if test="searchDate1 != '' and searchDate2 != ''">
 				AND DATE_FORMAT(u.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 			</if>
+		LIMIT ${pageNum * rowCount}, ${rowCount}
 	</select>
 
 	<select id="getListCount" parameterType="com.smpro.vo.MemberVo" resultType="int">
