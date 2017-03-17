@@ -175,7 +175,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">샘플 다운로드</label>
 								<div class="col-md-10">
-									<a href="/admin/item/list" target="_self" class="btn btn-sm btn-success">상품 리스트</a> 에서 <strong>엑셀다운</strong>하세요
+									<a href="/admin/item/list?mallSeq=${mallSeq}" target="_self" class="btn btn-sm btn-success">상품 리스트</a> 에서 <strong>엑셀다운</strong>하세요
 								</div>
 							</div>
 						</c:when>
@@ -334,8 +334,6 @@
 </div>
 <%@ include file="/WEB-INF/jsp/admin/include/footer.jsp" %>
 <script type="text/javascript">
-
-
 	var getStatusProc = function() {
 		$.ajax({
 			url:"/admin/item/excel/status/json",
@@ -385,7 +383,7 @@
 			$.ajax({
 				url:"/admin/category/list/ajax",
 				type:"get",
-				data:{depth:depth, parentSeq:parentSeq},
+				data:{depth:depth, parentSeq:parentSeq,mallId:${mallSeq}},
 				dataType:"text",
 				success:function(data) {
 					var list = $.parseJSON(data);
@@ -509,7 +507,7 @@
 				url: "/admin/item/excel/check",
 				type: "get",
 				data: {
-					filepath: value, sellerSeq: $("input[name=sellerSeq]").val()
+					filepath: value, sellerSeq: $("input[name=sellerSeq]").val(), mallSeq:${mallSeq}
 				},
 				dataType: "text",
 				success: function (data) {
@@ -517,7 +515,7 @@
 						$("#errorList").html("");
 						$("#uploadModal").html(
 								$("#uploadTemplate").tmpl({
-									"title": "모든 작업이 완료되었습니다!", "content": '<a href="/admin/item/list?statusCode=E">리스트 페이지로 이동하기</a>'
+									"title": "모든 작업이 완료되었습니다!", "content": '<a href="/admin/item/list?mallSeq=${mallSeq}&statusCode=E">리스트 페이지로 이동하기</a>'
 								})
 						)
 					} else {

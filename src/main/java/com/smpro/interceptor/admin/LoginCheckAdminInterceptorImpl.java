@@ -39,20 +39,21 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 
 		/* navi 위치 처리 */
 		String requestURI = request.getRequestURI();
-		
+		String requestURIAttribute = request.getParameter("mallSeq");
+
+
+		request.setAttribute("mallList", mallService.getListSimple());
+
+
 		String naviPos = "";
 		String naviPosSub = "";
-		String mallid = "";
+
 		LOGGER.info("### requestURI : " + requestURI);
+		LOGGER.info("### requestURIAttribute : " + requestURIAttribute);
 		LOGGER.debug("### handler : " + handler.toString());
 
 		if (!StringUtil.isBlank(requestURI)	&& requestURI.split("/").length >= 3) {
 			naviPos = requestURI.split("/")[2];
-			try{
-				mallid = requestURI.split("/")[4];
-			}catch(Exception e){
-				e.printStackTrace();
-			}
 			naviPosSub = requestURI.substring(requestURI.indexOf(naviPos)-1);
 		}
 		// 다른이름의 페이지 navi 조정
@@ -62,23 +63,18 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 		} else if ("review".equals(naviPos)) {
 			naviPos = "board";
 		} else if ("event".equals(naviPos) || "category".equals(naviPos) || "best".equals(naviPos)) {
+			naviPosSub = naviPos;
 			naviPos = "item";
-//			LOGGER.debug("### mallid : " + mallid);
-//			if(mallid.equals("2")){
-//				naviPos = "itemParm";
-//			}
-//			else if(mallid.equals("3")){
-//				naviPos = "itemParm";
-//			}
-
 		} else if ("point".equals(naviPos)) {
 			naviPos = "member";
 		}
-		
+
 		LOGGER.debug("### navi : " + naviPos);
 		LOGGER.debug("### naviSub : " + naviPosSub);
+		LOGGER.info("### requestURIAttribute : " + requestURIAttribute);
 		request.setAttribute("navi", naviPos);
 		request.setAttribute("naviSub", naviPosSub);
+		request.setAttribute("naviSubAttr",requestURIAttribute);
 
 		/* 세션 체크 */
 		HttpSession session = request.getSession(false);
@@ -96,7 +92,7 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 
 			validLogin = false;
 		}
-
+		LOGGER.info("### 1");
 		if ((session == null || session.getAttribute("loginSeq") == null) && validLogin) {
 			Cookie[] cookies = request.getCookies();
 			UserVo vo = null;
@@ -112,7 +108,7 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 				/* 로그인 토큰 확인 */
 				vo = loginService.getDataForToken(paramVo);
 			}
-
+			LOGGER.info("### 2");
 			/* 유효한 토큰일 경우 */
 			if (vo != null) {
 				session = request.getSession(true);
@@ -128,7 +124,7 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 			LOGGER.debug("### token login result : " + vo);
 			LOGGER.debug("### token login result session : " + session);
 		}
-				
+		LOGGER.info("### 3");
 		if (session == null || session.getAttribute("loginSeq") == null) {
 			response.sendRedirect("/admin/login?status=expired");
 			return false;

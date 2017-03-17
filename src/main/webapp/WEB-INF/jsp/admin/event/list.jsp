@@ -202,14 +202,14 @@
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">
-								<tr><td class="text-center" colspan="10">등록된 내용이 없습니다.</td></tr>
+								<tr><td class="text-center" colspan="11">등록된 내용이 없습니다.</td></tr>
 							</c:if>
 							</tbody>
 						</table>
 						<div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div>
 						<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3)}">
 						<div class="pull-right">
-							<a href="/admin/event/exhform" class="btn btn-sm btn-info">기획전 / 이벤트 등록</a>
+							<a href="/admin/event/exhform?mallSeq=${mallSeq}" class="btn btn-sm btn-info">기획전 / 이벤트 등록</a>
 						</div>
 						</c:if>
 					</div>

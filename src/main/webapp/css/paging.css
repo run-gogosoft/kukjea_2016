@@ -1,0 +1,18 @@
+@charset "utf-8";
+
+/*
+ *
+ * Content : KUK-JE MALL UI STYLE
+ * Author : GOGOSOFT
+ *
+ */
+/*@import url(https://cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/nanumbarungothic.css);*/
+
+.paging {text-align:center; margin: 10px;}
+.paging a, .paging em {display:inline-block; vertical-align:middle; line-height:1;font-size:14px;}
+.paging a.prev {padding:1px 10px 0 8px; border-right:1px solid #d6d6d6; background:url('../images/common/bul_prev_paging.png') no-repeat 0 3px;}
+.paging a.next {padding:1px 8px 0 10px; border-left:1px solid #d6d6d6; background:url('../images/common/bul_next_paging.png') no-repeat 100% 3px;}
+.paging .num {display:inline-block; padding:1px 5px 0;}
+.paging .num a, .paging .num em {min-width:15px; padding:5px;margin: 5px; }
+.paging .num a {border:1px solid #fff;}
+.paging .num a:hover, .paging .num em {border:1px solid #ef3f3b; color:#ef3f3b;}

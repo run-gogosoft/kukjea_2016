@@ -120,8 +120,8 @@ public class EventServiceImpl implements EventService {
 		return eventDao.updateItemListOrderData(vo) > 0;
 	}
 
-	public List<EventVo> getLv1List() {
-		return eventDao.getLv1List();
+	public List<EventVo> getLv1List(EventVo vo) {
+		return eventDao.getLv1List(vo);
 	}
 
 	/** 이벤트의 자동발행 쿠폰번호 유효성 검사 */

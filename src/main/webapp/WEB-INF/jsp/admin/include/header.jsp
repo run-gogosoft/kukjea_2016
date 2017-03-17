@@ -34,7 +34,7 @@
 <link href="/assets/js/plugins/msgbox/jquery.msgbox.css" rel="stylesheet">
 <!-- custom CSS -->
 <link href="/assets/css/custom.css" rel="stylesheet" type="text/css" />
-
+<link rel="stylesheet" href="/css/paging.css" />
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>

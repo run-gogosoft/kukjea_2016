@@ -135,18 +135,18 @@
 </tr>
 </script>
 
-<!-- CS 처리내역 리스트 -->
-<script id="tmpl-delivery-list" type="text/html">
-<tr>
-	<td class="text-center">
-		<a href="/admin/order/view/<%="${orderSeq}"%>?seq=<%="${seq}"%>"><%="${seq}"%></a>
-	</td>
-	<td class="text-center"><%="${orderSeq}"%></td>
-	<%-- <td class="text-center"><%="${mallName}"%></td> --%>
-	<td class="text-center"><strong><%="${statusText}"%></strong></td>
-	<td class="text-left"><%="${contents}"%></td>
-	<td class="text-center"><%="${loginName}"%></td>
-	<td class="text-center"><%="${sellerName}"%></td>
-	<td class="text-center"><%="${regDate}"%></td>
-</tr>
-</script>
+<%--<!-- CS 처리내역 리스트 -->--%>
+<%--<script id="tmpl-delivery-list" type="text/html">--%>
+<%--<tr>--%>
+	<%--<td class="text-center">--%>
+		<%--<a href="/admin/order/view/<%="${orderSeq}"%>?seq=<%="${seq}"%>"><%="${seq}"%></a>--%>
+	<%--</td>--%>
+	<%--<td class="text-center"><%="${orderSeq}"%></td>--%>
+	<%--&lt;%&ndash; <td class="text-center"><%="${mallName}"%></td> &ndash;%&gt;--%>
+	<%--<td class="text-center"><strong><%="${statusText}"%></strong></td>--%>
+	<%--<td class="text-left"><%="${contents}"%></td>--%>
+	<%--<td class="text-center"><%="${loginName}"%></td>--%>
+	<%--<td class="text-center"><%="${sellerName}"%></td>--%>
+	<%--<td class="text-center"><%="${regDate}"%></td>--%>
+<%--</tr>--%>
+<%--</script>--%>

@@ -186,7 +186,7 @@
 		<div class="modal-header">
 			<h3 class="modal-title"><%="${method}"%></h3>
 		</div>
-		<form class="form-horizontal" action="/admin/item/batch/<%="${action}"%>" onsubmit="return EBbatch.submitProc(this)" method="post" target="zeroframe">
+		<form class="form-horizontal" action="/admin/item/batch/<%="${action}"%>?mallSeq=<%="${mallSeq}"%>" onsubmit="return EBbatch.submitProc(this)" method="post" target="zeroframe">
 			<div class="modal-body">
 				<p>선택된 <%="${count}"%> 개의 항목을 일괄로 처리합니다</p>
 				<div class="form-group">
@@ -230,7 +230,7 @@
 		<div class="modal-header">
 			<h3 class="modal-title"><%="${method}"%></h3>
 		</div>
-		<form action="/admin/item/batch/<%="${action}"%>" onsubmit="return EBbatch.contentSubmitProc(this)" class="form-horizontal" method="post" target="zeroframe">
+		<form action="/admin/item/batch/<%="${action}"%>?mallSeq=<%="${mallSeq}"%>" onsubmit="return EBbatch.contentSubmitProc(this)" class="form-horizontal" method="post" target="zeroframe">
 			<div class="modal-body">
 				<p>선택된 <%="${count}"%> 개의 항목을 일괄로 처리합니다</p>
 				<div class="form-group">
@@ -582,7 +582,7 @@
 			$.ajax({
 				url:"/admin/category/list/ajax",
 				type:"get",
-				data:{depth:depth, parentSeq:parseParentSeq},
+				data:{depth:depth, parentSeq:parseParentSeq,mallId:${mallSeq}},
 				dataType:"text",
 				success:function(data) {
 					var list = $.parseJSON(data);
@@ -640,7 +640,7 @@
 				return;
 			}
 	
-			$("#searchForm").attr("action", "/admin/item/list/download/excel");
+			$("#searchForm").attr("action", "/admin/item/list/download/excel?mallSeq=${mallSeq}");
 			$("#searchForm").submit();
 			$("#searchForm").attr("action",location.pathname);
 		}
@@ -671,7 +671,7 @@
 	
 	var goPage = function (page) {
 		$("#pageNum").val(page);
-		location.href = location.pathname + "?" + $("#searchForm").serialize();
+		location.href = location.pathname + "?" + $("#searchForm").serialize()+"&mallSeq=${mallSeq}";
 	};
 	
 	var searchOrderBy = function(orderByName, orderByType) {
@@ -684,7 +684,7 @@
 			$("#orderByType").val("ASC");
 		} 
 		
-		location.href = location.pathname + "?" + $("#searchForm").serialize();
+		location.href = location.pathname + "?" + $("#searchForm").serialize()+"&mallSeq=${mallSeq}";
 	};
 </script>
 </body>

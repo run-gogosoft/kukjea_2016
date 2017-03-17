@@ -24,6 +24,17 @@ public class CategoryVo {
 	private List<CategoryVo> list;
 	private Integer count;
 
+	/** mall id **/
+	private int mallId=1;
+
+	public int getMallId() {
+		return mallId;
+	}
+
+	public void setMallId(int mallId) {
+		this.mallId = mallId;
+	}
+
 	public Integer getSeq() {
 		return seq;
 	}

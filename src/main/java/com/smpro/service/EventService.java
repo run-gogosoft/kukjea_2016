@@ -53,7 +53,7 @@ public interface EventService {
 
 	public boolean updateItemListOrderData(EventVo vo);
 
-	public List<EventVo> getLv1List();
+	public List<EventVo> getLv1List(EventVo vo);
 
 	/** 이벤트의 자동발행 쿠폰번호 유효성 검사 */
 	public boolean chkEventCouponSeq(EventVo vo);

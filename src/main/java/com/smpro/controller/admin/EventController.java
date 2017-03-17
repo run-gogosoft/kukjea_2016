@@ -44,31 +44,32 @@ public class EventController {
 
 	@CheckGrade(controllerName = "eventController", controllerMethod = "list")
 	@RequestMapping("/event/list")
-	public String list(EventVo vo, Model model) {
+	public String list(Integer mallSeq, EventVo vo, Model model) {
 		vo.setTotalRowCount(eventService.getListCount(vo).intValue());
-
+		vo.setMallSeq(mallSeq);
 		List<EventVo> eventVo = eventService.getList(vo);
 		for (int i = 0; i < eventVo.size(); i++) {
 			EventVo tmpVo = eventVo.get(i);
 			tmpVo.setTitle(StringUtil.cutString(tmpVo.getTitle(), 150));
 		}
-		model.addAttribute("lv1List", eventService.getLv1List());
+		System.out.println("event/list mallSeq :"+mallSeq+", vo.getmallSeq():"+vo.getMallSeq());
+		model.addAttribute("lv1List", eventService.getLv1List(vo));
 		model.addAttribute("title", "기획전 / 이벤트 리스트");
 		model.addAttribute("list", eventVo);
 		model.addAttribute("total", new Integer(vo.getTotalRowCount()));
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
 		model.addAttribute("vo", vo);
-
+		model.addAttribute("mallSeq",mallSeq);
 		return "/event/list.jsp";
 	}
 
 	@CheckGrade(controllerName = "eventController", controllerMethod = "form")
 	@RequestMapping("/event/exhform")
-	public String form(Model model) {
+	public String form(Integer mallSeq, Model model) {
 		model.addAttribute("title", "기획전 / 이벤트 등록");
 		// 몰 리스트
-		MallVo mvo = new MallVo();
-		model.addAttribute("mallList", mallService.getList(mvo));
+//		MallVo mvo = new MallVo();
+		model.addAttribute("mallSeq", mallSeq);
 		return "/event/form.jsp";
 	}
 
@@ -159,7 +160,6 @@ public class EventController {
 		}
 		model.addAttribute("vo", vo);
 		MallVo mvo = new MallVo();
-		model.addAttribute("mallList", mallService.getList(mvo));
 		return "/event/form.jsp";
 	}
 
@@ -225,7 +225,6 @@ public class EventController {
 
 		// 몰 리스트
 		MallVo mvo = new MallVo();
-		model.addAttribute("mallList", mallService.getList(mvo));
 		model.addAttribute("titleListVo", eventService.getTitleList(paramVo));
 		model.addAttribute("itemListVo", eventService.getItemList(paramVo));
 		model.addAttribute("seq", seq);

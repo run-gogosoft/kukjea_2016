@@ -54,6 +54,7 @@
 			c2.name AS typeName,
 			c3.name AS taxName,
 			A.auth_category AS authCategory,
+			A.mall_id AS mallId,
 			(SELECT v.option_price FROM sm_item_option_value v LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS optionPrice,
 			(SELECT v.sale_price FROM sm_item_option_value v   LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS salePrice,
 			(SELECT v.sell_price FROM sm_item_option_value v   LEFT OUTER JOIN sm_item_option o ON (o.seq=v.option_seq) WHERE o.item_seq=A.seq AND v.stock_flag='Y' ORDER BY v.sell_price LIMIT 1) AS sellPrice,
@@ -384,6 +385,7 @@
 			A.cate_lv2_seq AS cateLv2Seq,
 			A.cate_lv3_seq AS cateLv3Seq,
 			A.cate_lv4_seq AS cateLv4Seq,
+			A.mall_id AS mallId,
 			(SELECT cate_name FROM sm_item_category i WHERE i.seq=A.cate_lv1_seq) AS cateLv1Name,
 			(SELECT cate_name FROM sm_item_category B WHERE B.seq=A.cate_lv2_seq) AS cateLv2Name,
 			(SELECT cate_name FROM sm_item_category C WHERE C.seq=A.cate_lv3_seq) AS cateLv3Name,
@@ -1026,7 +1028,8 @@
 			CASE WHEN o.stockCount=0 THEN 'Y' ELSE 'N' END AS soldOutFlag,
 			o.optionName,
 			o.optionSeq,
-			i.type_code AS typeCode
+			i.type_code AS typeCode,
+			i.mall_id AS mallId
 		FROM
 			sm_item i LEFT OUTER JOIN
 			sm_item_category c ON(i.cate_lv1_seq=c.seq) LEFT OUTER JOIN
@@ -1298,6 +1301,7 @@
 			A.supply_price AS supplyPrice,
 			A.market_price AS marketPrice,
 			A.maker,
+			A.mall_id AS mallId,
 			A.origin_country AS originCountry,
 			A.min_cnt AS minCnt,
 			A.seller_seq AS sellerSeq,

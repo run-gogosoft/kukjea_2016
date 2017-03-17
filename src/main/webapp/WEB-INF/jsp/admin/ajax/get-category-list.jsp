@@ -15,7 +15,7 @@
 	, "orderNo":"${item.orderNo}"
 	, "regDate":"${item.regDate}"
 	, "showFlag":"${item.showFlag}"
-
+	, "mallId":"${item.mallId}"
 	}
 </c:forEach>
 ]

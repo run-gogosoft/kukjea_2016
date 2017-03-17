@@ -27,7 +27,7 @@
 					<div class="box-header with-border"><h3 class="box-title"><i class="fa fa-newspaper-o"></i> ${vo.memberTypeName} 정보</h3></div>
 					<!-- 내용 -->
 					<div class="box-body">
-						<table id="view1" class="table table-bordered">
+						<table id="table-left" class="table table-bordered">
 							<colgroup>
 								<col style="width:20%;"/>
 								<col style="width:*"/>
@@ -57,7 +57,7 @@
 								<tr>
 									<th>업태 / 종목</th>
 									<td>${gvo.bizType} / ${gvo.bizKind}</td>
-								</tr>						
+								</tr>
 								<tr>
 									<th>소속 자치구</th>
 									<td>${gvo.jachiguName}</td>
@@ -92,7 +92,7 @@
 					</div>
 					<!-- 내용 -->
 					<div class="box-body">
-						<table id="view1" class="table table-bordered">
+						<table id="table-right" class="table table-bordered">
 							<colgroup>
 								<col style="width:20%;"/>
 								<col style="width:80%;"/>
@@ -162,10 +162,10 @@
 										</c:if>
 									</td>
 								</tr>
-								<tr>
-									<th>가입 경로</th>
-									<td>${vo.joinPathName}</td>
-								</tr>
+								<%--<tr>--%>
+									<%--<th>가입 경로</th>--%>
+									<%--<td>${vo.joinPathName}</td>--%>
+								<%--</tr>--%>
 								<tr>
 									<th>관심 카테고리</th>
 									<td>${vo.interestCategoryName}</td>
@@ -173,18 +173,60 @@
 							</tbody>
 						</table>
 					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box">
 					<c:if test="${sessionScope.loginType eq 'A'}">
-					<div class="box-footer text-right">
-						<a href="/admin/member/mod/${vo.seq}" class="btn btn-sm btn-info">수정하기</a>
-						<button type="button" class="btn btn-sm btn-danger" onclick="leaveMember();">탈퇴하기</button>
-						<button type="button" class="btn btn-sm btn-default" onclick="history.go(-1);">목록보기</button>
-						<%--<button type="button" class="btn btn-sm btn-default" onclick="addPoint()">포인트지급</button>--%>
-					</div>
+						<div class="box-footer text-right">
+							<button type="button" class="btn btn-sm btn-success" onclick="addPoint()">포인트지급</button>
+							<a href="/admin/member/mod/${vo.seq}" class="btn btn-sm btn-info">수정하기</a>
+							<button type="button" class="btn btn-sm btn-danger" onclick="leaveMember();">탈퇴하기</button>
+							<button type="button" class="btn btn-sm btn-default" onclick="history.go(-1);">목록보기</button>
+						</div>
 					</c:if>
 				</div>
 			</div>
 		</div>
-<c:if test="${sessionScope.loginType eq 'A'}">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box">
+					<!-- 제목 -->
+					<div class="box-header with-border">
+						<h3 class="box-title"><i class="fa fa-newspaper-o"></i> * 추가몰 이용 상태</h3>
+					</div>
+					<!-- 내용 -->
+					<div class="box-body">
+						<table class="table table-bordered">
+							<colgroup>
+								<col style="width:10%;"/>
+								<col style="width:45%;"/>
+								<col style="width:45%;"/>
+							</colgroup>
+							<thead>
+								<tr>
+									<th>쇼핑몰</th>
+									<th>이용상태</th>
+									<th>처리사유</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="text-center">약국몰</td>
+									<td class="text-center">
+										<button type="button" class="btn btn-sm btn-danger text-center" onclick="">승인요청</button>
+									</td>
+									<td class="text-center">사유</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="box">
@@ -197,7 +239,7 @@
 							<li id="tab-one"><a href="#" onclick="drawList('one',0);">1:1문의</a></li>
 							<li id="tab-review"><a href="#" onclick="drawList('review',0);">구매평</a></li>
 							<li id="tab-delivery"><a href="#" onclick="drawList('delivery',0);">배송지 정보</a></li>
-							<li id="tab-delivery"><a href="#" onclick="drawList('cs',0);">CS 이력</a></li>
+							<%--<li id="tbl-cs-list"><a href="#" onclick="drawList('cs',0);">CS 이력</a></li>--%>
 						</ul>
 					</div>
 					<!-- 내용 -->
@@ -305,28 +347,12 @@
 							</thead>
 							<tbody></tbody>
 						</table>
-						<!-- CS 처리내역 -->
-						<table id="tbl-cs-list" class="table table-bordered table-striped" style="display:none;">
-							<thead>
-								<tr>
-									<th>상품<br/>주문번호</th>
-									<th>주문번호</th>
-									<!-- <th>쇼핑몰</th> -->
-									<th>주문상태</th>
-									<th>CS내용</th>
-									<th>답변자</th>
-									<th>업체명</th>
-									<th>등록일</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
 						<div id="paging" class="dataTables_paginate paging_simple_numbers text-center"></div>
 					</div>
 				</div>
 			</div>
 		</div>
-</c:if>
+	<%--</c:if>--%>
 	</section>
 </div>
 
@@ -340,10 +366,10 @@
 	$(document).ready(function () {
 		//숫자 입력 칸 나머지 문자 입력 막기
 		$(".numeric").css("ime-mode", "disabled").numeric();
-		<c:if test="${sessionScope.loginType eq 'A'}">
+		<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
 		//CS리스트 최초 주문리스트로 이동
 		drawList('order',0);
-		</c:if>
+		<%--</c:if>--%>
 	});
 
 	var leaveMember = function() {
@@ -385,8 +411,8 @@
 				{type: "cancel", value: "Exit"}
 			]
 		}, function(addPoint, addResone) {
-			if(password) {
-				$.ajax({
+
+			$.ajax({
 					type: 'POST',
 					data: {
 						seq:${vo.seq},
@@ -394,20 +420,19 @@
 						addResone:addResone
 					},
 					dataType: 'json',
-					url: '/admin/system/member/password/update/ajax',
+					url: '/admin/point/write/proc',
 					success: function(data) {
+						alert( data.message);
 						if(data.result === "true") {
-							$.msgbox(data.message, {type: "info"});
-						} else {
-							$.msgbox(data.message, {type: "error"});
+							location.replace('/admin/member/view/${vo.seq}');
 						}
 					}
 				})
-			}
 		});
 	};
 	
 	var drawList = function(listType, pageNum) {
+		currentListType = listType;//현제 tab-menu 구하는 함수 알때까지 전역변수로 일단 사용하자;;
 		$.ajax({
 			url:"/admin/member/cs/list/"+listType,
 			type:"post",
@@ -444,8 +469,9 @@
 	};
 	
 	var goPage = function (pageNum) {
-		var listType = $("#tab-menu li").prop("id").split("-")[1];
-		drawList(listType, pageNum);
+		//var listType = $("#tab-menu li").("id").split("-")[1];
+		// TODO current tab-menu 확인하는 방법
+		drawList(currentListType, pageNum);
 	};
 </script>
 </body>

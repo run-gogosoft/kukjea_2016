@@ -49,17 +49,7 @@
 						<c:if test="${vo ne null}">
 							<div class="form-group">
 								<label class="col-md-2 control-label">쇼핑몰</label>
-								<div class="col-md-2 form-control-static">
-									<c:if test="${vo.mallId eq 1}">
-										병원몰
-									</c:if>
-									<c:if test="${vo.mallId eq 6}">
-										약국몰
-									</c:if>
-									<c:if test="${vo.mallId eq 35}">
-										B2B몰
-									</c:if>
-								</div>
+								<div class="col-md-2 form-control-static">${mallName}</div>
 							</div>
 							<div class="form-group">
 								<label class="col-md-2 control-label">상품 코드</label>
@@ -93,14 +83,11 @@
 								{{/each}}
 							</script>
 							<c:if test="${vo eq null}">
-								<%--<div class="form-group">--%>
-									<%--<label class="col-md-2 control-label">쇼핑몰<i class="fa fa-check"></i></label>--%>
-									<%--<div class="radio">--%>
-										<%--<label><input type="radio" onclick="setMallId()" name="mallName" value="Y" ${vo eq null or vo.mallId eq '1' ? "checked":""} alt="병원몰" /> 병원몰</label>--%>
-										<%--<label><input type="radio" onclick="setMallId()" name="mallName" value="N" ${vo eq null or vo.mallId eq '6' ? "checked":""} alt="약국몰" /> 약국몰</label>--%>
-										<%--<label><input type="radio" onclick="setMallId()" name="mallName" value="N" ${vo eq null or vo.mallId eq '35' ? "checked":""} alt="B2B몰" /> B2B몰</label>--%>
-									<%--</div>--%>
-								<%--</div>--%>
+								<div class="form-group">
+									<label class="col-md-2 control-label">쇼핑몰</label>
+									<div class="col-md-2 form-control-static">${mallName}</div>
+									<input type="hidden" name="mallId" value="${mallSeq}" />
+								</div>
 
 								<div class="form-group">
 									<label class="col-md-2 control-label">대분류 <i class="fa fa-check"></i></label>
@@ -903,7 +890,7 @@
 				<div class="progress progress-striped active">
 					<div class="bar" style="width:0%;"></div>
 				</div>
-				<p class="text-right"><a href="/admin/item/list">리스트 페이지로 이동하기</a></p>
+				<p class="text-right"><a href="/admin/item/list?mallSeq=${mallSeq}">리스트 페이지로 이동하기</a></p>
 			</div>
 		</div>
 	</div>

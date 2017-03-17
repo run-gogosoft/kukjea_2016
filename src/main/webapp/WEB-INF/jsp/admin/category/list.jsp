@@ -40,7 +40,7 @@
 									<div class="box-header">
 										<h3 class="box-title"><i class="fa fa-fw fa-bars"></i>대분류</h3>
 										<div class="box-tools pull-right">
-											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(1)">+추가</button>
+											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(1,${mallSeq})">+추가</button>
 										</div>
 									</div>
 									<div class="box-body no-padding">
@@ -62,7 +62,7 @@
 									<div class="box-header">
 										<h3 class="box-title"><i class="fa fa-fw fa-bars"></i>중분류</h3>
 										<div class="box-tools pull-right">
-											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(2)">+추가</button>
+											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(2,${mallSeq})">+추가</button>
 										</div>
 									</div>
 									<div class="box-body no-padding">
@@ -84,7 +84,7 @@
 									<div class="box-header">
 										<h3 class="box-title"><i class="fa fa-fw fa-bars"></i>소분류</h3>
 										<div class="box-tools pull-right">
-											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(3)">+추가</button>
+											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(3,${mallSeq})">+추가</button>
 										</div>
 									</div>
 									<div class="box-body no-padding">
@@ -106,7 +106,7 @@
 									<div class="box-header">
 										<h3 class="box-title"><i class="fa fa-fw fa-bars"></i>세분류</h3>
 										<div class="box-tools pull-right">
-											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(4)">+추가</button>
+											<button type="button" class="btn btn-sm btn-default" onclick="EBCategory.showInsertModal(4,${mallSeq})">+추가</button>
 										</div>
 									</div>
 									<div class="box-body no-padding">
@@ -163,6 +163,13 @@
 			<h4 class="text-info"><%="${parentCategory}"%></h4>
 			{{/if}}
 
+			<%--<div class="form-group">--%>
+				<%--<label class="col-md-3 control-label">쇼핑몰명</label>--%>
+				<%--<div class="col-md-5">--%>
+				<%--<%="${mallId}"%>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+
 			<div class="form-group">
 				<label class="col-md-3 control-label">카테고리명</label>
 				<div class="col-md-5">
@@ -183,6 +190,7 @@
 			<input type="hidden" name="parentSeq" value="<%="${parentSeq}"%>" />
 			<input type="hidden" name="orderNo" value="<%="${orderNo}"%>" />
 			<input type="hidden" name="seq" value="<%="${seq}"%>" />
+			<input type="hidden" name="mallId" value="<%="${mallId}"%>" />
 		</div>
 		<div class="modal-footer text-center">
 			<a data-dismiss="modal" class="btn btn-default" href="#">닫기</a>
@@ -282,7 +290,7 @@ var EBCategory = {
 		$.ajax({
 			url:"/admin/category/list/ajax",
 			type:"get",
-			data:{depth:depth, parentSeq:parentSeq},
+			data:{depth:depth, parentSeq:parentSeq, mallId:${mallSeq}},
 			dataType:"text",
 			success:function(data) {
 				var list = $.parseJSON(data);
@@ -309,7 +317,7 @@ var EBCategory = {
 			}
 		});
 	}
-	, showInsertModal: function(depth) {
+	, showInsertModal: function(depth,mallSeq) {
 		var vo = {
 			seq: 0
 			, name: ""
@@ -319,6 +327,7 @@ var EBCategory = {
 			, showFlag: "Y"
 			, method: "등록"
 			, parentCategory: $("#lv"+(depth-1)).find(".current").text()
+			, mallId:mallSeq
 		};
 
 		if(depth !== 1 && vo.parentSeq === 0) {
@@ -327,7 +336,7 @@ var EBCategory = {
 		}
 
 		$("#insertModal").html( $("#formTemplate").tmpl(vo) );
-		$("#insertModal>div").wrapAll("<form class='form-horizontal' action='/admin/category/new' target='zeroframe' method='post' onsubmit='return submitProc(this)'></form>");
+		$("#insertModal>div").wrapAll("<form class='form-horizontal' action='/admin/category/new?mallSeq=${mallSeq}' target='zeroframe' method='post' onsubmit='return submitProc(this)'></form>");
 		$("#insertModal").modal().find("input").eq(0).focus();
 	}
 	, showUpdateModal: function(seq) {

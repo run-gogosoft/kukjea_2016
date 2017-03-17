@@ -118,7 +118,7 @@
 										<fmt:formatNumber value="${item.point}" pattern="#,###" /> P
 									</td>
 									<td class="text-center">
-										<a href="/admin/member/view/${item.memberSeq}" target="_blank">${item.id}</a>
+										<a href="/admin/member/view/${item.memberSeq}">${item.id}</a>
 									</td>
 									<td class="text-center">${item.name}</td>
 									<td class="text-center" ${fn:length(mallList) <= 1 ? "style='display:none'":"" }>${item.mallName}</td>

@@ -50,7 +50,7 @@ public class ItemExcelController {
 
 	@CheckGrade(controllerName = "itemExcelController", controllerMethod = "form")
 	@RequestMapping("/item/excel/form")
-	public String form(HttpSession session, Model model) {
+	public String form(HttpSession session, Model model, Integer mallSeq) {
 		model.addAttribute("title", "엑셀 상품 대량등록");
 
 		List<FilterVo> list = itemService.getFilterList();
@@ -69,7 +69,7 @@ public class ItemExcelController {
 		statusMap.put("dbCount", "0");
 		statusMap.put("listCount", "계산중");
 		session.setAttribute("excelStatus", statusMap);
-
+		model.addAttribute("mallSeq", mallSeq);
 		return "/item/excel_form.jsp";
 	}
 
@@ -104,7 +104,7 @@ public class ItemExcelController {
 	}
 
 	@RequestMapping("/item/excel/check")
-	public String checkExcel(@RequestParam String filepath, @RequestParam(required=false) Integer sellerSeq, HttpServletRequest request, Model model) {
+	public String checkExcel(@RequestParam String filepath, @RequestParam(required=false) Integer sellerSeq, HttpServletRequest request, Model model, @RequestParam Integer mallSeq) {
 		HttpSession session = request.getSession(false);
 
 		/** 엑셀 컬럼 개수 */
@@ -186,7 +186,7 @@ public class ItemExcelController {
 		// 유효성 검사
 		for (int i = 1; i < v.size(); i++) {
 			// 오류를 검증한다
-			errorList.addAll(getErrorList(i + 1, v.get(i), LIST_SIZE,OPTION_SIZE)); // i에 1를 더하는 이유는 idx는 0부터 시작하니까 제목행을 포함해서 줄번호가 1 더 증가하기 때문이다.
+			errorList.addAll(getErrorList(i + 1, v.get(i), LIST_SIZE,OPTION_SIZE,mallSeq)); // i에 1를 더하는 이유는 idx는 0부터 시작하니까 제목행을 포함해서 줄번호가 1 더 증가하기 때문이다.
 		}
 
 		if (errorList.size() > 0) {
@@ -201,7 +201,8 @@ public class ItemExcelController {
 		for (int i = 1; i < v.size(); i++) {
 			
 			try {
-				ItemVo vo = itemMapper(v.get(i), LIST_SIZE);
+				ItemVo vo = itemMapper(v.get(i), LIST_SIZE, mallSeq);
+				vo.setMallId(mallSeq);
 				// 셀러 시퀀스를 매핑한다
 				/*if(sellerSeq == null) {
 					Integer sellerSeqFromDb = sellerService.getSeqByOldSeq(vo.getOldSellerSeq());
@@ -530,7 +531,7 @@ public class ItemExcelController {
 	 *            해당 column의 리스트
 	 * @return
 	 */
-	private List<String> getErrorList(int idx, ArrayList<Object> list, int LIST_SIZE, int OPSION_SIZE) {
+	private List<String> getErrorList(int idx, ArrayList<Object> list, int LIST_SIZE, int OPSION_SIZE, int mallSeq) {
 		List<String> errorList = new ArrayList<>();
 		List<FilterVo> fList = itemService.getFilterList();
 
@@ -551,6 +552,7 @@ public class ItemExcelController {
 
 		map.put("seq",0);
 		map.put("name", String.valueOf(list.get(index)));
+		map.put("mallId",mallSeq);
 		lv1 = categoryService.getVoByName(map);
 
 			if (lv1 == null) {
@@ -572,6 +574,7 @@ public class ItemExcelController {
 			if(lv1 != null) {
 				map.put("seq", lv1.getSeq());
 				map.put("name", String.valueOf(list.get(index)));
+				map.put("mallId",mallSeq);
 				lv2 = categoryService.getVoByName(map);
 			}
 			if (lv2 == null) {
@@ -595,6 +598,7 @@ public class ItemExcelController {
 			if(lv2 !=null) {
 				map.put("seq", lv2.getSeq());
 				map.put("name", String.valueOf(list.get(index)));
+				map.put("mallId",mallSeq);
 				lv3 = categoryService.getVoByName(map);
 			}
 			if (lv3 == null) {
@@ -619,6 +623,7 @@ public class ItemExcelController {
 			if(lv3 != null) {
 				map.put("seq", lv3.getSeq());
 				map.put("name", String.valueOf(list.get(index)));
+				map.put("mallId",mallSeq);
 				lv4 = categoryService.getVoByName(map);
 			}
 		
@@ -926,7 +931,7 @@ public class ItemExcelController {
 		return vo;
 	}
 
-	private ItemVo itemMapper(ArrayList<Object> list, int LIST_SIZE) throws ExcelOutOfBoundsException {
+	private ItemVo itemMapper(ArrayList<Object> list, int LIST_SIZE, int mallSeq) throws ExcelOutOfBoundsException {
 
 		ItemVo vo = new ItemVo();
 		int index = 0;
@@ -941,7 +946,7 @@ public class ItemExcelController {
 
 		map.put("seq", 0);
 		map.put("name", String.valueOf(list.get(index++)));
-
+		map.put("mallId",mallSeq);
 		CategoryVo category = categoryService.getVoByName(map);
 		vo.setCateLv1Seq(category.getSeq());
 		//2 중분류 코드
@@ -949,6 +954,7 @@ public class ItemExcelController {
 			map.clear();
 			map.put("seq", category.getSeq());
 			map.put("name", String.valueOf(list.get(index++)));
+			map.put("mallId",mallSeq);
 			category = categoryService.getVoByName(map);
 			vo.setCateLv2Seq(category.getSeq());
 		} else {
@@ -959,6 +965,7 @@ public class ItemExcelController {
 			map.clear();
 			map.put("seq", category.getSeq());
 			map.put("name", String.valueOf(list.get(index++)));
+			map.put("mallId",mallSeq);
 			category = categoryService.getVoByName(map);
 			vo.setCateLv3Seq(category.getSeq());
 		} else {
@@ -969,6 +976,7 @@ public class ItemExcelController {
 			map.clear();
 			map.put("seq", category.getSeq());
 			map.put("name", String.valueOf(list.get(index++)));
+			map.put("mallId",mallSeq);
 			category = categoryService.getVoByName(map);
 			vo.setCateLv4Seq(category.getSeq());
 		} else {

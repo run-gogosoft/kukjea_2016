@@ -123,17 +123,17 @@
 								</div>
 							</div>
 
-							<div class="form-group">
-								<label class="col-md-2 control-label" for="thumbImg">광고 배너 이미지</label>
-								<div class="col-md-4">
-									<input class="form-control" type="text" id="thumbImg" name="thumbImg" placeholder="배너 이미지를 등록해주세요" style="margin-bottom:5px;" readonly="readonly" <c:if test="${vo eq null}">alt="배너 이미지"</c:if>/>
-									<div class="thumbViewimg"></div>
-								</div>
-								<div>
-									<button type="button" onclick="showUploadModal()" class="btn btn-info">업로드</button>
-									<label class="col-md-4 control-label"> ! 이미지 크기 230 x 70 </label>
-								</div>
-							</div>
+							<%--<div class="form-group">--%>
+								<%--<label class="col-md-2 control-label" for="thumbImg">광고 배너 이미지</label>--%>
+								<%--<div class="col-md-4">--%>
+									<%--<input class="form-control" type="text" id="thumbImg" name="thumbImg" placeholder="배너 이미지를 등록해주세요" style="margin-bottom:5px;" readonly="readonly" <c:if test="${vo eq null}">alt="배너 이미지"</c:if>/>--%>
+									<%--<div class="thumbViewimg"></div>--%>
+								<%--</div>--%>
+								<%--<div>--%>
+									<%--<button type="button" onclick="showUploadModal()" class="btn btn-info">업로드</button>--%>
+									<%--<label class="col-md-4 control-label"> ! 이미지 크기 230 x 70 </label>--%>
+								<%--</div>--%>
+							<%--</div>--%>
 							<c:if test="${vo ne null}">
 								<c:if test="${vo.openDate ne ''}">
 									<div class="form-group">
@@ -288,39 +288,39 @@
 		})
 	});
 
-	var showUploadModal = function() {
-		$("#uploadModal").modal();
-		$("#uploadModal").find(".fileinput-button").show().next().hide();
-	};
-
-	var callbackProc = function(msg) {
-		if(msg.split("^")[0] === "EDITOR") {
-			CKEDITOR.tools.callFunction(msg.split("^")[1], msg.split("^")[2], '이미지를 업로드 하였습니다.')
-		}  else {
-			uploadProc(msg);
-		}
-	};
-
-
-	var uploadProc = function(filename) {
-		var html = "";
-		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
-
-		$("input[name=thumbImg]").val(filename).parents(".form-group").find(".thumbViewimg").html(html);
-		$("#uploadModal").modal("hide");
-	};
-
-	var uploadMappingProc = function(filename) {
-		var html = "";
-		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
-
-		$("input[name=thumbImg]").parents(".form-group").find(".thumbViewimg").html(html);
-		$("#uploadModal").modal("hide");
-	};
-
-	var imgProc = function(obj, size) {
-		$(obj).css({width:804, height:270});
-	};
+//	var showUploadModal = function() {
+//		$("#uploadModal").modal();
+//		$("#uploadModal").find(".fileinput-button").show().next().hide();
+//	};
+//
+//	var callbackProc = function(msg) {
+//		if(msg.split("^")[0] === "EDITOR") {
+//			CKEDITOR.tools.callFunction(msg.split("^")[1], msg.split("^")[2], '이미지를 업로드 하였습니다.')
+//		}  else {
+//			uploadProc(msg);
+//		}
+//	};
+//
+//
+//	var uploadProc = function(filename) {
+//		var html = "";
+//		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
+//
+//		$("input[name=thumbImg]").val(filename).parents(".form-group").find(".thumbViewimg").html(html);
+//		$("#uploadModal").modal("hide");
+//	};
+//
+//	var uploadMappingProc = function(filename) {
+//		var html = "";
+//		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
+//
+//		$("input[name=thumbImg]").parents(".form-group").find(".thumbViewimg").html(html);
+//		$("#uploadModal").modal("hide");
+//	};
+//
+//	var imgProc = function(obj, size) {
+//		$(obj).css({width:804, height:270});
+//	};
 </script>
 </body>
 </html>

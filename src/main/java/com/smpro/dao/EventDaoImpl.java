@@ -109,8 +109,8 @@ public class EventDaoImpl implements EventDao {
 	}
 
 	@Override
-	public List<EventVo> getLv1List() {
-		return sqlSession.selectList("event.getLv1List");
+	public List<EventVo> getLv1List(EventVo vo) {
+		return sqlSession.selectList("event.getLv1List", vo);
 	}
 
 	@Override

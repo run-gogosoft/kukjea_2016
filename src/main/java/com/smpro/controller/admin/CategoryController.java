@@ -23,24 +23,24 @@ public class CategoryController {
 
 	@CheckGrade(controllerName = "categoryController", controllerMethod = "getList")
 	@RequestMapping("/category")
-	public String getList(Model model) {
+	public String getList(Integer mallSeq, Model model) {
 		// 몰 리스트
-		model.addAttribute("mallList", mallService.getListSimple());
+		model.addAttribute("mallSeq",mallSeq);
 		return "/category/list.jsp";
 	}
 
 	@RequestMapping("/category/list/simple/ajax")
 	public String getListSimpleForAjax(CategoryVo vo, Model model) {
 		// todo : 사용자가 카테고리를 리스트를 읽을 권한이 있는지 검사해야 한다
+		System.out.println("### list/simple/ajax , mallSeq:"+vo.getMallId());
 		model.addAttribute("list", categoryService.getListSimple(vo));
 		return "/ajax/get-category-list.jsp";
 	}
 
 	@RequestMapping("/category/list/ajax")
-	public String getListForAjax(CategoryVo vo, Model model) {
-		
+	public String getListForAjax( CategoryVo vo, Model model) {
 		List<CategoryVo> list = categoryService.getList(vo);
-
+		model.addAttribute("mallSeq",vo.getMallId());
 		model.addAttribute("list", list);
 		return "/ajax/get-category-list.jsp";
 	}
@@ -54,8 +54,10 @@ public class CategoryController {
 	}
 
 	@RequestMapping("/category/new")
-	public String insert(CategoryVo vo, Model model) {
+	public String insert(Integer mallSeq, CategoryVo vo, Model model) {
 		// todo : 사용자가 카테고리를 삽입할 권한이 있는지 검사해야 한다
+		 System.out.println("### /category/new-----"+mallSeq);
+
 
 		if ("".equals(vo.getName().trim())) {
 			model.addAttribute("message", "카테고리명이 입력되지 않았습니다");
@@ -78,7 +80,7 @@ public class CategoryController {
 	@RequestMapping("/category/update")
 	public String update(CategoryVo vo, Model model) {
 		// todo : 사용자가 카테고리를 수정할 권한이 있는지 검사해야 한다
-
+		System.out.println("### /category/update-----"+vo.getMallId());
 		if ("".equals(vo.getName().trim())) {
 			model.addAttribute("message", "카테고리명이 입력되지 않았습니다");
 			return Const.ALERT_PAGE;

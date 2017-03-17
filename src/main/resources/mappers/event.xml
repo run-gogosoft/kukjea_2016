@@ -176,7 +176,6 @@
 	<update id="updateData" parameterType="com.smpro.vo.EventVo">
 		UPDATE sm_event SET
 			title = #{title}
-			, mall_seq = #{mallSeq}
 			, html = #{html}
 			<if test="thumbImg != ''">
 				, thumb_img = #{thumbImg}
@@ -334,11 +333,14 @@
 	    </if>
 	</update>
 
-	<select id="getLv1List" resultType="com.smpro.vo.EventVo">
+	<select id="getLv1List" parameterType="com.smpro.vo.EventVo" resultType="com.smpro.vo.EventVo">
 		  SELECT seq AS lv1Seq
 		         , cate_name AS cateName
     		FROM sm_item_category
     	   WHERE depth = 1
+			<if test="mallSeq != null">
+				AND mall_id = #{mallSeq}
+			</if>
     	   ORDER BY seq ASC
 	</select>
 	

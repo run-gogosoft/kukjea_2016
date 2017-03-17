@@ -3,10 +3,11 @@
 	<!-- 소제목 -->
 	<!-- <div class="box-header"><h3 class="box-title"></h3></div> -->
 	<!-- 내용 -->
-	<form id="searchForm" action="/admin/item/list/${mallSeq}" class="form-horizontal" method="get" onsubmit="search(this);">
+	<form id="searchForm" action="/admin/item/list" class="form-horizontal" method="get" onsubmit="search(this);">
 		<input type="hidden" name="pageNum"  id="pageNum" value="${vo.pageNum}"/>
 		<input type="hidden" name="orderByName" id="orderByName" value="${vo.orderByName}"/>
 		<input type="hidden" name="orderByType" id="orderByType" value="${vo.orderByType}"/>
+		<input type="hidden" name="mallSeq" id="mallSeq" value="${mallSeq}"/>
 		<div class="box-body">
 			<div class="form-group">
 				<label class="col-md-2 control-label">카테고리</label>
@@ -103,7 +104,7 @@
 				<c:if test="${sessionScope.loginType eq 'A'  or sessionScope.loginType eq 'S'}">
 					<button type="button" onclick="CHExcelDownload.excelDownCheck()" class="btn btn-success btn-sm">엑셀다운</button>
 				</c:if>
-				<button type="button" onclick="location.href='/admin/item/list/${mallSeq}'" class="btn btn-sm btn-warning">검색초기화</button>
+				<button type="button" onclick="location.href='/admin/item/list?mallSeq=${mallSeq}'" class="btn btn-sm btn-warning">검색초기화</button>
 			</div>
 		</div>
 	</form>

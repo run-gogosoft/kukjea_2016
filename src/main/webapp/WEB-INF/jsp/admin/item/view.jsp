@@ -55,7 +55,7 @@
 							<button type="button" onclick="deleteItem('${vo.statusCode}','${sessionScope.loginType}')" class="btn btn-sm btn-danger">삭제하기</button>
 							&nbsp;&nbsp;
 						</c:if>
-							<a href="/admin/item/list" onclick="location.href=decodeURIComponent('/admin/item/list'+(location.search)).split('&amp;').join('&');return false;" class="btn btn-sm btn-default">목록보기</a>
+							<a href="/admin/item/list" onclick="location.href=decodeURIComponent('/admin/item/list'+(location.search)+'&mallSeq=${vo.mallId}').split('&amp;').join('&');return false;" class="btn btn-sm btn-default">목록보기</a>
 						</div>
 					</div>
 					<!-- 내용 -->
@@ -896,7 +896,7 @@
 			$('input[name=cateLv4Seq]').prop('disabled',false);
 		}
 
-		//유효성검사가 모두 끝난 후 수정시 임시몰의 판매가와 상태코드가 중복(sellPrice,statusCode)되므로 에러가 발생되기 때문에 임시몰 부분을 disabled처리한다.
+		//유효성검사가 모두 끝난 후 수정시 임시몰의 판매목가와 상태코드가 중복(sellPrice,statusCode)되므로 에러가 발생되기 때문에 임시몰 부분을 disabled처리한다.
 		if(flag === true) {
 			$('#tempMall').find('input[name=sellPrice]').prop('disabled',true);
 			//$('#tempMall').find('select[name=statusCode]').prop('disabled',true);

@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -61,6 +63,9 @@ public class MemberController {
 	@Autowired
 	private MemberDeliveryService memberDeliveryService;
 
+	@Autowired
+	private MallAccessService mallAccessService;
+
 	@CheckGrade(controllerName = "memberController", controllerMethod = "getStats")
 	@RequestMapping("/member/stats")
 	public String getStats(Model model) {
@@ -88,7 +93,7 @@ public class MemberController {
 	public String getList(MemberVo pvo, Model model) throws Exception {
 		model.addAttribute("title", "회원 리스트" + ("Y".equals(pvo.getLongTermNotLoginFlag()) ? "(1년이상 미접속자)":""));
 
-		//기본 50개씩 조회
+		//기본 20개씩 조회
 		if (pvo.getRowCount() == 10) {
 			pvo.setRowCount(20);
 		}
@@ -99,24 +104,84 @@ public class MemberController {
 		cvo.setGroupCode(new Integer(1));
 		model.addAttribute("statusList", systemService.getCommonList(cvo));
 		// 등급
-		cvo.setGroupCode(new Integer(8));
-		model.addAttribute("gradeList", systemService.getCommonList(cvo));
+//		cvo.setGroupCode(new Integer(8));
+//		model.addAttribute("gradeList", systemService.getCommonList(cvo));
 		// 회원구분
 		cvo.setGroupCode(new Integer(30));
 		model.addAttribute("memberTypeList", systemService.getCommonList(cvo));
-		
-		MallVo mvo = new MallVo();
-		model.addAttribute("mallList", mallService.getList(mvo));
+
+
+		GradeVo gradeVo = new GradeVo();
+		List<GradeVo> grades = gradeService.getList(gradeVo);
+		model.addAttribute("gradeList", grades);
+
+//		MallVo mvo = new MallVo();
+//		model.addAttribute("mallList", mallService.getList(mvo));
 		
 		//최초 접속시 개인회원으로 초기화
 		if("".equals(pvo.getMemberTypeCode())) {
 			pvo.setMemberTypeCode("C");			
 		}
-		
+
 		pvo.setTotalRowCount(memberService.getListCount(pvo));
-		model.addAttribute("list", memberService.getList(pvo));
-		model.addAttribute("total", new Integer(pvo.getTotalRowCount()));
-		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
+		List<MemberVo> memberList = memberService.getList(pvo);
+
+
+
+		for(MemberVo member:memberList) {
+			Integer useablePoint = 0;
+			String grade = "";
+			int totlaOrderPrice = 0;
+
+			useablePoint = pointService.getUseablePoint(member.getSeq());
+			if (orderService.getTotalOrderFinishPrice(member.getSeq()) != null) {
+				totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(member.getSeq()));
+			}
+
+			for (GradeVo vo : grades) {
+				if (vo.getPayCondition() < totlaOrderPrice) {
+					grade = vo.getName();
+					break;
+				}
+			}
+
+			member.setTotalOrderPrice(totlaOrderPrice);
+			member.setGradeName(grade);
+			member.setPoint(useablePoint == null ? new Integer(0) : useablePoint);
+		}
+
+		List<MallVo> mallList = mallService.getListSimple();
+
+		for(MemberVo member:memberList){
+			List<MallAccessVo> mallAccessVos=mallAccessService.getVo(member.getSeq());
+			if(mallAccessVos == null) {
+				mallAccessVos = new ArrayList<>();
+				for(MallVo mall:mallList){
+					MallAccessVo vo = new MallAccessVo();
+					vo.setMallSeq(mall.getSeq());
+					vo.setAccessStatus("NA");
+					mallAccessVos.add(vo);
+				}
+			}
+			if(mallAccessVos.size()<mallList.size()){
+				for(MallVo mall:mallList){
+					if(findMall(mallList, mallAccessVos)){
+						continue;
+					}
+					else {
+						MallAccessVo vo = new MallAccessVo();
+						vo.setMallSeq(mall.getSeq());
+						vo.setAccessStatus("NA");
+						mallAccessVos.add(vo);
+					}
+				}
+			}
+			member.setMallAccessVos(mallAccessVos);
+		}
+
+		/**몰 접근권한 정보 처리**/
+		model.addAttribute("mallList",mallList);
+
 		model.addAttribute("pvo", pvo);
 		return "/member/list.jsp";
 	}
@@ -134,10 +199,6 @@ public class MemberController {
 		GradeVo gradeVo = new GradeVo();
 		List<GradeVo> grades = gradeService.getList(gradeVo);
 
-		for(GradeVo vo:grades){
-			System.out.println(">>>"+vo.getName());
-			System.out.println(">>>"+vo.getPayCondition());
-		}
 
 		if(grades != null) {
 			model.addAttribute("list", grades);
@@ -154,6 +215,7 @@ public class MemberController {
 		if(vo != null) {
 			model.addAttribute("gvo", memberGroupService.getVo(vo.getGroupSeq()));
 		}
+
 
 		return "/member/view.jsp";
 	}
@@ -409,7 +471,8 @@ public class MemberController {
 		model.addAttribute("callback", "POINT");
 		return Const.REDIRECT_PAGE;
 	}
-	
+
+
 	/*
 	 * 회원 정보 상세 CS 리스트
 	 */
@@ -418,7 +481,7 @@ public class MemberController {
 	public String getCsList(@PathVariable String listType, Integer memberSeq, int pageNum, HttpSession session, Model model) throws Exception {
 		String loginType = (String) session.getAttribute("loginType");
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
-		
+
 		if("order".equals(listType)) {
 			OrderVo pvo = new OrderVo();
 			pvo.setLoginType(loginType);
@@ -486,8 +549,117 @@ public class MemberController {
 			model.addAttribute("total", new Integer(list.size()));
 			model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		}
-		
-		
+
 		return "/ajax/get-"+listType+"-list.jsp";
+	}
+
+
+	/*
+	 * 회원  리스트
+	 */
+	@CheckGrade(controllerName = "memberController", controllerMethod = "getAllList")
+	@RequestMapping("/member/all/list/{listType}")
+	public String getAllList(@PathVariable String listType,  int pageNum, HttpSession session, Model model) throws Exception {
+
+		String loginType = (String) session.getAttribute("loginType");
+		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
+		MemberVo pvo = new MemberVo();
+		System.out.println(">>> getAllList, listType:"+listType);
+		System.out.println(">>> getAllList, pageNum:"+pageNum);
+		//기본 20개씩 조회
+		if (pvo.getRowCount() == 10) {
+			pvo.setRowCount(20);
+		}
+
+		pvo.setLoginType(loginType);
+		pvo.setLoginSeq(loginSeq);
+		pvo.setPageNum(pageNum);
+
+		GradeVo gradeVo = new GradeVo();
+		List<GradeVo> grades = gradeService.getList(gradeVo);
+
+
+		//최초 접속시 개인회원으로 초기화
+		if("".equals(pvo.getMemberTypeCode())) {
+			pvo.setMemberTypeCode("C");
+		}
+
+		pvo.setTotalRowCount(memberService.getListCount(pvo));
+
+		//listType : member > all list
+		//request : 요청한 회원 리스트
+		//if("request".equals(listType)) {
+		//	pvo.setAcc
+		//}
+
+
+		List<MemberVo> memberList = memberService.getList(pvo);
+
+
+		for(MemberVo member:memberList) {
+			Integer useablePoint = 0;
+			String grade = "BASIC";
+			int totlaOrderPrice = 0;
+
+			useablePoint = pointService.getUseablePoint(member.getSeq());
+			if (orderService.getTotalOrderFinishPrice(member.getSeq()) != null) {
+				totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(member.getSeq()));
+			}
+
+			for (GradeVo vo : grades) {
+				if (vo.getPayCondition() < totlaOrderPrice) {
+					grade = vo.getName();
+					break;
+				}
+			}
+
+			member.setTotalOrderPrice(totlaOrderPrice);
+			member.setGradeName(grade);
+			member.setPoint(useablePoint == null ? new Integer(0) : useablePoint);
+		}
+
+		List<MallVo> mallList = mallService.getListSimple();
+
+		for(MemberVo member:memberList){
+			List<MallAccessVo> mallAccessVos=mallAccessService.getVo(member.getSeq());
+			if(mallAccessVos == null) {
+				mallAccessVos = new ArrayList<>();
+				for(MallVo mall:mallList){
+					MallAccessVo vo = new MallAccessVo();
+					vo.setMallSeq(mall.getSeq());
+					vo.setAccessStatus("NA");
+					mallAccessVos.add(vo);
+				}
+			}
+			if(mallAccessVos.size()<mallList.size()){
+				for(MallVo mall:mallList){
+					if(findMall(mallList, mallAccessVos)){
+						continue;
+					}
+					else {
+						MallAccessVo vo = new MallAccessVo();
+						vo.setMallSeq(mall.getSeq());
+						vo.setAccessStatus("NA");
+						mallAccessVos.add(vo);
+					}
+				}
+			}
+			member.setMallAccessVos(mallAccessVos);
+		}
+
+		model.addAttribute("list", memberList);
+		model.addAttribute("total", new Integer(pvo.getTotalRowCount()));
+		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
+
+		return "/ajax/get-memberAccess-list.jsp";
+	}
+
+	private boolean findMall(List<MallVo> mallList, List<MallAccessVo>mallAccessVos){
+		for(MallVo mall:mallList){
+			for(MallAccessVo mallacc:mallAccessVos){
+				if(mall.getSeq() == mallacc.getMallSeq()) return true;
+			}
+		}
+		return false;
 	}
 }

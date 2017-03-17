@@ -11,8 +11,10 @@
 			, show_flag AS showFlag
 			, mod_date AS modDate
 			, reg_date AS regDate
+			, mall_id AS mallId
 		FROM sm_item_category
 		WHERE 1=1
+		AND mall_id=#{mallId}
 		<if test="depth > 0">
 			AND depth=#{depth}
 		</if>
@@ -27,6 +29,7 @@
 	<select id="getListSimple" parameterType="com.smpro.vo.CategoryVo" resultType="com.smpro.vo.CategoryVo">
 		SELECT seq, cate_name AS name, show_flag AS showFlag FROM sm_item_category
 		WHERE 1=1
+		AND mall_id=#{mallId}
 		<if test="depth > 0">
 			AND depth=#{depth}
 		</if>
@@ -48,6 +51,7 @@
 			, show_flag AS showFlag
 			, mod_date AS modDate
 			, reg_date AS regDate
+			, mall_id AS mallId
 		FROM sm_item_category
 		WHERE seq=#{value}
 	</select>
@@ -62,10 +66,12 @@
 		, show_flag AS showFlag
 		, mod_date AS modDate
 		, reg_date AS regDate
+		, mall_id AS mallId
 		FROM sm_item_category
 		WHERE
 			cate_name=#{name}
 			AND parent_seq=#{seq}
+			AND mall_id=#{mallId}
 	</select>
 
 	<select id="getLv1Value" parameterType="int" resultType="int">
@@ -89,6 +95,7 @@
 	<select id="getVoSimple" parameterType="int" resultType="com.smpro.vo.CategoryVo">
 		SELECT cate_name AS name FROM sm_item_category
 		WHERE seq=#{value}
+		AND mall_id=#{mallId}
 	</select>
 
 	<select id="getListForSearch" parameterType="com.smpro.vo.ItemVo" resultType="com.smpro.vo.CategoryVo">
@@ -168,7 +175,8 @@
 			depth,
 			show_flag,
 			mod_date,
-			reg_date
+			reg_date,
+			mall_id
 		) VALUES (
 			#{parentSeq},
 			#{name},
@@ -176,7 +184,8 @@
 			#{depth},
 			#{showFlag},
 			NOW(),
-			NOW()
+			NOW(),
+			#{mallId}
 		)
 	</insert>
 

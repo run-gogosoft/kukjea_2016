@@ -20,7 +20,7 @@
 	<section class="content-header">
 		<h1>기획전/이벤트 관리 <small></small></h1>
 		<ol class="breadcrumb">
-			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></a></li>
+			<li><a href="/admin/index"><i class="fa fa-home"></i>Home</a></li>
 			<li>상품 관리</li>
 			<li>기획전/이벤트 관리</li>
 			<li class="active">기획전/이벤트 등록</li>
@@ -37,7 +37,7 @@
 					<form id="write" class="form-horizontal" method="post" onsubmit="return submitProc(this);" action="<c:choose><c:when test="${vo eq null}">/admin/event/write/proc</c:when><c:otherwise>/admin/event/edit/proc</c:otherwise></c:choose>" target="zeroframe">
 						<input class="form-control" type="hidden" name="flag" id="flag"/>
 						<div class="box-body">
-							<input type="hidden" name="mallSeq" value="1">
+							<input type="hidden" name="mallSeq" value="${mallSeq}">
 							<input type="hidden" name="typeCode" value="1">
 							<c:if test="${ vo ne null }">
 							<input class="form-control" type="hidden" name="seq" id="seq" value="${ vo.seq }"/>
@@ -225,15 +225,15 @@
 			}
 		});
 
-		mallCategoryRenderList(2);
+		mallCategoryRenderList(${mallSeq});
 
 		<c:if test="${vo ne null and vo.thumbImg ne ''}">uploadMappingProc("/upload"+"${vo.thumbImg}");</c:if>
 	});
 
-	var mallSelect = function(){
-		var mallSeq = parseInt($('#mallList option:selected').val(),10);
-		mallCategoryRenderList(mallSeq);
-	};
+	<%--var mallSelect = function(){--%>
+		<%--var mallSeq = parseInt($('#mallList option:selected').val(),10);--%>
+		<%--mallCategoryRenderList(${mallSeq});--%>
+	<%--};--%>
 
 	var mallCategoryRenderList = function(mallSeq){
 		//카테고리를 불러온다.

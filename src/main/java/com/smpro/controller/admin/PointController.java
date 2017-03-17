@@ -30,6 +30,10 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Slf4j
@@ -207,8 +211,28 @@ public class PointController {
 	@CheckGrade(controllerName = "pointController", controllerMethod = "pointWriteProc")
 	@RequestMapping("/point/write/proc")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public String pointWriteProc(PointVo vo, HttpSession session, Model model) {
+	public String pointWriteProc(Integer seq, Integer addPoint, String addResone, HttpSession session, Model model) {
+
+		PointVo vo = new PointVo();
+		vo.setPoint(addPoint);
+		vo.setMemberSeq(seq);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Calendar cl = new GregorianCalendar();
+		Date date = new Date();
+		cl.setTime(date);
+		cl.add(cl.DATE, 30);
+		String endDate = sdf.format(cl.getTime());
+		vo.setEndDate(endDate);
+
+		vo.setValidFlag("Y");
+		vo.setReserveCode("E");//회원가입 : N, 구매 : B  , 이벤트 : E
+		vo.setTypeCode("1");
+		vo.setNote("관리자 포인트 지급 :" + addResone);
+		vo.setUseablePoint(vo.getPoint());
+
+
 		// 이벤트, CS요청등을 통한 일반지급
+		//상태 코드(S:적립, U:사용, D:소멸,C:취소적립)
 		vo.setStatusCode("S");
 		if (vo.getMemberSeq() == null) {
 			model.addAttribute("message", "회원은 반드시 입력 되어야 합니다.");
@@ -355,10 +379,9 @@ public class PointController {
 			e.printStackTrace();
 			transactionManager.rollback(status);
 		}
-		model.addAttribute("message", "포인트가 지급 되었습니다.");
-
-		model.addAttribute("returnUrl",	"/admin/point/detail/list/" + vo.getMemberSeq());
-		return Const.REDIRECT_PAGE;
+		model.addAttribute("result", "true");
+		model.addAttribute("message", "포인트가 지급되었습니다.");
+		return "/ajax/get-message-result.jsp";
 	}
 
 	@RequestMapping("/point/member/json")

@@ -18,6 +18,7 @@
 	, "itemName":"${item.itemName}"
 	, "sellPrice":"<fmt:formatNumber value="${item.sellPrice}" pattern="#,###" />"
 	, "statusFlag":"${item.statusFlag}"
+	, "mallId":"${item.mallId}"
 	}
 </c:forEach>
 ]

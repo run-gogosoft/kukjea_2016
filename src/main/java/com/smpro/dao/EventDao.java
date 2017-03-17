@@ -48,7 +48,7 @@ public interface EventDao {
 
 	public int updateItemListOrderData(EventVo vo);
 
-	public List<EventVo> getLv1List();
+	public List<EventVo> getLv1List(EventVo vo);
 	
 	public int insertComment(BoardVo vo);
 	

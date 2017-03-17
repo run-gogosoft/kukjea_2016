@@ -1001,7 +1001,7 @@ public class OrderServiceImpl implements OrderService {
 				} else {
 					pvo.setPoint(usePoint);
 					pvo.setStatusCode("U"); // 사용했음
-
+					pvo.setNote("포인트t사용(주문번호 :" + vo.getOrderSeq() + ")");
 					pvo.setUseablePoint(pvo.getUseablePoint() - usePoint);
 					usePoint = 0;
 				}

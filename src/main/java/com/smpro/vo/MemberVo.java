@@ -1,4 +1,5 @@
 package com.smpro.vo;
+import java.util.List;
 
 public class MemberVo extends UserVo {
 	/** 성별 (M:남, F:여) */
@@ -39,10 +40,10 @@ public class MemberVo extends UserVo {
 	private String closeText = "";
 
 	/** 보유 포인트 */
-	private int point;
+	private int point = 0;
 	/** 몰 이름 */
 	private String mallName = "";
-	
+
 	/** 회원 구분 */
 	private String memberTypeName = "";
 	
@@ -68,7 +69,32 @@ public class MemberVo extends UserVo {
 	
 	/** 장기미접속 여부 */
 	private String longTermNotLoginFlag ="";
-	
+
+
+	/** 총주문액 **/
+	private int totalOrderPrice = 0;
+	/** 등급 **/
+	private String gradeName = "";
+
+	/** mall access **/
+	private List<MallAccessVo> mallAccessVos=null;
+
+	public void setMallAccessVos(List<MallAccessVo> lists){
+		this.mallAccessVos = lists;
+	}
+
+	public List<MallAccessVo> getMallAccessVos(){
+		return this.mallAccessVos;
+	}
+
+	public void setTotalOrderPrice(int price){ this.totalOrderPrice = price;}
+
+	public int getTotalOrderPrice(){return this.totalOrderPrice;}
+
+	public void setGradeName(String grade){ this.gradeName = grade;}
+
+	public String getGradeName(){ return this.gradeName;}
+
 	public String getSexCode() {
 		return sexCode;
 	}

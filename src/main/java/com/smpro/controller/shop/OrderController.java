@@ -718,7 +718,7 @@ public class OrderController {
 		}
 
 		/** 신용카드 결제의 경우, 포인트 적립 **/
-		if(!"CASH".equals(ovo.getPayMethod())) {
+		if(!ovo.getPayMethod().contains("CASH")) {
 			//구매 후 포인트 적립 : 구입액 * 1%
 			//포인트 유효기가 30일
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

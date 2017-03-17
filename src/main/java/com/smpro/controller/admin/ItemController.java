@@ -189,26 +189,25 @@ public class ItemController {
 			return Const.ALERT_PAGE;
 		}
 		model.addAttribute("message", "삭제되었습니다");
-		model.addAttribute("returnUrl", "/admin/item/list?" + (search == null ? "" : search.replace("&amp;", "&")));
+		model.addAttribute("returnUrl", "/admin/item/list?" + "mallSeq="+vo.getMallId()+"&"+(search == null ? "" : search.replace("&amp;", "&")));
 		return Const.REDIRECT_PAGE;
 	}
 
 	@CheckGrade(controllerName = "itemController", controllerMethod = "list")
 	@RequestMapping("/item/list")
-	public String list(HttpServletRequest request, ItemVo vo, Model model) throws Exception {
-
-//		@RequestMapping("/item/list/{mallseq}")
-//	public String list(@PathVariable Integer mallseq, HttpServletRequest request, ItemVo vo, Model model) throws Exception {
+	public String list(Integer mallSeq,HttpServletRequest request, ItemVo vo, Model model) throws Exception {
 		HttpSession session = request.getSession(false);
 
 		vo.setLoginType((String) session.getAttribute("loginType"));
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
+		vo.setMallId(mallSeq);
 
-//		System.out.println(">>>>mallseq:"+mallseq);
+		System.out.println(">>>>mallSeq:"+mallSeq);
 		// 카테고리를 가져온다
 		CategoryVo cvo = new CategoryVo();
 		//대분류
 		cvo.setDepth(1);
+		cvo.setMallId(mallSeq);
 		model.addAttribute("cateLv1List", categoryService.getList(cvo));
 
 		//중분류
@@ -273,7 +272,7 @@ public class ItemController {
 		model.addAttribute("list",list);
 		model.addAttribute("vo", vo);
 		model.addAttribute("paging", vo.drawPagingNavigation("goPage"));
-//		model.addAttribute("mallSeq", mallseq);
+		model.addAttribute("mallSeq", mallSeq);
 
 		/* 마스터 벤더
 		SellerVo svo = new SellerVo();
@@ -288,10 +287,10 @@ public class ItemController {
 
 	@CheckGrade(controllerName = "itemController", controllerMethod = "form")
 	@RequestMapping("/item/form")
-	public String form(Model model) {
-//	@RequestMapping("/item/form/new/{mallseq}")
-//	public String form(@PathVariable Integer mallseq,Model model) {
-//		model.addAttribute("mallseq",mallseq);
+	public String form(Integer mallSeq,Model model) {
+		String mallName = mallService.getVo(mallSeq).getName();
+		model.addAttribute("mallSeq",mallSeq);
+		model.addAttribute("mallName",mallName);
 		model.addAttribute("title", "상품 등록");
 		model.addAttribute("typeInfoList", itemService.getTypeInfoList());
 		model.addAttribute("filterList", itemService.getFilterList());
@@ -318,10 +317,14 @@ public class ItemController {
 			return Const.REDIRECT_PAGE;
 		}
 */
+		ItemVo item = itemService.getVo(seq);
+		String mallName = mallService.getVo(item.getMallId()).getName();
+		model.addAttribute("mallName",mallName);
+		model.addAttribute("mallSeq",item.getMallId());
 		model.addAttribute("pageNum", pageNum);
 		// todo : 아이템을 수정할 수 있는 권한이 있는지 검사하여야 함
 		model.addAttribute("title", "상품 수정");
-		model.addAttribute("vo", itemService.getVo(seq));
+		model.addAttribute("vo", item);
 		model.addAttribute("typeInfoList", itemService.getTypeInfoList()); // 상품 고시정보 분류 목록
 		model.addAttribute("propInfo", itemService.getInfo(seq)); // 해당 상품에 저장된 상품고시정보
 		model.addAttribute("filterList", itemService.getFilterList());
@@ -1175,7 +1178,7 @@ public class ItemController {
 	 */
 	@CheckGrade(controllerName = "itemController", controllerMethod = "batchDelete")
 	@RequestMapping("/item/batch/delete")
-	public String batchDelete(@RequestParam Integer[] procSeq, String searchText, HttpServletRequest request, Model model) {
+	public String batchDelete(@RequestParam Integer[] procSeq,Integer mallSeq, String searchText, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession(false);
 		// todo : 해당 배치를 실행시킬 수 있는지 검사하여야 함
 
@@ -1213,7 +1216,7 @@ public class ItemController {
 			itemService.deleteVo(procSeq[i]);
 		}
 		model.addAttribute("message", "삭제되었습니다");
-		model.addAttribute("returnUrl", "/admin/item/list?" + (searchText == null ? "" : searchText.replace("&amp;", "&")));
+		model.addAttribute("returnUrl", "/admin/item/list?" + "mallSeq="+mallSeq+"&"+(searchText == null ? "" : searchText.replace("&amp;", "&")));
 		return Const.REDIRECT_PAGE;
 	}
 
@@ -1231,14 +1234,13 @@ public class ItemController {
 	public String batchUpdate(@RequestParam Integer[] procSeq, HttpServletRequest request, String statusCode, String searchText, Model model) {
 		HttpSession session = request.getSession(false);
 		// todo : 해당 배치를 실행시킬 수 있는지 검사하여야 함
+		int mallSeq = itemService.getVo(procSeq[0]).getMallId();
 		for (int i = 0; i < procSeq.length; i++) {
 			ItemVo vo = new ItemVo();
 			vo.setSeq(procSeq[i]);
 			vo.setStatusCode(statusCode);
 			ItemVo ivo = itemLogCheck(vo);
-
 			itemService.updateStatusCode(vo);
-
 			// 로그 (이력)
 			ItemLogVo lvo = new ItemLogVo();
 			lvo.setItemSeq(vo.getSeq());
@@ -1248,16 +1250,15 @@ public class ItemController {
 			lvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 			lvo.setLoginType(String.valueOf(session.getAttribute("loginType")));
 			itemService.insertLogVo(lvo);
-
 		}
 		model.addAttribute("message", "변경되었습니다");
-		model.addAttribute("returnUrl", "/admin/item/list?" + (searchText == null ? "" : searchText.replace("&amp;", "&")));
+		model.addAttribute("returnUrl", "/admin/item/list?mallSeq="+mallSeq+"&"+(searchText == null ? "" : searchText.replace("&amp;", "&")));
 		return Const.REDIRECT_PAGE;
 	}
 
 	@CheckGrade(controllerName = "itemController", controllerMethod = "batchCategoryUpdate")
 	@RequestMapping("/item/batch/category")
-	public String batchCategoryUpdate(@RequestParam Integer[] procSeq, Integer cateLv1Seq, Integer cateLv2Seq, Integer cateLv3Seq, Integer cateLv4Seq, String searchText,
+	public String batchCategoryUpdate(@RequestParam Integer[] procSeq, Integer mallSeq,Integer cateLv1Seq, Integer cateLv2Seq, Integer cateLv3Seq, Integer cateLv4Seq, String searchText,
 			HttpSession session, Model model) {
 
 		// todo : 해당 배치를 실행시킬 수 있는지 검사하여야 함
@@ -1291,7 +1292,7 @@ public class ItemController {
 
 		}
 		model.addAttribute("message", "변경되었습니다");
-		model.addAttribute("returnUrl", "/admin/item/list?" + (searchText == null ? "" : searchText.replace("&amp;", "&")));
+		model.addAttribute("returnUrl", "/admin/item/list?" + "mallSeq="+mallSeq+"&"+(searchText == null ? "" : searchText.replace("&amp;", "&")));
 		return Const.REDIRECT_PAGE;
 	}
 
@@ -1373,7 +1374,7 @@ public class ItemController {
 
 		}
 		model.addAttribute("message", "변경되었습니다");
-		model.addAttribute("returnUrl", "/admin/item/list?" + (searchText == null ? "" : searchText.replace("&amp;", "&")));
+		model.addAttribute("returnUrl", "/admin/item/list?" +"mallSeq="+vo.getMallId()+"&"+ (searchText == null ? "" : searchText.replace("&amp;", "&")));
 		return Const.REDIRECT_PAGE;
 	}
 
@@ -1382,7 +1383,7 @@ public class ItemController {
 	@CheckGrade(controllerName = "itemController", controllerMethod = "batchDuplicate")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	@RequestMapping("/item/batch/dupli")
-	public String batchDuplicate(@RequestParam Integer[] procSeq, Integer cateLv1Seq, Integer cateLv2Seq, Integer cateLv3Seq, Integer cateLv4Seq, String searchText, HttpSession session, Model model) throws IOException {
+	public String batchDuplicate(@RequestParam Integer[] procSeq,Integer mallSeq,Integer cateLv1Seq, Integer cateLv2Seq, Integer cateLv3Seq, Integer cateLv4Seq, String searchText, HttpSession session, Model model) throws IOException {
 
 		// 존재하는 카테고리인지 검사
 		if (categoryService.getVo(cateLv1Seq) == null) {
@@ -1556,7 +1557,7 @@ public class ItemController {
 			}
 		}
 		model.addAttribute("message", "등록 되었습니다");
-		model.addAttribute("returnUrl", "/admin/item/list?" + (searchText == null ? "" : searchText.replace("&amp;", "&")));
+		model.addAttribute("returnUrl", "/admin/item/list?" + "mallSeq="+mallSeq+"&"+(searchText == null ? "" : searchText.replace("&amp;", "&")));
 		return Const.REDIRECT_PAGE;
 	}
 
@@ -1659,8 +1660,9 @@ public class ItemController {
 	/** 상품 리스트 엑셀 다운로드 */
 	@CheckGrade(controllerName = "itemController", controllerMethod = "writeExcelItemList")
 	@RequestMapping("/item/list/download/excel")
-	public void writeExcelItemList(ItemVo vo, HttpSession session, HttpServletResponse response) throws IOException {
+	public void writeExcelItemList(Integer mallSeq,ItemVo vo, HttpSession session, HttpServletResponse response) throws IOException {
 		// 엑셀 다운로드시 row수를 1000개로 무조건 고정한다.
+		vo.setMallId(mallSeq);
 		vo.setRowCount(itemService.getListTotalCount(vo));
 		// 엑셀 파일명
 		response.setHeader("Content-Disposition", "attachment; filename = item_list_" + StringUtil.getDate(0, "yyyyMMdd") + ".xls");

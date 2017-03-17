@@ -52,8 +52,8 @@
 								<div class="col-md-2">
 									<select class="form-control" name="memberTypeCode">
 										<option value="">---전체---</option>
-									<c:forEach var="item" items="${memberTypeList}">
-										<option value="${item.value}" <c:if test="${pvo.memberTypeCode == item.value}">selected</c:if>>${item.name}</option>
+									<c:forEach var="item" items="${gradeList}">
+										<option value="${item.name}" <c:if test="${pvo.gradeName == item.name}">selected</c:if>>${item.name}</option>
 									</c:forEach>
 									</select>
 								</div>
@@ -112,6 +112,17 @@
 									</select>
 								</div>
 							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">이용권한</label>
+								<div class="col-md-2">
+									<select class="form-control" name="mallaccess">
+										<option value="">---전체---</option>
+										<c:forEach var="mallList" items="${mallList}">
+											<option value="${mallList.name}" <c:if test="${pvo.gradeName == mallList.name}">selected</c:if>>${mallList.name}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
 						</div>
 						<div class="box-footer">
 							<div class="pull-left">! 총 <b style="color:#00acd6;"><fmt:formatNumber value="${pvo.totalRowCount}"/></b> 건이 조회 되었습니다.</div>
@@ -129,84 +140,39 @@
 					<!-- 소제목 -->
 					<!-- <div class="box-header with-border"><h3 class="box-title"></h3></div> -->
 					<!-- 내용 -->
+
 					<div class="box-body">
-						<ul class="nav nav-tabs" style="border-bottom:0">
-							<li <c:if test="${pvo.memberTypeCode eq 'C'}">class="active"</c:if>><a href="#" onclick="memberType('C');">일반회원</a></li>
-						</ul>
-						<table class="table table-bordered table-striped">
-							<!-- <colgroup>
-								<col style="width:10%;"/>
-								<col style="width:15%;"/>
-								<col style="width:12%;"/>
-								<col style="width:12%;"/>
-								<col style="width:10%;"/>
-								<col style="width:10%;"/>
-								<col style="width:11%;"/>
-								<col style="width:10%;"/>
-							</colgroup> -->
-							<thead>
-							<tr>
-								<th>No.</th>
-								<th>회원 구분</th>
-								<th>업체명</th>
-								<th>아이디</th>
-								<th>이름(담당자)</th>
-								<th>부서/직책</th>
-								<th>상태</th>
-								<th>유선 전화</th>
-								<th>휴대 전화</th>
-								<th>이메일</th>
-								<th>등록일자<br/><span class="text-info">마지막 접속일</span></th>
-							</tr>
-							</thead>
-							<tbody>
-							<c:forEach var="item" items="${list}">
+						<div class="box-header">
+							<ul id="tab-menu" class="nav nav-tabs">
+								<li id="tab-member"><a href="#" onclick="memberType('member',0);">일반회원</a></li>
+								<li id="tab-request"><a href="#" onclick="memberType('request',0);">요청회원</a></li>
+							</ul>
+						</div>
+						<div class="box-body" id="cs-list">
+							<!-- 일반회원 -->
+							<table id="tbl-member-list" class="table table-bordered table-striped">
+								<thead>
 								<tr>
-									<td class="text-center">${item.seq}</td>
-									<td class="text-center">${item.memberTypeName}</td>
-									<td class="text-center">
-										${item.groupName eq "" ? "-":item.groupName}
-									<c:if test="${item.investFlag eq 'Y'}">
-										<div class="text-warning">투자출연업체</div>
-									</c:if>
-									</td>
-									<td>
-										<c:choose>
-											<c:when test="${sessionScope.loginType eq 'A'}">
-												<a href="/admin/member/view/${item.seq}">${item.id}</a>
-											</c:when>
-											<c:otherwise>
-												${item.id}
-											</c:otherwise>
-										</c:choose>
-									</td>
-									<td>${item.name}</td>
-									<td class="text-center">
-										<c:choose>
-											<c:when test="${item.deptName ne '' and item.posName eq ''}">
-												${item.deptName}
-											</c:when>
-											<c:when test="${item.deptName eq '' and item.posName ne ''}">
-												${item.posName}
-											</c:when>
-											<c:when test="${item.deptName ne '' and item.posName ne ''}">
-												${item.deptName} / ${item.posName}
-											</c:when>
-										</c:choose>
-									</td>
-									<td class="text-center">${item.statusText}</td>
-									<td class="text-center"><smp:decrypt value="${item.tel}"/></td>
-									<td class="text-center"><smp:decrypt value="${item.cell}"/></td>
-									<td class="text-center">${item.email}</td>
-									<td class="text-center">${fn:substring(item.regDate,0,10)}<br/><span class="text-info">${fn:substring(item.lastDate,0,10)}</span></td>
+									<th>No.</th>
+									<th>회원등급</th>
+									<c:forEach var="mall" items="${mallList}" begin="0" step="1">
+										<th>${mall.name}<br>이용권한</th>
+									</c:forEach>
+									<th>업체명</th>
+									<th>아이디</th>
+									<th>이름(담당자)</th>
+									<th>부서/직책</th>
+									<th>휴대 전화</th>
+									<th>이메일</th>
+									<th>주문액</th>
+									<th>포인트</th>
+									<th>등록일자<br/><span class="text-info">마지막 접속일</span></th>
 								</tr>
-							</c:forEach>
-							<c:if test="${ fn:length(list)==0 }">
-								<tr><td class="text-center" colspan="11">등록된 회원이 없습니다.</td></tr>
-							</c:if>
-							</tbody>
-						</table>
-						<div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div>
+								</thead>
+								<tbody></tbody>
+							</table>
+							<div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -214,11 +180,19 @@
 	</section>
 </div>
 
+<!-- 템플릿 호출  -->
+<%@ include file="/WEB-INF/jsp/admin/include/memberAccess_list_tmpl.jsp" %>
+
 <%@ include file="/WEB-INF/jsp/admin/include/footer.jsp" %>
 <script src="/assets/js/libs/moment.js"></script>
 <script type="text/javascript">
+	$(document).ready(function() {
+		showDatepicker("yy-mm-dd");
+		memberType('member',0);
+	});
+
 	var goPage = function (page) {
-		location.href = location.pathname + "?pageNum=" + page + "&" + $("#searchForm").serialize();
+		memberType(currentListType, pageNum);
 	};
 
 	/** 날짜 계산 */
@@ -244,13 +218,45 @@
 		}
 		location.href = "/admin/member/list/download/excel?thatDayMemberRegDate="+$("#thatDayMemberRegDate").val();
 	};
-	var memberType = function(type) {
-		$('select[name=memberTypeCode]').val(type);
-		location.href = location.pathname + "?" + $("#searchForm").serialize();
-	}
-	$(document).ready(function() {
-		showDatepicker("yy-mm-dd");
-	});
+
+	var memberType = function(listType, pageNum) {
+		currentListType = listType;//현제 tab-menu 구하는 함수 알때까지 전역변수로 일단 사용하자;;
+		$.ajax({
+			url:"/admin/member/all/list/"+listType,
+			type:"post",
+			data:{pageNum:pageNum},
+			dataType:"text",
+			success:function(data) {
+				//탭메뉴 전체 비활성화
+				$("#tab-menu li").removeClass("active");
+				//테이블 전체 비활성화
+				$("#cs-list table").css("display","none");
+				//$("#cs-list table tbody").html("");
+
+				//선택 메뉴 활성화
+				$("#tab-"+listType).addClass("active");
+				//선택 메뉴 테이블 활성화
+				$("#tbl-"+listType+"-list").css("display","table");
+				//선택 메뉴 테이블 데이터 렌더링
+				$("#tbl-"+listType+"-list tbody").html("<tr><td colspan='20' class='text-center'><img src='/assets/img/common/ajaxloader.gif'/> 데이터를 불러오고 있습니다.</td></tr>");
+
+				var vo = $.parseJSON(data);
+
+				if(vo.list.length == 0) {
+					$("#tbl-member-list tbody").html("<tr><td colspan='20' class='muted text-center'>검색된 결과가 없습니다</td></tr>");
+				} else {
+					$("#tbl-member-list tbody").html( $("#tmpl-member-list").tmpl(vo.list) );
+				}
+
+				//페이징 네비게이션 렌더링
+				$("#paging").html(vo.paging);
+			},
+			error:function(error) {
+				alert( error.status + ":" +error.statusText );
+			}
+		});
+	};
+
 </script>
 </body>
 </html>
