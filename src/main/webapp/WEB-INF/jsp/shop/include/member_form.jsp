@@ -121,23 +121,23 @@
     </colgroup>
     <tbody>
     <c:choose>
-    <c:when test="${sessionScope.loginSeq > 0}">
-        <tr>
-            <th scope="row"><label>업체명</label></th>
-            <td colspan="3">
-                ${gvo.name}
-                <input type="hidden" name="groupSeq" value="${vo.groupSeq}"> <%--공공기관, 기업 회원일경우 그룹 시퀀스가 존재하기때문에 넘겨줘야한다.--%>
-            </td>
-        </tr>
-    </c:when>
-    <c:otherwise>
-        <tr>
-            <th scope="row"><label>업체명</label></th>
-            <td colspan="3">
-                <input type="text" class="intxt w180" name="groupName" maxlength="30" alt="업체명" value="" />
-            </td>
-        </tr>
-    </c:otherwise>
+        <c:when test="${sessionScope.loginSeq > 0}">
+            <tr>
+                <th scope="row"><label>업체명</label></th>
+                <td colspan="3">
+                        ${gvo.name}
+                    <input type="hidden" name="groupSeq" value="${vo.groupSeq}"> <%--공공기관, 기업 회원일경우 그룹 시퀀스가 존재하기때문에 넘겨줘야한다.--%>
+                </td>
+            </tr>
+        </c:when>
+        <c:otherwise>
+            <tr>
+                <th scope="row"><label>업체명</label></th>
+                <td colspan="3">
+                    <input type="text" class="intxt w180" name="groupName" maxlength="30" alt="업체명" value="" />
+                </td>
+            </tr>
+        </c:otherwise>
     </c:choose>
     <tr>
         <th scope="row"><label for="ceoName">대표자명</label></th>
@@ -181,27 +181,27 @@
         </td>
     </tr -->
     <c:choose>
-    <c:when test="${sessionScope.loginSeq > 0}">
-        <tr>
-            <th scope="row"><label>사업자번호</label></th>
-            <td colspan="3">
-                ${fn:substring(gvo.bizNo,0,3)}-${fn:substring(gvo.bizNo,3,5)}-${fn:substring(gvo.bizNo,5,10)}
-                <br/><br/><em class="must">*</em> 사업자등록증사본을 팩스로 보내주세요.(FAX 02-3280-8007)
-            </td>
-        </tr>
-    </c:when>
-    <c:otherwise>
-        <tr>
-            <th scope="row"><label>사업자번호</label></th>
-            <td colspan="3">
-                <input type="hidden" id="bizno_check_flag" value="N"/>
-                <input type="text" id="bizNo1" name="bizNo1" class="intxt w70" onblur="numberCheck(this);" maxlength="3" >&nbsp;-&nbsp;
-                <input type="text" id="bizNo2" name="bizNo2" class="intxt w50" onblur="numberCheck(this);" maxlength="2" >&nbsp;-&nbsp;
-                <input type="text" id="bizNo3" name="bizNo3" class="intxt w90" onblur="numberCheck(this);" maxlength="5" >
-                <br/><br/><em class="must">*</em> 사업자등록증사본을 팩스로 보내주세요.(FAX 02-3280-8007)
-            </td>
-        </tr>
-    </c:otherwise>
+        <c:when test="${sessionScope.loginSeq > 0}">
+            <tr>
+                <th scope="row"><label>사업자번호</label></th>
+                <td colspan="3">
+                        ${fn:substring(gvo.bizNo,0,3)}-${fn:substring(gvo.bizNo,3,5)}-${fn:substring(gvo.bizNo,5,10)}
+                    <br/><br/><em class="must">*</em> 사업자등록증사본을 팩스로 보내주세요.(FAX 02-3280-8007)
+                </td>
+            </tr>
+        </c:when>
+        <c:otherwise>
+            <tr>
+                <th scope="row"><label>사업자번호</label></th>
+                <td colspan="3">
+                    <input type="hidden" id="bizno_check_flag" value="N"/>
+                    <input type="text" id="bizNo1" name="bizNo1" class="intxt w70" onblur="numberCheck(this);" maxlength="3" >&nbsp;-&nbsp;
+                    <input type="text" id="bizNo2" name="bizNo2" class="intxt w50" onblur="numberCheck(this);" maxlength="2" >&nbsp;-&nbsp;
+                    <input type="text" id="bizNo3" name="bizNo3" class="intxt w90" onblur="numberCheck(this);" maxlength="5" >
+                    <br/><br/><em class="must">*</em> 사업자등록증사본을 팩스로 보내주세요.(FAX 02-3280-8007)
+                </td>
+            </tr>
+        </c:otherwise>
     </c:choose>
 
     <%-- tr>
@@ -223,6 +223,69 @@
             <input type="text" id="businessStatus" name="bizKind" class="intxt w180" maxlength="15" value="${gvo.bizKind}" />
         </td>
     </tr>
+    </tbody>
+</table>
+
+<h4><em class="must">*</em> 몰 서비스 이용 권한 정보</h4>
+<!-- board_write -->
+<table class="board_write">
+    <caption>몰 서비스 이용 권한 선택</caption>
+    <colgroup>
+        <col style="width:140px" />
+        <col style="width:auto" />
+        <col style="width:140px" />
+        <col style="width:auto" />
+    </colgroup>
+    <tbody>
+
+    <c:forEach var="mall" items="${mallList}" begin="0" step="1">
+        <tr>
+            <th scope="row"><label>${mall.name}</label></th>
+
+            <c:forEach var="access" items="${vo.mallAccessVos}">
+                <c:if test="${access.mallSeq eq mall.seq}">
+                    <c:choose>
+                        <c:when test="${access.accessStatus eq 'A'}">
+                            <td colspan="3">&nbsp;이용중&nbsp;</td>
+                            <td colspan="3">
+                                 <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'H')" class="btn btn-warning btn-xs">보류</button>--%>
+                                 <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>--%>
+                            </td>
+                        </c:when>
+                        <c:when test="${access.accessStatus eq 'N'}">
+                            <td colspan="3">&nbsp;미승인&nbsp;</td>
+                            <td colspan="3">
+                                <button type="button" onclick="updateAccessStatus('${mall.name}',${mall.seq}, 'R')" class="btn btn_gray btn_sm">이용승인요청</button>
+                            </td>
+                        </c:when>
+                        <c:when test="${access.accessStatus eq 'R'}">
+                            <td colspan="3">&nbsp;신청중&nbsp;</td>
+                            <td colspan="3">
+                                <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'A')" class="btn btn-info btn-xs">승인</button>--%>
+                                <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'H')" class="btn btn-warning btn-xs">보류</button>--%>
+                                <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>--%>
+                            </td
+                            ></c:when>
+                        <c:when test="${access.accessStatus eq 'H'}">
+                            <td colspan="3">&nbsp;신청중&nbsp;</td>
+                            <td colspan="3">
+                                <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'A')" class="btn btn-info btn-xs">승인</button>--%>
+                                <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>--%>
+                            </td>
+                        </c:when>
+                        <c:when test="${access.accessStatus eq 'X'}">
+                            <td colspan="3"> &nbsp;미승인&nbsp;</td>
+                            <td colspan="3">
+                                <button type="button" onclick="updateAccessStatus('${mall.name}',${mall.seq}, 'R')" class="btn btn_gray btn_sm">이용승인요청</button>
+                                <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'H')" class="btn btn-warning btn-xs">보류</button>--%>
+                                <%--<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>--%>
+                            </td>
+                        </c:when>
+                    </c:choose>
+                </c:if>
+            </c:forEach>
+        </tr>
+    </c:forEach>
     </tbody>
 </table>
 <!-- //board_write -->

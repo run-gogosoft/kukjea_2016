@@ -31,6 +31,9 @@ import java.util.*;
 public class SellerController {
 
 	@Autowired
+	private OrderStatsService orderStatsService;
+
+	@Autowired
 	private SellerService sellerService;
 
 	@Autowired
@@ -47,6 +50,12 @@ public class SellerController {
 
 	@Autowired
 	private MemberService memberService;
+
+	@Autowired
+	private MallService mallService;
+
+	@Autowired
+	private MallAccessService mallAccessService;
 	
 	/** 총판/입점업체 리스트 */
 	@CheckGrade(controllerName = "sellerController", controllerMethod = "getList")
@@ -58,6 +67,7 @@ public class SellerController {
 		} else {
 			model.addAttribute("title", "입점업체 리스트");
 		}
+		List<MallVo> mallList = mallService.getListSimple();
 
 		/* 공통코드 리스트 가져오기 */
 		CommonVo cvo = new CommonVo();
@@ -80,7 +90,49 @@ public class SellerController {
 		pvo.setLoginType((String) session.getAttribute("loginType"));
 		pvo.setTypeCode(typeCode);
 		pvo.setTotalRowCount(sellerService.getListCount(pvo));
-		model.addAttribute("list", sellerService.getList(pvo));
+		List<SellerVo> sellerList = sellerService.getList(pvo);
+
+		List<OrderVo> lists = orderStatsService.getListByItemForSellerJachigu(new SellerVo());
+
+		for(SellerVo seller:sellerList){
+			List<MallAccessVo> mallAccessVos=mallAccessService.getVo(seller.getSeq());
+			if(mallAccessVos == null) {
+				mallAccessVos = new ArrayList<>();
+				for(MallVo mall:mallList){
+					MallAccessVo vo = new MallAccessVo();
+					vo.setMallSeq(mall.getSeq());
+					vo.setAccessStatus("X");
+					mallAccessVos.add(vo);
+				}
+			}
+			if(mallAccessVos.size()<mallList.size()){
+				for(MallVo mall:mallList){
+					if(findMall(mall.getSeq(), mallAccessVos)){
+						continue;
+					}
+					else {
+						MallAccessVo vo = new MallAccessVo();
+						vo.setMallSeq(mall.getSeq());
+						vo.setAccessStatus("X");
+						mallAccessVos.add(vo);
+					}
+				}
+			}
+
+			seller.setMallAccessVos(mallAccessVos);
+			for(OrderVo order:lists){
+				if(order.getSellerName().equals(seller.getName())){
+					seller.setTotalItemCount(order.getOrderCnt());
+					seller.setTotalSellPrice(order.getSumPrice());
+					break;
+				}
+			}
+		}
+
+
+		/**몰 접근권한 정보 처리**/
+		model.addAttribute("mallList",mallList);
+		model.addAttribute("list", sellerList);
 		model.addAttribute("total", new Integer(pvo.getTotalRowCount()));
 		model.addAttribute("paging", pvo.drawPagingNavigation("goPage"));
 		model.addAttribute("pvo", pvo);
@@ -103,7 +155,11 @@ public class SellerController {
 			pvo.setTypeCode("D"); // 구분값이 총판
 			model.addAttribute("masterList", sellerService.getSimpleList(pvo));
 		}
-		
+
+		List<MallVo> mallList = mallService.getListSimple();
+		/**몰 접근권한 정보 처리**/
+		model.addAttribute("mallList",mallList);
+
 		CommonVo cvo = new CommonVo();
 		//자치구 코드
 		cvo.setGroupCode(new Integer(29));
@@ -155,7 +211,39 @@ public class SellerController {
 		}
 		model.addAttribute("deliCompanyList", systemService.getDeliCompany());
 		model.addAttribute("vo", vo);
-		
+
+		List<MallVo> mallList = mallService.getListSimple();
+
+
+			List<MallAccessVo> mallAccessVos=mallAccessService.getVo(vo.getSeq());
+			if(mallAccessVos == null) {
+				mallAccessVos = new ArrayList<>();
+				for(MallVo mall:mallList){
+					MallAccessVo mvo = new MallAccessVo();
+					mvo.setMallSeq(mall.getSeq());
+					mvo.setAccessStatus("X");
+					mallAccessVos.add(mvo);
+				}
+			}
+			if(mallAccessVos.size()<mallList.size()){
+				for(MallVo mall:mallList){
+					if(findMall(mall.getSeq(), mallAccessVos)){
+						continue;
+					}
+					else {
+						MallAccessVo mvo = new MallAccessVo();
+						mvo.setMallSeq(mall.getSeq());
+						mvo.setAccessStatus("X");
+						mallAccessVos.add(mvo);
+					}
+				}
+			}
+
+		vo.setMallAccessVos(mallAccessVos);
+
+
+		/**몰 접근권한 정보 처리**/
+		model.addAttribute("mallList",mallList);
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentCode", "seller");
@@ -405,7 +493,44 @@ public class SellerController {
 		}
 		
 	}
-	
+
+	/** 몰이용허가 처리  */
+	@RequestMapping(value = "/seller/status/accessupdate")
+	public String accessStatusUpdate(HttpSession session, SellerVo vo, String accessStatus,Model model) throws Exception{
+		boolean flag = false;
+
+		System.out.println(">>>>>> user seq:"+vo.getSeq());
+		System.out.println(">>>>>> mall seq:"+vo.getMallSeq());
+		System.out.println(">>>>>> accessStatus:"+accessStatus);
+
+		try {
+			List<MallAccessVo> myAccesses = mallAccessService.getVo(vo.getSeq());
+			MallAccessVo mvm = new MallAccessVo();
+			mvm.setMallSeq(vo.getMallSeq());
+			mvm.setUserSeq(vo.getSeq());
+			mvm.setAccessStatus(accessStatus);
+			if(findMall(mvm.getMallSeq(), myAccesses)){
+				mallAccessService.modVo(mvm);
+			}
+			else {
+				mallAccessService.insertVo(mvm);
+			}
+			flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+		if (flag) {
+			model.addAttribute("message", "상태 업데이트 성공.");
+		}
+		else {
+			model.addAttribute("message", "상태 업데이트 실패.");
+		}
+		model.addAttribute("returnUrl", "/admin/seller/mod/" + vo.getSeq());
+		return Const.REDIRECT_PAGE;
+	}
+
 	/** 승인/폐점 처리 */
 	@RequestMapping(value = "/seller/status/update")
 	public String updateStatus(HttpSession session, SellerVo vo, Model model) throws Exception{
@@ -416,7 +541,7 @@ public class SellerController {
 			e.printStackTrace();
 			flag = false;
 		}
-		System.out.println(">>>seller updateStatus, flag:"+flag);
+
 		//폐점처리일 경우 상품 판매중지 처리
 		if(flag) {
 			ItemVo pvo = new ItemVo();
@@ -430,8 +555,6 @@ public class SellerController {
 
 			MemberVo memger  = memberService.getData(vo.getSeq());
 			String loginName = memger.getName();
-			System.out.println(">>>seller updateStatus,seller:"+loginName+", vo.getSeq():"+vo.getSeq());
-			System.out.println(">>>seller updateStatus,originList size:"+originList.size());
 			if(originList != null) {
 				for(int i=0; i<originList.size(); i++) {
 					ItemVo originVo = originList.get(i);
@@ -443,33 +566,12 @@ public class SellerController {
 						map.put("seq", optionVo.getSeq());
 						map.put("loginName",loginName);
 						List<ItemOptionVo> optionVoList = itemOptionService.getValueListForSeller(map);
-						System.out.println(">>>seller updateStatus,seq:"+originVo.getSeq()+", optionVoList size:"+optionVoList.size());
 						for(ItemOptionVo optionValueVo:optionVoList){
 							optionValueVo.setStockFlag(("X".equals(vo.getStatusCode()))? "N":"Y");
 							optionValueVo.toString();
 							itemOptionService.updateValueVo(optionValueVo);
 						}
 					}
-
-//					ItemVo paramVo = new ItemVo();
-//					paramVo.setSeq(originVo.getSeq());
-//					paramVo.setStatusCode("N");
-//					itemService.updateStatusCode(paramVo);
-					
-//					String message = getLogMessage(originVo);
-//					System.out.println(">>>seller updateStatus,message:"+message);
-//					if(!"".equals(message)) {
-//						// 로그 이력 생성
-//						ItemLogVo logVo = new ItemLogVo();
-//						logVo.setItemSeq(originVo.getSeq());
-//						logVo.setAction(("X".equals(vo.getStatusCode()))? "업체 폐점 처리":"업체 입점처리");
-////						logVo.setContent("statusCode="+paramVo.getStatusCode());
-//						logVo.setContent("["+loginName+"] 옵션값 stock_flag N 처리적용");
-//						logVo.setModContent(message);
-//						logVo.setLoginSeq(Integer.valueOf(String.valueOf(session.getAttribute("loginSeq"))));
-//						logVo.setLoginType(String.valueOf(session.getAttribute("loginType")));
-//						itemService.insertLogVo(logVo);
-//					}
 				}
 			}
 		}
@@ -713,5 +815,15 @@ public class SellerController {
 		}	
 		
 		return message;
+	}
+
+	private boolean findMall(int mallSeq, List<MallAccessVo>mallAccessVos){
+		System.out.println("### findMall mallSeq:"+mallSeq);
+		for(MallAccessVo mallacc:mallAccessVos){
+			System.out.println("### findMall mallacc.getMallSeq():"+mallacc.getMallSeq());
+			if(mallSeq == mallacc.getMallSeq()) return true;
+		}
+
+		return false;
 	}
 }

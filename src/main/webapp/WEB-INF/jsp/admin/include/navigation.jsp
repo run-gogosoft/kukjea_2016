@@ -58,7 +58,7 @@
 						<a href="#"><i class="fa fa-cogs"></i> <span>시스템 관리</span><i class="fa fa-angle-left pull-right"></i></a>
 						<ul class="treeview-menu">
 							<li ${naviSub eq '/mall/list' ? "class='active'":""}><a href="/admin/mall/list"><i class="fa fa-caret-right"></i>쇼핑몰 관리</a></li>
-							<%--<!--li ${naviSub eq '/system/delivery/list' ? "class='active'":""}><a href="/admin/system/delivery/list"><i class="fa fa-caret-right"></i>배송업체 관리</a></li-->--%>
+							<%--<li ${naviSub eq '/system/delivery/list' ? "class='active'":""}><a href="/admin/system/delivery/list"><i class="fa fa-caret-right"></i>배송업체 관리</a></li>--%>
 							<li ${naviSub eq '/system/admin/list' ? "class='active'":""}><a href="/admin/system/admin/list"><i	class="fa fa-caret-right"></i>어드민 관리자</a></li>
 							<li ${naviSub eq '/system/notice/popup/list' ? "class='active'":""}><a href="/admin/system/notice/popup/list"><i class="fa fa-caret-right"></i>공지팝업창 관리</a></li>
 							<li ${naviSub eq '/sms/list' ? "class='active'":""}><a href="/admin/sms/list"><i class="fa fa-caret-right"></i>SMS 관리</a></li>

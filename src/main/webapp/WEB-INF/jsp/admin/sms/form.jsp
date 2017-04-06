@@ -65,7 +65,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">내용 <i class="fa fa-check"></i></label>
 								<div class="col-md-2">
-									<textarea class="form-control" id="content" name="content" alt="내용" rows="10"/>${vo.content}</textarea>
+									<textarea class="form-control" id="content" name="content" alt="내용" rows="10">${vo.content}</textarea>
 								</div>
 								<div class="col-md-3">
 									<div class="alert alert-info">

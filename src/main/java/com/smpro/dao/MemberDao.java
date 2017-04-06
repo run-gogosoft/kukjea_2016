@@ -5,6 +5,7 @@ import com.smpro.vo.MemberVo;
 import com.smpro.vo.UserVo;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 @Repository
@@ -13,7 +14,11 @@ public interface MemberDao {
 
 	public List<MemberVo> getList(MemberVo vo);
 
+	public List<MemberVo> getRequestList(MemberVo vo);
+
 	public int getListCount(MemberVo vo);
+
+	public int getRequestListCount(MemberVo vo);
 
 	public MemberVo getData(Integer seq);
 

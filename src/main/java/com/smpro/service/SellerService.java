@@ -51,4 +51,13 @@ public interface SellerService {
 	public Integer getSeqByOldSeq(Integer oldSeq);
 	
 	public boolean deleteSeller(Integer seq);
+
+
+	/** 구매확정된 총 판매건수 */
+	public String getTotlaSellFinishCount(Integer sellerSeq);
+
+	/** 구매확정된 총 판매 금액 */
+	public String getTotalSellFinishPrice(Integer sellerSeq);
+
+
 }

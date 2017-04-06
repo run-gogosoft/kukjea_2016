@@ -119,6 +119,20 @@ public class SellerVo extends UserVo {
 
 	private int commission = 0;
 
+	/** 총판매액 **/
+	private long totalSellPrice = 0;
+
+	/** 판매건수 **/
+	private int totlaSellCount = 0;
+
+	public int getTotalSellCount(){return this.totlaSellCount;}
+
+	public void setTotalSellCount(int count){this.totlaSellCount = count;}
+
+	public long getTotalSellPrice(){return this.totalSellPrice;}
+
+	public void setTotalSellPrice(long price){this.totalSellPrice = price;}
+
 	public int getCommission() {
 		return commission;
 	}

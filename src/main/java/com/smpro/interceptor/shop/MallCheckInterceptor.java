@@ -37,6 +37,7 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		log.debug("interceptor--handler #1:" + handler);
 		log.info("interceptor--catched #1");
+		log.debug("mallSeq:"+request.getAttribute("mallSeq"));
 		response.addHeader("Progma", "No-cache");
 		response.addHeader("Cache-Control", "no-cache");
 		response.addHeader("Cache-Control", "no-store"); // 일부 파이어폭스 버그 관련
@@ -44,6 +45,10 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 //		response.setHeader("Pragma", "no-cache");
 //		response.setHeader("Expires", "-1"); // 일부 파이어폭스 버그 관련
 		log.info("### requestURI : " + request.getRequestURI());
+
+
+		//mall정보d
+//		request.setAttribute("mallList",mallService.getListSimple());
 
 		//공지사항
 		BoardVo boardVo = new BoardVo();
@@ -58,7 +63,6 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 		HttpSession session  = request.getSession();
 		itemVo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
 		request.setAttribute("cartCount", cartService.getListTotalCount(itemVo));
-
 		String[] requestURI = request.getRequestURI().replace("http://","").split("/");
 		String mallId = "";
 		String errMsg = "";

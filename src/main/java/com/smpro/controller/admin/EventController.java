@@ -29,16 +29,6 @@ public class EventController {
 
 	@Autowired
 	private EventService eventService;
-
-	@Autowired
-	private ItemService itemService;
-
-	@Autowired
-	private CategoryService categoryService;
-
-	@Autowired
-	private MallService mallService;
-
 	@Autowired
 	private DisplayService displayService;
 
@@ -52,7 +42,7 @@ public class EventController {
 			EventVo tmpVo = eventVo.get(i);
 			tmpVo.setTitle(StringUtil.cutString(tmpVo.getTitle(), 150));
 		}
-		System.out.println("event/list mallSeq :"+mallSeq+", vo.getmallSeq():"+vo.getMallSeq());
+//		System.out.println("event/list mallSeq :"+mallSeq+", vo.getmallSeq():"+vo.getMallSeq());
 		model.addAttribute("lv1List", eventService.getLv1List(vo));
 		model.addAttribute("title", "기획전 / 이벤트 리스트");
 		model.addAttribute("list", eventVo);
@@ -100,6 +90,11 @@ public class EventController {
 				model.addAttribute("message", "노출 여부가 선택되지 않았습니다.");
 				return Const.ALERT_PAGE;
 			}
+		}
+
+		// 시작일 수정
+		if (!StringUtil.isBlank(vo.getStartDate())) {
+			vo.setStartDate(vo.getStartDate().replace("-", ""));
 		}
 
 		// 종료일 수정
@@ -192,6 +187,10 @@ public class EventController {
 			}
 		}
 
+		// 시작일 수정
+		if (!StringUtil.isBlank(vo.getStartDate())) {
+			vo.setStartDate(vo.getStartDate().replace("-", ""));
+		}
 		// 종료일 수정
 		if (!StringUtil.isBlank(vo.getEndDate())) {
 			vo.setEndDate(vo.getEndDate().replace("-", ""));

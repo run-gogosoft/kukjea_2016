@@ -124,6 +124,84 @@
 	</update>
 
 	<!--회원리스트-->
+	<select id="getRequestList" parameterType="com.smpro.vo.MemberVo" resultType="com.smpro.vo.MemberVo">
+		SELECT
+		u.seq,
+		u.id,
+		u.password,
+		u.name,
+		u.nickname,
+		u.status_code AS statusCode,
+		(SELECT name FROM sm_common WHERE group_code=1 AND value=u.status_code) AS statusText,
+		u.grade_code AS gradeCode,
+		(SELECT name FROM sm_common WHERE group_code=8 AND value=u.grade_code) AS gradeText,
+		(SELECT name FROM sm_user WHERE type_code='M' AND seq=m.mall_seq) AS mallName,
+		m.sex_code AS sexCode,
+		m.birthdate,
+		m.tel,
+		m.cell,
+		m.postcode,
+		m.addr1,
+		m.addr2,
+		m.dept_name AS deptName,
+		m.pos_name AS posName,
+		u.last_date AS lastDate,
+		u.mod_date AS modDate,
+		u.reg_date AS regDate,
+		(SELECT name FROM sm_common WHERE group_code=30 AND value=m.member_type_code) AS memberTypeName,
+		g.name AS groupName,
+		m.email,
+		g.invest_flag AS investFlag,
+		(
+			SELECT SUM(useable_point) FROM sm_point
+			WHERE
+			valid_flag='Y'
+			AND member_seq=u.seq
+		) AS point,
+		(
+			SELECT
+			SUM(((d.sell_price * d.order_cnt) + d.deli_cost))
+			FROM
+			sm_order o LEFT OUTER JOIN
+			sm_order_detail d ON(o.seq = d.order_seq)
+			WHERE
+			o.member_seq = u.seq
+			GROUP BY
+			o.member_seq
+		) AS totalOrderPrice
+		FROM
+		sm_user u LEFT OUTER JOIN
+		sm_member m ON (m.seq=u.seq) LEFT OUTER JOIN
+		sm_member_group g ON (m.group_seq=g.seq) LEFT OUTER JOIN
+		sm_mall_access a ON (a.user_seq=u.seq)
+		WHERE
+		u.type_code='C'
+		AND a.access_status='R'
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(u.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		<if test="findword != '' and search == 'name'">
+			AND u.name=#{findword}
+		</if>
+		<if test="findword != '' and search == 'groupName'">
+			AND g.name=#{findword}
+		</if>
+		<if test="findword != '' and search == 'id'">
+			AND u.id=#{findword}
+		</if>
+		<if test="findword != '' and search == 'email'">
+			AND m.email=#{findword}
+		</if>
+		<if test="statusCode != ''">
+			AND u.status_code=#{statusCode}
+		</if>
+
+		GROUP BY u.seq
+		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+
+	<!--회원리스트-->
 	<select id="getList" parameterType="com.smpro.vo.MemberVo" resultType="com.smpro.vo.MemberVo">
 		SELECT
 			u.seq,
@@ -151,7 +229,24 @@
 			(SELECT name FROM sm_common WHERE group_code=30 AND value=m.member_type_code) AS memberTypeName,
 			g.name AS groupName,
 			m.email,
-			g.invest_flag AS investFlag
+			g.invest_flag AS investFlag,
+			(
+				SELECT SUM(useable_point) FROM sm_point
+				WHERE
+				valid_flag='Y'
+				AND member_seq=u.seq
+			) AS point,
+			(
+				SELECT
+				SUM(((d.sell_price * d.order_cnt) + d.deli_cost))
+				FROM
+				sm_order o LEFT OUTER JOIN
+				sm_order_detail d ON(o.seq = d.order_seq)
+				WHERE
+				o.member_seq = u.seq
+				GROUP BY
+				o.member_seq
+			) AS totalOrderPrice
 		FROM
 			sm_user u LEFT OUTER JOIN
 			sm_member m ON (m.seq=u.seq) LEFT OUTER JOIN
@@ -161,7 +256,56 @@
 			<if test="searchDate1 != '' and searchDate2 != ''">
 				AND DATE_FORMAT(u.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 			</if>
+
+			<if test="findword != '' and search == 'name'">
+				  AND u.name=#{findword}
+			</if>
+			<if test="findword != '' and search == 'groupName'">
+				  AND g.name=#{findword}
+			</if>
+			<if test="findword != '' and search == 'id'">
+				  AND u.id=#{findword}
+			</if>
+			<if test="findword != '' and search == 'email'">
+				  AND m.email=#{findword}
+			</if>
+			<if test="statusCode != ''">
+				  AND u.status_code=#{statusCode}
+			</if>
+		ORDER BY u.seq DESC
 		LIMIT ${pageNum * rowCount}, ${rowCount}
+	</select>
+
+	<select id="getRequestListCount" parameterType="com.smpro.vo.MemberVo" resultType="int">
+		SELECT
+		COUNT(DISTINCT u.seq) cnt
+		FROM
+		sm_user u LEFT OUTER JOIN
+		sm_member m ON(m.seq=u.seq) LEFT OUTER JOIN
+		sm_member_group g ON(m.group_seq=g.seq) LEFT OUTER  JOIN
+		sm_mall_access a ON (a.user_seq=u.seq)
+		WHERE
+		u.type_code='C'
+		AND a.access_status='R'
+		<if test="searchDate1 != '' and searchDate2 != ''">
+			AND DATE_FORMAT(u.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
+		</if>
+		<if test="findword != '' and search == 'name'">
+			AND u.name=#{findword}
+		</if>
+		<if test="findword != '' and search == 'groupName'">
+			AND g.name=#{findword}
+		</if>
+		<if test="findword != '' and search == 'id'">
+			AND u.id=#{findword}
+		</if>
+		<if test="findword != '' and search == 'email'">
+			AND m.email=#{findword}
+		</if>
+		<if test="statusCode != ''">
+			AND u.status_code=#{statusCode}
+		</if>
+		GROUP BY u.seq
 	</select>
 
 	<select id="getListCount" parameterType="com.smpro.vo.MemberVo" resultType="int">
@@ -176,7 +320,21 @@
 			<if test="searchDate1 != '' and searchDate2 != ''">
 				AND DATE_FORMAT(u.reg_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 			</if>
-
+			<if test="findword != '' and search == 'name'">
+				AND u.name=#{findword}
+			</if>
+			<if test="findword != '' and search == 'groupName'">
+				AND g.name=#{findword}
+			</if>
+			<if test="findword != '' and search == 'id'">
+				AND u.id=#{findword}
+			</if>
+			<if test="findword != '' and search == 'email'">
+				AND m.email=#{findword}
+			</if>
+			<if test="statusCode != ''">
+				AND u.status_code=#{statusCode}
+			</if>
 	</select>
 
 	<!--비밀변경 안내 메일 발송 대상자 리스트-->

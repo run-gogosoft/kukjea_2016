@@ -332,4 +332,11 @@ public class SellerServiceImpl implements SellerService {
 	public boolean deleteSeller(Integer seq) {
 		return sellerDao.deleteSeller(seq) > 0;
 	}
+
+	@Override
+	public String getTotlaSellFinishCount(Integer sellerSeq){ return sellerDao.getTotlaSellFinishCount(sellerSeq);}
+
+	@Override
+	public String getTotalSellFinishPrice(Integer sellerSeq){return sellerDao.getTotalSellFinishPrice(sellerSeq);}
+
 }

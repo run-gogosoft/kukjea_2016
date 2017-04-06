@@ -120,7 +120,7 @@
 									<th>기획전/이벤트 명</th>
 									<th>상태</th>
 									<th>노출<br/>여부</th>
-									<th>배너<br/>구분</th>
+									<th>시작 예정일</th>
 									<th>종료 예정일</th>
 									<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 3)}">
 										<th></th>
@@ -133,7 +133,7 @@
 							<tbody>
 							<c:forEach var="item" items="${list}" varStatus="status">
 								<tr>
-									<td style="width:3%;" class="text-center">${item.seq}</td>
+									<td style="width:2%;" class="text-center">${item.seq}</td>
 									<td style="width:8%;" class="text-center">
 										<c:choose>
 											<c:when test="${ item.typeCode == '1' }">
@@ -157,7 +157,7 @@
 											</c:otherwise>
 										</c:choose>
 									</td>
-									<td style="width:23%;">
+									<td style="width:22%;">
 										${ item.title }
 									</td>
 									<td style="width:5%;" class="text-center">${ item.statusCode }</td>
@@ -171,10 +171,11 @@
 											</c:when>
 										</c:choose>
 									</td>
-									<td style="width:5%;" class="text-center">
-											${ item.mainSection }
+									<td style="width:10%;" class="text-center">
+										<fmt:parseDate value="${item.startDate}" var="startDate" pattern="yyyymmdd"/>
+										<fmt:formatDate value="${startDate}" pattern="yyyy-mm-dd"/>
 									</td>
-									<td style="width:15%;" class="text-center">
+									<td style="width:10%;" class="text-center">
 										<fmt:parseDate value="${item.endDate}" var="endDate" pattern="yyyymmdd"/>
 										<fmt:formatDate value="${endDate}" pattern="yyyy-mm-dd"/>
 									</td>
@@ -194,11 +195,11 @@
 
 									<%--<td style="width:7%;" class="text-center"><a href="/shop/event/plan/plansub/${item.seq}" target="_blank" class="btn btn-mini"><i class="icon-search"></i></a></td>--%>
 
-									<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
+									<%--<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">--%>
 									<td style="width:7%;" class="text-center">
 										<div onclick="veiwModal('${ item.seq }')" role="button" class="btn btn-sm btn-default" data-toggle="modal"><i class="fa fa-remove"></i></div>
 									</td>
-									</c:if>
+									<%--</c:if>--%>
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">

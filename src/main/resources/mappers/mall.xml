@@ -8,7 +8,8 @@
 			u.name,
 			c1.name AS statusText,
 			m.open_date AS openDate,
-			u.reg_date AS regDate
+			u.reg_date AS regDate,
+			m.logo_img AS logoImg
 		FROM
 			sm_user u LEFT OUTER JOIN
 			sm_mall m ON (u.seq=m.seq) LEFT OUTER JOIN
@@ -46,7 +47,8 @@
 			m.open_date AS openDate,
 			m.close_date AS closeDate,
 			u.mod_date AS modDate,
-			u.reg_date AS regDate
+			u.reg_date AS regDate,
+			m.logo_img AS logoImg
 		FROM
 			sm_user u LEFT OUTER JOIN
 			sm_mall m ON (u.seq=m.seq)
@@ -55,15 +57,15 @@
 
 	<insert id="regVo" parameterType="com.smpro.vo.MallVo">
 		INSERT INTO sm_mall (
-			seq, url, pay_method, pg_code, pg_id, pg_key
+			seq, url, pay_method, pg_code, pg_id, pg_key, logo_img
 		) VALUES (
-			#{seq}, #{url}, #{payMethod}, #{pgCode}, #{pgId}, #{pgKey}
+			#{seq}, #{url}, #{payMethod}, #{pgCode}, #{pgId}, #{pgKey}, #{logoImg}
 		)
 	</insert>
 
 	<update id="modVo" parameterType="com.smpro.vo.MallVo">
 	  UPDATE sm_mall SET
-	    url=#{url}, pay_method=#{payMethod}, pg_code=#{pgCode}, pg_id=#{pgId}, pg_key=#{pgKey} 
+	    url=#{url}, pay_method=#{payMethod}, pg_code=#{pgCode}, pg_id=#{pgId}, pg_key=#{pgKey} , logo_img=#{logoImg}
 	   <if test="statusCode eq 'Y'.toString()">
 	    , open_date = NOW()
 	  </if>
@@ -98,7 +100,8 @@
 			m.pg_code AS pgCode,
 			m.pg_id AS pgId,
 			m.pg_key AS pgkey,
-	     		m.pay_method AS payMethod
+	     	m.pay_method AS payMethod,
+	     	m.logo_img AS logoImg
 		FROM
 			sm_mall m LEFT OUTER JOIN
 			sm_user u ON (m.seq=u.seq)

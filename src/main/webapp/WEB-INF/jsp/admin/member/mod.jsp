@@ -25,18 +25,22 @@
 			<div class="col-md-6">
 				<div class="box">
 					<!-- 제목 -->
-					<div class="box-header with-border"><h3 class="box-title"><i class="fa fa-edit"></i> ${vo.memberTypeName} 정보 수정</h3></div>
+					<div class="box-header with-border"><h3 class="box-title"><i class="fa fa-edit"></i> 회원 기본 정보 수정</h3></div>
 					<!-- 내용 -->
-					<form id="validation-form" method="post" action="/admin/member/group/mod" target="zeroframe" class="form-horizontal" onsubmit="return submitForm(this)">
+					<form id="validation-form1" method="post" action="/admin/member/group/mod" target="zeroframe" class="form-horizontal" onsubmit="return submitForm(this)">
 						<input class="form-control" type="hidden" name="memberSeq" value="${vo.seq}"/>
 						<input class="form-control" type="hidden" name="seq" value="${gvo.seq}"/>
 						<div id="groupBox" class="box-body">
 							<div class="form-group">
-								<label class="col-md-2 control-label">${vo.memberTypeName}명</label>
+								<label class="col-md-2 control-label">회원명</label>
 								<div class="col-md-3 form-control-static">${gvo.name}</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label">사업자 등록 번호</label>
+								<label class="col-md-2 control-label">아이디</label>
+								<div class="col-md-2 form-control-static">${vo.id}</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">사업자등록번호</label>
 								<div class="col-md-3 form-control-static">${fn:substring(gvo.bizNo,0,3)}-${fn:substring(gvo.bizNo,3,5)}-${fn:substring(gvo.bizNo,5,10)}</div>	
 							</div>
 							<div class="form-group">
@@ -76,24 +80,24 @@
 									
 								</div>									
 							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">소속 자치구</label>
-								<div class="col-md-3">
-									<select class="form-control" id="jachiguSido" alt="소속 자치구 시/도">
-										<option value="">--- 시/도 ---</option>
-										<option value="01">서울시</option>
-										<option value="99">기타</option>
-									</select>
-								</div>
-								<div class="col-md-3">
-									<select class="form-control" id="jachiguCode" name="jachiguCode" style="display:none;" alt="자치구">
-										<option value="">--- 자치구 ---</option>
-										<c:forEach var="item" items="${jachiguList}">
-											<option value="${item.value}" ${gvo.jachiguCode eq item.value ? "selected":""}>${item.name}</option>
-										</c:forEach>
-									</select>
-								</div>
-							</div>
+							<%--<div class="form-group">--%>
+								<%--<label class="col-md-2 control-label">소속 자치구</label>--%>
+								<%--<div class="col-md-3">--%>
+									<%--<select class="form-control" id="jachiguSido" alt="소속 자치구 시/도">--%>
+										<%--<option value="">--- 시/도 ---</option>--%>
+										<%--<option value="01">서울시</option>--%>
+										<%--<option value="99">기타</option>--%>
+									<%--</select>--%>
+								<%--</div>--%>
+								<%--<div class="col-md-3">--%>
+									<%--<select class="form-control" id="jachiguCode" name="jachiguCode" style="display:none;" alt="자치구">--%>
+										<%--<option value="">--- 자치구 ---</option>--%>
+										<%--<c:forEach var="item" items="${jachiguList}">--%>
+											<%--<option value="${item.value}" ${gvo.jachiguCode eq item.value ? "selected":""}>${item.name}</option>--%>
+										<%--</c:forEach>--%>
+									<%--</select>--%>
+								<%--</div>--%>
+							<%--</div>--%>
 							<div class="form-group">
 								<label class="col-md-2 control-label" for="tel1">팩스 번호</label>
 								<div class="col-md-6">
@@ -107,13 +111,13 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label">세금계산서 담당자</label>
+								<label class="col-md-2 control-label">담당자</label>
 								<div class="col-md-3">
 									<input class="form-control" type="text" id="taxName" name="taxName" value="${gvo.taxName}" maxlength="15"/>
 								</div>	
 							</div>
 							<div class="form-group">
-								<label class="col-md-2 control-label">세금계산서 이메일</label>
+								<label class="col-md-2 control-label">담당자 이메일</label>
 								<div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" type="text" name="taxEmail1" value="${gvo.taxEmail1}" maxlength="50"/>
@@ -122,8 +126,9 @@
 									</div>
 								</div>	
 							</div>
+
 							<div class="form-group">
-								<label class="col-md-2 control-label">세금계산서 연락처</label>
+								<label class="col-md-2 control-label">담당자 유선전화</label>
 								<div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" type="text" id="taxTel1" name="taxTel1" value="${gvo.taxTel1}" maxlength="4" onblur="numberCheck(this);"/>
@@ -133,6 +138,18 @@
 										<input class="form-control" type="text" id="taxTel3" name="taxTel3" value="${gvo.taxTel3}" maxlength="4" onblur="numberCheck(this);"/>
 									</div>
 								</div>	
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">담당자 휴대전화</label>
+								<div class="col-md-6">
+									<div class="input-group">
+										<input class="form-control" type="text" id="cell1" name="cell1" value="${vo.cell1}" maxlength="4" onblur="numberCheck(this);" />
+										<div class="input-group-addon" style="border:0">-</div>
+										<input class="form-control" type="text" id="cell2" name="cell2" value="${vo.cell2}" maxlength="4" onblur="numberCheck(this);" />
+										<div class="input-group-addon" style="border:0">-</div>
+										<input class="form-control" type="text" id="cell3" name="cell3" value="${vo.cell3}" maxlength="4" onblur="numberCheck(this);" />
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="box-footer text-center">
@@ -179,13 +196,13 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">쇼핑몰</label>
 								<div class="col-md-2 form-control-static">${vo.mallName}</div>
-							</div> 
+							</div>
 							<div class="form-group">
 								<label class="col-md-2 control-label">보유 포인트</label>
 								<div class="col-md-2 form-control-static">
 									<fmt:formatNumber value="${vo.point}" pattern="#,###" /> P
 								</div>
-							</div> 
+							</div>
 							--%>
 							<div class="form-group">
 								<label class="col-md-2 control-label">부서명</label>
@@ -237,7 +254,7 @@
 								<label class="col-md-2 control-label">주소</label>
 								<div class="col-md-4">
 									<div class="input-group">
-										<input type="text" class="form-control" id="postcode" name="postcode" value="${vo.postcode}" maxlength="5" data-required-label="우편번호" alt="우편번호" readonly />		
+										<input type="text" class="form-control" id="postcode" name="postcode" value="${vo.postcode}" maxlength="5" data-required-label="우편번호" alt="우편번호" readonly />
 									</div>
 								</div>
 								<div class="col-md-1 form-control-static">

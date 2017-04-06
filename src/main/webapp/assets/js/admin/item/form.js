@@ -15,7 +15,7 @@ var EBCategory = {
 		$.ajax({
 			url:"/admin/category/list/ajax",
 			type:"get",
-			data:{depth:depth, parentSeq:parseParentSeq, mallSeq:mallSeq},
+			data:{depth:depth, parentSeq:parseParentSeq, mallId:mallSeq},
 			dataType:"text",
 			success:function(data) {
 				var list = $.parseJSON(data);

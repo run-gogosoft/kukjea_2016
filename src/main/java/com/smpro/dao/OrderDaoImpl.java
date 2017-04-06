@@ -128,7 +128,7 @@ public class OrderDaoImpl implements OrderDao {
 	public List<HashMap<String, String>> getCntByStatus(OrderVo pvo) {
 		return sqlSession.selectList("order.getCntByStatus", pvo);
 	}
-
+	
 	@Override
 	public String getTotalOrderFinishPrice(Integer loginSeq) {
 		return sqlSession.selectOne("order.getTotalOrderFinishPrice", loginSeq);

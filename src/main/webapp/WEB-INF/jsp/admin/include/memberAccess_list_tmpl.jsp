@@ -4,7 +4,11 @@
         <td class="text-center"><%="${seq}"%></td>
         <td class="text-center"><%="${gradeName}"%></td>
         {{each access}}
-            <td class="text-center"><%="${accessStatus}"%></td>
+            {{if accessStatus=="X"}} <td class="text-center"><span class="text-warning">미요청</span></td>{{/if}}
+            {{if accessStatus=="A"}} <td class="text-center"><span class="text-success">이용</span></td>{{/if}}
+            {{if accessStatus=="N"}} <td class="text-center"><span class="text-danger">거절</span></td>{{/if}}
+            {{if accessStatus=="R"}} <td class="text-center"><span class="text-danger">요청</span></td>{{/if}}
+            {{if accessStatus=="H"}} <td class="text-center"><span class="text-warning">보류</span></td>{{/if}}
         {{/each}}
         <td class="text-center"><%="${groupName}"%></td>
         <td class="text-center"><a href="/admin/member/view/<%="${seq}"%>"><%="${id}"%></a></td>

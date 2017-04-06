@@ -111,7 +111,52 @@
 									</c:if>
 								</div>
 							</div>
-							<c:if test="${sessionScope.loginType eq 'A'}">
+							<div class="form-group">
+								<label class="col-md-2 control-label">운영권한</label>
+							</div>
+							<c:forEach var="mall" items="${mallList}" begin="0" step="1">
+							<div class="form-group">
+								<div class="col-md-2"></div>
+								<div class="col-md-4">
+										<label>${mall.name}&nbsp;-&nbsp;</label>
+										<c:forEach var="access" items="${vo.mallAccessVos}">
+											<c:if test="${access.mallSeq eq mall.seq}">
+												<c:choose>
+													<c:when test="${access.accessStatus eq 'A'}">
+														&nbsp;승인&nbsp;
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'H')" class="btn btn-warning btn-xs">보류</button>
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>
+													</c:when>
+													<c:when test="${access.accessStatus eq 'N'}">
+														&nbsp;미승인&nbsp;
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'A')" class="btn btn-info btn-xs">승인</button>
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'H')" class="btn btn-warning btn-xs">보류</button>
+													</c:when>
+													<c:when test="${access.accessStatus eq 'R'}">
+														&nbsp;승인요청&nbsp;
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'A')" class="btn btn-info btn-xs">승인</button>
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'H')" class="btn btn-warning btn-xs">보류</button>
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>
+													</c:when>
+													<c:when test="${access.accessStatus eq 'H'}">
+														&nbsp;승인보류&nbsp;
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'A')" class="btn btn-info btn-xs">승인</button>
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>
+													</c:when>
+													<c:when test="${access.accessStatus eq 'X'}">
+														&nbsp;미요청&nbsp;
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'A')" class="btn btn-info btn-xs">승인</button>
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'H')" class="btn btn-warning btn-xs">보류</button>
+														<button type="button" onclick="updateAccessStatus(${mall.seq}, 'N')" class="btn btn-danger btn-xs">미승인</button>
+													</c:when>
+												</c:choose>
+											</c:if>
+										</c:forEach>
+								</div>
+							</div>
+							</c:forEach>
+
+						<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
 								<div class="form-group">
 									<label class="col-md-2 control-label" for="comment">코멘트</label>
 									<div class="col-md-4">
@@ -127,11 +172,11 @@
 									<label class="col-md-2"></label>
 									<span class="text-info" style="padding-left: 20px;"><i class="fa fa-info"></i>코멘트는 코멘트 저장을 누르셔야 등록/수정이 가능합니다</span>
 								</div>
-							</c:if>
+							<%--</c:if>--%>
 						</c:if>
 							
 							<div class="form-group">
-								<label class="col-md-2 control-label">면세업체구분</i></label>
+								<label class="col-md-2 control-label">면세업체구분</label>
 								<div class="col-md-2">
 									<select class="form-control" name="taxTypeFlag">
 										<option value="">-- 과세/면세 --</option>
@@ -516,6 +561,15 @@ var callbackProc = function(msg) {
 		}
 
 		location.href="/admin/seller/status/update?seq=${vo.seq}&statusCode="+status
+	}
+
+	/** 몰이용허가 처리 */
+	var updateAccessStatus = function(mallSeq, accessStatus) {
+		if(!confirm("변경하시겠습니까?")) {
+			return;
+		}
+
+		location.href="/admin/seller/status/accessupdate?seq=${vo.seq}&mallSeq="+mallSeq+"&accessStatus="+accessStatus
 	}
 
 	/** 아이디 중복 체크 */

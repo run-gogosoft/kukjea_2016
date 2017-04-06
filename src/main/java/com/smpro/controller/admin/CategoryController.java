@@ -40,6 +40,7 @@ public class CategoryController {
 	@RequestMapping("/category/list/ajax")
 	public String getListForAjax( CategoryVo vo, Model model) {
 		List<CategoryVo> list = categoryService.getList(vo);
+		System.out.println(">>>getListForAjax, mallSeq:"+vo.getMallId());
 		model.addAttribute("mallSeq",vo.getMallId());
 		model.addAttribute("list", list);
 		return "/ajax/get-category-list.jsp";

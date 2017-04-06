@@ -70,7 +70,7 @@
 					</div>
 					<!-- 합계 -->
 					<div class="box-body">
-						<table id="sumlist" class="table table-bordered" style="max-width:600px;">
+						<table id="sumlist" class="table table-bordered" ">
 							<colgroup>
 								<col style="width:150px"/>
 								<col style="width:150px"/>
@@ -140,7 +140,7 @@
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">
-								<tr><td class="text-center" colspan="4">조회된 데이터가 없습니다.</td></tr>
+								<tr><td class="text-center" colspan="5">조회된 데이터가 없습니다.</td></tr>
 							</c:if>
 							</tbody>
 						</table>

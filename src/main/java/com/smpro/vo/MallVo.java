@@ -15,7 +15,17 @@ public class MallVo extends UserVo {
 	private String openDate = "";
 	/** 폐쇄 일자 */
 	private String closeDate = "";
-	
+
+	private String logoImg = "";
+
+	public String getLogoImg(){
+		return this.logoImg;
+	}
+
+	public void setLogoImg(String url){
+		this.logoImg = url;
+	}
+
 	public String getUrl() {
 		return url;
 	}

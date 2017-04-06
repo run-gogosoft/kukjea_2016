@@ -24,7 +24,7 @@
                     <div class="privacy_intro">
                         <em>이벤트 기간 </em>
                         <span class="date">
-                            <fmt:parseDate value="${vo.startDate}" var="startDate" pattern="yyyy-mm-dd"/>
+                            <fmt:parseDate value="${vo.startDate}" var="startDate" pattern="yyyymmdd"/>
                             <fmt:formatDate value="${startDate}" pattern="yyyy-mm-dd"/>
                             ~
                             <fmt:parseDate value="${vo.endDate}" var="endDate" pattern="yyyymmdd"/>

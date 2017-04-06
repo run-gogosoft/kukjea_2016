@@ -1,8 +1,12 @@
 package com.smpro.interceptor.admin;
 
 import com.smpro.service.LoginService;
+import com.smpro.service.MallAccessService;
 import com.smpro.service.MallService;
 import com.smpro.util.StringUtil;
+import com.smpro.vo.MallAccessVo;
+import com.smpro.vo.MallVo;
+import com.smpro.vo.MemberVo;
 import com.smpro.vo.UserVo;
 
 import org.slf4j.Logger;
@@ -15,6 +19,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
@@ -24,6 +30,9 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 	private LoginService loginService;
 	@Autowired
 	private MallService mallService;
+
+	@Autowired
+	private MallAccessService mallAccessService;
 
 	public void setLoginService(LoginService loginService) {
 		this.loginService = loginService;
@@ -40,10 +49,6 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 		/* navi 위치 처리 */
 		String requestURI = request.getRequestURI();
 		String requestURIAttribute = request.getParameter("mallSeq");
-
-
-		request.setAttribute("mallList", mallService.getListSimple());
-
 
 		String naviPos = "";
 		String naviPosSub = "";
@@ -92,6 +97,7 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 
 			validLogin = false;
 		}
+
 		LOGGER.info("### 1");
 		if ((session == null || session.getAttribute("loginSeq") == null) && validLogin) {
 			Cookie[] cookies = request.getCookies();
@@ -130,7 +136,36 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 			return false;
 		}
 
+
+		List<MallVo> mallList = mallService.getListSimple();
+
+		if(!session.getAttribute("loginType").equals("A")) {
+
+			List<MallAccessVo> currentAccess = mallAccessService.getVo((Integer) session.getAttribute("loginSeq"));
+
+			List<MallVo> tmpMallList = new ArrayList<MallVo>();
+
+				for (MallVo mall : mallList) {
+					if (findMall(mall.getSeq(), currentAccess)) {
+						tmpMallList.add(mall);
+					}
+				}
+			request.setAttribute("mallList", tmpMallList);
+		}
+		else {
+			request.setAttribute("mallList", mallList);
+		}
 		return true;
+	}
+
+	private boolean findMall(int mallSeq, List<MallAccessVo>mallAccessVos){
+		System.out.println("### findMall mallSeq:"+mallSeq);
+		for(MallAccessVo mallacc:mallAccessVos){
+			System.out.println("### findMall mallacc.getMallSeq():"+mallacc.getMallSeq());
+			if(mallSeq == mallacc.getMallSeq() && mallacc.getAccessStatus().equals("A")) return true;
+		}
+
+		return false;
 	}
 
 }

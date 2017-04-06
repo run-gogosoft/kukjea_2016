@@ -8,6 +8,11 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="국제몰닷컴">
+<meta property="og:description" content="의료소모품 전문 쇼핑몰">
+<meta property="og:image" content="http://kukjemall.com/images/common/logo.gif">
+<meta property="og:url" content="http://www.kukjemall.com">
 <title><c:if test="${title ne null}">${title} : </c:if>국제몰</title>
 <meta name="keywords" content="국제몰, KUKJE MALL, 국제실업" />
 <link rel="stylesheet" href="/css/nanumbarungothic.css" />

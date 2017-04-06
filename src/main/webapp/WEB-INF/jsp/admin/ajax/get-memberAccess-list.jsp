@@ -21,7 +21,8 @@
         "email":"${item.email}",
         "totalOrderPrice":"<fmt:formatNumber value="${item.totalOrderPrice}"/>",
         "regDate":"${fn:substring(item.regDate,0,10)}",
-        "lastDate":"${fn:substring(item.lastDate,0,10)}"
+        "lastDate":"${fn:substring(item.lastDate,0,10)}",
+        "point":"<fmt:formatNumber value="${item.point}"/>"
         , "access":[
         <c:forEach var="value" items="${item.mallAccessVos}" varStatus="status2" begin="0" step="1">
             <c:if test="${status2.index ne 0}">,</c:if>

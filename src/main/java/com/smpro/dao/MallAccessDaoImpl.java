@@ -30,11 +30,11 @@ public class MallAccessDaoImpl implements MallAccessDao {
 
     @Override
     public void modVo(MallAccessVo vo) {
-        sqlSession.update("mall_access.updateVo", vo);
+        sqlSession.update("mall_access.modVo", vo);
     }
 
     @Override
     public List<MallAccessVo> getVo(Integer seq) {
-        return sqlSession.selectOne("mall_access.getVo", seq);
+        return sqlSession.selectList("mall_access.getVo", seq);
     }
 }

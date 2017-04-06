@@ -71,6 +71,7 @@
 								<label class="col-md-2 control-label" for="findword">상세 검색</label>
 								<div class="col-md-2">
 									<select class="form-control" id="search" name="search">
+										<option value="">---전체---</option>
 										<option value="id"   <c:if test="${pvo.search eq 'id'}">selected</c:if>>아이디</option>
 										<option value="name" <c:if test="${pvo.search eq 'name' or pvo.search eq ''}">selected</c:if>>이름</option>
 										<option value="groupName" <c:if test="${pvo.search eq 'groupName'}">selected</c:if>>업체명</option>
@@ -89,29 +90,29 @@
 									</select>
 								</div>
 							</div>
-							<div class="form-group">
-							<label class="col-md-2 control-label"></label>
-								<div class="col-md-4" style="font-size:12px;">* 이메일 검색의 경우 이메일 주소까지 정확히 입력하셔야 검색됩니다.</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">이메일 수신 허용</label>
-								<div class="col-md-2">
-									<select class="form-control" name="emailFlag">
-										<option value="">---전체---</option>
-										<option value="Y" <c:if test="${pvo.emailFlag eq 'Y'}">selected="selected"</c:if>>허용</option>
-										<option value="N" <c:if test="${pvo.emailFlag eq 'N'}">selected="selected"</c:if>>허용안함</option>
-									</select>
-								</div>
+							<%--<div class="form-group">--%>
+							<%--<label class="col-md-2 control-label"></label>--%>
+								<%--<div class="col-md-4" style="font-size:12px;">* 이메일 검색의 경우 이메일 주소까지 정확히 입력하셔야 검색됩니다.</div>--%>
+							<%--</div>--%>
+							<%--<div class="form-group">--%>
+								<%--<label class="col-md-2 control-label">이메일 수신 허용</label>--%>
+								<%--<div class="col-md-2">--%>
+									<%--<select class="form-control" name="emailFlag">--%>
+										<%--<option value="">---전체---</option>--%>
+										<%--<option value="Y" <c:if test="${pvo.emailFlag eq 'Y'}">selected="selected"</c:if>>허용</option>--%>
+										<%--<option value="N" <c:if test="${pvo.emailFlag eq 'N'}">selected="selected"</c:if>>허용안함</option>--%>
+									<%--</select>--%>
+								<%--</div>--%>
 
-								<label class="col-md-4 control-label">SMS 수신 허용</label>
-								<div class="col-md-2">
-									<select class="form-control" name="smsFlag">
-										<option value="">---전체---</option>
-										<option value="Y" <c:if test="${pvo.smsFlag eq 'Y'}">selected="selected"</c:if>>허용</option>
-										<option value="N" <c:if test="${pvo.smsFlag eq 'N'}">selected="selected"</c:if>>허용안함</option>
-									</select>
-								</div>
-							</div>
+								<%--<label class="col-md-4 control-label">SMS 수신 허용</label>--%>
+								<%--<div class="col-md-2">--%>
+									<%--<select class="form-control" name="smsFlag">--%>
+										<%--<option value="">---전체---</option>--%>
+										<%--<option value="Y" <c:if test="${pvo.smsFlag eq 'Y'}">selected="selected"</c:if>>허용</option>--%>
+										<%--<option value="N" <c:if test="${pvo.smsFlag eq 'N'}">selected="selected"</c:if>>허용안함</option>--%>
+									<%--</select>--%>
+								<%--</div>--%>
+							<%--</div>--%>
 							<div class="form-group">
 								<label class="col-md-2 control-label">이용권한</label>
 								<div class="col-md-2">
@@ -128,9 +129,9 @@
 							<div class="pull-left">! 총 <b style="color:#00acd6;"><fmt:formatNumber value="${pvo.totalRowCount}"/></b> 건이 조회 되었습니다.</div>
 							<div class="pull-right">
 								<button type="submit" class="btn btn-sm btn-default">검색하기</button>
-								<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">
+								<%--<c:if test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2)}">--%>
 									<button type="button" onclick="downloadExcel();" class="btn btn-success btn-sm">엑셀다운</button>
-								</c:if>
+								<%--</c:if>--%>
 							</div>
 						</div>
 					</form>
@@ -171,7 +172,7 @@
 								</thead>
 								<tbody></tbody>
 							</table>
-							<div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div>
+							<div id="paging" class="dataTables_paginate paging_simple_numbers text-center"></div>
 						</div>
 					</div>
 				</div>
@@ -192,7 +193,7 @@
 	});
 
 	var goPage = function (page) {
-		memberType(currentListType, pageNum);
+		memberType(currentListType, page);
 	};
 
 	/** 날짜 계산 */
@@ -211,6 +212,7 @@
 		$("#searchForm").submit();
 		$("#searchForm").attr("action",location.pathname);
 	};
+
 	var downloadThatDayExcel = function() {
 		if($("#thatDayMemberRegDate").val()==""){
 			alert("일자를 입력해주세요.");
@@ -222,7 +224,7 @@
 	var memberType = function(listType, pageNum) {
 		currentListType = listType;//현제 tab-menu 구하는 함수 알때까지 전역변수로 일단 사용하자;;
 		$.ajax({
-			url:"/admin/member/all/list/"+listType,
+			url:"/admin/member/all/list/"+listType+"?" + $("#searchForm").serialize(),
 			type:"post",
 			data:{pageNum:pageNum},
 			dataType:"text",
@@ -236,9 +238,9 @@
 				//선택 메뉴 활성화
 				$("#tab-"+listType).addClass("active");
 				//선택 메뉴 테이블 활성화
-				$("#tbl-"+listType+"-list").css("display","table");
+				$("#tbl-member-list").css("display","table");
 				//선택 메뉴 테이블 데이터 렌더링
-				$("#tbl-"+listType+"-list tbody").html("<tr><td colspan='20' class='text-center'><img src='/assets/img/common/ajaxloader.gif'/> 데이터를 불러오고 있습니다.</td></tr>");
+				$("#tbl-member-list tbody").html("<tr><td colspan='20' class='text-center'><img src='/assets/img/common/ajaxloader.gif'/> 데이터를 불러오고 있습니다.</td></tr>");
 
 				var vo = $.parseJSON(data);
 

@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 @Controller
 public class MemberController {
@@ -39,6 +40,12 @@ public class MemberController {
 	@Autowired
 	private MemberGroupService memberGroupService;
 
+
+	@Autowired
+	private MallAccessService mallAccessService;
+
+	@Autowired
+	private MallService mallService;
 
 	/** 관리자 테스트용 회원가입 폼 페이지 */
 	@RequestMapping("/member/reg/admin")
@@ -101,6 +108,17 @@ public class MemberController {
 		}
 
 		if(flag) {
+			//병원몰 접근 기본적용
+			List<MallVo> mallVoList = mallService.getListSimple();
+			for(MallVo mall:mallVoList){
+				if(mall.getName().equals("병원몰")){
+					MallAccessVo mav = new MallAccessVo();
+					mav.setMallSeq(mall.getMallSeq());
+					mav.setUserSeq(vo.getSeq());
+					mav.setAccessStatus("A");
+					mallAccessService.insertVo(mav);
+				}
+			}
 			//회원가입 완료 페이지 이동
 			model.addAttribute("message", "회원 가입이 완료되었습니다. 로그인 후 사용해 주시기 바랍니다.");
 			//다음페이지에서 가입 정보를 표시해 줄때 회원시퀀스 파라메타 노출을 방지하기 위해 세션에 저장한다.

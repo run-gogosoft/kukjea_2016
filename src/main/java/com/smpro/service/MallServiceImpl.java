@@ -4,8 +4,10 @@ import com.smpro.dao.MallDao;
 import com.smpro.dao.UserDao;
 import com.smpro.util.Const;
 import com.smpro.util.FileUploadUtil;
+import com.smpro.util.FileUtil;
 import com.smpro.util.exception.ImageIsNotAvailableException;
 import com.smpro.util.exception.ImageSizeException;
+import com.smpro.vo.EventVo;
 import com.smpro.vo.MallVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -119,9 +121,34 @@ public class MallServiceImpl implements MallService {
 					tempDir.mkdir();
 				}
 
-				fileMap.put(file.getName(), new FileUploadUtil().uploadEventImageFile(file, Const.UPLOAD_REAL_PATH + "/banner/temp"));
+				fileMap.put(file.getName(), new FileUploadUtil().uploadBannermageFile(file, Const.UPLOAD_REAL_PATH + "/banner/temp"));
 			}
 		}
 		return fileMap;
+	}
+
+	public String imageProc(String realPath, String filename, Integer seq) {
+		String ext = "." + filename.split("\\.")[1];
+		String perSeq = "" + ((seq.intValue() / 1000) * 1000 + 1000);
+
+		// 디렉토리를 검증한다
+		FileUtil.mkdir(new File(realPath + "/" + perSeq + "/"));
+		// 파일이 존재한다면 미리 삭제해야 한다
+		FileUtil.move(new File(realPath + "/temp/" + filename), new File(realPath + "/" + perSeq + "/" + seq + ext));
+
+		return "/banner/" + perSeq + "/" + seq + ext;
+	}
+
+	/**
+	 * 해당 seq의 파일을 삭제한다
+	 *
+	 * @param realPath
+	 * @param seq
+	 */
+	public void deleteFiles(String realPath, Integer seq) {
+		MallVo paramVo = new MallVo();
+		paramVo.setSeq(seq);
+		MallVo vo = getVo(paramVo.getSeq());
+		new File(realPath + vo.getLogoImg()).delete();
 	}
 }

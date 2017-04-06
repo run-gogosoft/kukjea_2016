@@ -58,6 +58,30 @@ public class MemberServiceImpl implements MemberService {
 		return list;
 	}
 
+	/** 요청 회원 리스트 */
+	public List<MemberVo> getRequestList(MemberVo vo) throws Exception {
+		List<MemberVo> list = null;
+		if("email".equals(vo.getSearch())) {
+			if(!"".equals(vo.getFindword())) {
+				vo.setFindword(CrypteUtil.encrypt(vo.getFindword(), Const.ARIA_KEY, Const.ARIA_KEY.length * 8, null));
+			}
+		}
+
+		list = memberDao.getRequestList(vo);
+
+		//정상적으로 이메일을 쿼리한뒤 값이 존대한다면 복호화한다.
+		if("email".equals(vo.getSearch())) {
+			vo.setFindword(CrypteUtil.decrypt(vo.getFindword(), Const.ARIA_KEY, Const.ARIA_KEY.length * 8, null));
+		}
+		for(int i=0; i<list.size(); i++){
+			list.get(i).setEmail(CrypteUtil.decrypt(list.get(i).getEmail(), Const.ARIA_KEY, Const.ARIA_KEY.length * 8, null));
+		}
+
+		return list;
+	}
+
+	public int getRequestListCount(MemberVo vo) { return memberDao.getRequestListCount(vo);}
+
 	/** 회원 리스트 검색 건수 */
 	public int getListCount(MemberVo vo) {
 		return memberDao.getListCount(vo);
@@ -376,11 +400,12 @@ public class MemberServiceImpl implements MemberService {
 			vo.setPostcode(vo.getPostcode1() + vo.getPostcode2());
 		}
 
-		if (!"".equals(vo.getEmail1()) && !"".equals(vo.getEmail2())) {
+		if (!"".equals(vo.getEmail1().trim()) && !"".equals(vo.getEmail2().trim())) {
 			/* 이메일 붙이기 */
 			vo.setEmail(vo.getEmail1() + "@" + vo.getEmail2());
 		}
 
+		System.out.println(">>>formatValue setEmail:"+vo.getEmail());
 		/* 전화번호 붙이기 */
 		if (!"".equals(vo.getTel1()) && !"".equals(vo.getTel2()) && !"".equals(vo.getTel3())) {
 			vo.setTel(StringUtil.formatPhone(vo.getTel1(), vo.getTel2(), vo.getTel3()));

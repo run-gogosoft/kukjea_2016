@@ -117,36 +117,39 @@
 					<!-- 내용 -->
 					<div class="box-body">
 						<table class="table table-bordered table-striped">
-							<colgroup>
-								<col style="width:3%;"/>
-								<col style="width:8%;"/>
-								<col style="width:*;"/>
-								<col style="width:10%"/>
-								<col style="width:8%"/>
-								<col style="width:10%"/>
-								<col style="width:5%;"/>
-								<col style="width:10%;"/>
-								<col style="width:7%;"/>
-								<col style="width:10%;"/>
-								<col style="width:7%;"/>
-								<col style="width:6%;"/>
-								<col style="width:6%;"/>
-							</colgroup>
+							<%--<colgroup>--%>
+								<%--<col style="width:3%;"/>--%>
+								<%--<c:forEach var="mall" items="${mallList}" begin="0" step="1">--%>
+									<%--<col style="width:8%;"/>--%>
+								<%--</c:forEach>--%>
+								<%--<col style="width:*;"/>--%>
+								<%--<col style="width:10%"/>--%>
+								<%--<col style="width:8%"/>--%>
+								<%--<col style="width:10%"/>--%>
+								<%--<col style="width:5%;"/>--%>
+								<%--<col style="width:7%;"/>--%>
+								<%--<col style="width:10%;"/>--%>
+								<%--<col style="width:7%;"/>--%>
+								<%--<col style="width:6%;"/>--%>
+								<%--<col style="width:6%;"/>--%>
+								<%--<col style="width:6%;"/>--%>
+							<%--</colgroup>--%>
 							<thead>
 								<tr>
 									<th>No.</th>
+									<c:forEach var="mall" items="${mallList}" begin="0" step="1">
+										<th>${mall.name}<br>운영권한</th>
+									</c:forEach>
 									<th>아이디</th>
 									<th>상호명</th>
 									<th>수수료(%)</th>
-									<!-- <th>상점명</th> -->
 									<th>등록 상품수<br/>(판매중/전체)</th>
-									<th>인증구분</th>
 									<th>상태</th>
-									<th>대표자명</th>
 									<th>대표전화</th>
-									<th>담당자명</th>
 									<th>담당자<br/>연락처</th>
-									<th>승인일자</th>
+									<th>이메일</th>
+									<th>판매건수</th>
+									<th>판매금액</th>
 									<th>등록일자</th>
 								</tr>
 							</thead>
@@ -154,6 +157,13 @@
 							<c:forEach var="item" items="${list}">
 								<tr>
 									<td class="text-center">${item.seq}</td>
+									<c:forEach var="access" items="${item.mallAccessVos}">
+										<c:if test="${access.accessStatus eq 'X'}"><td class="text-center"><span class="text-warning">미요청</span></td></c:if>
+										<c:if test="${access.accessStatus eq 'A'}"><td class="text-center"><span class="text-success">이용</span></td></c:if>
+										<c:if test="${access.accessStatus eq 'N'}"><td class="text-center"><span class="text-danger">거절</span></td></c:if>
+										<c:if test="${access.accessStatus eq 'R'}"><td class="text-center"><span class="text-danger">요청</span></td></c:if>
+										<c:if test="${access.accessStatus eq 'H'}"><td class="text-center"><span class="text-warning">보류</span></td></c:if>
+									</c:forEach>
 									<td>
 										<c:choose>
 											<c:when test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 4)}">
@@ -166,36 +176,14 @@
 										</c:choose>
 									</td>
 									<td>${item.name}</td>
-									<td class="text-center">
-									 	${item.commission}%
-										<%--<c:choose>--%>
-											<%--<c:when test="${item.taxTypeFlag eq 'Y'}">과세</c:when>--%>
-											<%--<c:when test="${item.taxTypeFlag eq 'N'}">면세</c:when>--%>
-											<%--<c:otherwise><span class="text-muted">--</span></c:otherwise>--%>
-										<%--</c:choose>--%>
-									</td>
-									<!-- <td>${item.nickname}</td> -->
+									<td class="text-center">${item.commission}%</td>
 									<td class="text-center">${item.sellItemCount}&nbsp;/&nbsp;${item.totalItemCount}</td>
-									<td>
-										<c:forEach var="vo" items="${authCategoryList}">
-											<c:if test="${fn:contains(item.authCategory,vo.value)}">
-												<div>${vo.name}</div>
-											</c:if>
-										</c:forEach>
-									</td>
 									<td class="text-center">${item.statusText}</td>
-									<td class="text-center">${item.ceoName}</td>
 									<td class="text-center">${item.tel}</td>
-									<td class="text-center">${item.salesName}</td>
 									<td class="text-center">${item.salesTel}</td>
-									<td class="text-center">
-										<c:choose>
-											<c:when test="${item.statusCode eq 'H'}">
-												<button type="button" class="btn btn-danger btn-xs" onclick="deleteProc(${item.seq})">삭제</button>
-											</c:when>
-											<c:otherwise>${fn:substring(item.approvalDate,0,10)}</c:otherwise>
-										</c:choose>
-									</td>
+									<td class="text-center">${item.salesEmail}</td>
+									<td class="text-center"><fmt:formatNumber value="${item.totalItemCount}"/>건</td>
+									<td class="text-center"><fmt:formatNumber value="${item.totalSellPrice}"/>원</td>
 									<td class="text-center">${fn:substring(item.regDate,0,10)}</td>
 								</tr>
 							</c:forEach>

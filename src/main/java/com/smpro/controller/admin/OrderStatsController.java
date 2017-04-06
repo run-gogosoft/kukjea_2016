@@ -339,9 +339,9 @@ public class OrderStatsController {
 	@CheckGrade(controllerName = "orderStatsController", controllerMethod = "getListByItem")
 	@RequestMapping("/stats/list/item")
 	public String getListByItem(HttpSession session, OrderVo vo, Model model) {
-		System.out.println(">>> login Type :"+session.getAttribute("loginType"));
-		System.out.println(">>> loginSeq :"+(Integer)session.getAttribute("loginSeq"));
-		System.out.println(">>> loginName :"+(String)session.getAttribute("loginName"));
+//		System.out.println(">>> login Type :"+session.getAttribute("loginType"));
+//		System.out.println(">>> loginSeq :"+(Integer)session.getAttribute("loginSeq"));
+//		System.out.println(">>> loginName :"+(String)session.getAttribute("loginName"));
 
 		vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
 		vo.setSellerName((String)session.getAttribute("loginName"));

@@ -24,7 +24,7 @@
 			<div class="col-md-6">
 				<div class="box">
 					<!-- 제목 -->
-					<div class="box-header with-border"><h3 class="box-title"><i class="fa fa-newspaper-o"></i> ${vo.memberTypeName} 정보</h3></div>
+					<div class="box-header with-border"><h3 class="box-title"><i class="fa fa-newspaper-o"></i> 회원정보</h3></div>
 					<!-- 내용 -->
 					<div class="box-body">
 						<table id="table-left" class="table table-bordered">
@@ -67,15 +67,15 @@
 									<td>${gvo.fax}</td>
 								</tr>
 								<tr>
-									<th>세금계산서 담당자</th>
+									<th>담당자</th>
 									<td>${gvo.taxName}</td>
 								</tr>
 								<tr>
-									<th>세금계산서 이메일</th>
+									<th>담당자 이메일</th>
 									<td>${gvo.taxEmail}</td>
 								</tr>
 								<tr>
-									<th>세금계산서 연락처</th>
+									<th>담당자 연락처</th>
 									<td>${gvo.taxTel}</td>
 								</tr>
 							</tbody>
@@ -179,14 +179,14 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="box">
-					<c:if test="${sessionScope.loginType eq 'A'}">
+					<%--<c:if test="${sessionScope.loginType eq 'A'}">--%>
 						<div class="box-footer text-right">
 							<button type="button" class="btn btn-sm btn-success" onclick="addPoint()">포인트지급</button>
 							<a href="/admin/member/mod/${vo.seq}" class="btn btn-sm btn-info">수정하기</a>
 							<button type="button" class="btn btn-sm btn-danger" onclick="leaveMember();">탈퇴하기</button>
 							<button type="button" class="btn btn-sm btn-default" onclick="history.go(-1);">목록보기</button>
 						</div>
-					</c:if>
+					<%--</c:if>--%>
 				</div>
 			</div>
 		</div>
@@ -200,25 +200,37 @@
 					<!-- 내용 -->
 					<div class="box-body">
 						<table class="table table-bordered">
-							<colgroup>
-								<col style="width:10%;"/>
-								<col style="width:45%;"/>
-								<col style="width:45%;"/>
-							</colgroup>
+							<%--<colgroup>--%>
+								<%--<col style="width:10%;"/>--%>
+								<%--<col style="width:45%;"/>--%>
+								<%--<col style="width:45%;"/>--%>
+							<%--</colgroup>--%>
 							<thead>
 								<tr>
 									<th>쇼핑몰</th>
-									<th>이용상태</th>
-									<th>처리사유</th>
+									<c:forEach var="mall" items="${mallList}" begin="0" step="1">
+										<th>${mall.name}<br>이용권한</th>
+									</c:forEach>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td class="text-center">약국몰</td>
-									<td class="text-center">
-										<button type="button" class="btn btn-sm btn-danger text-center" onclick="">승인요청</button>
-									</td>
-									<td class="text-center">사유</td>
+									<td class="text-center" ><strong>이용상태</strong></td>
+									<c:forEach var="mall" items="${vo.mallAccessVos}" begin="0" step="1">
+										<td class="text-center">
+											<c:if test="${mall.accessStatus eq 'X'}"><button type="button" class="btn btn-sm btn-info text-center" onclick="changeAccessStatus(${mall.mallSeq}, ${vo.seq},'${mall.accessStatus}','${mall.note}')">미요청</button></c:if>
+											<c:if test="${mall.accessStatus eq 'A'}"><button type="button" class="btn btn-sm btn-success text-center" onclick="changeAccessStatus(${mall.mallSeq}, ${vo.seq},'${mall.accessStatus}','${mall.note}')">이용중</button></c:if>
+											<c:if test="${mall.accessStatus eq 'N'}"><button type="button" class="btn btn-sm btn-danger text-center" onclick="changeAccessStatus(${mall.mallSeq}, ${vo.seq},'${mall.accessStatus}','${mall.note}')">거절</button></c:if>
+											<c:if test="${mall.accessStatus eq 'R'}"><button type="button" class="btn btn-sm btn-danger text-center" onclick="changeAccessStatus(${mall.mallSeq}, ${vo.seq},'${mall.accessStatus}','${mall.note}')">승인요청</button></c:if>
+											<c:if test="${mall.accessStatus eq 'H'}"><button type="button" class="btn btn-sm btn-default text-center" onclick="changeAccessStatus(${mall.mallSeq}, ${vo.seq},'${mall.accessStatus}','${mall.note}')">보류</button></c:if>
+										</td>
+									</c:forEach>
+								</tr>
+								<tr>
+									<td class="text-center"><strong>처리사유</strong></td>
+									<c:forEach var="mall" items="${vo.mallAccessVos}" begin="0" step="1">
+										<td class="text-center">${mall.note}</td>
+									</c:forEach>
 								</tr>
 							</tbody>
 						</table>
@@ -291,7 +303,7 @@
 									<!-- <th>쇼핑몰</th> -->
 									<th>상태</th>
 									<th>주문번호</th>
-									<th>상품주문번호</th>
+									<%--<th>상품주문번호</th>--%>
 									<th>비고</th>
 								</tr>
 							</thead>
@@ -398,6 +410,42 @@
 			}
 		});
 	};
+
+	var changeAccessStatus = function (mallSeq, userSeq,accessStatus,note) {
+		$.msgbox("<p>몰이용 승인조정</p>", {
+			type    : "prompt",
+			inputs  : [
+				{type: "hidden", value: mallSeq, required: true},
+				{type: "hidden", value: userSeq, required: true},
+				{type: "radio", label: "승인", value:"A" , required: true},
+				{type: "radio", label: "보류", value:"H" , required: true},
+				{type: "radio", label: "거절", value:"N" , required: true},
+				{type: "text", label: "처리사유:",  value:note, required: true}
+			],
+			buttons : [
+				{type: "submit", value: "OK"},
+				{type: "cancel", value: "Exit"}
+			]
+		}, function(mallSeq, userSeq,accessStatus,accessStatus,accessStatus,note) {
+			$.ajax({
+				type: 'POST',
+				data: {
+					mallSeq:mallSeq,
+					userSeq:userSeq,
+					accessStatus: $('input[type="radio"]:checked').val(),
+					note:note
+				},
+				dataType: 'json',
+				url: '/admin/member/access/change',
+				success: function(data) {
+					alert( data.message);
+//					if(data.result === "true") {
+						location.replace('/admin/member/view/${vo.seq}');
+//					}
+				}
+			})
+		});
+	}
 
 	var addPoint = function() {
 		$.msgbox("<p>포인트지급</p>", {

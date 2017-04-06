@@ -30,5 +30,5 @@ public interface MallService {
 
 	public Map<String, String> uploadImagesByMap(HttpServletRequest request) throws IOException, ImageIsNotAvailableException, ImageSizeException;
 
-
+	public String imageProc(String realPath, String filename, Integer seq);
 }

@@ -202,7 +202,6 @@ public class ItemController {
 		vo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		vo.setMallId(mallSeq);
 
-		System.out.println(">>>>mallSeq:"+mallSeq);
 		// 카테고리를 가져온다
 		CategoryVo cvo = new CategoryVo();
 		//대분류
@@ -291,6 +290,7 @@ public class ItemController {
 		String mallName = mallService.getVo(mallSeq).getName();
 		model.addAttribute("mallSeq",mallSeq);
 		model.addAttribute("mallName",mallName);
+		System.out.println("### item/form/, mallSeq:"+mallSeq);
 		model.addAttribute("title", "상품 등록");
 		model.addAttribute("typeInfoList", itemService.getTypeInfoList());
 		model.addAttribute("filterList", itemService.getFilterList());
@@ -321,6 +321,7 @@ public class ItemController {
 		String mallName = mallService.getVo(item.getMallId()).getName();
 		model.addAttribute("mallName",mallName);
 		model.addAttribute("mallSeq",item.getMallId());
+		System.out.println("### item/form/{seq} , mallSeq:"+item.getMallId());
 		model.addAttribute("pageNum", pageNum);
 		// todo : 아이템을 수정할 수 있는 권한이 있는지 검사하여야 함
 		model.addAttribute("title", "상품 수정");

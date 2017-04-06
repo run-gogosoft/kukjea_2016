@@ -24,21 +24,14 @@
 					<!-- 소제목 -->
 					<div class="box-header with-border">
 						<h3 class="box-title"><i class="fa fa-list-ul"></i> 쇼핑몰 리스트</h3>
-						<c:if test="${sessionScope.loginType eq 'A'}">
-
-						<div class="pull-right">
-							<a href="/admin/mall/form" class="btn btn-info btn-sm">쇼핑몰 신규 등록</a>
-						</div>
-
-						</c:if>
 					</div>
 					<!-- 내용 -->
 					<div class="box-body">
 						<table id="list1" class="table table-bordered">
 							<thead>
 								<tr>
-									<th>No.</th>
-									<th>쇼핑몰 아이디</th>
+									<%--<th>No.</th>--%>
+									<%--<th>쇼핑몰 아이디</th>--%>
 									<th>쇼핑몰 명</th>
 									<th>상태</th>
 									<!-- <th>템플릿</th> -->
@@ -49,9 +42,9 @@
 							<tbody>
 							<c:forEach var="vo" items="${list}">
 								<tr>
-									<td class="text-center">${vo.seq}</td>
-									<td>${vo.id}</td>
-									<td><a href="/admin/mall/form?seq=${vo.seq}"><b>${vo.name}</b></a></td>
+									<%--<td class="text-center">${vo.seq}</td>--%>
+									<%--<td>${vo.id}</td>--%>
+									<td class="text-center"><a href="/admin/mall/form?seq=${vo.seq}"><b>${vo.name}</b></a></td>
 									<td class="text-center">${vo.statusText}</td>
 									<td class="text-center">${fn:substring(vo.openDate,0,10)}</td>
 									<td class="text-center">${fn:substring(vo.regDate,0,10)}</td>

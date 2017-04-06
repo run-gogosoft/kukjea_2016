@@ -92,21 +92,21 @@
 								<div class="form-group">
 									<label class="col-md-2 control-label">대분류 <i class="fa fa-check"></i></label>
 									<div class="col-md-3">
-										<select class="form-control col-md-2" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+										<select class="form-control col-md-2" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val(),${mallSeq})">데이터를 불러오고 있습니다</select>
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-md-2 control-label">중분류</label>
 									<div class="col-md-3">
-										<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+										<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val(), ${mallSeq})">데이터를 불러오고 있습니다</select>
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-md-2 control-label">소분류</label>
 									<div class="col-md-3">
-										<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val(), 0)">데이터를 불러오고 있습니다</select>
+										<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val(), ${mallSeq})">데이터를 불러오고 있습니다</select>
 									</div>
 								</div>
 
@@ -844,13 +844,13 @@
 				<legend>분류 수정</legend>
 				<c:if test="${vo ne null}">
 					<label class="label">대분류</label>
-					<select class="form-control" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val())">데이터를 불러오고 있습니다</select>
+					<select class="form-control" id="lv1" name="cateLv1Seq" onchange="EBCategory.renderList(2, $(this).val(),${mallSeq})">데이터를 불러오고 있습니다</select>
 					<br/>
 					<label class="label">중분류</label>
-					<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val())">데이터를 불러오고 있습니다</select>
+					<select class="form-control" id="lv2" name="cateLv2Seq" onchange="EBCategory.renderList(3, $(this).val(),${mallSeq})">데이터를 불러오고 있습니다</select>
 					<br/>
 					<label class="label">소분류</label>
-					<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val())">데이터를 불러오고 있습니다</select>
+					<select class="form-control" id="lv3" name="cateLv3Seq" onchange="EBCategory.renderList(4, $(this).val(),${mallSeq})">데이터를 불러오고 있습니다</select>
 					<br/>
 					<div id="updateFormLv4SelectBox">
 						<label class="label">세분류</label>
@@ -1161,14 +1161,14 @@
 
 		<c:if test="${vo eq null}">
 		setTimeout(function(){
-			EBCategory.renderList(1, 0, 0);
+			EBCategory.renderList(1, 0, ${mallSeq});
 		}, 100);
 		EBOption.add(); //옵션추가
 		EBOption.addChild($('.optionValueAdd'));
 		</c:if>
 		<c:if test="${vo ne null}">
 		setTimeout(function(){
-			EBCategory.renderList(1, 0, 0);
+			EBCategory.renderList(1, 0, ${mallSeq});
 		}, 100);
 		</c:if>
 

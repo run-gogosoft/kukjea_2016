@@ -3,50 +3,57 @@
 <mapper namespace="mall_access">
     <select id="getList" parameterType="com.smpro.vo.MallAccessVo" resultType="com.smpro.vo.MallAccessVo">
         SELECT
-        u.seq AS seq,
         u.mall_seq AS mallSeq,
         u.user_seq AS userSeq,
-        u.access_status AS accessStatus
+        u.access_status AS accessStatus,
+        u.note AS note
         FROM
         sm_mall_access u
-        WHERE mall_seq=#{mallSeq}
+        WHERE 1=1
+        <if test="mallSeq !=null">
+            AND mall_seq=#{mallSeq}
+        </if>
+        <if test="accessStatus !=null">
+            AND access_status=#{accessStatus}
+        </if>
         ORDER BY u.seq DESC
     </select>
 
     <select id="getListSimple" resultType="com.smpro.vo.MallAccessVo">
         SELECT
-        u.seq AS seq,
         u.mall_seq AS mallSeq,
         u.user_seq AS userSeq,
-        u.access_status AS accessStatus
+        u.access_status AS accessStatus,
+        u.note AS note
         FROM
         sm_mall_access u
-        ORDER BY u.seq DESC
+        ORDER BY u.mall_seq ASC
     </select>
 
     <select id="getVo" parameterType="int" resultType="com.smpro.vo.MallAccessVo">
         SELECT
-        u.seq AS seq,
         u.mall_seq AS mallSeq,
         u.user_seq AS userSeq,
-        u.access_status AS accessStatus
+        u.access_status AS accessStatus,
+        u.note AS note
         FROM
         sm_mall_access u
         WHERE user_seq=#{seq}
         ORDER BY u.mall_seq ASC
     </select>
 
-    <insert id="regVo" parameterType="com.smpro.vo.MallAccessVo">
-        INSERT INTO sm_mall (
-          seq, mall_seq, user_seq, access_status
+    <insert id="insertVo" parameterType="com.smpro.vo.MallAccessVo">
+        INSERT INTO sm_mall_access (
+          mall_seq, user_seq, access_status, note
         ) VALUES (
-          #{seq}, #{mallSeq}, #{userSeq}, #{accessStatus}
+          #{mallSeq}, #{userSeq}, #{accessStatus}, #{note}
         )
     </insert>
 
     <update id="modVo" parameterType="com.smpro.vo.MallAccessVo">
         UPDATE sm_mall_access SET
-        access_status=#{accessStatus}
-        WHERE seq=#{seq}
+        access_status=#{accessStatus},
+        note=#{note}
+        WHERE mall_seq=#{mallSeq} AND user_seq=#{userSeq}
     </update>
 </mapper>

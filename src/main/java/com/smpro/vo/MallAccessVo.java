@@ -7,19 +7,19 @@ public class MallAccessVo extends UserVo{
 
     private Integer userSeq;
     /**
-     * R : 요청
-     * NR : 미요청
-     * A : 이용중
-     * NA : 거절
-     * H : 보류
+     (A)이용, (N)거절,(R)요청, (H)보류, (X)미요청
      */
     private String accessStatus;
 
-    public void setMallSeq(int mallSeq){
-        this.mallSeq = mallSeq;
-    }
+    /**
+     * 사유
+     */
+    private String note;
 
-   public Integer getUserSeq(){
+    public void setNote(String note){this.note = note;}
+    public String getNote(){return this.note;}
+
+    public Integer getUserSeq(){
        return this.userSeq;
    }
 
@@ -33,5 +33,10 @@ public class MallAccessVo extends UserVo{
 
     public void setAccessStatus(String accessStatus){
         this.accessStatus = accessStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "MallAccessVo [mallSeq="+mallSeq+", userSeq="+userSeq+", accessStatus="+accessStatus+", note="+note+"]";
     }
 }

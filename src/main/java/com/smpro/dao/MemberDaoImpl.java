@@ -20,8 +20,18 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
+	public List<MemberVo> getRequestList(MemberVo vo) {
+		return sqlSession.selectList("member.getRequestList", vo);
+	}
+
+	@Override
 	public int getListCount(MemberVo vo) {
 		return ((Integer) sqlSession.selectOne("member.getListCount", vo)).intValue();
+	}
+
+	@Override
+	public int getRequestListCount(MemberVo vo) {
+		return ((Integer) sqlSession.selectOne("member.getRequestListCount", vo)).intValue();
 	}
 
 	@Override

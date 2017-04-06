@@ -8,9 +8,12 @@ import com.smpro.vo.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +26,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -126,8 +127,6 @@ public class MemberController {
 		pvo.setTotalRowCount(memberService.getListCount(pvo));
 		List<MemberVo> memberList = memberService.getList(pvo);
 
-
-
 		for(MemberVo member:memberList) {
 			Integer useablePoint = 0;
 			String grade = "";
@@ -151,7 +150,6 @@ public class MemberController {
 		}
 
 		List<MallVo> mallList = mallService.getListSimple();
-
 		for(MemberVo member:memberList){
 			List<MallAccessVo> mallAccessVos=mallAccessService.getVo(member.getSeq());
 			if(mallAccessVos == null) {
@@ -159,23 +157,24 @@ public class MemberController {
 				for(MallVo mall:mallList){
 					MallAccessVo vo = new MallAccessVo();
 					vo.setMallSeq(mall.getSeq());
-					vo.setAccessStatus("NA");
+					vo.setAccessStatus("X");
 					mallAccessVos.add(vo);
 				}
 			}
 			if(mallAccessVos.size()<mallList.size()){
 				for(MallVo mall:mallList){
-					if(findMall(mallList, mallAccessVos)){
+					if(findMall(mall.getSeq(), mallAccessVos)){
 						continue;
 					}
 					else {
 						MallAccessVo vo = new MallAccessVo();
 						vo.setMallSeq(mall.getSeq());
-						vo.setAccessStatus("NA");
+						vo.setAccessStatus("X");
 						mallAccessVos.add(vo);
 					}
 				}
 			}
+
 			member.setMallAccessVos(mallAccessVos);
 		}
 
@@ -211,12 +210,38 @@ public class MemberController {
 	@RequestMapping("/member/view/{seq}")
 	public String getView(@PathVariable Integer seq, Model model) throws Exception {
 		MemberVo vo = memberService.getData(seq);
+		List<MallVo> mallList = mallService.getListSimple();
+		List<MallAccessVo> mallAccessVos=mallAccessService.getVo(vo.getSeq());
+		if(mallAccessVos == null) {
+			mallAccessVos = new ArrayList<>();
+			for(MallVo mall:mallList){
+				MallAccessVo accessVo = new MallAccessVo();
+				accessVo.setMallSeq(mall.getSeq());
+				accessVo.setAccessStatus("X");
+				mallAccessVos.add(accessVo);
+			}
+		}
+		if(mallAccessVos.size()<mallList.size()){
+			for(MallVo mall:mallList){
+				if(findMall(mall.getSeq(), mallAccessVos)){
+					continue;
+				}
+				else {
+					MallAccessVo accessVo = new MallAccessVo();
+					accessVo.setMallSeq(mall.getSeq());
+					accessVo.setAccessStatus("X");
+					mallAccessVos.add(accessVo);
+				}
+			}
+		}
+
+		model.addAttribute("mallList",mallList);
+		vo.setMallAccessVos(mallAccessVos);
+
 		model.addAttribute("vo", vo);
 		if(vo != null) {
 			model.addAttribute("gvo", memberGroupService.getVo(vo.getGroupSeq()));
 		}
-
-
 		return "/member/view.jsp";
 	}
 
@@ -226,6 +251,7 @@ public class MemberController {
 	@RequestMapping("/member/mod/{seq}")
 	public String getData(@PathVariable Integer seq, Model model) throws Exception {
 		MemberVo vo = memberService.getData(seq);
+		System.out.println(">>>>vo.ema:"+vo.getEmail());
 		MemberGroupVo gvo = null;
 		if(vo != null) {
 			gvo = memberGroupService.getVo(vo.getGroupSeq());
@@ -559,11 +585,12 @@ public class MemberController {
 	 */
 	@CheckGrade(controllerName = "memberController", controllerMethod = "getAllList")
 	@RequestMapping("/member/all/list/{listType}")
-	public String getAllList(@PathVariable String listType,  int pageNum, HttpSession session, Model model) throws Exception {
+	public String getAllList(@PathVariable String listType,MemberVo pvo,  int pageNum, HttpSession session, Model model) throws Exception {
+
+		//member/list?longTermNotLoginFlag=&searchDate1=&searchDate2=&memberTypeCode=&statusCode=&search=id&findword=kkkkk&rowCount=100&emailFlag=&smsFlag=&mallaccess=#
 
 		String loginType = (String) session.getAttribute("loginType");
 		Integer loginSeq = (Integer) session.getAttribute("loginSeq");
-		MemberVo pvo = new MemberVo();
 		System.out.println(">>> getAllList, listType:"+listType);
 		System.out.println(">>> getAllList, pageNum:"+pageNum);
 		//기본 20개씩 조회
@@ -578,74 +605,70 @@ public class MemberController {
 		GradeVo gradeVo = new GradeVo();
 		List<GradeVo> grades = gradeService.getList(gradeVo);
 
-
 		//최초 접속시 개인회원으로 초기화
 		if("".equals(pvo.getMemberTypeCode())) {
 			pvo.setMemberTypeCode("C");
 		}
 
-		pvo.setTotalRowCount(memberService.getListCount(pvo));
+		List<MemberVo> memberList = new ArrayList<MemberVo>();
+		if("request".equals(listType)){
+			pvo.setTotalRowCount(memberService.getRequestListCount(pvo));
+			memberList = memberService.getRequestList(pvo);
+		}
+		else {//all memeber list
+			pvo.setTotalRowCount(memberService.getListCount(pvo));
 
-		//listType : member > all list
-		//request : 요청한 회원 리스트
-		//if("request".equals(listType)) {
-		//	pvo.setAcc
-		//}
-
-
-		List<MemberVo> memberList = memberService.getList(pvo);
-
-
-		for(MemberVo member:memberList) {
-			Integer useablePoint = 0;
-			String grade = "BASIC";
-			int totlaOrderPrice = 0;
-
-			useablePoint = pointService.getUseablePoint(member.getSeq());
-			if (orderService.getTotalOrderFinishPrice(member.getSeq()) != null) {
-				totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(member.getSeq()));
-			}
-
-			for (GradeVo vo : grades) {
-				if (vo.getPayCondition() < totlaOrderPrice) {
-					grade = vo.getName();
-					break;
-				}
-			}
-
-			member.setTotalOrderPrice(totlaOrderPrice);
-			member.setGradeName(grade);
-			member.setPoint(useablePoint == null ? new Integer(0) : useablePoint);
+			memberList = memberService.getList(pvo);
 		}
 
 		List<MallVo> mallList = mallService.getListSimple();
-
-		for(MemberVo member:memberList){
-			List<MallAccessVo> mallAccessVos=mallAccessService.getVo(member.getSeq());
-			if(mallAccessVos == null) {
+		for (MemberVo member : memberList) {
+			List<MallAccessVo> mallAccessVos = mallAccessService.getVo(member.getSeq());
+			if (mallAccessVos == null) {
 				mallAccessVos = new ArrayList<>();
-				for(MallVo mall:mallList){
+				for (MallVo mall : mallList) {
 					MallAccessVo vo = new MallAccessVo();
 					vo.setMallSeq(mall.getSeq());
-					vo.setAccessStatus("NA");
+					vo.setAccessStatus("X");
 					mallAccessVos.add(vo);
 				}
-			}
-			if(mallAccessVos.size()<mallList.size()){
-				for(MallVo mall:mallList){
-					if(findMall(mallList, mallAccessVos)){
+			} else if (mallAccessVos.size() < mallList.size()) {
+				for (MallVo mall : mallList) {
+					if (findMall(mall.getSeq(), mallAccessVos)) {
 						continue;
-					}
-					else {
+					} else {
 						MallAccessVo vo = new MallAccessVo();
 						vo.setMallSeq(mall.getSeq());
-						vo.setAccessStatus("NA");
+						vo.setAccessStatus("X");
 						mallAccessVos.add(vo);
 					}
 				}
 			}
 			member.setMallAccessVos(mallAccessVos);
 		}
+
+		for(MemberVo member:memberList) {
+//			Integer useablePoint = 0;
+			String grade = "BASIC";
+//			int totlaOrderPrice = 0;
+
+//			useablePoint = pointService.getUseablePoint(member.getSeq());
+//			if (orderService.getTotalOrderFinishPrice(member.getSeq()) != null) {
+//				totlaOrderPrice = new Integer(orderService.getTotalOrderFinishPrice(member.getSeq()));
+//			}
+
+			for (GradeVo vo : grades) {
+				if (vo.getPayCondition() < member.getTotalOrderPrice()) {
+					grade = vo.getName();
+					break;
+				}
+			}
+
+//			member.setTotalOrderPrice(totlaOrderPrice);
+			member.setGradeName(grade);
+//			member.setPoint(useablePoint == null ? new Integer(0) : useablePoint);
+		}
+
 
 		model.addAttribute("list", memberList);
 		model.addAttribute("total", new Integer(pvo.getTotalRowCount()));
@@ -654,12 +677,49 @@ public class MemberController {
 		return "/ajax/get-memberAccess-list.jsp";
 	}
 
-	private boolean findMall(List<MallVo> mallList, List<MallAccessVo>mallAccessVos){
-		for(MallVo mall:mallList){
-			for(MallAccessVo mallacc:mallAccessVos){
-				if(mall.getSeq() == mallacc.getMallSeq()) return true;
-			}
+
+	@CheckGrade(controllerName = "memberController", controllerMethod = "mallAccessChange")
+	@RequestMapping("/member/access/change")
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public String mallAccessChange(MallAccessVo vo, Model model) {
+
+		System.out.println(">>>"+vo.toString());
+
+		if (vo.getNote() == null) {
+			model.addAttribute("result", "false");
+			model.addAttribute("message", "사유는 반드시 입력 되어야 합니다.");
+			return "/ajax/get-message-result.jsp";
 		}
+
+		if(vo.getAccessStatus() == null){
+			model.addAttribute("result", "false");
+			model.addAttribute("message", "상태값은 반드시 선택택 어야 합니다.");
+			return "/ajax/get-message-result.jsp";
+		}
+
+		try {
+			List<MallAccessVo> myAccesses = mallAccessService.getVo(vo.getUserSeq());
+			if(findMall(vo.getMallSeq(), myAccesses)){
+				mallAccessService.modVo(vo);
+			}
+			else {
+				mallAccessService.insertVo(vo);
+			}
+		} catch (Exception e) {
+
+		}
+		model.addAttribute("result", "true");
+		model.addAttribute("message", "몰이용 승인이 조정되었습니다.");
+		return "/ajax/get-message-result.jsp";
+	}
+
+	private boolean findMall(int mallSeq, List<MallAccessVo>mallAccessVos){
+System.out.println("### findMall mallSeq:"+mallSeq);
+		for(MallAccessVo mallacc:mallAccessVos){
+			System.out.println("### findMall mallacc.getMallSeq():"+mallacc.getMallSeq());
+			if(mallSeq == mallacc.getMallSeq()) return true;
+		}
+
 		return false;
 	}
 }

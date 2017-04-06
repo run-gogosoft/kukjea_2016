@@ -97,4 +97,14 @@ public class SellerDaoImpl implements SellerDao {
 	public int deleteSeller(Integer seq) {
 		return sqlSession.delete("seller.deleteSeller", seq);
 	}
+
+	@Override
+	public String getTotlaSellFinishCount(Integer sellerSeq){
+		return "0";
+	}
+
+	@Override
+	public String getTotalSellFinishPrice(Integer sellerSeq){
+		return sqlSession.selectOne("order.getTotalSellFinishPrice", sellerSeq);
+	}
 }

@@ -27,7 +27,7 @@
                             <dl>
                                 <dt><a href="/shop/event/plan/plansub/${item.seq}">${item.title}</a></dt>
                                 <dd class="date">
-                                    <fmt:parseDate value="${item.startDate}" var="startDate" pattern="yyyy-mm-dd"/>
+                                    <fmt:parseDate value="${item.startDate}" var="startDate" pattern="yyyymmdd"/>
                                     <fmt:formatDate value="${startDate}" pattern="yyyy-mm-dd"/>
                                     ~
                                     <fmt:parseDate value="${item.endDate}" var="endDate" pattern="yyyymmdd"/>

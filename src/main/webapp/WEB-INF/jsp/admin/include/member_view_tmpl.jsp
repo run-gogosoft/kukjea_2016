@@ -59,9 +59,9 @@
 	<td class="text-center">
 		<a href="/admin/order/list?search=order_seq&findword=<%="${orderSeq}"%>"><%="${orderSeq}"%></a>
 	</td>
-	<td class="text-center">
-		<a href="/admin/order/view/<%="${orderSeq}"%>?seq=<%="${orderDetailSeq}"%>"><%="${orderDetailSeq}"%></a>
-	</td>
+	<%--<td class="text-center">--%>
+		<%--<a href="/admin/order/view/<%="${orderSeq}"%>?seq=<%="${orderDetailSeq}"%>"><%="${orderDetailSeq}"%></a>--%>
+	<%--</td>--%>
 	<td class="text-center"><%="${note}"%></td>
 </tr>
 </script>

@@ -78,6 +78,14 @@
         }
     };
 
+    /** 몰이용허가 처리 */
+    var updateAccessStatus = function(mallName,mallSeq, accessStatus) {
+        if(!confirm("회원님께서는 아직 '"+mallName+"' 의 이용승인을 얻지 못하셨습니다. \n변경하시겠습니까?")) {
+            return;
+        }
+
+        location.href="/shop/mypage/status/accessupdate?seq=${vo.seq}&mallSeq="+mallSeq+"&accessStatus="+accessStatus
+    }
 </script>
 </body>
 </html>

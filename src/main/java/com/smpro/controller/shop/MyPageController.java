@@ -63,6 +63,12 @@ public class MyPageController extends MyPage {
 	@Autowired
 	private EventService eventService;
 
+	@Autowired
+	private MallService mallService;
+
+	@Autowired
+	private MallAccessService mallAccessService;
+
 	@RequestMapping("/mypage/main")
 	public String mypageMain(HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
@@ -240,13 +246,40 @@ public class MyPageController extends MyPage {
 			model.addAttribute("message", "회원 정보 복호화에 실패했습니다. ["+e.getMessage()+"]");
 			return Const.ALERT_PAGE;
 		}
-		model.addAttribute("vo", vo);
 
+
+		List<MallVo> mallList = mallService.getListSimple();
+		List<MallAccessVo> mallAccessVos=mallAccessService.getVo(vo.getSeq());
+		if(mallAccessVos == null) {
+			mallAccessVos = new ArrayList<>();
+			for(MallVo mall:mallList){
+				MallAccessVo mvao = new MallAccessVo();
+				mvao.setMallSeq(mall.getSeq());
+				mvao.setAccessStatus("X");
+				mallAccessVos.add(mvao);
+			}
+		}
+		if(mallAccessVos.size()<mallList.size()){
+			for(MallVo mall:mallList){
+				if(findMall(mall.getSeq(), mallAccessVos)){
+					continue;
+				}
+				else {
+					MallAccessVo mvao = new MallAccessVo();
+					mvao.setMallSeq(mall.getSeq());
+					mvao.setAccessStatus("X");
+					mallAccessVos.add(mvao);
+				}
+			}
+		}
+
+		vo.setMallAccessVos(mallAccessVos);
+		model.addAttribute("vo", vo);
 //		CommonVo cvo = new CommonVo();
 //		//자치구 코드
 //		cvo.setGroupCode(new Integer(29));
 //		model.addAttribute("jachiguList", systemService.getCommonList(cvo));
-
+		model.addAttribute("mallList",mallList);
 		model.addAttribute("title", "나의정보");
 		model.addAttribute("on", "01");
 		return "/mypage/member_mod.jsp";
@@ -1485,6 +1518,48 @@ public class MyPageController extends MyPage {
 		return "/mypage/order/detail_taxrequest.jsp";
 	}
 
+
+	/** 몰이용허가 처리  */
+	@RequestMapping("/mypage/status/accessupdate")
+	public String accessStatusUpdate(HttpServletRequest request, MemberVo vo, String accessStatus,Model model) throws Exception{
+		boolean flag = false;
+
+		System.out.println(">>>>>> user seq:"+vo.getSeq());
+		System.out.println(">>>>>> mall seq:"+vo.getMallSeq());
+		System.out.println(">>>>>> accessStatus:"+accessStatus);
+
+		try {
+			List<MallAccessVo> myAccesses = mallAccessService.getVo(vo.getSeq());
+			MallAccessVo mvm = new MallAccessVo();
+			mvm.setMallSeq(vo.getMallSeq());
+			mvm.setUserSeq(vo.getSeq());
+			mvm.setAccessStatus(accessStatus);
+			if(findMall(mvm.getMallSeq(), myAccesses)){
+				mallAccessService.modVo(mvm);
+			}
+			else {
+				mallAccessService.insertVo(mvm);
+			}
+			flag = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+		if (flag) {
+			model.addAttribute("message", "상태 업데이트 성공.");
+		}
+		else {
+			model.addAttribute("message", "상태 업데이트 실패.");
+		}
+		model.addAttribute("returnUrl", "/shop/mypage/mod");
+		return Const.REDIRECT_PAGE;
+	}
+
+
+
+
+
 	private boolean memberValidCheck(MemberVo vo, MemberGroupVo gvo, Model model) {
 		boolean flag = true;
 		/* 유효성 검사 */
@@ -1563,5 +1638,15 @@ public class MyPageController extends MyPage {
 		vo.setTitle((String)map.get("title") == null ? "" : (String)map.get("title"));
 		vo.setContent((String)map.get("content") == null ? "" : (String)map.get("content"));
 		return vo;
+	}
+
+	private boolean findMall(int mallSeq, List<MallAccessVo>mallAccessVos){
+		System.out.println("### findMall mallSeq:"+mallSeq);
+		for(MallAccessVo mallacc:mallAccessVos){
+			System.out.println("### findMall mallacc.getMallSeq():"+mallacc.getMallSeq());
+			if(mallSeq == mallacc.getMallSeq()) return true;
+		}
+
+		return false;
 	}
 }

@@ -21,7 +21,7 @@
 			</otherwise>
 		</choose>
 				i.cate_lv1_seq,
-				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -48,7 +48,7 @@
 			</otherwise>
 		</choose>
 				i.cate_lv1_seq,
-				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -78,7 +78,7 @@
 			<!-- 정상 주문건 -->
 			SELECT
 				i.cate_lv1_seq,
-				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -95,7 +95,7 @@
 			<!-- 취소 주문건 -->
 			SELECT
 				i.cate_lv1_seq,
-				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -134,7 +134,7 @@
 				d.option_value AS optionValue,
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
-				((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				(d.option_price * d.order_cnt) AS sellPrice,
 				(d.supply_price * d.order_cnt) AS supplyPrice
 			FROM
 				sm_order_detail d LEFT OUTER JOIN
@@ -172,7 +172,7 @@
 				d.option_value AS optionValue,
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
-				-((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				-(d.option_price * d.order_cnt) AS sellPrice,
 				-(d.supply_price * d.order_cnt) AS supplyPrice
 			FROM
 				sm_order_detail d LEFT OUTER JOIN
@@ -195,7 +195,7 @@
 	<!--  상품 카테고리별 매출 현황 상세 - 정상주문 합 -->
 	<select id="getListByCategoryDetailSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
-			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM(d.option_price * d.order_cnt) AS sumPrice,
 			SUM(d.supply_price * d.order_cnt) AS supplyPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM
@@ -216,7 +216,7 @@
 	<!--  상품 카테고리별 매출 현황 상세 - 취소주문 합 -->
 	<select id="getListByCategoryDetailCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
-			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM(d.option_price * d.order_cnt) AS sumPrice,
 			SUM(d.supply_price * d.order_cnt) AS supplyPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM
@@ -253,7 +253,7 @@
 			</otherwise>
 		</choose>
 				i.auth_category,
-				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -276,7 +276,7 @@
 			</otherwise>
 		</choose>
 				i.auth_category,
-				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -299,7 +299,7 @@
 		FROM (
 			SELECT
 				i.auth_category,
-				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -313,7 +313,7 @@
 			
 			SELECT
 				i.auth_category,
-				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -344,7 +344,7 @@
 			</otherwise>
 		</choose>
 				m.member_type_code,
-				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -368,7 +368,7 @@
 			</otherwise>
 		</choose>
 				m.member_type_code,
-				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -393,7 +393,7 @@
 		FROM (
 			SELECT
 				m.member_type_code,
-				((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -408,7 +408,7 @@
 			
 			SELECT
 				m.member_type_code,
-				-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -435,7 +435,7 @@
 				SELECT
 					d.item_name,
 					d.order_cnt,
-					((d.sell_price + d.option_price) * d.order_cnt) sell_price,
+					(d.option_price * d.order_cnt) sell_price,
 					i.type1,
 					i.type2,
 					i.type3
@@ -450,26 +450,26 @@
 					<if test="sellerSeq > 2">
 						AND d.seller_seq =#{sellerSeq}
 					</if>
-				UNION ALL
+				<!--UNION ALL-->
 
-				SELECT
-					d.item_name,
-					-d.order_cnt,
-					-((d.sell_price + d.option_price) * d.order_cnt) sell_price,
-					i.type1,
-					i.type2,
-					i.type3
-				FROM
-					sm_order_detail d LEFT OUTER JOIN
-					sm_item i ON i.seq=d.item_seq
-				WHERE
-					d.c10_date IS NOT NULL
-					<if test="searchDate1 != '' and searchDate2 != ''">
-					AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
-					</if>
-					<if test="sellerSeq > 2">
-						AND d.seller_seq =#{sellerSeq}
-					</if>
+				<!--SELECT-->
+					<!--d.item_name,-->
+					<!-- -d.order_cnt,-->
+					<!-- -(d.option_price * d.order_cnt) sell_price,-->
+					<!--i.type1,-->
+					<!--i.type2,-->
+					<!--i.type3-->
+				<!--FROM-->
+					<!--sm_order_detail d LEFT OUTER JOIN-->
+					<!--sm_item i ON i.seq=d.item_seq-->
+				<!--WHERE-->
+					<!--d.c10_date IS NOT NULL-->
+					<!--<if test="searchDate1 != '' and searchDate2 != ''">-->
+					<!--AND DATE_FORMAT(d.c99_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')-->
+					<!--</if>-->
+					<!--<if test="sellerSeq > 2">-->
+						<!--AND d.seller_seq =#{sellerSeq}-->
+					<!--</if>-->
 			) t
 			GROUP BY t.item_name
 		) tt
@@ -481,7 +481,7 @@
 	<!-- 상품 누적 판매 통계 기간별 정상주문 매출액 합계 -->
 	<select id="getListByItemSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
-			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM( d.option_price * d.order_cnt) AS sumPrice,
 			SUM(d.supply_price * d.order_cnt) AS supplyPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM 
@@ -499,7 +499,7 @@
 	<!-- 상품 누적 판매 통계 기간별 취소주문 매출액 합계 -->
 	<select id="getListByItemCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
-			SUM((d.sell_price + d.option_price) * d.order_cnt) AS sumPrice,
+			SUM(d.option_price * d.order_cnt) AS sumPrice,
 			SUM(d.supply_price * d.order_cnt) AS supplyPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM 
@@ -528,7 +528,7 @@
 				SELECT
 					s.name,
 					d.order_cnt,
-					((d.sell_price + d.option_price) * d.order_cnt) sell_price,
+					(d.option_price * d.order_cnt) sell_price,
 					ss.commission
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
@@ -545,7 +545,7 @@
 				SELECT
 					s.name,
 					-d.order_cnt,
-					-((d.sell_price + d.option_price) * d.order_cnt) sell_price,
+					-(d.option_price * d.order_cnt) sell_price,
 					ss.commission
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
@@ -572,7 +572,7 @@
 		FROM (
 			<!-- 정상주문 -->
 			SELECT
-				SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+				SUM(d.option_price * d.order_cnt) AS sellPrice
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_seller s ON (d.seller_seq=s.seq)
@@ -589,7 +589,7 @@
 			
 			<!-- 취소주문 -->
 			SELECT
-				-SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+				-SUM(d.option_price * d.order_cnt) AS sellPrice
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_seller s ON (d.seller_seq=s.seq)
@@ -617,7 +617,7 @@
 				SELECT
 					d.item_name,
 					d.order_cnt,
-					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					(d.option_price * d.order_cnt) sell_price
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
 					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -639,7 +639,7 @@
 				SELECT
 					d.item_name,
 					-d.order_cnt,
-					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					-(d.option_price * d.order_cnt) sell_price
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
 					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -670,7 +670,7 @@
 		FROM (
 			<!-- 정상주문 -->
 			SELECT
-				SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+				SUM(d.option_price * d.order_cnt) AS sellPrice
 			FROM
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -690,7 +690,7 @@
 			
 			<!-- 취소주문 -->
 			SELECT
-				-SUM((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice
+				-SUM(d.option_price * d.order_cnt) AS sellPrice
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -721,7 +721,7 @@
 					g.jachigu_code,
 					g.invest_flag,
 					d.order_cnt,
-					((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					(d.option_price * d.order_cnt) sell_price
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
 					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -739,7 +739,7 @@
 					g.jachigu_code,
 					g.invest_flag,
 					-d.order_cnt,
-					-((d.sell_price + d.option_price) * d.order_cnt) sell_price
+					-( d.option_price * d.order_cnt) sell_price
 				FROM 
 					sm_order_detail d LEFT OUTER JOIN
 					sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -775,7 +775,7 @@
 				d.option_value AS optionValue,
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
-				((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				(d.option_price * d.order_cnt) AS sellPrice,
 				(d.supply_price * d.order_cnt) AS supplyPrice,
 				<!--d.deli_cost AS deliCost,-->
 				u.name AS sellerName,
@@ -814,7 +814,7 @@
 				d.option_value AS optionValue,
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
-				-((d.sell_price + d.option_price) * d.order_cnt) AS sellPrice,
+				-(d.option_price * d.order_cnt) AS sellPrice,
 				-(d.supply_price * d.order_cnt) AS supplyPrice,
 				<!--d.deli_cost AS deliCost,-->
 				u.name AS sellerName,

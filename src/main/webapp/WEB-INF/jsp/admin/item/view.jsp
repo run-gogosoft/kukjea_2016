@@ -933,7 +933,7 @@
 		goPage(0);
 		<c:if test="${vo eq null}">
 			setTimeout(function(){
-				EBCategory.renderList(1, 0, 0);
+				EBCategory.renderList(1, 0, ${vo.mallId});
 			}, 100);
 			EBOption.add(); //옵션추가
 			EBOption.addChild($('.optionValueAdd'));

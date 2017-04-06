@@ -1,5 +1,7 @@
 package com.smpro.vo;
 
+import java.util.List;
+
 public class UserVo extends PagingVo {
 	/** 시퀀스(고유번호) */
 	protected Integer seq;
@@ -95,6 +97,17 @@ public class UserVo extends PagingVo {
 	
 	/** 회원 유형 코드 */
 	private String memberTypeCode = "";
+
+	/** mall access **/
+	private List<MallAccessVo> mallAccessVos=null;
+
+	public void setMallAccessVos(List<MallAccessVo> lists){
+		this.mallAccessVos = lists;
+	}
+
+	public List<MallAccessVo> getMallAccessVos(){
+		return this.mallAccessVos;
+	}
 	
 	public Integer getSeq() {
 		return seq;

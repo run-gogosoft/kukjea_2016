@@ -76,17 +76,6 @@ public class MemberVo extends UserVo {
 	/** 등급 **/
 	private String gradeName = "";
 
-	/** mall access **/
-	private List<MallAccessVo> mallAccessVos=null;
-
-	public void setMallAccessVos(List<MallAccessVo> lists){
-		this.mallAccessVos = lists;
-	}
-
-	public List<MallAccessVo> getMallAccessVos(){
-		return this.mallAccessVos;
-	}
-
 	public void setTotalOrderPrice(int price){ this.totalOrderPrice = price;}
 
 	public int getTotalOrderPrice(){return this.totalOrderPrice;}

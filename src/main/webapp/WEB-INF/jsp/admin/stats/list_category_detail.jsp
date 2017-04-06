@@ -42,7 +42,7 @@
 					</div>
 					<!-- 합계 -->
 					<div class="box-body">
-						<table id="sumlist" class="table table-bordered" style="max-width:600px;">
+						<table id="sumlist" class="table table-bordered" >
 							<colgroup>
 								<col style="width:150px"/>
 								<col style="width:150px"/>

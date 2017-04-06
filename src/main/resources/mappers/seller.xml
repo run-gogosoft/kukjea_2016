@@ -103,6 +103,7 @@
 			S.sales_name AS salesName,
 			S.sales_tel  AS salesTel,
 			S.sales_cell  AS salesCell,
+			S.sales_email AS salesEmail,
 			S.approval_date  AS approvalDate,
 			S.intro,
 			U.type_code AS typeCode,
@@ -162,7 +163,7 @@
 				<when test="search eq 'nickname'">AND U.nickname LIKE CONCAT('%',#{findword},'%')</when>
 			</choose>
 		</if>
-		ORDER BY U.seq DESC
+		ORDER BY U.seq ASC
 		LIMIT ${pageNum * rowCount}, ${rowCount}
 	</select>
 	<!--총판/판매자 리스트 레코드 수-->

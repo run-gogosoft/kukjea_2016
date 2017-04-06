@@ -15,6 +15,13 @@ public interface MemberService {
 	 * @throws Exception */
 	public List<MemberVo> getList(MemberVo vo) throws Exception;
 
+	/** 몰 이용 요청 회원 리스트
+	 * @throws Exception */
+	public List<MemberVo> getRequestList(MemberVo vo) throws Exception;
+
+	/** 요청회원 리스트 건수 **/
+	public int getRequestListCount(MemberVo vo);
+
 	/** 회원 리스트 검색 건수 */
 	public int getListCount(MemberVo vo);
 
