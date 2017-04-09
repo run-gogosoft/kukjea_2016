@@ -61,9 +61,71 @@ public class IndexController {
 	@Autowired
 	private EventService eventService;
 
+	@Autowired
+	private MallAccessService mallAccessService;
+
+	@RequestMapping("/changeMall")
+	public String change(HttpSession session, HttpServletRequest request, Model model) throws Exception {
+		//login check
+		Integer mallSeq = 1;
+		if(request.getParameter("mallSeq")!=null){
+			mallSeq =new Integer(request.getParameter("mallSeq"));
+		}
+
+		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
+			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
+			model.addAttribute("returnUrl", "/shop/login");
+			return Const.REDIRECT_PAGE;
+		}
+		//mall access check
+		List<MallAccessVo> mallAccessVos =  mallAccessService.getVo((Integer)session.getAttribute("loginSeq"));
+		if(mallAccessVos==null || mallAccessVos.size()==0){
+			String mallName = mallService.getVo(mallSeq).getName();
+			model.addAttribute("target", "self");
+			model.addAttribute("message","회원님께서는 아직 "+mallName+"의 이용 승인을 얻지 못하였습니다. 승인신청하세요.");
+			return Const.ALERT_PAGE;
+		}
+		else {
+			boolean permitted = false;
+			for(MallAccessVo accessVo:mallAccessVos){
+				if(accessVo.getMallSeq()==mallSeq){
+					if(accessVo.getAccessStatus().equals("A")){
+						permitted = true;
+					}
+					else if(accessVo.getAccessStatus().equals("R")){
+						String mallName = mallService.getVo(mallSeq).getName();
+						model.addAttribute("message","현재 회원님의"+mallName+"의 이용을 검토중입니다.");
+					}
+					else {
+						model.addAttribute("message","허용되지 않은 접근입니다.");
+					}
+				}
+			}
+			if(!permitted){
+				model.addAttribute("target", "self");
+				return Const.ALERT_PAGE;
+			}
+		}
+
+
+		//change mall seq
+		/**
+		 * sesseion에 몰 변경시 해당 값을 지정해 놓는다.
+		 */
+		if(request.getRequestURI().equals("/shop/changeMall")) {
+			session.setAttribute("mallSeq", mallSeq);
+		}
+
+		//redirect url lv/1
+		if(mallSeq==1) model.addAttribute("returnUrl", "/shop/main");
+		else model.addAttribute("reurnUrl","/lv/1");
+		return Const.REDIRECT_PAGE;
+	}
+
 	@RequestMapping("/main")
 	public String index(HttpSession session, HttpServletRequest request, Model model) throws Exception {
 		String memberTypeCode = (String)session.getAttribute("loginMemberTypeCode");
+		System.out.println("/main!!1");
 		//회원이면 회원의 멤버구분을, 비회원이면 무조건 회원으로 강제한다.
 		if(memberTypeCode == null) {
 			memberTypeCode = "C";
@@ -134,7 +196,6 @@ public class IndexController {
 		repeate.setLoginType((String) session.getAttribute("loginType"));
 		repeate.setLoginSeq((Integer) session.getAttribute("loginSeq"));
 		model.addAttribute("repeatList", orderService.getRepeatOrderList(repeate));
-		model.addAttribute("mallList", mallService.getListSimple());
 		return "/index.jsp";
 	}
 

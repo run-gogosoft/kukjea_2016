@@ -27,6 +27,9 @@
 							<%--<span class="user_message">새쪽지<span class="badge">3</span></span>--%>
 						</div>
 						<div class="user_point">
+							등급  (<em data-access="grade">---</em>)
+						</div>
+						<div class="user_point">
 							포인트 (<em data-access="point">---</em>)
 						</div>
 						<div class="user_links btn_grp">

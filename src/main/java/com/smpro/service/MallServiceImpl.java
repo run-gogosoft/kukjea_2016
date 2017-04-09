@@ -112,11 +112,11 @@ public class MallServiceImpl implements MallService {
 				if (!tempDir.exists()) {
 					tempDir.mkdir();
 				}
-				tempDir = new File(Const.UPLOAD_REAL_PATH + "/banner/");
+				tempDir = new File(Const.UPLOAD_REAL_PATH + "/logo/");
 				if (!tempDir.exists()) {
 					tempDir.mkdir();
 				}
-				tempDir = new File(Const.UPLOAD_REAL_PATH + "/banner/temp");
+				tempDir = new File(Const.UPLOAD_REAL_PATH + "/logo/temp");
 				if (!tempDir.exists()) {
 					tempDir.mkdir();
 				}

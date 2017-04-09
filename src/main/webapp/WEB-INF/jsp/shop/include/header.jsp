@@ -4,23 +4,23 @@
         <div class="layout_inner">
             <a href="#" id="favorite" class="btn_favorite">즐겨찾기 추가</a>
             <ul class="mall_links">
-                <c:forEach var="mall" items="${mallList}">
-                    <c:choose>
-                        <c:when test="${mall.seq eq mallVo.seq}">
-                            <li><a href="/shop/main?mallSeq=${mall.seq}">${mall.name}</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li><a href="/shop/main?mallSeq=${mall.seq}" style="color:#aaa">${mall.name}</a></li>
-                        </c:otherwise>
-                    </c:choose>
-                <%--<li><a href="#">약국몰</a></li>--%>
-                <%--<li><a href="#">B2B몰</a></li>--%>
-                </c:forEach>
+                <%--<c:forEach var="mall" items="${mallList}">--%>
+                    <%--<c:choose>--%>
+                        <%--<c:when test="${mall.seq eq mallVo.seq}">--%>
+                            <%--<li><a href="/shop/main?mallSeq=${mall.seq}">${mall.name}</a></li>--%>
+                        <%--</c:when>--%>
+                        <%--<c:otherwise>--%>
+                            <%--<li><a href="/shop/main?mallSeq=${mall.seq}" style="color:#aaa">${mall.name}</a></li>--%>
+                        <%--</c:otherwise>--%>
+                    <%--</c:choose>--%>
+                <%--</c:forEach>--%>
+                    <li><a href="#">병원몰</a></li>
+                    <%--<li><a href="#">B2B몰</a></li>--%>
             </ul>
             <c:choose>
             <c:when test="${sessionScope.loginSeq > 0}">
                 <ul class="utils">
-                    <li class="user">${sessionScope.loginName}님 ( <em data-access="point">---</em> 포인트)</li>
+                    <li class="user">${sessionScope.loginName}님 ( <em data-access="grade">---</em> 등급, <em data-access="point">---</em> 포인트)</li>
                     <li><a href="/shop/cart">장바구니(<em>${cartCount}</em>)</a></li>
                     <li><a href="/shop/mypage/main">마이페이지</a></li>
                     <li><a href="/shop/mypage/order/list">주문배송조회</a></li>
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="layout_inner search_section">
-        <h1><a href="/shop/main?mallSeq=${mallVo.seq}"><img src="/upload/${mallVo.logoImg}" alt="국제몰 (KUK JE MALL)" /></a></h1>
+        <h1><a href="/shop/main?mallSeq=${mallVo.seq}"><img src="/upload${mallVo.logoImg}" alt="국제몰 (KUK JE MALL)" /></a></h1>
         <div class="search">
             <form action="/shop/search?mallSeq=${mallVo.seq}" role="form" onsubmit="return checkRequiredValue(this, 'data-required-label');">
                 <fieldset>
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="promotion_top">
-            <a href="http://blog.naver.com/alaman92" target="_blank"><img src="/images/thumb/thumb_promotion230x70.jpg" alt="">
+            <a href="http://blog.naver.com/alaman92" target="_blank"><img src="/upload/banner/banner.jpg" alt="">
         </div>
             <li>
                 <c:if test="${noticeList ne null}">

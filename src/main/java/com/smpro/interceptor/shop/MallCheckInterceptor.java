@@ -45,10 +45,13 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 //		response.setHeader("Pragma", "no-cache");
 //		response.setHeader("Expires", "-1"); // 일부 파이어폭스 버그 관련
 		log.info("### requestURI : " + request.getRequestURI());
+		log.info("### mallId:"+ request.getParameter("mallSeq"));
 
 
-		//mall정보d
-//		request.setAttribute("mallList",mallService.getListSimple());
+		HttpSession session = request.getSession(true);
+
+		//mall정보
+		request.setAttribute("mallList",mallService.getListSimple());
 
 		//공지사항
 		BoardVo boardVo = new BoardVo();
@@ -57,10 +60,9 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 		boardVo.setRowCount(4);
 		boardVo.setTotalRowCount( boardService.getListCount(boardVo) );
 		request.setAttribute("noticeList",boardService.getList(boardVo));
-
 		//장바구니 카운트
 		ItemVo itemVo = new ItemVo();
-		HttpSession session  = request.getSession();
+
 		itemVo.setMemberSeq((Integer)session.getAttribute("loginSeq"));
 		request.setAttribute("cartCount", cartService.getListTotalCount(itemVo));
 		String[] requestURI = request.getRequestURI().replace("http://","").split("/");
@@ -76,8 +78,11 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 				//몰과 상관없이 공통적으로 쓰는 페이지는 skip
 				return true;
 			} 
-			mallId = "kookje";
-			MallVo vo = mallService.getMainInfo(mallId);
+			mallId = request.getParameter("mallSeq");
+			int mallSeq = 1;
+			if(mallId != null) mallSeq = new Integer(mallId);
+
+			MallVo vo = mallService.getVo(mallSeq);
 			if(vo == null) {
 				errMsg = "존재하지 않는 쇼핑몰 접근입니다.";
 			} else {
