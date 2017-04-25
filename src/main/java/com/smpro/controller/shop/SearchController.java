@@ -34,7 +34,7 @@ public class SearchController {
 			return Const.REDIRECT_PAGE;
 		}
 
-
+		vo.setMallId((Integer)session.getAttribute("mallSeq"));
 		model.addAttribute("title", "검색");
 
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
@@ -46,7 +46,7 @@ public class SearchController {
 
 		// 카테고리를 가져온다
 		CategoryVo cvo = new CategoryVo();
-
+		cvo.setMallId((Integer)session.getAttribute("mallSeq"));
 		cvo.setDepth(1);
 		cvo.setShowFlag("Y");
 		model.addAttribute("cateLv1List", categoryService.getListSimple(cvo));

@@ -71,39 +71,34 @@ public class IndexController {
 		if(request.getParameter("mallSeq")!=null){
 			mallSeq =new Integer(request.getParameter("mallSeq"));
 		}
+		if(mallSeq !=1) {
+			if (session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
+				model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
+				model.addAttribute("returnUrl", "/shop/login");
+				return Const.REDIRECT_PAGE;
+			}
+			//mall access check
+			boolean find = false;
+			List<MallAccessVo> mallAccessVos = mallAccessService.getVo((Integer) session.getAttribute("loginSeq"));
 
-		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
-			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
-			model.addAttribute("returnUrl", "/shop/login");
-			return Const.REDIRECT_PAGE;
-		}
-		//mall access check
-		List<MallAccessVo> mallAccessVos =  mallAccessService.getVo((Integer)session.getAttribute("loginSeq"));
-		if(mallAccessVos==null || mallAccessVos.size()==0){
-			String mallName = mallService.getVo(mallSeq).getName();
-			model.addAttribute("target", "self");
-			model.addAttribute("message","회원님께서는 아직 "+mallName+"의 이용 승인을 얻지 못하였습니다. 승인신청하세요.");
-			return Const.ALERT_PAGE;
-		}
-		else {
-			boolean permitted = false;
-			for(MallAccessVo accessVo:mallAccessVos){
-				if(accessVo.getMallSeq()==mallSeq){
-					if(accessVo.getAccessStatus().equals("A")){
-						permitted = true;
-					}
-					else if(accessVo.getAccessStatus().equals("R")){
+			for (MallAccessVo accessVo : mallAccessVos) {
+				if(accessVo.getMallSeq()==mallSeq.intValue()) {
+					if (accessVo.getAccessStatus().equals("R")) {
 						String mallName = mallService.getVo(mallSeq).getName();
-						model.addAttribute("message","현재 회원님의"+mallName+"의 이용을 검토중입니다.");
+						model.addAttribute("message", "현재 회원님의" + mallName + "의 이용을 검토중입니다.");
+						model.addAttribute("returnUrl", request.getRequestURL());
+						return Const.REDIRECT_PAGE;
 					}
-					else {
-						model.addAttribute("message","허용되지 않은 접근입니다.");
-					}
+					find = true;
+					break;
 				}
 			}
-			if(!permitted){
-				model.addAttribute("target", "self");
-				return Const.ALERT_PAGE;
+
+			if(!find) {
+				String mallName = mallService.getVo(mallSeq).getName();
+				model.addAttribute("message", "회원님께서는 아직 " + mallName + "의 이용 승인을 얻지 못하였습니다. 나의 정보에서 승인신청을 하십시오.");
+				model.addAttribute("returnUrl","/shop/mypage/confirm");
+				return Const.REDIRECT_PAGE;
 			}
 		}
 
@@ -112,13 +107,13 @@ public class IndexController {
 		/**
 		 * sesseion에 몰 변경시 해당 값을 지정해 놓는다.
 		 */
-		if(request.getRequestURI().equals("/shop/changeMall")) {
+//		if(request.getRequestURI().equals("/shop/changeMall")) {
 			session.setAttribute("mallSeq", mallSeq);
-		}
+//		}
 
 		//redirect url lv/1
 		if(mallSeq==1) model.addAttribute("returnUrl", "/shop/main");
-		else model.addAttribute("reurnUrl","/lv/1");
+		else model.addAttribute("returnUrl","/shop/lv1/1");
 		return Const.REDIRECT_PAGE;
 	}
 
@@ -159,7 +154,7 @@ public class IndexController {
 		/** 현재 진행중인 기획전 상품리스트를 가져옴 */
 		eventVo.setTypeCode("1");
 		eventVo.setStatusCode("Y");
-		eventVo.setMallSeq(mallVo.getSeq());
+		eventVo.setMallSeq((Integer)session.getAttribute("mallSeq"));
 		//현재날짜 저장
 		eventVo.setCurDate(StringUtil.getDate(0, "yyyyMMdd"));
 		List<EventVo> eventList = eventService.getList(eventVo);
@@ -171,7 +166,8 @@ public class IndexController {
 
 
 		// 오늘만 이가격
-		eventVo.setSeq(1); // <-- 오늘만 이가격
+
+		eventVo.setSeq((Integer)session.getAttribute("mallSeq")); // <-- 오늘만 이가격
 
 		model.addAttribute("eventVo",eventService.getVo(eventVo) );
 		eventVo.setStatusCode("Y");
@@ -186,6 +182,7 @@ public class IndexController {
 		ItemVo newvo = new ItemVo();
 		newvo.setRowCount(20);
 		newvo.setStatusCode("Y");
+		newvo.setMallId((Integer)session.getAttribute("mallSeq"));
 
 		//nvo.setLoginType((String) session.getAttribute("loginType"));
 		//nvo.setLoginSeq((Integer) session.getAttribute("loginSeq"));
@@ -230,6 +227,7 @@ public class IndexController {
 
 		// 카테고리를 가져온다
 		CategoryVo cvo = new CategoryVo();
+		cvo.setMallId((Integer)session.getAttribute("mallSeq"));
 		cvo.setDepth(1);
 		cvo.setShowFlag("Y");
 		map.put("cateLv1List", categoryService.getListSimple(cvo));
@@ -423,6 +421,8 @@ public class IndexController {
 		if(memberTypeCode == null) {
 			memberTypeCode = "C";
 		}
+
+
 
 		DisplayLvItemVo dvo = new DisplayLvItemVo();
 		dvo.setMemberTypeCode(memberTypeCode);

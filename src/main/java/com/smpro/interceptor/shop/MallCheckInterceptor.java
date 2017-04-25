@@ -60,6 +60,9 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 		boardVo.setRowCount(4);
 		boardVo.setTotalRowCount( boardService.getListCount(boardVo) );
 		request.setAttribute("noticeList",boardService.getList(boardVo));
+
+		MallVo banner = mallService.getVo(2);
+		request.setAttribute("banner", banner);
 		//장바구니 카운트
 		ItemVo itemVo = new ItemVo();
 
@@ -77,10 +80,14 @@ public class MallCheckInterceptor extends HandlerInterceptorAdapter {
 			) {
 				//몰과 상관없이 공통적으로 쓰는 페이지는 skip
 				return true;
-			} 
-			mallId = request.getParameter("mallSeq");
+			}
+
 			int mallSeq = 1;
-			if(mallId != null) mallSeq = new Integer(mallId);
+			if(session.getAttribute("mallSeq")!=null) {
+				mallSeq = (Integer)session.getAttribute("mallSeq");
+			}
+			System.out.println("#### mallSeq:"+mallSeq);
+			session.setAttribute("mallSeq", mallSeq);
 
 			MallVo vo = mallService.getVo(mallSeq);
 			if(vo == null) {

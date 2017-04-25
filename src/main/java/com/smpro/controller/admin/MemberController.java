@@ -67,6 +67,9 @@ public class MemberController {
 	@Autowired
 	private MallAccessService mallAccessService;
 
+	@Autowired
+	private SmsService smsService;
+
 	@CheckGrade(controllerName = "memberController", controllerMethod = "getStats")
 	@RequestMapping("/member/stats")
 	public String getStats(Model model) {
@@ -708,6 +711,35 @@ public class MemberController {
 		} catch (Exception e) {
 
 		}
+
+
+
+		try {
+			//SMS 발송
+			//1. 사용자에게 몰이용접수알림
+			MallVo mallVo = mallService.getVo(vo.getMallSeq());
+			MemberVo member = memberService.getData(vo.getUserSeq());
+			SmsVo svo = new SmsVo();
+			svo.setStatusCode(vo.getAccessStatus());
+			svo.setStatusType("C");
+			String content = smsService.getContent(svo);
+			content = content.replaceAll("mallName", mallVo.getName()).replaceAll("memberName", member.getName());
+			svo.setTrSendStat("0");
+			svo.setTrMsgType("0");
+
+			svo.setTrPhone( member.getCell().replace("-", ""));
+			svo.setTrMsg(content);
+			smsService.insertSmsSendVo(svo);
+		} catch(Exception e) {
+			e.printStackTrace();
+//			log.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+		}
+
+
+
+
+
+
 		model.addAttribute("result", "true");
 		model.addAttribute("message", "몰이용 승인이 조정되었습니다.");
 		return "/ajax/get-message-result.jsp";

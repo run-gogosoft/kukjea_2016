@@ -28,7 +28,8 @@ public class CategoryVo {
 	private int mallId=1;
 
 	public int getMallId() {
-		return mallId;
+		System.out.println("$$$ CategoryVo this.mallId:"+this.mallId);
+		return this.mallId;
 	}
 
 	public void setMallId(int mallId) {

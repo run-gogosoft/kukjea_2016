@@ -225,7 +225,7 @@
     </tr>
     </tbody>
 </table>
-
+<c:if test="${vo ne null}">
 <h4><em class="must">*</em> 몰 서비스 이용 권한 정보</h4>
 <!-- board_write -->
 <table class="board_write">
@@ -288,6 +288,7 @@
     </c:forEach>
     </tbody>
 </table>
+</c:if>
 <!-- //board_write -->
 
 <%@ include file="/WEB-INF/jsp/shop/include/postcode_view.jsp" %>

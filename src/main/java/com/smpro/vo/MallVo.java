@@ -18,6 +18,35 @@ public class MallVo extends UserVo {
 
 	private String logoImg = "";
 
+	/** 대표검색어 **/
+	private String searchkey1 = "";
+	private String searchkey2 = "";
+	private String searchkey3 = "";
+
+	public String getSearchkey1(){
+		return this.searchkey1;
+	}
+
+	public void setSearchkey1(String key){
+		this.searchkey1 = key;
+	}
+
+	public String getSearchkey2(){
+		return this.searchkey2;
+	}
+
+	public void setSearchkey2(String key){
+		this.searchkey2 = key;
+	}
+
+	public String getSearchkey3(){
+		return this.searchkey3;
+	}
+
+	public void setSearchkey3(String key){
+		this.searchkey3 = key;
+	}
+
 	public String getLogoImg(){
 		return this.logoImg;
 	}

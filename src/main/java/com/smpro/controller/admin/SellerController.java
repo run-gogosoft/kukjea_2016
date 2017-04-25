@@ -56,6 +56,10 @@ public class SellerController {
 
 	@Autowired
 	private MallAccessService mallAccessService;
+
+
+	@Autowired
+	private SmsService smsService;
 	
 	/** 총판/입점업체 리스트 */
 	@CheckGrade(controllerName = "sellerController", controllerMethod = "getList")
@@ -498,10 +502,10 @@ public class SellerController {
 	@RequestMapping(value = "/seller/status/accessupdate")
 	public String accessStatusUpdate(HttpSession session, SellerVo vo, String accessStatus,Model model) throws Exception{
 		boolean flag = false;
-
-		System.out.println(">>>>>> user seq:"+vo.getSeq());
-		System.out.println(">>>>>> mall seq:"+vo.getMallSeq());
-		System.out.println(">>>>>> accessStatus:"+accessStatus);
+//
+//		System.out.println(">>>>>> user seq:"+vo.getSeq());
+//		System.out.println(">>>>>> mall seq:"+vo.getMallSeq());
+//		System.out.println(">>>>>> accessStatus:"+accessStatus);
 
 		try {
 			List<MallAccessVo> myAccesses = mallAccessService.getVo(vo.getSeq());
@@ -516,6 +520,24 @@ public class SellerController {
 				mallAccessService.insertVo(mvm);
 			}
 			flag = true;
+
+
+				//SMS 발송
+				//1. 사용자에게 몰이용접수알림
+				MallVo mallVo = mallService.getVo(vo.getMallSeq());
+				SellerVo member = sellerService.getData(vo.getSeq());
+				SmsVo svo = new SmsVo();
+				svo.setStatusCode(accessStatus);
+				svo.setStatusType("C");
+				String content = smsService.getContent(svo);
+				content = content.replaceAll("mallName", mallVo.getName()).replaceAll("memberName", member.getName());
+				svo.setTrSendStat("0");
+				svo.setTrMsgType("0");
+
+				svo.setTrPhone( member.getSalesCell().replace("-", ""));
+				svo.setTrMsg(content);
+				smsService.insertSmsSendVo(svo);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

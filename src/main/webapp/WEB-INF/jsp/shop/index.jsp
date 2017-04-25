@@ -84,6 +84,7 @@
 		</div>
 		<div id="contents" class="main_contents">
 			<!-- 국제 TOP10 -->
+			<c:if test="${mallSeq eq '1'}">
 			<div class="best_ranking">
 				<h2>국제몰 <strong>기획전</strong></h2>
 				<ul>
@@ -92,6 +93,7 @@
 					<li class="member_best"><a href="/shop/event/plan/plansub/4">상품별이벤트</a></li>
 				</ul>
 			</div>
+			</c:if>
 			<!-- //국제 TOP10 -->
 			<!-- 메인 상품목록 -->
 			<div class="tab_wrap product_tab">

@@ -58,6 +58,7 @@
 						<a href="#"><i class="fa fa-cogs"></i> <span>시스템 관리</span><i class="fa fa-angle-left pull-right"></i></a>
 						<ul class="treeview-menu">
 							<li ${naviSub eq '/mall/list' ? "class='active'":""}><a href="/admin/mall/list"><i class="fa fa-caret-right"></i>쇼핑몰 관리</a></li>
+							<li ${naviSub eq '/mall/banner' ? "class='active'":""}><a href="/admin/mall/banner"><i class="fa fa-caret-right"></i>배너 관리</a></li>
 							<%--<li ${naviSub eq '/system/delivery/list' ? "class='active'":""}><a href="/admin/system/delivery/list"><i class="fa fa-caret-right"></i>배송업체 관리</a></li>--%>
 							<li ${naviSub eq '/system/admin/list' ? "class='active'":""}><a href="/admin/system/admin/list"><i	class="fa fa-caret-right"></i>어드민 관리자</a></li>
 							<li ${naviSub eq '/system/notice/popup/list' ? "class='active'":""}><a href="/admin/system/notice/popup/list"><i class="fa fa-caret-right"></i>공지팝업창 관리</a></li>
@@ -113,9 +114,9 @@
 									</c:if>
 									<li ${naviSub eq '/item/excel/form' and mall.seq eq naviSubAttr? "class='active'":""}><a href="/admin/item/excel/form?mallSeq=${mall.seq}"><i class="fa fa-caret-right"></i>상품 대량 등록</a></li>
 									<c:if test="${sessionScope.loginType eq 'A'}">
-										<c:if test="${mall.name eq '병원몰'}">
+										<%--<c:if test="${mall.name eq '병원몰'}">--%>
 											<li ${naviSub eq 'event' and mall.seq eq naviSubAttr? "class='active'":""}><a href="/admin/event/list?mallSeq=${mall.seq}"><i class="fa fa-caret-right"></i>기획전 / 이벤트 관리</a></li>
-										</c:if>
+										<%--</c:if>--%>
 										<li ${naviSub eq 'category' and mall.seq eq naviSubAttr? "class='active'":""}><a href="/admin/category?mallSeq=${mall.seq}"><i class="fa fa-caret-right"></i>카테고리 관리</a></li>
 									</c:if>
 								</ul>

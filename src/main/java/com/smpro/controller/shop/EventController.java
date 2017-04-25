@@ -1,11 +1,13 @@
 package com.smpro.controller.shop;
 
 import com.smpro.service.EventService;
+import com.smpro.service.ItemService;
 import com.smpro.service.SystemService;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
 import com.smpro.vo.BoardVo;
 import com.smpro.vo.EventVo;
+import com.smpro.vo.ItemVo;
 import com.smpro.vo.MallVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,9 @@ public class EventController {
 
 	@Autowired
 	private SystemService systemService;
+
+	@Autowired
+	private ItemService itemService;
 
 	@RequestMapping("/event/plan")
 	public String planList(EventVo vo , HttpServletRequest request, Model model){
@@ -48,7 +53,7 @@ public class EventController {
 
 		model.addAttribute("title", "이벤트");
 		model.addAttribute("on", "01");
-
+		model.addAttribute("mallSeq",request.getSession().getAttribute("mallSeq"));
 		return "/event/plan.jsp";
 	}
 
@@ -92,8 +97,7 @@ public class EventController {
 
 		/** sm_event_item 내용 */
 		eventVo.setStatusCode("Y");
-
-		model.addAttribute("itemList",  eventService.getItemList(eventVo));
+		model.addAttribute("itemList", eventService.getItemList(eventVo));
 		model.addAttribute("title", vo.getTitle());
 		model.addAttribute("on", "01");
 		return "/event/plan_sub.jsp";

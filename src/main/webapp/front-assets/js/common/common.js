@@ -1,3 +1,4 @@
+var menuJson = eval('menuJson_' + mallSeq);
 var validMenuJson = $.extend(true, menuJson, {});
 
 var numberCheck = function(obj){

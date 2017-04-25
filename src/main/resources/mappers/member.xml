@@ -305,7 +305,6 @@
 		<if test="statusCode != ''">
 			AND u.status_code=#{statusCode}
 		</if>
-		GROUP BY u.seq
 	</select>
 
 	<select id="getListCount" parameterType="com.smpro.vo.MemberVo" resultType="int">

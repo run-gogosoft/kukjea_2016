@@ -246,7 +246,7 @@
                             <tr>
                                 <th scope="row"><label>이메일</label></th>
                                 <td>
-                                    <input type="text" class="intxt w180" name="receiverEmail" data-name="receiverEmail" maxlength="100" placeholder="example@example.com" alt="이메일"/>
+                                    <input type="text" class="intxt w180" name="receiverEmail" data-name="receiverEmail" value="${memberVo.email}" maxlength="100" placeholder="example@example.com" alt="이메일"/>
                                 </td>
                             </tr>
                             <tr>

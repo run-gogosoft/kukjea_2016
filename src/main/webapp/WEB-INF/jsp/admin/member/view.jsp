@@ -208,7 +208,7 @@
 							<thead>
 								<tr>
 									<th>쇼핑몰</th>
-									<c:forEach var="mall" items="${mallList}" begin="0" step="1">
+									<c:forEach var="mall" items="${mallList}" begin="1" step="1">
 										<th>${mall.name}<br>이용권한</th>
 									</c:forEach>
 								</tr>
@@ -216,7 +216,7 @@
 							<tbody>
 								<tr>
 									<td class="text-center" ><strong>이용상태</strong></td>
-									<c:forEach var="mall" items="${vo.mallAccessVos}" begin="0" step="1">
+									<c:forEach var="mall" items="${vo.mallAccessVos}" begin="1" step="1">
 										<td class="text-center">
 											<c:if test="${mall.accessStatus eq 'X'}"><button type="button" class="btn btn-sm btn-info text-center" onclick="changeAccessStatus(${mall.mallSeq}, ${vo.seq},'${mall.accessStatus}','${mall.note}')">미요청</button></c:if>
 											<c:if test="${mall.accessStatus eq 'A'}"><button type="button" class="btn btn-sm btn-success text-center" onclick="changeAccessStatus(${mall.mallSeq}, ${vo.seq},'${mall.accessStatus}','${mall.note}')">이용중</button></c:if>
@@ -228,7 +228,7 @@
 								</tr>
 								<tr>
 									<td class="text-center"><strong>처리사유</strong></td>
-									<c:forEach var="mall" items="${vo.mallAccessVos}" begin="0" step="1">
+									<c:forEach var="mall" items="${vo.mallAccessVos}" begin="1" step="1">
 										<td class="text-center">${mall.note}</td>
 									</c:forEach>
 								</tr>

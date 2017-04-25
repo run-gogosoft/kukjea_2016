@@ -121,7 +121,12 @@ public class MallServiceImpl implements MallService {
 					tempDir.mkdir();
 				}
 
-				fileMap.put(file.getName(), new FileUploadUtil().uploadBannermageFile(file, Const.UPLOAD_REAL_PATH + "/banner/temp"));
+				if(request.getAttribute("banner")!=null && request.getAttribute("banner").equals("Y")){
+					fileMap.put(file.getName(), new FileUploadUtil().uploadBannermageFile(file, Const.UPLOAD_REAL_PATH + "/logo/temp"));
+				}
+				else {
+					fileMap.put(file.getName(), new FileUploadUtil().uploadLogoImageFile(file, Const.UPLOAD_REAL_PATH + "/logo/temp"));
+				}
 			}
 		}
 		return fileMap;
@@ -136,7 +141,7 @@ public class MallServiceImpl implements MallService {
 		// 파일이 존재한다면 미리 삭제해야 한다
 		FileUtil.move(new File(realPath + "/temp/" + filename), new File(realPath + "/" + perSeq + "/" + seq + ext));
 
-		return "/banner/" + perSeq + "/" + seq + ext;
+		return "/logo/" + perSeq + "/" + seq + ext;
 	}
 
 	/**

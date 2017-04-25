@@ -125,7 +125,7 @@
 					var common = {list:[], statusCode:''};
 					common.list = list;
 					common.statusCode = statusCode;
-					$("#statusCode").html($("#commonTemplate").tmpl(common));
+					$("#statusCode").html($("#commonTemplate").tmpl(list));
 					$('#statusCode').show();
 				},
 				error:function(error) {

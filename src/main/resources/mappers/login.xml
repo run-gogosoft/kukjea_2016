@@ -35,9 +35,9 @@
 			AND u.id=#{id}
 			AND u.password=#{password}
 			AND u.status_code='Y'
-			<if test="mallSeq != null">
-				AND m.mall_seq=#{mallSeq}
-			</if>
+			<!--<if test="mallSeq != null">-->
+				<!--AND m.mall_seq=#{mallSeq}-->
+			<!--</if>-->
 	</select>
 	<select id="getDataForToken" parameterType="com.smpro.vo.UserVo" resultType="com.smpro.vo.UserVo">
 		<![CDATA[

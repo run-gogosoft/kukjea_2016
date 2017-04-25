@@ -1,8 +1,10 @@
 package com.smpro.service;
 
 import com.smpro.dao.CategoryDao;
+import com.smpro.dao.MallDao;
 import com.smpro.vo.CategoryVo;
 import com.smpro.vo.ItemVo;
+import com.smpro.vo.MallVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,6 +22,9 @@ import java.util.Map;
 public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private CategoryDao categoryDao;
+
+	@Autowired
+	private MallDao mallDao;
 
 	@Override
 	public List<CategoryVo> getList(CategoryVo vo) {
@@ -127,7 +132,10 @@ public class CategoryServiceImpl implements CategoryService {
 		OutputStreamWriter ou = new OutputStreamWriter(new FileOutputStream(
 				targetPath), "utf-8");
 		BufferedWriter out = new BufferedWriter(ou);
-		out.write(makeString());
+		List<MallVo> mallVos = mallDao.getListSimple();
+		for(MallVo mall:mallVos){
+			out.write(makeString(mall.getSeq()));
+		}
 		out.close();
 		ou.close();
 	}
@@ -146,14 +154,15 @@ public class CategoryServiceImpl implements CategoryService {
 	/**
 	 * 모든 카테고리를 순회하면서 json 형태의 string을 반환한다
 	 */
-	private String makeString() {
+	private String makeString(int mallSeq) {
 		StringBuffer sb = new StringBuffer();
-		String varStr = "var menuJson";
-		
+
 		sb.append("/* Generated json : Date ").append(new Date()).append("  */ ");
+		String varStr = "var menuJson_"+mallSeq;
 		sb.append(varStr + " = [");
 		CategoryVo vo = new CategoryVo();
 		vo.setDepth(1);
+		vo.setMallId(mallSeq);
 		vo.setShowFlag("Y");
 		List<CategoryVo> list = getList(vo);
 		for (int i = 0; i < list.size(); i++) {

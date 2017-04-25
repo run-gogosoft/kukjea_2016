@@ -44,7 +44,7 @@
 									<th>상태</th>
 									<th>내용</th>
 									<th>등록일</th>
-									<th></th>
+									<%--<th></th>--%>
 								</tr>
 							</thead>
 							<tbody>
@@ -84,7 +84,7 @@
 									</td>
 									<td>${item.content}</td>
 									<td class="text-center">${fn:substring(item.regDate,0,10)}</td>
-									<td class="text-center"><button onclick="deleteConfirm(${item.seq})" class="btn btn-danger btn-sm">삭제</button></td>
+									<%--<td class="text-center"><button onclick="deleteConfirm(${item.seq})" class="btn btn-danger btn-sm">삭제</button></td>--%>
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">
@@ -94,11 +94,11 @@
 						</table>
 						<div class="dataTables_paginate paging_simple_numbers text-center">${paging}</div>
 					</div>
-					<div class="box-footer">
-						<div class="pull-right">
-							<a href="/admin/sms/form" class="btn btn-info btn-sm">발송 메세지 신규 등록</a>
-						</div>
-					</div>
+					<%--<div class="box-footer">--%>
+						<%--<div class="pull-right">--%>
+							<%--<a href="/admin/sms/form" class="btn btn-info btn-sm">발송 메세지 신규 등록</a>--%>
+						<%--</div>--%>
+					<%--</div>--%>
 				</div>
 			</div>
 		</div>

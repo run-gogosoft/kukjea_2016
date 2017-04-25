@@ -69,6 +69,9 @@ public class MyPageController extends MyPage {
 	@Autowired
 	private MallAccessService mallAccessService;
 
+	@Autowired
+	private SmsService smsService;
+
 	@RequestMapping("/mypage/main")
 	public String mypageMain(HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
@@ -1346,7 +1349,7 @@ public class MyPageController extends MyPage {
 
 		model.addAttribute("data", orderService.getCntByStatus(pvo));
 
-		return "/mypage/member_leave.jsp";
+		return "/login.jsp";
 	}
 
 	/**
@@ -1548,6 +1551,53 @@ public class MyPageController extends MyPage {
 
 		if (flag) {
 			model.addAttribute("message", "상태 업데이트 성공.");
+
+
+			//SMS 발송
+			//1. 사용자에게 몰이용접수알림
+			MallVo mallVo = mallService.getVo(vo.getMallSeq());
+			SmsVo svo = new SmsVo();
+			svo.setStatusCode("R");
+			svo.setStatusType("C");
+			String content = smsService.getContent(svo);
+			content = content.replaceAll("mallName", mallVo.getName()).replaceAll("memberName", memberService.getData(vo.getSeq()).getName());
+			svo.setTrSendStat("0");
+			svo.setTrMsgType("0");
+			svo.setTrPhone(vo.getCell().replace("-", ""));
+			svo.setTrMsg(content);
+
+			try {
+				smsService.insertSmsSendVo(svo);
+			} catch(Exception e) {
+				e.printStackTrace();
+				log.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+			}
+
+			//2.관리자에게 몰이용접수알림
+			SmsVo ssvo = new SmsVo();
+			ssvo.setStatusCode("R");
+			ssvo.setStatusType("C");
+			content = smsService.getContent(ssvo);
+			content = content.replaceAll("mallName", mallVo.getName()).replaceAll("memberName",memberService.getData(vo.getSeq()).getName());
+			ssvo.setTrSendStat("0");
+			ssvo.setTrMsgType("0");
+			ssvo.setTrMsg(content);
+
+			try {
+				//2-1 관리자 핸드폰 번호 가져옮
+				List<AdminVo> adminList = systemService.getAdminList();
+				for(AdminVo admin:adminList){
+					admin = systemService.getAdminData(admin);
+					String cellNum=admin.getCell();
+					if(cellNum!=null && cellNum.length()>0) {
+						ssvo.setTrPhone(cellNum);
+						smsService.insertSmsSendVo(ssvo);
+					}
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+				log.error("SMS발송에 실패 하였습니다. [" + e.getMessage() + "]");
+			}
 		}
 		else {
 			model.addAttribute("message", "상태 업데이트 실패.");
@@ -1555,7 +1605,6 @@ public class MyPageController extends MyPage {
 		model.addAttribute("returnUrl", "/shop/mypage/mod");
 		return Const.REDIRECT_PAGE;
 	}
-
 
 
 

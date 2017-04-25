@@ -8,6 +8,7 @@ import com.smpro.vo.CategoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,7 +50,6 @@ public class CategoryController {
 	@RequestMapping("/category/vo/ajax")
 	public String getVoForAjax(@RequestParam Integer seq, Model model) {
 		// todo : 사용자가 카테고리를 vo를 읽을 권한이 있는지 검사해야 한다
-
 		model.addAttribute("item", categoryService.getVo(seq));
 		return "/ajax/get-category-vo.jsp";
 	}
@@ -58,7 +58,6 @@ public class CategoryController {
 	public String insert(Integer mallSeq, CategoryVo vo, Model model) {
 		// todo : 사용자가 카테고리를 삽입할 권한이 있는지 검사해야 한다
 		 System.out.println("### /category/new-----"+mallSeq);
-
 
 		if ("".equals(vo.getName().trim())) {
 			model.addAttribute("message", "카테고리명이 입력되지 않았습니다");

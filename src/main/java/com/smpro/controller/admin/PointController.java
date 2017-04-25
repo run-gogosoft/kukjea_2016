@@ -212,7 +212,7 @@ public class PointController {
 	@RequestMapping("/point/write/proc")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public String pointWriteProc(Integer seq, Integer addPoint, String addResone, HttpSession session, Model model) {
-
+		System.out.println("#### pointWriteProc, addPoint:"+addPoint);
 		PointVo vo = new PointVo();
 		vo.setPoint(addPoint);
 		vo.setMemberSeq(seq);
@@ -227,13 +227,15 @@ public class PointController {
 		vo.setValidFlag("Y");
 		vo.setReserveCode("E");//회원가입 : N, 구매 : B  , 이벤트 : E
 		vo.setTypeCode("1");
-		vo.setNote("관리자 포인트 지급 :" + addResone);
+		vo.setNote("관리자 포인트 처리 :" + addResone);
 		vo.setUseablePoint(vo.getPoint());
 
 
 		// 이벤트, CS요청등을 통한 일반지급
 		//상태 코드(S:적립, U:사용, D:소멸,C:취소적립)
 		vo.setStatusCode("S");
+
+
 		if (vo.getMemberSeq() == null) {
 			model.addAttribute("message", "회원은 반드시 입력 되어야 합니다.");
 			return Const.ALERT_PAGE;
@@ -242,7 +244,7 @@ public class PointController {
 			model.addAttribute("message", "만료일은 반드시 입력 되어야 합니다.");
 			return Const.ALERT_PAGE;
 		}
-		if (vo.getPoint() <= 0) {
+		if (vo.getPoint() == 0) {
 			model.addAttribute("message", "포인트는 반드시 입력 되어야 합니다.");
 			return Const.ALERT_PAGE;
 		}

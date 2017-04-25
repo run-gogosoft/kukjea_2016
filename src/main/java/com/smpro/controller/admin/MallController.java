@@ -66,7 +66,6 @@ public class MallController {
 	@RequestMapping("/mall/form")
 	public String getForm(MallVo paramVo, Model model) {
 		String title = "쇼핑몰 신규 등록";
-		String realPath = Const.UPLOAD_PATH;
 		if (paramVo.getSeq() != null) {
 			title = "쇼핑몰 정보 수정";
 			MallVo vo = mallService.getVo(paramVo.getSeq());
@@ -94,6 +93,19 @@ public class MallController {
 		model.addAttribute("itemLimitList", systemService.getCommonListByGroup(new Integer(29)));
 		return "/mall/form.jsp";
 	}
+
+	/** 쇼핑몰 등록/수정 폼 */
+	@CheckGrade(controllerName = "mallController", controllerMethod = "getForm")
+	@RequestMapping("/mall/banner")
+	public String getBanner(MallVo paramVo, Model model) {
+		String title = "배너 이지미 변경";
+		model.addAttribute("title", title);
+		MallVo vo = mallService.getVo(2);
+		vo.setLogoImg(vo.getLogoImg());
+		model.addAttribute("vo", vo);
+		return "/mall/banner.jsp";
+	}
+
 
 	/** 쇼핑몰 정보 등록 */
 	@CheckGrade(controllerName = "mallController", controllerMethod = "regVo")
@@ -163,11 +175,10 @@ public class MallController {
 			if (!StringUtil.isBlank(vo.getPassword())) {
 				vo.setPassword(StringUtil.encryptSha2(vo.getPassword()));
 			}
-			log.info(
-					"### password to sha2 encryption : " + vo.getPassword());
-			String realPath = Const.UPLOAD_REAL_PATH + "/banner";
+			log.info("### password to sha2 encryption : " + vo.getPassword());
+			String realPath = Const.UPLOAD_REAL_PATH + "/logo";
 			if (!"".equals(vo.getLogoImg())) {
-				vo.setLogoImg(mallService.imageProc(realPath, vo.getLogoImg().replace("/upload/banner/temp/", ""), vo.getSeq()));
+				vo.setLogoImg(mallService.imageProc(realPath, vo.getLogoImg().replace("/upload/logo/temp/", ""), vo.getSeq()));
 			}
 
 			if (mallService.modVo(vo)) {
@@ -355,7 +366,46 @@ public class MallController {
 		String files = "";
 		if (fileMap != null) {
 			if (fileMap.get("file[0]") != null) {
-				files += "/upload/banner/temp/" + fileMap.get("file[0]");
+				files += "/upload/logo/temp/" + fileMap.get("file[0]");
+			}
+		}
+		// 업로드된 파일 리스트를 던진다
+		model.addAttribute("callback", files);
+		return Const.REDIRECT_PAGE;
+	}
+
+	@RequestMapping(value ="/mall/form/uploadbanner", method = RequestMethod.POST)
+	public String uploadbanner(HttpServletRequest request, Model model) {
+		// todo : 업로드할 수 있는 권한이 있는지 검사
+
+		request.setAttribute("banner", "Y");
+
+		Map<String, String> fileMap;
+		try {
+			fileMap = mallService.uploadImagesByMap(request);
+		} catch (IOException ie) {
+			log.error(ie.getMessage());
+			model.addAttribute("message", "서버상의 문제가 발생했습니다. 관리자에게 문의하여 주십시오.");
+			ie.printStackTrace();
+			return Const.ALERT_PAGE;
+		} catch (MaxUploadSizeExceededException me) {
+			model.addAttribute("message", "한번에 너무 큰 용량의 이미지를 첨부하실 수 없습니다");
+			me.printStackTrace();
+			return Const.ALERT_PAGE;
+		} catch (ImageIsNotAvailableException ie) {
+			model.addAttribute("message", "첨부한 파일은 이미지 파일이 아닙니다");
+			ie.printStackTrace();
+			return Const.ALERT_PAGE;
+		} catch (ImageSizeException se) {
+			model.addAttribute("message", "이미지의 사이즈가 올바르지 않습니다");
+			se.printStackTrace();
+			return Const.ALERT_PAGE;
+		}
+
+		String files = "";
+		if (fileMap != null) {
+			if (fileMap.get("file[0]") != null) {
+				files += "/upload/logo/temp/" + fileMap.get("file[0]");
 			}
 		}
 		// 업로드된 파일 리스트를 던진다

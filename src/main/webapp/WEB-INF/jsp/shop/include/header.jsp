@@ -4,18 +4,18 @@
         <div class="layout_inner">
             <a href="#" id="favorite" class="btn_favorite">즐겨찾기 추가</a>
             <ul class="mall_links">
-                <%--<c:forEach var="mall" items="${mallList}">--%>
-                    <%--<c:choose>--%>
-                        <%--<c:when test="${mall.seq eq mallVo.seq}">--%>
-                            <%--<li><a href="/shop/main?mallSeq=${mall.seq}">${mall.name}</a></li>--%>
-                        <%--</c:when>--%>
-                        <%--<c:otherwise>--%>
-                            <%--<li><a href="/shop/main?mallSeq=${mall.seq}" style="color:#aaa">${mall.name}</a></li>--%>
-                        <%--</c:otherwise>--%>
-                    <%--</c:choose>--%>
-                <%--</c:forEach>--%>
-                    <li><a href="#">병원몰</a></li>
-                    <%--<li><a href="#">B2B몰</a></li>--%>
+                <c:forEach var="mall" items="${mallList}">
+                    <c:choose>
+                        <c:when test="${mall.seq eq mallVo.seq}">
+                            <li><a href="/shop/changeMall?mallSeq=${mall.seq}">${mall.name}</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="/shop/changeMall?mallSeq=${mall.seq}" style="color:#aaa">${mall.name}</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+                    <%--<li><a href="/shop/changeMall?mallSeq=1">${mallList[0].name}</a></li>--%>
+
             </ul>
             <c:choose>
             <c:when test="${sessionScope.loginSeq > 0}">
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="layout_inner search_section">
-        <h1><a href="/shop/main?mallSeq=${mallVo.seq}"><img src="/upload${mallVo.logoImg}" alt="국제몰 (KUK JE MALL)" /></a></h1>
+        <h1><a href="/shop/changeMall?mallSeq=${mallVo.seq}"><img src="/upload${mallVo.logoImg}" alt="국제몰 (KUK JE MALL)" /></a></h1>
         <div class="search">
             <form action="/shop/search?mallSeq=${mallVo.seq}" role="form" onsubmit="return checkRequiredValue(this, 'data-required-label');">
                 <fieldset>
@@ -56,9 +56,9 @@
                 <dl>
                     <dt><span class="icon icon_search"><span class="blind">인기검색어</span></span></dt>
                     <dd>
-                        <a href="/shop/search?nameMaker=드레싱포셉">드레싱포셉</a>
-                        <a href="/shop/search?nameMaker=일회용주사기">일회용주사기</a>
-                        <a href="/shop/search?nameMaker=발마사지기">발마사지기</a>
+                        <a href="/shop/search?nameMaker=${mallVo.searchkey1}">${mallVo.searchkey1}</a>
+                        <a href="/shop/search?nameMaker=${mallVo.searchkey2}">${mallVo.searchkey2}</a>
+                        <a href="/shop/search?nameMaker=${mallVo.searchkey3}">${mallVo.searchkey3}</a>
                     </dd>
                 </dl>
                 <%-- div class="btn_paging">
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="promotion_top">
-            <a href="http://blog.naver.com/alaman92" target="_blank"><img src="/upload/banner/banner.jpg" alt="">
+            <a href="http://blog.naver.com/alaman92" target="_blank"><img src="/upload${banner.logoImg}" alt="">
         </div>
             <li>
                 <c:if test="${noticeList ne null}">
@@ -79,3 +79,4 @@
 
     <%@ include file="/WEB-INF/jsp/shop/include/navigation.jsp" %>
 </div>
+<script> var mallSeq = ${sessionScope.get("mallSeq")} </script>

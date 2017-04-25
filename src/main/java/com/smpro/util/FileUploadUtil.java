@@ -142,7 +142,7 @@ public class FileUploadUtil {
 		if (ii.getIconWidth() == -1 && ii.getIconHeight() == -1) {
 			new File(realPath + "/" + fileName).delete();
 			throw new ImageIsNotAvailableException();
-		} else if(ii.getIconWidth() > 243 || ii.getIconWidth() < 243 && ii.getIconHeight() > 60 || ii.getIconHeight() < 60) {
+		} else if(ii.getIconWidth() > 168 || ii.getIconWidth() < 168 && ii.getIconHeight() > 52 || ii.getIconHeight() < 52) {
 			new File(realPath + "/" + fileName).delete();
 			throw new ImageSizeException();
 		}

@@ -43,7 +43,6 @@ public class LvController {
 			ItemVo vo, HttpSession session, Model model) {
 		String loginType = (String)session.getAttribute("loginType");
 		String memberTypeCode = (String)session.getAttribute("loginMemberTypeCode");
-
 		if(session.getAttribute("loginSeq") == null && session.getAttribute("loginEmail") == null) {
 
 			model.addAttribute("message", "로그인 후 이용하시기 바랍니다.");
@@ -56,23 +55,12 @@ public class LvController {
 			memberTypeCode = "C";
 		}
 
-//		DisplayVo dvo = new DisplayVo();
-//		dvo.setLocation("sub");
-//		dvo.setCateSeq(seq);
-//		//공용이라면 공통 템플릿, 아니라면 개별 템플릿을 가져온다.
-//		dvo.setMemberTypeCode(memberTypeCode);
-
-//		dvo.setTitle("titleBanner");
-//		model.addAttribute("titleBanner", displayService.getVo(dvo) ==null ? null : displayService.getVo(dvo).getContent());
-//
-//		dvo.setTitle("Banner");
-//		model.addAttribute("banner", displayService.getVo(dvo) ==null ? null : displayService.getVo(dvo).getContent());
-
 		// 카테고리를 가져온다
 		CategoryVo cvo = new CategoryVo();
+		cvo.setMallId((Integer)session.getAttribute("mallSeq"));
 		cvo.setDepth(1);
 		cvo.setShowFlag("Y");
-
+		cvo.setMallId((Integer)session.getAttribute("mallSeq"));
 		model.addAttribute("cateLv1List", categoryService.getListSimple(cvo));
 
 		if(seq != null) {
@@ -85,35 +73,12 @@ public class LvController {
 		// 카테고리 정보
 		CategoryVo mainVo = categoryService.getVo(seq);
 
-//		/** 상단 배너영역 상품 리스트 */
-//		DisplayLvItemVo paramVo = new DisplayLvItemVo();
-//		paramVo.setCateSeq(seq);
-//		paramVo.setMemberTypeCode(memberTypeCode);
-//		paramVo.setStatusFlag("Y");
-
-//		//상품리스트1
-//		paramVo.setStyleCode(new Integer(1));
-//		DisplayLvItemVo dvo1 = displayService.getLvTitle(paramVo);
-//		model.addAttribute("gallery1_title", dvo1==null ? null : dvo1.getListTitle());
-//		model.addAttribute("gallery1", dvo1==null ? null : displayService.getLvItemList(paramVo));
-//
-//		//상품리스트2
-//		paramVo.setStyleCode(new Integer(2));
-//		DisplayLvItemVo dvo2 = displayService.getLvTitle(paramVo);
-//		model.addAttribute("gallery2_title", dvo2==null ? null : dvo2.getListTitle());
-//		model.addAttribute("gallery2", dvo2==null ? null : displayService.getLvItemList(paramVo));
-//
-//		//상품리스트2
-//		paramVo.setStyleCode(new Integer(3));
-//		DisplayLvItemVo dvo3 = displayService.getLvTitle(paramVo);
-//		model.addAttribute("gallery3_title", dvo3==null ? null : dvo3.getListTitle());
-//		model.addAttribute("gallery3", dvo3==null ? null : displayService.getLvItemList(paramVo));
-
 		/* 하단 카테고리 상품 리스트 */
 		vo.setLoginType(loginType);
 		vo.setMemberTypeCode(memberTypeCode);
 		vo.setCateLv1Seq(seq);
 		vo.setStatusCode("Y");
+		vo.setMallId((Integer)session.getAttribute("mallSeq"));
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
 			vo.setRowCount(vo.getRowCount());
 		}
@@ -156,7 +121,7 @@ public class LvController {
 		CategoryVo cvo = new CategoryVo();
 		cvo.setDepth(1);
 		cvo.setShowFlag("Y");
-
+		cvo.setMallId((Integer)session.getAttribute("mallSeq"));
 		model.addAttribute("cateLv1List", categoryService.getListSimple(cvo));
 
 		// 카테고리 정보

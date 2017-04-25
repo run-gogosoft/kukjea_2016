@@ -516,6 +516,7 @@ function ebFormatNumber(num) {
 $(document).ready(function(){
 	// 상단 헤더에 메뉴명을 매핑한다
 	var m1=[], m2=[];
+	var menuJson = eval('menuJson_' + mallSeq);
 	_.map(menuJson,function(v,i){
 		7 > i ? m1.push({href: "/shop/lv1/"+v.seq, className: "mn"+(i+1), categoryName: v.categoryName}) :
 				m2.push({href: "/shop/lv1/"+v.seq, className: "s_mn1", categoryName: v.categoryName})}),

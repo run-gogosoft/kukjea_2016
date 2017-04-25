@@ -39,6 +39,50 @@
 						<input class="form-control" type="hidden" id="checkFlagId" name="checkFlagId" value="N" />
 						<input class="form-control" type="hidden" id="validId" name="validId" />
 						<input class="form-control" type="hidden" id="seq" name="seq" value="${vo.seq}"/>
+
+						<input class="form-control" type="hidden" id="pg_code" name="pgCode" value="${vo.pgCode}"/>
+						<input class="form-control" type="hidden" id="pg_id" name="pgId" value="${vo.pgId}"/>
+						<input class="form-control" type="hidden" id="pg_key" name="pgKey" value="${vo.pgKey}"/>
+
+						<%--<div class="form-group">--%>
+							<%--<label class="col-md-2 control-label">결제 수단</label>--%>
+							<%--<div class="checkbox col-md-10" style="padding-left:15px;">--%>
+								<c:forEach var="item" items="${payMethodList}" begin="0" step="1" varStatus="status">
+									<c:if test="${!fn:contains(item.value,'+POINT')}">
+										<%--<label>--%>
+											<input type="hidden" name="payMethod" value="${item.value}" <c:if test="${fn:indexOf(vo.payMethod,item.value) >= 0}">checked</c:if>/>
+											 <%--${item.name}--%>
+										<%--</label>--%>
+									</c:if>
+								</c:forEach>
+							<%--</div>--%>
+						<%--</div>--%>
+
+
+						<%--<div class="form-group">--%>
+							<%--<label class="col-md-2 control-label" for="pg_code">PG 선택</label>--%>
+							<%--<div class="col-md-2">--%>
+								<%--<select class="form-control" id="pg_code" name="pgCode">--%>
+									<%--<option value="">----------선택----------</option>--%>
+									<%--<c:forEach var="item" items="${pgList}">--%>
+										<%--<option value="${item.value}" <c:if test="${vo.pgCode eq item.value}">selected</c:if>>${item.name}</option>--%>
+									<%--</c:forEach>--%>
+								<%--</select>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+						<%--<div class="form-group">--%>
+							<%--<label class="col-md-2 control-label" for="pg_id">상점 아이디</label>--%>
+							<%--<div class="col-md-2">--%>
+								<%--<input class="form-control" type="text" id="pg_id" name="pgId" value="${vo.pgId}" style="ime-mode:disabled" maxlength="50"/>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+						<%--<div class="form-group">--%>
+							<%--<label class="col-md-2 control-label" for="pg_key">상점 키</label>--%>
+							<%--<div class="col-md-2">--%>
+								<%--<input class="form-control" type="text" id="pg_key" name="pgKey" value="${vo.pgKey}" maxlength="100"/>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+
 						<div class="box-body">
 							<%--<div class="form-group">--%>
 								<%--<label class="col-md-2 control-label" for="id">쇼핑몰 아이디 <i class="fa fa-check"></i></label>--%>
@@ -62,6 +106,24 @@
 									<input class="form-control" type="text" id="name" name="name" value="${vo.name}" maxlength="15" alt="쇼핑몰명"/>
 								</div>
 							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="searchkey1">대표검색어 <i class="fa fa-check"></i></label>
+								<div class="col-md-2">
+									<input class="form-control" type="text" id="searchkey1" name="searchkey1" value="${vo.searchkey1}" maxlength="15" alt="대표검색어"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="searchkey2"></label>
+								<div class="col-md-2">
+									<input class="form-control" type="text" id="searchkey2" name="searchkey2" value="${vo.searchkey2}" maxlength="15" alt="쇼핑몰명"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label" for="searchkey3"></label>
+								<div class="col-md-2">
+									<input class="form-control" type="text" id="searchkey3" name="searchkey3" value="${vo.searchkey3}" maxlength="15" alt="쇼핑몰명"/>
+								</div>
+							</div>
 							<%--<div class="form-group">--%>
 								<%--<label class="col-md-2 control-label" for="password">패스워드<c:if test="${vo eq null}"> <i class="fa fa-check"></i></c:if></label>--%>
 								<%--<div class="col-md-2">--%>
@@ -75,18 +137,18 @@
 								<%--</div>--%>
 							<%--</div>--%>
 							<%--<c:if test="${vo ne null}">--%>
-							<%--<div class="form-group">--%>
-								<%--<label class="col-md-2 control-label">쇼핑몰 상태 <i class="fa fa-check"></i></label>--%>
-								<%--<div class="col-md-2">--%>
-									<%--<select class="form-control" name="statusCode" alt="상태">--%>
-										<%--<option value="">--선택--</option>--%>
-										<%--<c:forEach var="item" items="${statusList}">--%>
-											<%--<option value="${item.value}" <c:if test="${vo.statusCode eq item.value}">selected</c:if>>${item.name}</option>--%>
-										<%--</c:forEach>--%>
+							<div class="form-group">
+								<label class="col-md-2 control-label">쇼핑몰 상태 <i class="fa fa-check"></i></label>
+								<div class="col-md-2">
+									<select class="form-control" name="statusCode" alt="상태">
+										<option value="">--선택--</option>
+										<c:forEach var="item" items="${statusList}">
+											<option value="${item.value}" <c:if test="${vo.statusCode eq item.value}">selected</c:if>>${item.name}</option>
+										</c:forEach>
 
-									<%--</select>--%>
-								<%--</div>--%>
-							<%--</div>--%>
+									</select>
+								</div>
+							</div>
 							<%--</c:if>--%>
 							<%--&lt;%&ndash;--%>
 							<%--<div class="form-group">--%>
@@ -97,39 +159,6 @@
 							<%--</div>--%>
 							<%--&ndash;%&gt;--%>
 
-							<%--<div class="form-group">--%>
-								<%--<label class="col-md-2 control-label">결제 수단</label>--%>
-								<%--<div class="checkbox col-md-10" style="padding-left:15px;">--%>
-								<%--<c:forEach var="item" items="${payMethodList}" begin="0" step="1" varStatus="status">--%>
-									<%--<c:if test="${!fn:contains(item.value,'+POINT')}">--%>
-									<%--<label><input type="checkbox" name="payMethod" value="${item.value}" <c:if test="${fn:indexOf(vo.payMethod,item.value) >= 0}">checked</c:if>/> ${item.name}</label>--%>
-									<%--</c:if>--%>
-								<%--</c:forEach>--%>
-								<%--</div>--%>
-							<%--</div>--%>
-							<%--<div class="form-group">--%>
-								<%--<label class="col-md-2 control-label" for="pg_code">PG 선택</label>--%>
-								<%--<div class="col-md-2">--%>
-									<%--<select class="form-control" id="pg_code" name="pgCode">--%>
-										<%--<option value="">----------선택----------</option>--%>
-										<%--<c:forEach var="item" items="${pgList}">--%>
-											<%--<option value="${item.value}" <c:if test="${vo.pgCode eq item.value}">selected</c:if>>${item.name}</option>--%>
-										<%--</c:forEach>--%>
-									<%--</select>--%>
-								<%--</div>--%>
-							<%--</div>--%>
-							<%--<div class="form-group">--%>
-								<%--<label class="col-md-2 control-label" for="pg_id">상점 아이디</label>--%>
-								<%--<div class="col-md-2">--%>
-									<%--<input class="form-control" type="text" id="pg_id" name="pgId" value="${vo.pgId}" style="ime-mode:disabled" maxlength="50"/>--%>
-								<%--</div>--%>
-							<%--</div>--%>
-							<%--<div class="form-group">--%>
-								<%--<label class="col-md-2 control-label" for="pg_key">상점 키</label>--%>
-								<%--<div class="col-md-2">--%>
-									<%--<input class="form-control" type="text" id="pg_key" name="pgKey" value="${vo.pgKey}" maxlength="100"/>--%>
-								<%--</div>--%>
-							<%--</div>--%>
 
 							<%--&lt;%&ndash;<div class="form-group">&ndash;%&gt;--%>
 								<%--&lt;%&ndash;<label class="col-md-2 control-label" for="thumbImg">광고 배너 이미지</label>&ndash;%&gt;--%>
@@ -170,7 +199,7 @@
 								<div class="form-group">
 									<label class="col-md-2 control-label" for="logoImg">몰 로고</label>
 									<div class="col-md-4">
-										<input class="form-control" type="text" id="logoImg" name="logoImg" placeholder="몰 로고이미지를 등록해주세요" style="margin-bottom:5px;" readonly="readonly" <c:if test="${vo eq null}">alt="배너 이미지"</c:if>/>
+										<input class="form-control" type="text" id="logoImg" name="logoImg" value="${vo.logoImg}" placeholder="몰 로고이미지를 등록해주세요" style="margin-bottom:5px;" readonly="readonly" <c:if test="${vo eq null}">alt="배너 이미지"</c:if>/>
 										<div class="thumbViewimg"></div>
 									</div>
 									<%--<div class="col-md-10 form-control-static">--%>
@@ -336,7 +365,7 @@
 
 	var uploadProc = function(filename) {
 		var html = "";
-		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
+		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>로고 이미지</div>";
 
 		$("input[name=logoImg]").val(filename).parents(".form-group").find(".thumbViewimg").html(html);
 		$("#uploadModal").modal("hide");
@@ -344,7 +373,7 @@
 
 	var uploadMappingProc = function(filename) {
 		var html = "";
-		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>배너 이미지</div>";
+		html += "<div><img src='"+ filename +"' class='img-polaroid' onclick='imgProc(this, 0)' /><br/>로고 이미지</div>";
 
 		$("input[name=logoImg]").parents(".form-group").find(".thumbViewimg").html(html);
 		$("#uploadModal").modal("hide");
