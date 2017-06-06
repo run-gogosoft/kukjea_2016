@@ -159,9 +159,9 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 	}
 
 	private boolean findMall(int mallSeq, List<MallAccessVo>mallAccessVos){
-		System.out.println("### findMall mallSeq:"+mallSeq);
+//		System.out.println("### findMall mallSeq:"+mallSeq);
 		for(MallAccessVo mallacc:mallAccessVos){
-			System.out.println("### findMall mallacc.getMallSeq():"+mallacc.getMallSeq());
+//			System.out.println("### findMall mallacc.getMallSeq():"+mallacc.getMallSeq());
 			if(mallSeq == mallacc.getMallSeq() && mallacc.getAccessStatus().equals("A")) return true;
 		}
 

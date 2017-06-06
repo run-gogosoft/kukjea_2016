@@ -120,7 +120,7 @@ public class MemberController {
 				}
 			}
 			//회원가입 완료 페이지 이동
-			model.addAttribute("message", "회원 가입이 완료되었습니다. 로그인 후 사용해 주시기 바랍니다.");
+			model.addAttribute("message", "회원 가입이 완료되었습니다. 로그인 후 사용해 주시기 바랍니다.!!!!");
 			//다음페이지에서 가입 정보를 표시해 줄때 회원시퀀스 파라메타 노출을 방지하기 위해 세션에 저장한다.
 			request.getSession(true).setAttribute("seq",vo.getSeq());
 			model.addAttribute("returnUrl", "/shop/member/finish");
@@ -447,7 +447,7 @@ public class MemberController {
 
 		MemberVo vo = new MemberVo();
 		vo.setName((String)session.getAttribute("loginName"));
-		vo.setEmail(email);
+		vo.setEmail(email+" ");
 		vo.setTypeCode("C");
 		vo.setMallSeq(mallVo.getSeq());
 

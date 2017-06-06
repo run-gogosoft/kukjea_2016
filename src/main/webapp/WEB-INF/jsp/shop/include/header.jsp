@@ -4,17 +4,17 @@
         <div class="layout_inner">
             <a href="#" id="favorite" class="btn_favorite">즐겨찾기 추가</a>
             <ul class="mall_links">
-                <c:forEach var="mall" items="${mallList}">
-                    <c:choose>
-                        <c:when test="${mall.seq eq mallVo.seq}">
-                            <li><a href="/shop/changeMall?mallSeq=${mall.seq}">${mall.name}</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li><a href="/shop/changeMall?mallSeq=${mall.seq}" style="color:#aaa">${mall.name}</a></li>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
-                    <%--<li><a href="/shop/changeMall?mallSeq=1">${mallList[0].name}</a></li>--%>
+                <%--<c:forEach var="mall" items="${mallList}">--%>
+                    <%--<c:choose>--%>
+                        <%--<c:when test="${mall.seq eq mallVo.seq}">--%>
+                            <%--<li><a href="/shop/changeMall?mallSeq=${mall.seq}">${mall.name}</a></li>--%>
+                        <%--</c:when>--%>
+                        <%--<c:otherwise>--%>
+                            <%--<li><a href="/shop/changeMall?mallSeq=${mall.seq}" style="color:#aaa">${mall.name}</a></li>--%>
+                        <%--</c:otherwise>--%>
+                    <%--</c:choose>--%>
+                <%--</c:forEach>--%>
+                    <li><a href="/shop/changeMall?mallSeq=1">${mallList[0].name}</a></li>
 
             </ul>
             <c:choose>

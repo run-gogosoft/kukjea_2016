@@ -121,13 +121,18 @@ public class EventController {
 		}		
 
 		model.addAttribute("message", "게시물이 등록 되었습니다.");
-		model.addAttribute("returnUrl", "/admin/event/list");
+		model.addAttribute("returnUrl", "/admin/event/list?mallSeq="+vo.getMallSeq());
 		return Const.REDIRECT_PAGE;
 	}
 
 	@CheckGrade(controllerName = "eventController", controllerMethod = "delProc")
 	@RequestMapping("/event/del/proc")
 	public String delProc(Integer seq, Model model) {
+		EventVo event = new EventVo();
+		event.setSeq(seq);
+		EventVo ev = eventService.getVo(event);
+		Integer mallSeq= ev.getMallSeq();
+		System.out.println(">>>mallSEq:"+mallSeq);
 		String realPath = Const.UPLOAD_REAL_PATH;
 		eventService.deleteFiles(realPath, seq);
 		if (!eventService.deleteData(seq)) {
@@ -137,9 +142,8 @@ public class EventController {
 		
 		//에디터를 통해 업로드한 이미지 삭제
 		EditorUtil.deleteImage(seq, "event");
-		
 		model.addAttribute("message", "게시물이 삭제 되었습니다.");
-		model.addAttribute("returnUrl", "/admin/event/list");
+		model.addAttribute("returnUrl", "/admin/event/list?mallSeq="+mallSeq);
 		return Const.REDIRECT_PAGE;
 	}
 
@@ -205,9 +209,16 @@ public class EventController {
 		vo.setHtml(EditorUtil.procImage(vo.getHtml(), vo.getSeq(), "event"));
 				
 		// 이벤트 수정
+		EventVo event = new EventVo();
+		event.setSeq(vo.getSeq());
+		EventVo ev = eventService.getVo(event);
+		Integer mallSeq= ev.getMallSeq();
+		System.out.println(">>>mallSEq:"+mallSeq);
+
+
 		if (eventService.updateData(vo)) {
 			model.addAttribute("message", "게시물이 수정 되었습니다.");
-			model.addAttribute("returnUrl", "/admin/event/list");
+			model.addAttribute("returnUrl",  "/admin/event/list?mallSeq="+mallSeq);
 			return Const.REDIRECT_PAGE;
 		}
 

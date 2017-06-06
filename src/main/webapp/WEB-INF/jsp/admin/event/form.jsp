@@ -123,7 +123,7 @@
 						</div><!-- /.box-body -->
 						<div class="box-footer text-center">
 							<button type="submit" class="btn btn-md btn-primary" ><c:choose><c:when test="${vo eq null}">등록하기</c:when><c:otherwise>수정하기</c:otherwise></c:choose></button>
-							<a href="/admin/event/list" class="btn btn-md btn-default">취소하기</a>
+							<a href="/admin/event/list?mallSeq=${mallSeq}" class="btn btn-md btn-default">취소하기</a>
 						</div><!-- /.box-footer -->
 					</form>
 				</div>

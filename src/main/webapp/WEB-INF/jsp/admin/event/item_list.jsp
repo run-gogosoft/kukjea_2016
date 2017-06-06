@@ -442,7 +442,7 @@
 
 	var goCancel = function(){
 		$("#flag").val("N");
-		location.href = "/admin/event/list";
+		location.href = "/admin/event/list?mallSeq=mallSeq";
 
 	};
 	var submitProc = function(obj) {

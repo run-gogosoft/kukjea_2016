@@ -17,7 +17,7 @@ public class GradeVo {
     /** 아이콘 **/
     private String iconPath;
     /** 등급조건 **/
-    private int payCondition;
+    private long payCondition;
 
     public void setName(String name){this.name = name;}
     public String getName(){return this.name;}
@@ -32,7 +32,7 @@ public class GradeVo {
     public int getSortOrder(){return this.sortOrder;}
     public void setIconPath(String iconPath){ this.iconPath = iconPath;}
     public String getIconPath(){return this.iconPath;}
-    public void setPayCondition(int condition){this.payCondition = condition;}
-    public int getPayCondition(){return this.payCondition;}
+    public void setPayCondition(long condition){this.payCondition = condition;}
+    public long getPayCondition(){return this.payCondition;}
 
 }

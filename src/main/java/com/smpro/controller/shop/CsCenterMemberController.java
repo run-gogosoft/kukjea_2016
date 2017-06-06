@@ -3,6 +3,7 @@ package com.smpro.controller.shop;
 import com.smpro.service.*;
 import com.smpro.util.Const;
 import com.smpro.util.StringUtil;
+import com.smpro.vo.MallAccessVo;
 import com.smpro.vo.MallVo;
 import com.smpro.vo.MemberGroupVo;
 import com.smpro.vo.MemberVo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Controller
 public class CsCenterMemberController {
@@ -29,6 +31,12 @@ public class CsCenterMemberController {
 
 	@Autowired
 	private SystemService systemService;
+
+	@Autowired
+	private MallAccessService mallAccessService;
+
+	@Autowired
+	private MallService mallService;
 
 	@Autowired
 	private MemberGroupService memberGroupService;
@@ -121,10 +129,12 @@ public class CsCenterMemberController {
 //				flag = memberService.regData(vo);
 //			} else {
 				gvo.setName(vo.getGroupName());
+				gvo.setTaxEmail(gvo.getTaxEmail()+" ");
 				resultGroup = memberGroupService.regVo(gvo);
 
 				if(resultGroup > 0) {
 					vo.setGroupSeq(gvo.getSeq());
+					vo.setEmail(vo.getEmail()+" ");
 					flag = memberService.regData(vo);
 				}
 //			}
@@ -142,6 +152,17 @@ public class CsCenterMemberController {
 //			}
 
 			if(flag) {
+				//병원몰 접근 기본적용
+				List<MallVo> mallVoList = mallService.getListSimple();
+				for(MallVo mall:mallVoList){
+					if(mall.getName().equals("병원몰")){
+						MallAccessVo mav = new MallAccessVo();
+						mav.setMallSeq(mall.getSeq());
+						mav.setUserSeq(vo.getSeq());
+						mav.setAccessStatus("A");
+						mallAccessService.insertVo(mav);
+					}
+				}
 				//회원가입 완료 페이지 이동
 				model.addAttribute("message", "회원 가입이 완료되었습니다. 로그인 후 사용해 주시기 바랍니다.");
 				//다음페이지에서 가입 정보를 표시해 줄때 회원시퀀스 파라메타 노출을 방지하기 위해 세션에 저장한다.

@@ -80,7 +80,7 @@ public class MemberGroupServiceImpl implements MemberGroupService {
 		}
 		
 		if (!"".equals(vo.getTaxEmail1()) && !"".equals(vo.getTaxEmail2())) {
-			vo.setTaxEmail(vo.getTaxEmail1() + "@" + vo.getTaxEmail2());
+			vo.setTaxEmail(vo.getTaxEmail1() + "@" + vo.getTaxEmail2()+" ");
 		}		
 
 		if (!"".equals(vo.getTaxTel1()) && !"".equals(vo.getTaxTel2()) && !"".equals(vo.getTaxTel3())) {
