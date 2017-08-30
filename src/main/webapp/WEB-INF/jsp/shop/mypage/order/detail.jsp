@@ -29,7 +29,7 @@
                     <c:set var="totalDeliveryPrice" value="0" />
                     <c:set var="addrButton" value="0" />
                     <c:forEach var="item" items="${list}" varStatus="status">
-                        <c:if test="${item.statusCode eq '00' or item.statusCode eq '10'}">
+                        <c:if test="${item.statusCode eq '00' or item.statusCode eq '10'}">f
                             <c:set var="addrButton" value="${addrButton+1}" />
                         </c:if>
                         <%--착불 배송비 제외--%>

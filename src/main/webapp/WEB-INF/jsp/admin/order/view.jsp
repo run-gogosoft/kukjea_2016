@@ -251,6 +251,24 @@
 											</c:otherwise>
 										</c:choose>
 										)
+										<c:if test="${vo.couponPrice>0}">
+											- 할인금액(<fmt:formatNumber value="${vo.couponPrice}"/>원)
+										</c:if>
+										<c:if test="${vo.point >0}">
+											- 포인트 차감(<fmt:formatNumber value="${vo.point}"/>원)
+										</c:if>
+										<c:if test="${vo.payMethod eq 'CASH' or vo.payMethod eq 'CASH+POINT'}">
+											= 무통장 입금 금액(
+											<c:choose>
+												<c:when test="${total>= 50000}">
+													<fmt:formatNumber value="${total-vo.point}"/>
+												</c:when>
+												<c:otherwise>
+													<fmt:formatNumber value="${total+totlaDeliCost-vo.point}"/>
+												</c:otherwise>
+											</c:choose>
+											)
+										</c:if>
 									</th>
 									<td class="text-right">
 										<c:choose>
@@ -262,6 +280,7 @@
 											</c:otherwise>
 										</c:choose>
 									</td>
+
 								</tr>
 							</tbody>
 						</table>
