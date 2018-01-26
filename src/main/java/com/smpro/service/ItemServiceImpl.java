@@ -2,6 +2,7 @@ package com.smpro.service;
 
 import com.smpro.dao.ItemDao;
 import com.smpro.dao.ItemOptionDao;
+import com.smpro.dao.MallDao;
 import com.smpro.dao.UserDao;
 import com.smpro.util.*;
 import com.smpro.util.exception.ImageIsNotAvailableException;
@@ -31,6 +32,9 @@ public class ItemServiceImpl implements ItemService {
 
 	@Autowired
 	private ItemOptionDao itemOptionDao;
+
+	@Autowired
+	private MallDao mallDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -429,12 +433,15 @@ public class ItemServiceImpl implements ItemService {
 	public Workbook writeExcelItemList(ItemVo vo, String type,HttpSession session) {
 		Workbook wb;
 		String loginType = (String) session.getAttribute("loginType");
-		int arrSize = loginType.equals("S")?26:18;
+		String mallName = mallDao.getVo(vo.getMallId()).getName();
+		int arrSize = loginType.equals("S")?29:20;
 
 		/* 타이틀 항목 생성 */
 		String[] strTitle = new String[arrSize];
 		int idx = 0;
 		strTitle[idx++] = "상품코드";
+		strTitle[idx++] = "관리코드";
+		strTitle[idx++] = "바코드";
 		strTitle[idx++] = "대분류";
 		strTitle[idx++] = "중분류";
 		strTitle[idx++] = "소분류";
@@ -456,6 +463,7 @@ public class ItemServiceImpl implements ItemService {
 		if(loginType.equals("S")){
 			strTitle[idx++] = "상품코드";
 			strTitle[idx++] = "쇼핑몰명";
+			strTitle[idx++] = "상품 원가";
 			strTitle[idx++] = "상품 가격";
 			strTitle[idx++] = "할인 가격";
 			strTitle[idx++] = "할인 기간";
@@ -477,6 +485,8 @@ public class ItemServiceImpl implements ItemService {
 
 				ArrayList<Object> cell = new ArrayList<>(arrSize);
 				cell.add(ivo.getSeq());
+				cell.add(ivo.getManagedCode());
+				cell.add(ivo.getBarcode());
 				cell.add(ivo.getCateLv1Name());
 				cell.add(ivo.getCateLv2Name());
 				cell.add(ivo.getCateLv3Name());
@@ -504,10 +514,11 @@ public class ItemServiceImpl implements ItemService {
 
 				if(loginType.equals("S")){
 					cell.add(ivo.getSeq());
-					cell.add("병원몰");//TODO check current mall id & set data
+					cell.add(mallName);//TODO check current mall id & set data
 					String s = (String)session.getAttribute("loginName");
 					for(int j = 0;j<optionVoList.size();j++){
 						if(s.equals(optionVoList.get(j).getValueName())) {
+							cell.add(optionVoList.get(j).getOriginalPrice());
 							cell.add(optionVoList.get(j).getOptionPrice());
 							cell.add(optionVoList.get(j).getSalePrice());
 							cell.add(optionVoList.get(j).getSalePeriod());

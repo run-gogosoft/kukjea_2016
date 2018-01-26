@@ -1,13 +1,8 @@
 package com.smpro.interceptor.admin;
 
-import com.smpro.service.LoginService;
-import com.smpro.service.MallAccessService;
-import com.smpro.service.MallService;
+import com.smpro.service.*;
 import com.smpro.util.StringUtil;
-import com.smpro.vo.MallAccessVo;
-import com.smpro.vo.MallVo;
-import com.smpro.vo.MemberVo;
-import com.smpro.vo.UserVo;
+import com.smpro.vo.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
@@ -30,6 +24,10 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 	private LoginService loginService;
 	@Autowired
 	private MallService mallService;
+	@Autowired
+	private BoardService boardService;
+	@Autowired
+	private CommonBoardService commonBoardService;
 
 	@Autowired
 	private MallAccessService mallAccessService;
@@ -138,6 +136,61 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 
 
 		List<MallVo> mallList = mallService.getListSimple();
+		List<Integer> hasNew = new ArrayList<>(new Integer(0)) ;
+		for(int i = 0;i<8;i++) hasNew.add(new Integer(0));//상품문의
+		int allNew = 0;
+		BoardVo vo = new BoardVo();
+		CommonBoardVo cvo = new CommonBoardVo();
+
+		List<BoardVo> boardVos = boardService.getListAll(vo);
+		for (int i = 0; i < boardVos.size(); i++) {
+			//게시판 분류 코드(N=공지, F=자주묻는질문, Q=상품QnA, O=1:1문의)
+			//답변여부(1=답변, 2=미답변)
+			BoardVo tmpVo = boardVos.get(i);
+			if(tmpVo.getAnswerFlag()==2) {
+				switch (tmpVo.getGroupCode()) {
+//					case "N"://공지사항
+//						hasNew.set(0, new Integer(1));
+//						hasNew.set(1, new Integer(1));
+//						break;
+//					case "F"://자주묻는질문
+//						hasNew.set(0, new Integer(1));
+//						hasNew.set(2, new Integer(1));
+//						break;
+					case "Q"://상품문의
+						hasNew.set(0, new Integer(1));
+						hasNew.set(3, new Integer(1));
+						break;
+					case "O"://1:1문의
+						hasNew.set(0, new Integer(1));
+						hasNew.set(4, new Integer(1));
+						break;
+				}
+			}
+		}
+
+		List<CommonBoardVo> commonBoardVos = commonBoardService.getDetailList(cvo);
+		//답변여부(Y=답변, N=미답변)
+		for (int i = 0; i < commonBoardVos.size(); i++) {
+			CommonBoardVo tmpVo = commonBoardVos.get(i);
+			if("N".equals(tmpVo.getAnswerFlag())) {
+				switch (tmpVo.getCommonBoardSeq()) {
+					case 2://입점문의
+						hasNew.set(0, new Integer(1));
+						hasNew.set(5, new Integer(1));
+						break;
+					case 1://판매요청
+						hasNew.set(0, new Integer(1));
+						hasNew.set(6, new Integer(1));
+						break;
+					case 10://가격제안
+						hasNew.set(0, new Integer(1));
+						hasNew.set(7, new Integer(1));
+						break;
+				}
+			}
+		}
+
 
 		if(!session.getAttribute("loginType").equals("A")) {
 
@@ -151,9 +204,11 @@ public class LoginCheckAdminInterceptorImpl extends HandlerInterceptorAdapter {
 					}
 				}
 			request.setAttribute("mallList", tmpMallList);
+			request.setAttribute("boardNewList", hasNew);
 		}
 		else {
 			request.setAttribute("mallList", mallList);
+			request.setAttribute("boardNewList", hasNew);
 		}
 		return true;
 	}

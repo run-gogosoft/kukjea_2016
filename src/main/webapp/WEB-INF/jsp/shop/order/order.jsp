@@ -44,16 +44,52 @@
                             <th>판매가</th>
                             <th>수량</th>
                             <th>상품 금액</th>
-                            <th>배송료</th>
+                            <th></th>
                             <th>이벤트</th>
                             <th>업체</th>
                         </tr>
                         </thead>
                         <c:set var="totalSellPrice" value="0" />
                         <c:set var="totalDeliveryPrice" value="0" />
+                        <c:set var="sellerDeliveryPrice" value="0" />
+                        <c:set var="sellerPrice" value="0" />
+                        <c:set var="seller" value="" />
+                        <c:set var="deliCost" value="0" />
+                        <c:set var="freeDeli" value="Y" />
                         <tbody>
                         <c:forEach var="item" items="${list}">
+                            <c:set var="freeDeli" value="${item.freeDeli}" />
+                            <c:set var="deliCost" value="3300" />
+                            <c:if test="${seller ne item.sellerName && sellerPrice>0}">
+                                <tr style="background-color: #f4f4f4">
+
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>${seller}</strong></td>
+                                    <td><strong>주문상품액 : ${sellerPrice}</strong></td>
+                                    <td><strong>배송료 :
+                                        <c:choose>
+                                            <c:when test="${freeDeli == 'Y' || sellerPrice >50000}">
+                                                무료배송
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="sellerDeliveryPrice" value="${deliCost}" />
+                                                <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice+sellerDeliveryPrice}" />
+                                                ${deliCost} 원
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </strong></td>
+                                    <td><strong>결제금액 :
+                                    ${sellerPrice +sellerDeliveryPrice}</strong></td>
+                                    <c:set var="sellerPrice" value="0" />
+                                    <c:set var="sellerDeliveryPrice" value="0" />
+
+                                </tr>
+                            </c:if>
                             <c:set var="rowSum" value="${item.sellPrice  * item.count}"/>
+                            <c:set var="seller" value="${item.sellerName}" />
                             <tr>
                                 <td>
                                     <c:if test="${item.img1 ne ''}">
@@ -76,15 +112,15 @@
                                     <fmt:formatNumber value="${rowSum}" pattern="#,###" />원
                                 </td>
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${item.freeDeli == 'Y' || (item.sellPrice * item.count) >50000}">
-                                            무료배송
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:set var="totalDeliveryPrice" value="${item.deliCost}" />
-                                            ${item.deliCost} 원
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <%--<c:choose>--%>
+                                        <%--<c:when test="${item.freeDeli == 'Y' || (item.sellPrice * item.count) >50000}">--%>
+                                            <%--무료배송--%>
+                                        <%--</c:when>--%>
+                                        <%--<c:otherwise>--%>
+                                            <%--<c:set var="totalDeliveryPrice" value="${item.deliCost}" />--%>
+                                            <%--${item.deliCost} 원--%>
+                                        <%--</c:otherwise>--%>
+                                    <%--</c:choose>--%>
                                 </td>
                                 <td>
                                     <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
@@ -98,8 +134,39 @@
                                     ${item.sellerName}
                                 </td>
                             </tr>
+
+                            <c:set var="sellerPrice" value="${sellerPrice + rowSum}" />
                             <c:set var="totalSellPrice" value="${totalSellPrice + rowSum}" />
                         </c:forEach>
+
+                        <tr style="background-color: #f4f4f4">
+
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>${seller}</strong></td>
+                            <td><strong>주문상품액 : ${sellerPrice}</strong></td>
+                            <td><strong>배송료 :
+                                <c:choose>
+                                    <c:when test="${freeDeli == 'Y' || sellerPrice >50000}">
+                                        무료배송
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="sellerDeliveryPrice" value="${deliCost}" />
+                                        <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice+sellerDeliveryPrice}" />
+                                        ${deliCost} 원
+                                    </c:otherwise>
+                                </c:choose>
+                            </strong></td>
+                            <td><strong>결제금액 :
+                                ${sellerPrice +sellerDeliveryPrice}</strong></td>
+                            <c:set var="sellerPrice" value="0" />
+                            <c:set var="sellerDeliveryPrice" value="0" />
+
+
+                        </tr>
+
                         </tbody>
                         <tfoot>
                         <tr class="total_price">
@@ -113,7 +180,7 @@
                                         <dt>배송비 합계</dt>
                                         <dd>
                                             <c:choose>
-                                                <c:when test="${totalSellPrice>50000}">
+                                                <c:when test="${totalDeliveryPrice==0}">
                                                     <strong><fmt:formatNumber value="0" pattern="#,###" /></strong>원 ( 50,000 만원 이상 무료배송)
                                                 </c:when>
                                                 <c:otherwise>
@@ -127,14 +194,15 @@
                                     <div class="price">
                                        <span>
                                             총 구매금액: <em id="totalPriceText">
-                                            <c:choose>
-                                                <c:when test="${totalSellPrice>50000}">
-                                                    <fmt:formatNumber value="${totalSellPrice}" pattern="#,###" />
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <fmt:formatNumber value="${totalSellPrice + totalDeliveryPrice}" pattern="#,###" />
-                                                </c:otherwise>
-                                            </c:choose>
+                                            <%--<c:choose>--%>
+                                                <%--<c:when test="${totalDeliveryPrice==>50000}">--%>
+                                                    <%--<fmt:formatNumber value="${totalSellPrice}" pattern="#,###" />--%>
+                                                <%--</c:when>--%>
+                                                <%--<c:otherwise>--%>
+                                                    <%--<fmt:formatNumber value="${totalSellPrice + totalDeliveryPrice}" pattern="#,###" />--%>
+                                                <%--</c:otherwise>--%>
+                                            <%--</c:choose>--%>
+                                           <fmt:formatNumber value="${totalSellPrice + totalDeliveryPrice}" pattern="#,###" />
                                            </em> 원
                                        </span>
                                     </div>

@@ -167,18 +167,28 @@
 
 				<c:if test="${sessionScope.loginType eq 'A' }">
 				<li class="${navi eq 'board' or navi eq 'about' ? 'active':''} treeview">
-					<a href="#"><i class="fa fa-clipboard"></i> <span>게시판 관리</span> <i class="fa fa-angle-left pull-right"></i></a>
+					<a href="#"><i class="fa fa-clipboard"></i> <span>게시판 관리</span><c:if test="${boardNewList[0] ne 0}"><span style="color: #ffe724;">new</span></c:if>
+						<i class="fa fa-angle-left pull-right"></i></a>
 					<ul class="treeview-menu">
-						<li ${naviSub eq '/board/list/notice' ? "class='active'":""}><a href="/admin/board/list/notice"><i class="fa fa-caret-right"></i> 공지사항</a></li>
+						<li ${naviSub eq '/board/list/notice' ? "class='active'":""}><a href="/admin/board/list/notice"><i class="fa fa-caret-right"></i> 공지사항
+							<c:if test="${boardNewList[1] ne 0}"><span style="color: #ffe724;">new</span></c:if></a></li>
 					<c:if test="${sessionScope.loginType eq 'A'}">
 						<%-- only 관리자 --%>
-						<li ${naviSub eq '/board/list/faq' ? "class='active'":""}><a href="/admin/board/list/faq"><i class="fa fa-caret-right"></i> 자주 묻는 질문</a></li>
+						<li ${naviSub eq '/board/list/faq' ? "class='active'":""}><a href="/admin/board/list/faq"><i class="fa fa-caret-right"></i> 자주 묻는 질문
+							<c:if test="${boardNewList[2] ne 0}"><span style="color: #ffe724;">new</span></c:if></a></li>
 					</c:if>
-						<li ${naviSub eq '/board/list/qna' ? "class='active'":""}><a href="/admin/board/list/qna"><i class="fa fa-caret-right"></i> 상품 문의(Q&amp;A)</a></li>
+						<li ${naviSub eq '/board/list/qna' ? "class='active'":""}><a href="/admin/board/list/qna"><i class="fa fa-caret-right"></i> 상품 문의(Q&amp;A)
+							<c:if test="${boardNewList[3] ne 0}"><span style="color: #ffe724;">new</span></c:if></a></li>
+						<li ${naviSub eq '/board/list/qna' ? "class='active'":""}><a href="/admin/board/list/one"><i class="fa fa-caret-right"></i> 1:1 문의(Q&amp;A)
+							<c:if test="${boardNewList[4] ne 0}"><span style="color: #ffe724;">new</span></c:if></a></li>
+
+						<li ${naviSub eq '/about/board/detail/list/2' ? "class='active'":""}><a href="/admin/about/board/detail/list/2"><i class="fa fa-caret-right"></i> 입점문의
+							<c:if test="${boardNewList[5] ne 0}"><span style="color: #ffe724;">new</span></c:if></a></li>
 					<c:if test="${sessionScope.loginType eq 'A'}">
-						<li ${naviSub eq '/about/board/detail/list/2' ? "class='active'":""}><a href="/admin/about/board/detail/list/2"><i class="fa fa-caret-right"></i> 입점문의</a></li>
-						<li ${naviSub eq '/about/board/detail/list/1' ? "class='active'":""}><a href="/admin/about/board/detail/list/1"><i class="fa fa-caret-right"></i> 판매요청</a></li>
-						<li ${naviSub eq '/about/board/detail/list/10' ? "class='active'":""}><a href="/admin/about/board/detail/list/10"><i class="fa fa-caret-right"></i> 가격제안</a></li>
+						<li ${naviSub eq '/about/board/detail/list/1' ? "class='active'":""}><a href="/admin/about/board/detail/list/1"><i class="fa fa-caret-right"></i> 판매요청
+							<c:if test="${boardNewList[6] ne 0}"><span style="color: #ffe724;">new</span></c:if></a></li>
+						<li ${naviSub eq '/about/board/detail/list/10' ? "class='active'":""}><a href="/admin/about/board/detail/list/10"><i class="fa fa-caret-right"></i> 가격제안
+							<c:if test="${boardNewList[7] ne 0}"><span style="color: #ffe724;">new</span></c:if></a></li>
 					</c:if>
 					</ul>
 				</li>

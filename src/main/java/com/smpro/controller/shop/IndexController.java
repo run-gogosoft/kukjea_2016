@@ -113,7 +113,23 @@ public class IndexController {
 
 		//redirect url lv/1
 		if(mallSeq==1) model.addAttribute("returnUrl", "/shop/main");
-		else model.addAttribute("returnUrl","/shop/lv1/1");
+		else {
+			String mallName = mallService.getVo(mallSeq).getName();
+			CategoryVo cvo = new CategoryVo();
+			cvo.setMallId(mallSeq);
+			cvo.setDepth(1);
+			cvo.setShowFlag("Y");
+			List<CategoryVo> categoryVoList =  categoryService.getListSimple(cvo);
+			if(categoryVoList !=null && categoryVoList.size()>0){
+				int categoryid = categoryVoList.get(0).getSeq();
+				model.addAttribute("returnUrl","/shop/lv1/"+categoryid);
+			}
+			else {
+				model.addAttribute("message", "선택하신 "+mallName+"에는 카테고리와 상품이 존재하지 않습니다.");
+				return Const.ALERT_PAGE;
+			}
+
+		}
 		return Const.REDIRECT_PAGE;
 	}
 

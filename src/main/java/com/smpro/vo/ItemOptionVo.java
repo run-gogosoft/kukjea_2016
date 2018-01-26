@@ -56,6 +56,18 @@ public class ItemOptionVo {
 	private String modContent="";
 	private String column="";
 
+	/** 제품원가 **/
+	private int originalPrice=0;
+
+	public int getOriginalPrice() {
+		return originalPrice;
+	}
+
+	public void setOriginalPrice(int originalPrice) {
+		this.originalPrice = originalPrice;
+	}
+
+
 	public int getCount() {
 		return count;
 	}

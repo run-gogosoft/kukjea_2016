@@ -96,7 +96,7 @@
 									</td>
 									<td class="text-right">
 										<fmt:formatNumber value="${item.sellPrice}"/>
-										<div style="margin-top:5px;color:#6495ed"><fmt:formatNumber value="${item.supplyPrice}"/></div>
+										<div style="margin-top:5px;color:#6495ed"><fmt:formatNumber value="${item.orgPrice}"/></div>
 									</td>
 									<td class="text-right">${item.orderCnt}</td>
 									<td class="text-center">

@@ -49,12 +49,12 @@
 								<col style="width:16%;"/>
 							</colgroup>
 							<tr>
-								<td class="text-center"><b><a href="javascript:toggleSearchBar('statusSearchBar');">결제완료</a></b></td>
-								<td class="text-center"><b><a href="javascript:toggleSearchBar('statusSearchBar');">주문확인</a></b></td>
-								<td class="text-center"><b><a href="javascript:toggleSearchBar('statusSearchBar');">배송</a></b></td>
-								<td class="text-center"><b><a href="javascript:toggleSearchBar('statusSearchBar');">교환</a></b></td>
-								<td class="text-center"><b><a href="javascript:toggleSearchBar('statusSearchBar');">반품</a></b></td>
-								<td class="text-center"><b><a href="javascript:toggleSearchBar('statusSearchBar');">취소</a></b></td>
+								<td class="text-center" style="background-color:#ff9999"><b><a href="javascript:toggleSearchBar('statusSearchBar');">결제완료</a></b></td>
+								<td class="text-center" style="background-color:#ffcc99"><b><a href="javascript:toggleSearchBar('statusSearchBar');">주문확인</a></b></td>
+								<td class="text-center" style="background-color:#ffffcc"><b><a href="javascript:toggleSearchBar('statusSearchBar');">배송</a></b></td>
+								<td class="text-center" style="background-color:#ccff99"><b><a href="javascript:toggleSearchBar('statusSearchBar');">교환</a></b></td>
+								<td class="text-center" style="background-color:#99ffff"><b><a href="javascript:toggleSearchBar('statusSearchBar');">반품</a></b></td>
+								<td class="text-center" style="background-color:#99ccff"><b><a href="javascript:toggleSearchBar('statusSearchBar');">취소</a></b></td>
 							</tr>
 							<tr class="statusSearchBar" style="display:none;">
 								<td class="text-center"><i class="fa fa-fw fa-shopping-cart"></i> <a href="#" onclick="statusSearch('10');" <c:if test="${pvo.statusCode eq 10}">style="color:#d9534f;font-weight:bold;"</c:if>>결제완료</a></td>
@@ -149,7 +149,7 @@
 									<th>수량</th>
 									<th>
 										판매단가
-										<!-- <span class="text-primary">공급단가</span> -->
+										<div class="text-primary">판매원가</div>
 									</th>
 									<th>합계</th>
 									<th>배송비</th>
@@ -164,7 +164,10 @@
 							<tbody>
 							<c:set var="i" value="0"/>
 							<c:forEach var="item" items="${list}" varStatus="status">
-								<tr ${item.deliSeq == null ? "":"style='background-color:#f7df56'"}>
+								<%--<tr ${item.deliSeq == null ? "":"style='background-color:#f7df56'"}>--%>
+								<tr style="background-color:${item.bgColor}">
+								<%--<tr ${item.statusText == "결제완료" ? style='background-color:#ff9999':--%>
+										<%--(item.statusText == "주문확인" ? style='background-color:#ffcc99':style='background-color:#f7df56')}>--%>
 									<td class="text-center">
 										<input type="checkbox" name="seq" value="${item.seq}" data-value="${i}" <c:if test="${pvo.statusCode ne 30}">onclick="toggleDeliField(this.checked,${i})"</c:if> <c:if test="${sessionScope.loginType ne 'A' and sessionScope.loginType ne 'S'}">disabled</c:if>/>
 										<%-- <input type="hidden" name="orderSeq" value="${item.orderSeq}"/> --%>
@@ -217,16 +220,19 @@
 										<span class="text-primary">${item.receiverName}</span>
 									</td>
 									<td>
-										${item.itemName}</br>
+										${item.itemName}<br/>
 										<div class="text-primary">${item.taxName}</div>
 									</td>
 									<td>${item.optionValue}</td>
 									<td class="text-right"><fmt:formatNumber value="${item.orderCnt}"/></td>
 									<td class="text-right">
-										<fmt:formatNumber value="${item.sellPrice}"/>
-										<%-- <span class="text-primary"><fmt:formatNumber value="${item.supplyPrice}"/></span> --%>
+										<fmt:formatNumber value="${item.sellPrice}"/><br/>
+										<div class="text-primary"><fmt:formatNumber value="${item.orgPrice}"/></div>
 									</td>
-									<td class="text-right"><fmt:formatNumber value="${((item.sellPrice) * item.orderCnt)}"/></td>
+									<td class="text-right">
+										<fmt:formatNumber value="${((item.sellPrice) * item.orderCnt)}"/><br/>
+										<div class="text-primary"><fmt:formatNumber value="${((item.orgPrice) * item.orderCnt)}"/></div>
+									</td>
 									<td class="text-right">
 										<c:choose>
 											<c:when test="${((item.sellPrice) * item.orderCnt) >= 50000}">
@@ -253,7 +259,9 @@
 												<option value="${ deliItem.deliSeq }" ${item.deliSeq == deliItem.deliSeq ? "selected" :  ""}>${deliItem.deliCompanyName} <c:if test="${deliItem.useFlag eq 'N'}">(사용안함)</c:if></option>
 											</c:forEach>
 										</select><br/>
-										<input type="text" name="deliNo" value="${item.deliNo}" maxlength="15" alt="송장번호" onblur="numberCheck(this);" placeholder="송장번호(숫자만 입력)" style="width:100%" disabled/>
+										<input type="text" name="deliNo" value="${item.deliNo}" maxlength="15" alt="송장번호" onblur="numberCheck(this);" placeholder="송장번호(숫자만입력)" style="width:100%" disabled/>
+										<input type="text" name="boxCnt" value="${item.boxCnt}" maxlength="5" alt="총박스수" onblur="numberCheck(this);" placeholder="총박스(숫자만입력)" style="width:100%" disabled/>
+										<input type="text" name="totalDeliCost" value="${item.totalDeliCost}" maxlength="11" alt="총배송금액" onblur="numberCheck(this);" placeholder="총배송금액(숫자만입력)" style="width:100%" disabled/>
 									</td>
 									<td class="text-center">
 										<a href="/admin/seller/mod/${item.sellerSeq}" target="_blank">${item.sellerName}</a>
@@ -351,10 +359,14 @@
 			/* 전체선택 */
 			$("select[name='deliSeq']").prop("disabled", disabled);
 			$("input[name='deliNo']").prop("disabled", disabled);
+			$("input[name='boxCnt']").prop("disabled", disabled);
+			$("input[name='totalDeliCost']").prop("disabled", disabled);
 		} else {
 			/* 건별 선택 */
 			$("select[name='deliSeq']").eq(idx).prop("disabled", disabled);
 			$("input[name='deliNo']").eq(idx).prop("disabled", disabled);
+			$("input[name='boxCnt']").prop("disabled", disabled);
+			$("input[name='totalDeliCost']").prop("disabled", disabled);
 		}
 	};
 
@@ -399,6 +411,8 @@
 
 					var objDeliSeq = $(formObj).find("select[name='deliSeq']").eq(idx);
 					var objDeliNo  = $(formObj).find("input[name='deliNo']").eq(idx);
+					var objBoxCnt  = $(formObj).find("input[name='boxCnt']").eq(idx);
+					var objTotalDeliCost  = $(formObj).find("input[name='totalDeliCost']").eq(idx);
 					if($(objDeliSeq).val() == "") {
 						alert("택배사를 선택해 주세요.");
 						$(objDeliSeq).focus();
@@ -407,6 +421,16 @@
 					} else if($(objDeliSeq).val() !== "19" && $(objDeliNo).val() == "") {
 						alert("송장 번호를 입력해 주세요.");
 						$(objDeliNo).focus();
+						flag = false;
+						return flag;
+					} else if($(objBoxCnt).val() == "0" || $(objBoxCnt).val() == "") {
+						alert("배송 박스 수를 입력해 주세요.");
+						$(objBoxCnt).focus();
+						flag = false;
+						return flag;
+					} else if($(objTotalDeliCost).val() == "0" || $(objTotalDeliCost).val() == "") {
+						alert("총 배송비를 입력해 주세요.");
+						$(objTotalDeliCost).focus();
 						flag = false;
 						return flag;
 					}

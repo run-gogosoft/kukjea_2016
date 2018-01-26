@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -61,11 +62,24 @@ public class OrderStatsController {
 		System.out.println(">>> loginSeq :"+(Integer)session.getAttribute("loginSeq"));
 		System.out.println(">>> loginName :"+(String)session.getAttribute("loginName"));
 
-			vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
-			vo.setSellerName((String)session.getAttribute("loginName"));
+		vo.setSellerSeq((Integer)session.getAttribute("loginSeq"));
+		vo.setSellerName((String)session.getAttribute("loginName"));
+
+		List<HashMap<String,Integer[]>> list = orderStatsService.getListByCategory(vo);
 
 
-		model.addAttribute("list", orderStatsService.getListByCategory(vo));
+
+		for(int i = 0;i<list.size();i++){
+			int sumRow = 0;
+			int orgSumRow = 0;
+
+			HashMap<String,Integer[]> tmp = list.get(i);
+			System.out.println("### HashMap :"+tmp.toString());
+
+
+		}
+
+		model.addAttribute("list", list);
 		model.addAttribute("lv1CategoryList", vo.getCategoryList());
 		model.addAttribute("data", orderStatsService.getSumByCategory(vo));
 		model.addAttribute("vo", vo);

@@ -149,7 +149,8 @@
 				</thead>
 				<tbody>
 				<c:set var="total" value="0"/>
-				<c:set var="totlaDeliCost" value="0"/>
+				<c:set var="totalDeliCost" value="0"/>
+				<c:set var="checkBD" value="${vo.checkBD}"/>
 				<c:forEach var="vo" items="${list}" varStatus="status">
 					<tr <c:if test="${vo.seq==pvo.seq}"> class="tr-selected" </c:if>>
 						<td class="text-center">${vo.seq}</td>
@@ -174,7 +175,16 @@
 								<c:otherwise>이벤트없음</c:otherwise>
 							</c:choose>
 						</td>
-						<td class="text-center">${vo.statusText}</td>
+						<td><strong>
+							<c:choose>
+								<c:when test="${vo.statusCode eq '99'}">
+									<div style="color:#ff0000;">${vo.statusText}</div>
+								</c:when>
+								<c:otherwise>
+									<div style="color:#72afd2;">${vo.statusText}</div>
+								</c:otherwise>
+							</c:choose>
+						</strong></td>
 						<td>${vo.sellerName}</td>
 						<td class="text-right"><fmt:formatNumber value="${vo.sellPrice}"/></td>
 						<td class="text-right">${vo.orderCnt}</td>
@@ -198,24 +208,37 @@
 						<%--</td>--%>
 						<td class="text-right">
 							<c:set var="subTotal" value="${vo.sellPrice  * vo.orderCnt}"/>
-							<c:if test="${vo.deliCost > 0}">
-								<c:set var="totlaDeliCost" value="${vo.deliCost}"/>
+							<%--<c:set var="total" value="${total + subTotal}"/>--%>
+							<c:if test="${vo.statusCode ne '99'}">
+								<c:set var="total" value="${total + subTotal}"/>
 							</c:if>
-							<c:set var="total" value="${total + subTotal}"/>
 							<fmt:formatNumber value="${subTotal}"/>
+							<c:choose>
+								<c:when test="${checkBD eq 'Y'}">
+									<c:set var="totalDeliCost" value="${totalDeliCost+vo.deliCost}"/>
+								</c:when>
+								<c:otherwise>
+									<c:if test="${total >= 50000}">
+										<c:set var="totalDeliCost" value="0"/>
+									</c:if>
+									<c:if test="${total < 50000}">
+										<c:set var="totalDeliCost" value="3300"/>
+									</c:if>
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</tr>
 				</c:forEach>
 					<tr>
 						<th colspan="12" style="font-size:15px;">
-							주문 합계 금액 :
+							주문합계금액 :
 							상품금액(<fmt:formatNumber value="${total}"/>원) + 배송료(
 							<c:choose>
-								<c:when test="${total>= 50000}">
+								<c:when test="${totalDeliCost eq 0}">
 									무료배송
 								</c:when>
 								<c:otherwise>
-									<fmt:formatNumber value="${totlaDeliCost}"/>원
+									<fmt:formatNumber value="${totalDeliCost}"/>원
 								</c:otherwise>
 							</c:choose>
 							)
@@ -223,30 +246,23 @@
 								- 할인금액(<fmt:formatNumber value="${vo.couponPrice}"/>원)
 							</c:if>
 							<c:if test="${vo.point >0}">
-								- 포인트 차감(<fmt:formatNumber value="${vo.point}"/>원)
+								- 포인트차감(<fmt:formatNumber value="${vo.point}"/>원)
 							</c:if>
 							<c:if test="${vo.payMethod eq 'CASH' or vo.payMethod eq 'CASH+POINT'}">
-								= 무통장 입금 금액(
-								<c:choose>
-									<c:when test="${total>= 50000}">
-										<fmt:formatNumber value="${total-vo.point}"/>
-									</c:when>
-									<c:otherwise>
-										<fmt:formatNumber value="${total+totlaDeliCost-vo.point}"/>
-									</c:otherwise>
-								</c:choose>
+								= 무통장입금금액(
+										<fmt:formatNumber value="${total+totalDeliCost-vo.point}"/>
 								)
 							</c:if>
 						</th>
 						<td class="text-right">
-							<c:choose>
-								<c:when test="${total>= 50000}">
-									<fmt:formatNumber value="${total}"/>
-								</c:when>
-								<c:otherwise>
-									<fmt:formatNumber value="${total+totlaDeliCost}"/>
-								</c:otherwise>
-							</c:choose>
+							<%--<c:choose>--%>
+								<%--<c:when test="${total>= 50000}">--%>
+									<%--<fmt:formatNumber value="${total}"/>--%>
+								<%--</c:when>--%>
+								<%--<c:otherwise>--%>
+									<fmt:formatNumber value="${total+totalDeliCost}"/>
+								<%--</c:otherwise>--%>
+							<%--</c:choose>--%>
 						</td>
 					</tr>
 				</tbody>

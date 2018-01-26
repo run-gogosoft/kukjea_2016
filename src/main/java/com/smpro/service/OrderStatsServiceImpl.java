@@ -16,11 +16,11 @@ public class OrderStatsServiceImpl implements OrderStatsService {
 	@Autowired
 	private OrderStatsDao orderStatsDao;
 
-	public List<HashMap<String,Integer>> getListByCategory(OrderVo vo) {
+	public List<HashMap<String,Integer[]>> getListByCategory(OrderVo vo) {
 		return orderStatsDao.getListByCategory(vo);
 	}
 	
-	public HashMap<String, Integer> getSumByCategory(OrderVo vo) {
+	public HashMap<String, Integer[] > getSumByCategory(OrderVo vo) {
 		return orderStatsDao.getSumByCategory(vo);
 	}
 	

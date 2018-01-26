@@ -47,14 +47,14 @@
 								<col style="width:150px"/>
 								<col style="width:150px"/>
 								<col style="width:150px"/>
-								<col style="width:150px"/>
+								<%--<col style="width:150px"/>--%>
 							</colgroup>
 							<thead>
 								<tr>
 									<th>구분</th>
 									<th>판매가합</th>
 									<th>공급가합</th>
-									<th>배송비합계</th>
+									<%--<th>배송비합계</th>--%>
 								</tr>
 							</thead>
 							<tbody>
@@ -62,13 +62,13 @@
 									<td class="text-center">정상주문</td>
 									<td class="text-right"><fmt:formatNumber value="${orderSum.sumPrice}"/></td>
 									<td class="text-right"><fmt:formatNumber value="${orderSum.supplyPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${orderSum.deliCost}"/></td>
+									<%--<td class="text-right"><fmt:formatNumber value="${orderSum.deliCost}"/></td>--%>
 								</tr>
 								<tr>
 									<td class="text-center">취소주문</td>
 									<td class="text-right"><fmt:formatNumber value="${orderCancelSum.sumPrice}"/></td>
 									<td class="text-right"><fmt:formatNumber value="${orderCancelSum.supplyPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${orderCancelSum.deliCost}"/></td>
+									<%--<td class="text-right"><fmt:formatNumber value="${orderCancelSum.deliCost}"/></td>--%>
 								</tr>
 							</tbody>
 						</table>
@@ -88,7 +88,7 @@
 								<col style="width:"/>
 								<col style="width:"/>
 								<col style="width:"/>
-								<col style="width:"/>
+								<%--<col style="width:"/>--%>
 							</colgroup>
 							<thead>
 								<tr>
@@ -113,13 +113,13 @@
 									<th>수량</th>
 									<th>판매가</th>
 									<th>공급가</th>
-									<th>배송비</th>
+									<%--<th>배송비</th>--%>
 								</tr>
 							</thead>
 							<tbody>
 							<c:set var="sumSellPrice" value="0"/>
 							<c:set var="sumSupplyPrice" value="0"/>
-							<c:set var="sumDeliCost" value="0"/>
+							<%--<c:set var="sumDeliCost" value="0"/>--%>
 							<c:forEach var="item" items="${list}">
 								<tr ${item.c99Date ne '' ? "style=\"background-color:#ffe4e1\"":""}>
 									<td class="text-center">
@@ -150,18 +150,18 @@
 									<td class="text-right">${item.orderCnt}</td>
 									<td class="text-right"><fmt:formatNumber value="${item.sellPrice}"/></td>
 									<td class="text-right"><fmt:formatNumber value="${item.supplyPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${item.deliCost}"/></td>
+									<%--<td class="text-right"><fmt:formatNumber value="${item.deliCost}"/></td>--%>
 								</tr>
 
 								<c:set var="sumSellPrice" value="${sumSellPrice + item.sellPrice}"/>
 								<c:set var="sumSupplyPrice" value="${sumSupplyPrice + item.supplyPrice}"/>
-								<c:set var="sumDeliCost" value="${sumDeliCost + item.deliCost}"/>
+								<%--<c:set var="sumDeliCost" value="${sumDeliCost + item.deliCost}"/>--%>
 							</c:forEach>
 								<tr>
 									<td class="text-right" colspan="10"><strong>합계</strong></td>
 									<td class="text-right"><strong><fmt:formatNumber value="${sumSellPrice}"/></strong></td>
 									<td class="text-right"><strong><fmt:formatNumber value="${sumSupplyPrice}"/></strong></td>
-									<td class="text-right"><strong><fmt:formatNumber value="${sumDeliCost}"/></strong></td>
+									<%--<td class="text-right"><strong><fmt:formatNumber value="${sumDeliCost}"/></strong></td>--%>
 								</tr>
 							</tbody>
 						</table>

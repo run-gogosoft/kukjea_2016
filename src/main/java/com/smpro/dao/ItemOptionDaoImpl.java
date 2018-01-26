@@ -94,6 +94,9 @@ public class ItemOptionDaoImpl implements ItemOptionDao {
 
 	@Override
 	public Integer getSeq(Integer seq) {
-		return sqlSession.selectOne("option.getSeq", seq);
+
+		Integer optionSeq =  sqlSession.selectOne("option.getSeq", seq);
+		if(optionSeq == null) return -1;
+		return optionSeq;
 	}
 }

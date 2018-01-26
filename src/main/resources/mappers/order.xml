@@ -13,6 +13,7 @@
 	d.option_value AS optionValue,
 	d.status_code AS statusCode,
 	d.sell_price AS sellPrice,
+  	d.org_price AS orgPrice,
 	p.amount AS payPrice,
 	ph.point,
 	d.option_price AS optionPrice,
@@ -20,10 +21,12 @@
 	d.supply_master_price AS supplyMasterPrice,
 	d.coupon_price AS couponPrice,
 	d.order_cnt AS orderCnt,
-	<!--d.deli_cost AS deliCost,-->
+	d.deli_cost AS deliCost,
 	d.deli_prepaid_flag AS deliPrepaidFlag,
 	d.deli_seq AS deliSeq,
 	d.deli_no AS deliNo,
+	d.box_count AS boxCnt,
+	d.total_deli_cost AS totalDeliCost,
 	(SELECT company_name FROM sm_deli_company WHERE seq=d.deli_seq) AS deliCompanyName,
 	(SELECT track_url FROM sm_deli_company WHERE seq=d.deli_seq) AS deliTrackUrl,
 	(SELECT complete_msg FROM sm_deli_company WHERE seq=d.deli_seq) AS completeMsg,
@@ -447,10 +450,11 @@
 			d.option_value AS optionValue,
 			d.status_code AS statusCode,
 			d.sell_price AS sellPrice,
+			d.org_price AS orgPrice,
 			d.option_price AS optionPrice,
 			d.supply_price AS supplyPrice,
 			d.order_cnt AS orderCnt,
-			<!--d.deli_cost AS deliCost,-->
+			d.deli_cost AS deliCost,
 			d.deli_prepaid_flag AS deliPrepaidFlag,
 			d.tax_code AS taxCode,
 			d.seller_seq AS sellerSeq,
@@ -582,7 +586,8 @@
 			c.postcode,
 			c.addr1,
 			c.addr2,
-			p.tid
+			p.tid,
+			o.check_bd AS checkBD
 		FROM
 			sm_order o LEFT OUTER JOIN
 			sm_point_history ph ON (o.seq=ph.order_seq AND ph.status_code='U') LEFT OUTER JOIN
@@ -669,12 +674,13 @@
 			d.option_value AS optionValue,
 			d.status_code AS statusCode,
 			d.sell_price AS sellPrice,
+			d.org_price AS orgPrice,
 			d.option_price AS optionPrice,
 			d.supply_price AS supplyPrice,
 			d.supply_master_price AS supplyMasterPrice,
 			d.coupon_price AS couponPrice,
 			d.order_cnt AS orderCnt,
-			<!--d.deli_cost AS deliCost,-->
+			d.deli_cost AS deliCost,
 			d.deli_prepaid_flag AS deliPrepaidFlag,
 			d.deli_seq AS deliSeq,
 			(SELECT company_name FROM sm_deli_company WHERE seq=d.deli_seq) AS deliCompanyName,
@@ -759,9 +765,10 @@
 			d.option_value AS optionValue,
 			d.status_code AS statusCode,
 			d.sell_price AS sellPrice,
+			d.org_price AS orgPrice,
 			d.supply_price AS supplyPrice,
 			d.order_cnt AS orderCnt,
-			<!--d.deli_cost AS deliCost,-->
+			d.deli_cost AS deliCost,
 			d.deli_prepaid_flag AS deliPrepaidFlag,
 			d.seller_seq AS sellerSeq,
 			d.seller_name AS sellerName,
@@ -842,6 +849,7 @@
 		UPDATE sm_order_detail d SET
 			d.status_code='30', d.c30_date=NOW(), mod_date=NOW()
 			, d.deli_seq=#{deliSeq}, d.deli_no=#{deliNo}
+			, d.box_count=#{boxCnt}, d.total_deli_cost=#{totalDeliCost}
 		WHERE
 			d.status_code IN('20','30')
 			AND d.seq=#{seq}
@@ -854,7 +862,7 @@
 	<!-- 후청구 결제여부 상태 변경 -->
 	<update id="updateNpPayFlag" parameterType="com.smpro.vo.OrderVo">
 		UPDATE sm_order o SET 
-			o.np_pay_flag = #{npPayFlag}
+			o.np_pay_flag = #{npPayFlag}f
 			<if test="npPayFlag eq 'Y'.toString()">
 				,o.np_pay_date = NOW()
 			</if>
@@ -968,6 +976,7 @@
       		, member_cell
       		, member_email
       		, np_pay_flag
+      		, check_bd
 		) VALUES (
 			#{orderSeq}
 			, #{mallSeq}
@@ -991,6 +1000,7 @@
       		, #{memberCell}
       		, #{memberEmail}
       		, #{npPayFlag}
+      		, #{checkBD}
 		)
 	</insert>
 
@@ -1003,12 +1013,13 @@
 			option_value,
 			status_code,
 			sell_price,
+			org_price,
 			option_price,
 			supply_price,
 			supply_master_price,
 			coupon_price,
 			order_cnt,
-			<!--deli_cost,-->
+			deli_cost,
 			deli_prepaid_flag,
 			package_deli_cost,
 			tax_code,
@@ -1028,12 +1039,13 @@
 			#{optionValue},
 			#{statusCode},
 			#{sellPrice},
+			#{orgPrice},
 			#{optionPrice},
 			#{supplyPrice},
 			#{supplyMasterPrice},
 			#{couponPrice},
 			#{orderCnt},
-			<!--#{deliCost},-->
+			#{deliCost},
 			#{deliPrepaidFlag},
 			#{packageDeliCost},
 			#{taxCode},
@@ -1522,23 +1534,7 @@
 	<!-- 부분 취소 금액 계산 -->
 	<select id="calcPartCancelAmt" parameterType="int" resultType="com.smpro.vo.OrderVo">
 		SELECT
-			CASE
-				<!-- 묶음 배송 주문일 경우 -->
-				WHEN d.package_deli_cost > 0 AND d.deli_prepaid_flag = 'Y' THEN
-					CASE
-					  WHEN
-					   <!-- 해당 주문번호 판매자별 전체 상품주문건수 - 기취소된 상품주문건수 = 1이면 마지막 부분취소이다.(이경우 주문 전체가 취소되므로 이때는 배송비를 포함시킨다. -->
-					    (SELECT COUNT(*) FROM sm_order_detail WHERE order_seq=d.order_seq AND seller_seq=d.seller_seq) - (SELECT COUNT(*) FROM sm_order_detail WHERE seq != d.seq AND status_code='99' AND order_seq=d.order_seq AND seller_seq=d.seller_seq) = 1 THEN ((d.sell_price + IFNULL(d.option_price,0)) * d.order_cnt) + d.deli_cost
-					  ELSE
-					    (d.sell_price + IFNULL(d.option_price,0)) * d.order_cnt
-					END
-				ELSE
-					CASE
-						<!-- 선결제 배송이면 취소 금액에 배송비를 포함 시킨다. -->
-						WHEN d.deli_prepaid_flag = 'Y' THEN ((d.sell_price + IFNULL(d.option_price,0)) * d.order_cnt) + d.deli_cost
-						ELSE (d.sell_price + IFNULL(d.option_price,0)) * d.order_cnt
-					END
-			END AS sumPrice,
+			d.sell_price  * d.order_cnt AS sumPrice,
 			d.seller_seq AS sellerSeq,
 			d.tax_code AS taxCode,
 			o.pay_method AS payMethod
@@ -1599,13 +1595,14 @@
 			d.item_name AS itemName,
 			d.option_value AS optionValue,
 			d.sell_price AS sellPrice,
+			d.org_price AS orgPrice,
 			d.supply_price AS supplyPrice,
 			d.option_price AS optionPrice,
 			d.order_cnt AS orderCnt,
 			<!-- (d.order_cnt * d.sell_price) AS sumSellPrice,
 			(d.order_cnt * d.supply_price) AS sumSupplyPrice,
 			(d.order_cnt * d.option_price) AS sumOptionPrice, -->
-			<!--d.deli_cost AS deliCost,-->
+			d.deli_cost AS deliCost,
 			IFNULL(((
 			SELECT SUM(((x.sell_price+IFNULL(x.option_price,0))*x.order_cnt)+x.deli_cost)
 			FROM sm_order_detail x
@@ -1932,8 +1929,9 @@
 			d.option_value AS optionValue,
 			d.status_code AS statusCode,
 			d.sell_price AS sellPrice,
+			d.org_price AS orgPrice,
 			d.order_cnt AS orderCnt,
-			<!--d.deli_cost AS deliCost,-->
+			d.deli_cost AS deliCost,
 			d.deli_seq AS deliSeq,
 			d.deli_no AS deliNo,
 			d.seller_name AS sellerName,
@@ -2072,10 +2070,11 @@
 			d.item_name AS itemName,
 			d.option_value AS optionValue,
 			d.sell_price AS sellPrice,
+			d.org_price AS orgPrice,
 			d.option_price AS optionPrice,
 			d.order_cnt AS orderCnt,
 			d.deli_prepaid_flag AS deliPrepaidFlag,
-			<!--CASE WHEN d.deli_prepaid_flag = 'Y' THEN d.deli_cost ELSE 0 END deliCost,-->
+			CASE WHEN d.deli_prepaid_flag = 'Y' THEN d.deli_cost ELSE 0 END deliCost,
 			d.status_code AS statusCode,
 			c2.name AS statusText,
 			c3.name AS taxName,

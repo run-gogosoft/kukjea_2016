@@ -309,12 +309,16 @@ public class OrderController {
 			model.addAttribute("message", "회원 정보 복호화에 실패했습니다. [" + e.getMessage() + "]");
 			return Const.ALERT_PAGE;
 		}
-		model.addAttribute("vo", ovo);
-
+		//model.addAttribute("vo", ovo);
+System.out.println("!!!!! ovo.getCheckBD:"+ovo.getCheckBD());
 		/* 서브 */
 		List<OrderVo> detailList = orderService.getListForDetail(pvo);
+		int cancelAmt = 0;
 		for (int i = 0; i < detailList.size(); i++) {
 			OrderVo tempVo = detailList.get(i);
+			if(tempVo.getStatusCode().equals("99")){
+				cancelAmt +=(tempVo.getOptionPrice()*tempVo.getOrderCnt());
+			}
 			try {
 				tempVo.setMemberTel(CrypteUtil.decrypt(tempVo.getMemberTel(), Const.ARIA_KEY, Const.ARIA_KEY.length * 8, null));
 				tempVo.setMemberCell(CrypteUtil.decrypt(tempVo.getMemberCell(), Const.ARIA_KEY, Const.ARIA_KEY.length * 8, null));
@@ -323,6 +327,15 @@ public class OrderController {
 				return Const.ALERT_PAGE;
 			}
 		}
+
+		if(cancelAmt>0) {
+			ovo.setTotalPrice(ovo.getTotalPrice() - cancelAmt);
+			if (ovo.getTotalPrice() < Const.MIN_FREE_ORDER_PRICE) ovo.setTotalPrice(ovo.getTotalPrice() + Const.DELI_COST);
+			ovo.setPayPrice(ovo.getPayPrice() - cancelAmt);
+			if (ovo.getPayPrice() < Const.MIN_FREE_ORDER_PRICE) ovo.setPayPrice(ovo.getPayPrice() + Const.DELI_COST);
+		}
+
+		model.addAttribute("vo", ovo);
 		model.addAttribute("list", detailList);
 
 		/* PG 결제 정보 */
@@ -374,6 +387,8 @@ public class OrderController {
 			@RequestParam(value = "updateStatusCode") String statusCode,
 			@RequestParam(value = "deliSeq", required = false) Integer[] deliSeq,
 			@RequestParam(value = "deliNo", required = false) String[] deliNo,
+			@RequestParam(value = "boxCnt", required = false) Integer[] boxCnt,
+			@RequestParam(value = "totalDeliCost", required = false) Integer[] totalDeliCost,
 			@RequestParam(value = "returnUrl") String returnUrl, Model model
 		) throws Exception {
 		
@@ -411,7 +426,7 @@ public class OrderController {
 				}
 
 			}
-			procCnt = orderService.updateStatusForDelivery(seq, statusCode,	loginSeq, deliSeq, deliNo);
+			procCnt = orderService.updateStatusForDelivery(seq, statusCode,	loginSeq, deliSeq, deliNo, boxCnt,totalDeliCost);
 		} else {
 			procCnt = orderService.updateStatus(seq, statusCode, loginSeq);
 		}
@@ -658,11 +673,15 @@ public class OrderController {
 		Integer[] seq = null;
 		Integer[] deliSeq = null;
 		String[] deliNo = null;
+		Integer[] boxCnt = null;
+		Integer[] totalDeliCost = null;
 
 		if (list != null && list.size() > 0) {
 			seq = new Integer[list.size()];
 			deliSeq = new Integer[list.size()];
 			deliNo = new String[list.size()];
+			boxCnt = new Integer[list.size()];
+			totalDeliCost = new Integer[list.size()];
 			for (int i = 0; i < list.size(); i++) {
 				String[] row = list.get(i);
 				// 값 유효성 검증
@@ -675,11 +694,14 @@ public class OrderController {
 				seq[i] = Integer.valueOf(row[1]);
 				deliSeq[i] = Integer.valueOf(row[3]);
 				deliNo[i] = row[4];
+				boxCnt[i] = Integer.valueOf(row[5]);
+				totalDeliCost[i] = Integer.valueOf(row[6]);
+				System.out.println("### updateDeliveryData, boxCnt:"+boxCnt[i]+", totlaDelicost:"+totalDeliCost[i]);
 			}
 
 			/* DB 업데이트 처리 */
 			procCnt = orderService.updateStatusForDelivery(seq, "30", loginSeq,
-					deliSeq, deliNo, sellerSeq);
+					deliSeq, deliNo, boxCnt,totalDeliCost,sellerSeq);
 		}
 		
 
@@ -877,7 +899,7 @@ public class OrderController {
 			}
 
 			partCancelAmt = (int)detailVo.getSumPrice();
-			
+			System.out.print(">>>>>cancelOrder: [part partCancelAmt = "+partCancelAmt+"]");
 			vo.setSellerSeq(detailVo.getSellerSeq()); // 해당 부분취소 주문건의 입점업체 시퀀스 저장
 		} else {
 			model.addAttribute("message", "유효하지 않은 접근입니다.");
@@ -887,7 +909,9 @@ public class OrderController {
 		/*** PG 취소/부분취소 처리 ***/
 		OrderPayVo payVo = orderService.getPayVoForCancel(vo.getOrderSeq());
 		OrderPayVo payVoCancel = null;
+
 		if (payVo != null && payVo.getCurAmount() > 0) {
+			System.out.print(">>>>>cancelOrder, payVo seq:"+payVo.getSeq());
 			// PG 부분취소 금액
 			int partCancelAmtPay;
 			PgUtil pgUtil = new PgUtil(payVo.getPgCode());
@@ -895,12 +919,14 @@ public class OrderController {
 				int curAmount = payVo.getCurAmount();
 				partCancelAmtPay = partCancelAmt;
 
+				System.out.print(">>>>>cancelOrder, curAmount:"+curAmount);
+				System.out.print(">>>>>cancelOrder, partCancelAmtPay:"+partCancelAmtPay);
 				// 결제금액에 면세금액이 포함(복합과세)되어 있고 과세금액 주문 취소일 경우
-				if (payVo.getTaxFreeAmount() > 0 && (detailVo != null && "1".equals(detailVo.getTaxCode()))) {
-					// 현재 PG결제금액을 과세결제금액만으로 설정한다.(결제 시점에서의 과세/면세 금액 비율과 동일하게 유지)
-					// 잔여 과세 결제금액 = 총 과세결제금액 - (과세 결제금액 취소 합계)
-					curAmount = (payVo.getAmount() - payVo.getTaxFreeAmount()) - orderService.getSumCancelPayAmountTax(vo.getOrderSeq());
-				}
+//				if (payVo.getTaxFreeAmount() > 0 && (detailVo != null && "1".equals(detailVo.getTaxCode()))) {
+//					// 현재 PG결제금액을 과세결제금액만으로 설정한다.(결제 시점에서의 과세/면세 금액 비율과 동일하게 유지)
+//					// 잔여 과세 결제금액 = 총 과세결제금액 - (과세 결제금액 취소 합계)
+//					curAmount = (payVo.getAmount() - payVo.getTaxFreeAmount()) - orderService.getSumCancelPayAmountTax(vo.getOrderSeq());
+//				}
 				if (partCancelAmt > curAmount) {
 					// 부분취소 할 금액이 현재 PG결제금액 보다 클경우 현재 PG결제 금액으로 한다.
 					partCancelAmtPay = curAmount;
@@ -915,6 +941,7 @@ public class OrderController {
 				// PG 취소 요청
 				payVo.setOrderDetailSeq(vo.getSeq());
 				payVo.setPartCancelAmt(partCancelAmtPay);
+				System.out.print(">>>>>PG part cancelOrder: [partCancelAmtPay = "+partCancelAmtPay+"]");
 				payVoCancel = pgUtil.doCancel(request, payVo, detailVo == null ? "" : detailVo.getTaxCode());
 			} catch (Exception e) {
 				e.printStackTrace();

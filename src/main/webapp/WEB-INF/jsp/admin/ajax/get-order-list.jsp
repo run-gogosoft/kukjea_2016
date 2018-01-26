@@ -24,6 +24,8 @@
 		"deliCost":"<fmt:formatNumber value="${item.deliCost}"/>",
 		"deliName":"${item.deliName}",
 		"deliNo":"${item.deliNo}",
+		"boxCnt":"${item.boxCnt}",
+		"totalDeliCost":"${item.totalDeliCost}",
 		"sellerName":"${item.sellerName}",
 		"salesName":"${item.salesName}",
 		"salesTel":"${item.salesTel}",

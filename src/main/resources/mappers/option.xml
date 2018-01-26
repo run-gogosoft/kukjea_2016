@@ -22,6 +22,7 @@
 			, B.event_added AS eventAdded
 			, B.sale_percent AS salePercent
 			, B.sell_price AS sellPrice
+			, B.org_price AS originalPrice
 		FROM sm_item_option A
 		INNER JOIN sm_item_option_value B
 		ON A.seq=B.option_seq
@@ -62,6 +63,7 @@
 			, reg_date AS regDate
 			, sale_percent AS salePercent
 			, sell_price AS sellPrice
+			, org_price AS originalPrice
 		FROM sm_item_option_value
 		WHERE 1=1
 		AND option_seq=#{value}
@@ -86,6 +88,7 @@
 		, reg_date AS regDate
 		, sell_price AS sellPrice
 		, sale_percent AS salePercent
+		, org_price AS originalPrice
 		FROM sm_item_option_value
 		WHERE 1=1
 		AND option_seq=#{seq}
@@ -132,6 +135,7 @@
 			, A.seller_seq AS sellerSeq
 			, A.sale_percent AS salePercent
 			, A.sell_price AS sellPrice
+			, A.org_price AS originalPrice
 		FROM sm_item_option_value A
 		INNER JOIN sm_item_option B
 			ON A.option_seq=B.seq
@@ -161,6 +165,7 @@
 			value_name,
 			stock_cnt,
 			stock_flag,
+			org_price,
 			option_price,
 			sale_price,
 			mod_date,
@@ -175,6 +180,7 @@
 			#{valueName},
 			#{stockCount},
 			#{stockFlag},
+			#{originalPrice},
 			#{optionPrice},
 			#{salePrice},
 			NOW(),
@@ -209,6 +215,7 @@
 			, seller_seq=#{sellerSeq}
 			, free_deli=#{freeDeli}
 			, event_added=#{eventAdded}
+			, org_price=#{originalPrice}
 			, sell_price =
 				CASE
 					WHEN sale_price>0 THEN sale_price

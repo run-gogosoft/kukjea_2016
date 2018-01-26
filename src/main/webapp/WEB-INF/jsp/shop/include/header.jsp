@@ -15,6 +15,8 @@
                     <%--</c:choose>--%>
                 <%--</c:forEach>--%>
                     <li><a href="/shop/changeMall?mallSeq=1">${mallList[0].name}</a></li>
+                    <%--<li><a href="/shop/changeMall?mallSeq=6">${mallList[1].name}</a></li>--%>
+                    <%--<li><a href="/shop/changeMall?mallSeq=66">${mallList[2].name}</a></li>--%>
 
             </ul>
             <c:choose>

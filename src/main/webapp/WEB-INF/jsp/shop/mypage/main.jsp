@@ -102,22 +102,22 @@
                                 <%--</c:otherwise>--%>
                                 <%--</c:choose>--%>
                                 <%--</td>--%>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${vo.freeDeli eq 'Y'}">
-                                        무료
-                                    </c:when>
-                                    <c:otherwise>
-                                        <fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />
-                                        <%--<br/>--%>
-                                        <%--<c:when test="${vo.deliPrepaidFlag eq 'N'}">--%>
-                                            <%--착불--%>
-                                        <%--</c:when>--%>
-                                        <%--<c:otherwise>--%>
-                                            <%--선결제--%>
-                                        <%--</c:otherwise>--%>
-                                    </c:otherwise>
-                                </c:choose>
+                            <td>${vo.statusText}
+                                <%--<c:choose>--%>
+                                    <%--<c:when test="${vo.freeDeli eq 'Y'}">--%>
+                                        <%--무료--%>
+                                    <%--</c:when>--%>
+                                    <%--<c:otherwise>--%>
+                                        <%--<fmt:formatNumber value="${vo.deliCost}" pattern="#,###" />--%>
+                                        <%--&lt;%&ndash;<br/>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<c:when test="${vo.deliPrepaidFlag eq 'N'}">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;착불&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;</c:when>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<c:otherwise>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;선결제&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;</c:otherwise>&ndash;%&gt;--%>
+                                    <%--</c:otherwise>--%>
+                                <%--</c:choose>--%>
                             </td>
                         </tr>
                         </c:forEach>

@@ -15,12 +15,12 @@ public class OrderStatsDaoImpl implements OrderStatsDao {
 	@Autowired
 	private SqlSession sqlSession;
 	@Override
-	public List<HashMap<String,Integer>> getListByCategory(OrderVo vo) {
+	public List<HashMap<String,Integer[]>> getListByCategory(OrderVo vo) {
 		return sqlSession.selectList("order_stats.getListByCategory", vo);
 	}
 	
 	@Override
-	public HashMap<String, Integer> getSumByCategory(OrderVo vo) {
+	public HashMap<String, Integer[]> getSumByCategory(OrderVo vo) {
 		return sqlSession.selectOne("order_stats.getSumByCategory", vo);
 	}
 

@@ -19,6 +19,11 @@ public class BoardDaoImpl implements BoardDao {
 	}
 
 	@Override
+	public List<BoardVo> getListAll(BoardVo vo) {
+		return sqlSession.selectList("board.getListAll", vo);
+	}
+
+	@Override
 	public int getListCount(BoardVo vo) {
 		return ((Integer)sqlSession.selectOne("board.getListCount", vo)).intValue();
 	}

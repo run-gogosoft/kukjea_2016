@@ -18,6 +18,7 @@
 	, "salePrice":"${item.salePrice}"
 	, "salePeriod":"${item.salePeriod}"
 	, "optionPrice":"${item.optionPrice}"
+	, "originalPrice":"${item.originalPrice}"
 	, "freeDeli":"${item.freeDeli}"
 	, "eventAdded":"${item.eventAdded}"
 }

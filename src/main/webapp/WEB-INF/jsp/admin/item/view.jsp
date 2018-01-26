@@ -103,6 +103,14 @@
 									<td>${vo.typeName}</td>
 								</tr>
 								<tr>
+									<th>관리 코드</th>
+									<td>${vo.managedCode}</td>
+								</tr>
+								<tr>
+									<th>바코드</th>
+									<td>${vo.barcode}</td>
+								</tr>
+								<tr>
 									<th>판매 상태</th>
 									<td>${vo.statusName}</td>
 								</tr>
@@ -349,12 +357,14 @@
 								<col style="width:10%;"/>
 								<col style="width:10%;"/>
 								<col style="width:10%;"/>
+								<col style="width:10%;"/>
 								<%--<col style="width:10%;"/>--%>
 							</colgroup>
 							<thead>
 							<tr>
 								<th>쇼핑몰</th>
 								<th>판매자</th>
+								<th>상품원가</th>
 								<th>판매가격</th>
 								<th>할인가격</th>
 								<th>할인기간</th>
@@ -370,6 +380,7 @@
 								<tr >
 									<td class="text-center">병원몰</td>
 									<td class="text-center">${item.valueName}</td>
+									<td class="text-center"><fmt:formatNumber value="${item.originalPrice}" pattern="#,###" /> 원</td>
 									<td class="text-center"><fmt:formatNumber value="${item.optionPrice}" pattern="#,###" /> 원</td>
 									<td class="text-center"><fmt:formatNumber value="${item.salePrice}" pattern="#,###" /> 원</td>
 									<td class="text-center">${item.salePeriod}</td>
@@ -404,7 +415,7 @@
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(optionList)==0 }">
-								<tr ><td class="text-center" colspan="9">조회된 데이터가 없습니다.</td></tr>
+								<tr ><td class="text-center" colspan="10">조회된 데이터가 없습니다.</td></tr>
 							</c:if>
 							</tbody>
 						</table>
@@ -715,7 +726,13 @@
 					<div class="form-group">
 						<label class="col-md-3 control-label">상품 가격</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" name="optionPrice" value="<%="${optionPrice}"%>" alt="추가금액" onblur="numberCheck(this);"/>
+							<input type="text" class="form-control" name="optionPrice" value="<%="${optionPrice}"%>" alt="상품가격" onblur="numberCheck(this);"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">상품 원가</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" name="originalPrice" value="<%="${originalPrice}"%>" alt="상품원가" onblur="numberCheck(this);"/>
 						</div>
 					</div>
 					<div class="form-group">

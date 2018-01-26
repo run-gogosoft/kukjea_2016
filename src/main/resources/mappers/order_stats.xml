@@ -7,6 +7,7 @@
 			t.pay_date AS payDate,
 			<foreach collection="categoryList" item="item" index="index">
 			SUM(CASE WHEN t.cate_lv1_seq = #{item.seq} THEN t.sell_price ELSE 0 END) sumPrice${index+1},
+			SUM(CASE WHEN t.cate_lv1_seq = #{item.seq} THEN t.org_price ELSE 0 END) orgSumPrice${index+1},
 			</foreach>
 			SUM(CASE WHEN t.cate_lv1_seq IS NULL THEN t.sell_price ELSE 0 END) sumNull
 		FROM (
@@ -21,7 +22,8 @@
 			</otherwise>
 		</choose>
 				i.cate_lv1_seq,
-				(d.option_price * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price,
+				(d.org_price * d.order_cnt) org_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -48,7 +50,8 @@
 			</otherwise>
 		</choose>
 				i.cate_lv1_seq,
-				-(d.option_price * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price,
+				-(d.org_price * d.order_cnt) org_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -72,13 +75,15 @@
 		SELECT 
 			<foreach collection="categoryList" item="item" index="index">
 			SUM(CASE WHEN t.cate_lv1_seq = #{item.seq} THEN t.sell_price ELSE 0 END) sumPrice${index+1},
+			SUM(CASE WHEN t.cate_lv1_seq = #{item.seq} THEN t.org_price ELSE 0 END) orgSumPrice${index+1},
 			</foreach>
 			SUM(CASE WHEN t.cate_lv1_seq IS NULL THEN t.sell_price ELSE 0 END) sumNull
 		FROM (
 			<!-- 정상 주문건 -->
 			SELECT
 				i.cate_lv1_seq,
-				(d.option_price * d.order_cnt) sell_price
+				(d.option_price * d.order_cnt) sell_price,
+				(d.org_price * d.order_cnt) org_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -95,7 +100,8 @@
 			<!-- 취소 주문건 -->
 			SELECT
 				i.cate_lv1_seq,
-				-(d.option_price * d.order_cnt) sell_price
+				-(d.option_price * d.order_cnt) sell_price,
+				-(d.org_price * d.order_cnt) org_price
 			FROM 
 				sm_order_detail d LEFT OUTER JOIN
 				sm_item i ON (d.item_seq=i.seq)
@@ -110,6 +116,7 @@
 				</if>
 			) t
 	</select>
+
 	
 	<!-- 상품 카테고리별 매출 통계 상세 -->
 	<select id="getListByCategoryDetail" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
@@ -134,8 +141,9 @@
 				d.option_value AS optionValue,
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
+				(d.org_price *d.order_cnt) AS orgPrice,
 				(d.option_price * d.order_cnt) AS sellPrice,
-				(d.supply_price * d.order_cnt) AS supplyPrice
+				(d.org_price * d.order_cnt) AS supplyPrice
 			FROM
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -172,8 +180,9 @@
 				d.option_value AS optionValue,
 				c1.name AS taxName,
 				d.order_cnt AS orderCnt,
+				-(d.org_price *d.order_cnt) AS orgPrice,
 				-(d.option_price * d.order_cnt) AS sellPrice,
-				-(d.supply_price * d.order_cnt) AS supplyPrice
+				-(d.org_price * d.order_cnt) AS supplyPrice
 			FROM
 				sm_order_detail d LEFT OUTER JOIN
 				sm_order o ON (d.order_seq=o.seq) LEFT OUTER JOIN
@@ -196,6 +205,7 @@
 	<select id="getListByCategoryDetailSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM(d.option_price * d.order_cnt) AS sumPrice,
+		    SUM(d.org_price * d.order_cnt) AS orgSumPrice,
 			SUM(d.supply_price * d.order_cnt) AS supplyPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM
@@ -217,6 +227,7 @@
 	<select id="getListByCategoryDetailCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM(d.option_price * d.order_cnt) AS sumPrice,
+			SUM(d.org_price * d.order_cnt) AS orgSumPrice,
 			SUM(d.supply_price * d.order_cnt) AS supplyPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM
@@ -428,6 +439,7 @@
 				t.item_name AS itemName,
 				SUM(t.order_cnt) AS orderCnt,
 				SUM(t.sell_price) AS sumPrice,
+				SUM(t.org_price) AS orgPrice,
 				t.type1,
 				t.type2,
 				t.type3
@@ -436,6 +448,7 @@
 					d.item_name,
 					d.order_cnt,
 					(d.option_price * d.order_cnt) sell_price,
+					(d.org_price * d.order_cnt) org_price,
 					i.type1,
 					i.type2,
 					i.type3
@@ -482,7 +495,8 @@
 	<select id="getListByItemSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM( d.option_price * d.order_cnt) AS sumPrice,
-			SUM(d.supply_price * d.order_cnt) AS supplyPrice
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
+			SUM(d.org_price * d.order_cnt) AS orgPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM 
 			sm_order_detail d
@@ -500,7 +514,8 @@
 	<select id="getListByItemCancelSum" parameterType="com.smpro.vo.OrderVo" resultType="com.smpro.vo.OrderVo">
 		SELECT
 			SUM(d.option_price * d.order_cnt) AS sumPrice,
-			SUM(d.supply_price * d.order_cnt) AS supplyPrice
+			SUM(d.supply_price * d.order_cnt) AS supplyPrice,
+			SUM(d.org_price * d.order_cnt) AS orgPrice
 			<!--SUM(d.deli_cost) AS deliCost-->
 		FROM 
 			sm_order_detail d
@@ -517,38 +532,54 @@
 	
 	<!-- 자치구별 상품 판매수 통계(판매자) -->
 	<select id="getListByItemForSellerJachigu" parameterType="com.smpro.vo.SellerVo" resultType="com.smpro.vo.OrderVo">
-		SELECT tt.* FROM (	
+		SELECT tt.* FROM (
 			SELECT
 				t.name AS sellerName,
+				t.pg_id AS mallName,
 				SUM(t.order_cnt) AS orderCnt,
 				SUM(t.sell_price) AS sumPrice,
+				SUM(t.org_price) AS orgPrice,
+				SUM(t.deli_cost) AS deliCost,
+				SUM(t.total_deli_cost) AS totalDeliCost,
 				t.commission AS masterCommission
 			FROM (
 				<!-- 정상주문 -->
 				SELECT
 					s.name,
+					m.pg_id,
 					d.order_cnt,
 					(d.option_price * d.order_cnt) sell_price,
+					(d.org_price * d.order_cnt) org_price,
+					d.deli_cost,
+					d.total_deli_cost,
 					ss.commission
-				FROM 
-					sm_order_detail d LEFT OUTER JOIN
+				FROM
+					sm_mall m LEFT OUTER JOIN
+					sm_order o ON (m.seq=o.mall_seq) LEFT OUTER JOIN
+					sm_order_detail d ON (o.seq=d.order_seq) LEFT OUTER JOIN
 					sm_user s ON (d.seller_seq=s.seq) LEFT OUTER JOIN
 					sm_seller ss ON (d.seller_seq=ss.seq)
-				WHERE 
+				WHERE
 					d.c10_date IS NOT NULL
 					<if test="searchDate1 != '' and searchDate2 != ''">
 					AND DATE_FORMAT(d.c10_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchDate1}, '%Y-%m-%d') AND DATE_FORMAT(#{searchDate2}, '%Y-%m-%d')
 					</if>
 				UNION ALL
-				
+
 				<!-- 취소주문 -->
 				SELECT
 					s.name,
+					m.pg_id,
 					-d.order_cnt,
 					-(d.option_price * d.order_cnt) sell_price,
+					-(d.org_price * d.order_cnt) org_price,
+					-d.deli_cost,
+					-d.total_deli_cost,
 					ss.commission
-				FROM 
-					sm_order_detail d LEFT OUTER JOIN
+				FROM
+					sm_mall m LEFT OUTER JOIN
+					sm_order o ON (m.seq=o.mall_seq) LEFT OUTER JOIN
+					sm_order_detail d ON (o.seq=d.order_seq) LEFT OUTER JOIN
 					sm_user s ON (d.seller_seq=s.seq) LEFT OUTER JOIN
 					sm_seller ss ON (d.seller_seq=ss.seq)
 				WHERE

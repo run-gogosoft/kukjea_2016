@@ -95,7 +95,7 @@ public interface ItemDao {
 	
 	/* 상품로그 6개월 경과분 삭제 */
 	public int deleteLogBatch();
-	
+
 	/* 판매중인 상품 조회 */
 	public List<ItemVo> getListForSelling(ItemVo vo);
 }

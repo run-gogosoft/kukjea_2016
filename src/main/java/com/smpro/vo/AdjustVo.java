@@ -19,6 +19,8 @@ public class AdjustVo extends PagingVo {
 	private String adjustGradeCode = "";
 	// 판매가
 	private int sellPrice;
+	// 판매원가
+	private int orgPrice;
 	// 공급가
 	private int supplyPrice;
 	// 주문 수량
@@ -130,6 +132,14 @@ public class AdjustVo extends PagingVo {
 
 	public void setAdjustGradeCode(String adjustGradeCode) {
 		this.adjustGradeCode = adjustGradeCode;
+	}
+
+	public int getOrgPricePrice() {
+		return orgPrice;
+	}
+
+	public void setOrgPrice(int orgPrice) {
+		this.orgPrice = orgPrice;
 	}
 
 	public int getSellPrice() {

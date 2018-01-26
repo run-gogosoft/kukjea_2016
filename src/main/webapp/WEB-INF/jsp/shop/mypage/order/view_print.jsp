@@ -147,11 +147,18 @@
 				</thead>
 				<tbody>
 				<c:set var="total" value="0"/>
-				<c:set var="totalDeliCost" value="0"/>
+				<c:set var="totalSellPrice" value="0" />
+				<c:set var="totlaCancelPrice" value="0" />
+				<c:set var="totalDeliveryPrice" value="0" />
+				<c:set var="sellerDeliveryPrice" value="0" />
+				<c:set var="totlaCancelDeliveryPrice" value="0" />"
+				<c:set var="sellerPrice" value="0" />
+				<c:set var="deliCost" value="0" />
 				<c:forEach var="vo" items="${list}" varStatus="status">
 					<tr <c:if test="${vo.seq==pvo.seq}"> class="tr-selected" </c:if>>
 						<td class="text-center">${vo.seq}</td>
 						<td class="text-center">${vo.itemSeq}</td>
+
 						<td><strong>${vo.itemName}<br/></strong></td>
 						<td>${vo.type1}
 							<c:if test="${vo.type2 ne ''}">
@@ -171,7 +178,19 @@
 								<c:otherwise>이벤트없음</c:otherwise>
 							</c:choose>
 						</td>
-						<td class="text-center">${vo.statusText}</td>
+						<td class="text-center">
+							<strong>
+								<c:choose>
+									<c:when test="${vo.statusCode eq '99'}">
+										<div style="color:#ff0000;">${vo.statusText}</div>
+									</c:when>
+									<c:otherwise>
+										<div style="color:#72afd2;">${vo.statusText}</div>
+									</c:otherwise>
+								</c:choose>
+							</strong>
+							<br/>
+						</td>
 						<td>${vo.sellerName}</td>
 						<td class="text-right"><fmt:formatNumber value="${vo.sellPrice}"/></td>
 						<td class="text-right">${vo.orderCnt}</td>
@@ -195,26 +214,52 @@
 							<%--</td>--%>
 						<td class="text-right">
 							<c:set var="subTotal" value="${vo.sellPrice  * vo.orderCnt}"/>
-							<c:if test="${vo.deliCost > 0}">
-								<c:set var="totlaDeliCost" value="${vo.deliCost}"/>
-							</c:if>
-							<c:set var="total" value="${total + subTotal}"/>
+
+								<%--<c:if test="${vo.deliCost > 0}">--%>
+								<c:set var="totalDeliveryPrice" value="${totalDeliveryPrice+vo.deliCost}"/>
+								<%--</c:if>--%>
+								<c:set var="total" value="${total + subTotal}"/>
+								<c:if test="${vo.statusCode eq '99'}">
+									<c:set var="totlaCancelPrice" value="${totlaCancelPrice + (vo.sellPrice  * vo.orderCnt)}" />
+									<c:set var="totlaCancelDeliveryPrice" value="${totlaCancelDeliveryPrice+item.deliCost}" />"
+								</c:if>
+
 							<fmt:formatNumber value="${subTotal}"/>
 						</td>
 					</tr>
 				</c:forEach>
+
 				<tr>
 					<th colspan="11" style="font-size:15px;">
 						주문 합계 금액 :
-						상품금액(<fmt:formatNumber value="${total}"/>원) + 배송료(
+						상품금액(<fmt:formatNumber value="${total-totlaCancelPrice}"/>원) + 배송료(
 						<c:choose>
-							<c:when test="${total>= 50000}">
-								무료배송
+							<%--<c:when test="${(total-totlaCancelPrice)>= 50000}">--%>
+							<c:when test="${vo.checkBD eq 'Y' }">
+								<c:choose>
+									<c:when test="${totalDeliveryPrice eq 0}">
+										무료배송
+									</c:when>
+									<c:otherwise>
+										<fmt:formatNumber value="${totalDeliveryPrice}"/>원
+									</c:otherwise>
+								</c:choose>
 							</c:when>
 							<c:otherwise>
-								<fmt:formatNumber value="${totlaDeliCost}"/>원
+								<c:choose>
+									<c:when test="${(total-totlaCancelPrice)>= 50000}">
+										<c:set var="totalDeliveryPrice" value="0"/>
+										무료배송
+									</c:when>
+									<c:otherwise>
+										<c:set var="totalDeliveryPrice" value="3300"/>
+										<fmt:formatNumber value="${totalDeliveryPrice}"/>원
+									</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 						</c:choose>
+
+
 						)
 						<c:if test="${vo.couponPrice>0}">
 							- 할인금액(<fmt:formatNumber value="${vo.couponPrice}"/>원)
@@ -224,24 +269,24 @@
 						</c:if>
 						<c:if test="${vo.payMethod eq 'CASH' or vo.payMethod eq 'CASH+POINT'}">
 							= 무통장 입금 금액(
-							<c:choose>
-								<c:when test="${total>= 50000}">
-									<fmt:formatNumber value="${total-vo.point}"/>
-								</c:when>
-								<c:otherwise>
-									<fmt:formatNumber value="${total+totlaDeliCost-vo.point}"/>
-								</c:otherwise>
-							</c:choose>
+							<%--<c:choose>--%>
+								<%--<c:when test="${(total-totlaCancelPrice)>= 50000}">--%>
+									<%--<fmt:formatNumber value="${(total-totlaCancelPrice)-vo.point}"/>--%>
+								<%--</c:when>--%>
+								<%--<c:otherwise>--%>
+									<fmt:formatNumber value="${(total-totlaCancelPrice)+totalDeliveryPrice-vo.point}"/>
+								<%--</c:otherwise>--%>
+							<%--</c:choose>--%>
 							)
 						</c:if>
 					</th>
 					<td class="text-right">
 						<c:choose>
-							<c:when test="${total>= 50000}">
-								<fmt:formatNumber value="${total}"/>
+							<c:when test="${(total-totlaCancelPrice)>= 50000}">
+								<fmt:formatNumber value="${(total-totlaCancelPrice)}"/>
 							</c:when>
 							<c:otherwise>
-								<fmt:formatNumber value="${total+totlaDeliCost}"/>
+								<fmt:formatNumber value="${(total-totlaCancelPrice)+totalDeliveryPrice}"/>
 							</c:otherwise>
 						</c:choose>
 					</td>

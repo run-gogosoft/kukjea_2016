@@ -263,6 +263,7 @@ public class ItemController {
 					for(ItemOptionVo optionValueVo:optionVoValueList){
 //						System.out.println(">>>>>>optionValueVo name : "+optionValueVo.toString());
 						item.setTempSellPrice(optionValueVo.getSellPrice());
+						item.setOriginalPrice(optionValueVo.getOriginalPrice());//공급자의 원가를 표시하도록 변경
 					}
 				}
 			}

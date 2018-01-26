@@ -64,12 +64,14 @@
 								<col style="width:10%"/>
 								<col style="width:6%"/>
 								<col style="width:8%"/>
-								<col style="width:*%"/>
+								<col style="width:8%"/>
+								<col style="width:12%"/>
+								<col style="width:8%"/>
 								<col style="width:8%"/>
 								<col style="width:8%"/>
 								<col style="width:10%"/>
-								<col style="width:8%"/>
-								<col style="width:8%"/>
+								<col style="width:10%"/>
+								<col style="width:10%"/>
 
 							</colgroup>
 							<thead>
@@ -78,6 +80,7 @@
 									<th>카테고리</th>
 									<th><div class="text-primary">이미지</div></th>
 									<th>상품코드</th>
+									<th>관리코드</th>
 									<th>
 										<div class="text-primary">상품명</div>
 									</th>
@@ -90,6 +93,7 @@
 											<span class="text-warning"><i class="fa fa-caret-${vo.orderByType eq 'ASC' ? "up":"down"}"></i></span>
 										</c:if>
 									</th>
+									<th>상품원가</th>
 									<th><div class="text-primary">최저가</div></th>
 									<c:if test="${sessionScope.loginType eq 'S'}">
 										<th><div class="text-primary">공급가</div></th>
@@ -122,9 +126,10 @@
 											<img src="/upload${fn:replace(item.img1, 'origin', 's60')}" alt="" style="width:60px;height:60px" />
 										</c:if>
 									</td>
-									<td>
+									<td class="text-center">
 										${item.seq}
 									</td>
+									<td class="text-center">${item.managedCode}</td>
 									<td>
 										<div class="text-primary">
 											<strong>
@@ -151,12 +156,13 @@
 										<c:otherwise><span>${item.statusName}</span></c:otherwise>
 									</c:choose>
 									</td>
+									<td class="text-center"><div class="text-warning">${item.originalPrice}</div></td>
 									<td class="text-center">
 										<div class="text-warning">${item.sellPrice}</div>
 									</td>
 									<c:if test="${sessionScope.loginType eq 'S'}">
 										<td class="text-center">
-											<div class="text-warning"><strong>${item.tempSellPrice}</strong></div>
+											<div class="text-primary"><strong>${item.tempSellPrice}</strong></div>
 										</td>
 									</c:if>
 								</tr>
@@ -242,7 +248,7 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">제조사</label>
 					<div class="col-md-9">
-						<input class="form-control" type="text" name="maker" maxlength="26" alt="제조사" />
+						<input class="form-control" type="text" name="cgmaker" maxlength="26" alt="제조사" />
 					</div>
 				</div>
 				<div class="form-group">

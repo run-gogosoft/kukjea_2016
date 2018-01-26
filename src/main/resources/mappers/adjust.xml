@@ -9,6 +9,7 @@
       'N' AS cancelFlag,
       (d.sell_price + IFNULL(d.option_price,0)) AS sellPrice,
       d.supply_price AS supplyPrice,
+	  d.org_price AS orgPrice,
       d.order_cnt AS orderCnt,
       <!--CASE
         WHEN d.deli_prepaid_flag='Y' THEN d.deli_cost
@@ -38,6 +39,7 @@
       'Y' AS cancelFlag,
       a.sell_price AS sellPrice,
       a.supply_price AS supplyPrice,
+	  d.org_price AS orgPrice,
       a.order_cnt AS orderCnt,
       <!--a.deli_cost AS deliCost,-->
       a.tax_code AS taxCode,
@@ -138,6 +140,7 @@
 			a.adjust_date AS adjustDate,
 			a.seller_seq AS sellerSeq,
 			a.sell_price AS sellPrice,
+			a.org_price AS orgPrice,
 			a.supply_price AS supplyPrice,
 			a.order_cnt AS orderCnt,
 			<!--a.deli_cost AS deliCost,-->

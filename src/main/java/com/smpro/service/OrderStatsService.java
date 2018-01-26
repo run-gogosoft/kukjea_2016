@@ -8,8 +8,8 @@ import java.util.*;
 @Service
 public interface OrderStatsService {
 	/** 상품 카테고리별 매출 통계 */
-	public List<HashMap<String,Integer>> getListByCategory(OrderVo vo);
-	public HashMap<String,Integer> getSumByCategory(OrderVo vo);
+	public List<HashMap<String,Integer[]>> getListByCategory(OrderVo vo);
+	public HashMap<String,Integer[]> getSumByCategory(OrderVo vo);
 	public List<OrderVo> getListByCategoryDetail(OrderVo vo);
 	public OrderVo getListByCategoryDetailSum(OrderVo vo);
 	public OrderVo getListByCategoryDetailCancelSum(OrderVo vo);

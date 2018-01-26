@@ -23,34 +23,51 @@
             <div id="contents">
                 <%@ include file="/WEB-INF/jsp/shop/include/mypage_anchor.jsp" %>
                 <div class="sub_cont">
-
                     <%--주문금액계산--%>
                     <c:set var="totalSellPrice" value="0" />
+                    <c:set var="totlaCancelPrice" value="0" />
                     <c:set var="totalDeliveryPrice" value="0" />
+                    <c:set var="totlaCancelDeliveryPrice" value="0" />"
                     <c:set var="addrButton" value="0" />
                     <c:forEach var="item" items="${list}" varStatus="status">
-                        <c:if test="${item.statusCode eq '00' or item.statusCode eq '10'}">f
+                        <c:if test="${item.statusCode eq '00' or item.statusCode eq '10'}">
                             <c:set var="addrButton" value="${addrButton+1}" />
                         </c:if>
-                        <%--착불 배송비 제외--%>
-                        <c:if test="${item.deliCost >0}">
-                            <c:set var="totalDeliveryPrice" value="${item.deliCost}" />
-                        </c:if>
+                        착불 배송비 제외
+                        <c:set var="totalDeliveryPrice" value="${totalDeliveryPrice+item.deliCost}" />
                         <c:set var="totalSellPrice" value="${totalSellPrice + (item.sellPrice  * item.orderCnt)}" />
+                        <c:if test="${item.statusCode eq '99'}">
+                            <c:set var="totlaCancelPrice" value="${totlaCancelPrice + (item.sellPrice  * item.orderCnt)}" />
+                            <c:set var="totlaCancelDeliveryPrice" value="${totlaCancelDeliveryPrice+item.deliCost}" />
+                        </c:if>
                     </c:forEach>
-
                     <table class="purchase_list">
                         <colgroup>
-                            <col width="20%"/>
-                            <col width="20%"/>
-                            <col width="20%"/>
-                            <col width="20%"/>
-                            <col width="20%"/>
+                            <c:choose>
+                                <c:when test="${totlaCancelPrice>0}">
+                                    <col width="15%"/>
+                                    <col width="20%"/>
+                                    <col width="20%"/>
+                                    <col width="15%"/>
+                                    <col width="15%"/>
+                                    <col width="15%"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <col width="20%"/>
+                                    <col width="20%"/>
+                                    <col width="20%"/>
+                                    <col width="20%"/>
+                                    <col width="20%"/>
+                                </c:otherwise>
+                            </c:choose>
+
+
                         </colgroup>
                         <thead>
                         <tr>
                             <th>주문번호</th>
                             <th>총 상품금액</th>
+                            <c:if test="${totlaCancelPrice>0}"><th>총 취소금액</th></c:if>
                             <th>총 배송비</th>
                             <th>포인트</th>
                             <th>총 주문금액</th>
@@ -60,18 +77,22 @@
                         <tr>
                             <td>${vo.orderSeq}</td>
                             <td><fmt:formatNumber value="${totalSellPrice}"/>원</td>
+                            <c:if test="${totlaCancelPrice>0}"><td><fmt:formatNumber value="${totlaCancelPrice}"/>원</td></c:if>
                             <td>
-                                <c:choose>
-                                    <c:when test="${totalSellPrice>50000}">
-                                        <fmt:formatNumber value="0"/>원
-                                    </c:when>
-                                    <c:otherwise>
-                                        <fmt:formatNumber value="${totalDeliveryPrice}"/>원
-                                    </c:otherwise>
-                                </c:choose>
+                                <c:if test="${vo.checkBD ne 'Y'}">
+                                    <c:choose>
+                                        <c:when test="${(totalSellPrice-totlaCancelPrice)>50000}">
+                                            <c:set var="totalDeliveryPrice" value="0" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="totalDeliveryPrice" value="3300" />
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
+                                <fmt:formatNumber value="${totalDeliveryPrice-totlaCancelDeliveryPrice}"/>원
                             </td>
                             <td><fmt:formatNumber value="${vo.point}"/>원</td>
-                            <td><strong><fmt:formatNumber value="${vo.payPrice}"/>원</strong></td>
+                            <td><strong><fmt:formatNumber value="${totalSellPrice - totlaCancelPrice }"/>원</strong></td>
                         </tr>
                         </tbody>
                     </table>
@@ -92,7 +113,7 @@
                         <tbody>
                         <tr>
                             <td>${vo.payMethodName}</td>
-                            <td><strong><fmt:formatNumber value="${vo.payPrice + vo.point}"/></strong>원</td>
+                            <td><strong><fmt:formatNumber value="${totalSellPrice - totlaCancelPrice + totalDeliveryPrice - vo.point}"/></strong>원</td>
                             <td colspan="4">${vo.accountInfo}</td>
                         </tr>
                         </tbody>
@@ -144,7 +165,7 @@
                             <th>수량</th>
                             <th>주문금액</th>
                             <th>업체</th>
-                            <th></th>
+                            <th>이벤트</th>
                             <th>배송정보</th>
                         </tr>
                         </thead>
@@ -173,8 +194,8 @@
                                         <span class="icon icon_txt icon_txt_gray"> 무료배송  </span>
                                     </c:if>
                                     <c:if test="${item.eventAdded !='' && item.eventAdded !=' ' && item.eventAdded !='0'}">
-                                        <%--<span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>--%>
-                                            <span class="icon icon_txt icon_txt_yellow"> 10+1 </span>
+                                        <span class="icon icon_txt icon_txt_yellow">${item.eventAdded}</span>
+                                            <%--<span class="icon icon_txt icon_txt_yellow"> 10+1 </span>--%>
                                     </c:if>
                                 </td>
                                 <td>
@@ -185,12 +206,37 @@
                                                     접수완료<br/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    ${item.statusText}<br/>
+
+                                                    <strong>
+                                                    <c:choose>
+                                                        <c:when test="${item.statusCode eq '99'}">
+                                                            <div style="color:#ff0000;">${item.statusText}</div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div style="color:#72afd2;">${item.statusText}</div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    </strong>
+                                                    <br/>
+
+                                                    <%--${item.statusText}<br/>--%>
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:when>
                                         <c:otherwise>
-                                            ${item.statusText}<br/>
+                                            <strong>
+                                                <c:choose>
+                                                    <c:when test="${item.statusCode eq '99'}">
+                                                        <div style="color:#ff0000;">${item.statusText}</div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div style="color:#72afd2;">${item.statusText}</div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </strong>
+
+                                            <%--${item.statusText}--%>
+                                            <br/>
                                         </c:otherwise>
                                     </c:choose>
                                     <c:if test="${item.statusCode eq '10'}">

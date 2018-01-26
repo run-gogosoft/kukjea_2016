@@ -199,7 +199,7 @@ public class ItemVo extends PagingVo {
 	/** 배송 구분 */
 	private String deliTypeCode = "";
 	/** 배송비 */
-	private int deliCost = Const.DELI_COST;
+	private int deliCost = 0;//Const.DELI_COST;
 	/** 무료배송 조건금액 */
 	private int deliFreeAmount;
 	/** 선결제 여부 */
@@ -258,6 +258,39 @@ public class ItemVo extends PagingVo {
 
 	/** mall id **/
 	private int mallId=1;
+
+	/** 관리코드 **/
+	private String managedCode="";
+	/** 바코드 **/
+	private String barcode="";
+
+	/** 제품원가 **/
+	private int originalPrice=0;
+
+	/** 관리코드 , 바코드, 제품원가 추가 **/
+
+	public int getOriginalPrice() {
+		return originalPrice;
+	}
+
+	public void setOriginalPrice(int originalPrice) {
+		this.originalPrice = originalPrice;
+	}
+
+	public String getManagedCode() {
+		return managedCode;
+	}
+
+	public void setManagedCode(String managedCode) {
+		this.managedCode = managedCode;
+	}
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
 
 	public int getMallId() {
 		return mallId;
@@ -1252,7 +1285,7 @@ public class ItemVo extends PagingVo {
 	@Override
 	public String toString() {
 		return "ItemVo [rankNumber=" + rankNumber + ", seq=" + seq + ", name="
-				+ name +", nameMaker ="+nameMaker+", nickname=" + nickname + ", statusCode="
+				+ name +", mallId ="+mallId+", nameMaker ="+nameMaker+", nickname=" + nickname + ", statusCode="
 				+ statusCode + ", statusName=" + statusName + ", sellPrice="
 				+ sellPrice + ", tempSellPrice=" + tempSellPrice
 				+ ", supplyMasterPrice=" + supplyMasterPrice + ", supplyPrice=" + supplyPrice

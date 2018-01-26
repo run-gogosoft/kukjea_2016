@@ -106,8 +106,8 @@ public class OrderVo extends PagingVo {
 	/** 옵션 밸류 이름 */
 	private String valueName = "";
 	/**
-	 * 주문상태(00:입금대기, 10:결제완료, 20:주문확인, 30:배송중, 50:배송완료, 55:구매확정, 90:취소요청,
-	 * 99:취소완료)
+	 * 주문상태(00:입금대기, 10:결제완료, 20:주문확인, 30:배송중, 50:배송완료, 55:구매확정, 60:교환요청 , 61: 교환진행중, 69: 교환완료 ,
+	 * 70: 반품요청, 71:반품진행 , 79:반품완료, 90:취소요청, 99:취소완료)
 	 */
 	private String statusCode = "";
 	private String statusText = "";
@@ -140,11 +140,14 @@ public class OrderVo extends PagingVo {
 	private int sumOptionPrice;
 
 	/** 배송비 */
-	private int deliCost = Const.DELI_COST;
+	private int deliCost = 0;//Const.DELI_COST;
 	
 	/** 배송 메세지 */
 	private String deliMsg = "";
-	
+
+	/** 공급자 분리 배송료처리 여부 **/
+	private String checkBD = "N";
+
 	/** 묶음배송 가능 여부 */
 	private String deliPackageFlag = "Y";
 	
@@ -253,6 +256,8 @@ public class OrderVo extends PagingVo {
 	
 	/** 매출합계 */
 	private long sumPrice;
+	/** 매출합계 */
+	private long orgSumPrice;
 	/** 매출합계(투자 출연 기관) */
 	private long investSumPrice;
 	
@@ -431,6 +436,50 @@ public class OrderVo extends PagingVo {
 
 	/** 단위 */
 	private String originCountry = "";
+
+	/** 상품원가 **/
+	private int orgPrice;
+
+	/** 주문상태에 따른 배경 색상 **/
+	private String bgColor = "#ffffff";
+
+	/** 배송 박스 카운트 **/
+	private int boxCnt=0;
+	/** 총배송료 **/
+	private int totalDeliCost=0;
+
+
+
+	public int getBoxCnt() {
+		return boxCnt;
+	}
+
+	public void setBoxCnt(int boxCnt) {
+		this.boxCnt = boxCnt;
+	}
+
+	public int getTotalDeliCost() {
+		return totalDeliCost;
+	}
+
+	public void setTotalDeliCost(int totalDeliCost) {
+		this.totalDeliCost = totalDeliCost;
+	}
+
+
+
+	public int getOrgPrice() {
+		return orgPrice;
+	}
+
+	public void setOrgPrice(int orgPrice) {
+		this.orgPrice = orgPrice;
+	}
+
+
+	public String getBgColor(){
+		return this.bgColor;
+	}
 
 	public String getOriginCountry() {
 		return originCountry;
@@ -901,6 +950,45 @@ public class OrderVo extends PagingVo {
 
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
+		/**
+		 * 주문상태(00:입금대기, 10:결제완료, 20:주문확인, 30:배송중, 50:배송완료, 55:구매확정, 60:교환요청 , 61: 교환진행중, 69: 교환완료 ,
+		 * 70: 반품요청, 71:반품진행 , 79:반품완료, 90:취소요청, 99:취소완료)
+		 */
+
+		switch (statusCode){
+			case "00":
+				this.bgColor="#ffcccc";
+				break;
+			case "10":
+				this.bgColor="#ff9999";
+				break;
+			case "20":
+				this.bgColor="#ffcc99";
+				break;
+			case "30":
+			case "50":
+				this.bgColor="#ffff99";
+				break;
+			case "55":
+				this.bgColor="#e0e0e0";
+				break;
+			case "60":
+			case "61":
+			case "69":
+				this.bgColor="#ccff99";
+				break;
+			case "70":
+			case "71":
+			case "79":
+				this.bgColor="#99ffff";
+				break;
+			case "90":
+			case "99":
+				this.bgColor="#99ccff";
+				break;
+
+
+		}
 	}
 
 	public String getBeforeStatusCode() {
@@ -976,12 +1064,10 @@ public class OrderVo extends PagingVo {
 	}
 
 	public int getDeliCost() {
-		System.out.println(">>getDeliCost:"+deliCost);
 		return deliCost;
 	}
 
 	public void setDeliCost(int deliCost) {
-		System.out.println(">>setDeliCost:"+deliCost);
 		this.deliCost = deliCost;
 	}
 
@@ -992,6 +1078,16 @@ public class OrderVo extends PagingVo {
 	public void setDeliMsg(String deliMsg) {
 		this.deliMsg = deliMsg;
 	}
+
+
+	public String getCheckBD() {
+		return checkBD;
+	}
+
+	public void setCheckBD(String checkBD) {
+		this.checkBD = checkBD;
+	}
+
 
 	public String getDeliPackageFlag() {
 		return deliPackageFlag;
@@ -1299,6 +1395,13 @@ public class OrderVo extends PagingVo {
 		this.sumPrice = sumPrice;
 	}
 
+	public long getOrgSumPrice() {
+		return orgSumPrice;
+	}
+
+	public void setOrgSumPrice(long orgSumPrice) {
+		this.orgSumPrice = orgSumPrice;
+	}
 	
 	public long getInvestSumPrice() {
 		return investSumPrice;

@@ -122,6 +122,15 @@ public class SellerVo extends UserVo {
 	/** 총판매액 **/
 	private long totalSellPrice = 0;
 
+	/** 총판원가액 **/
+	private long totalSellOrgPrice = 0;
+
+	/** 총배송비액 **/
+	private long deliCost = 0;
+
+	/** 총실배송비액 **/
+	private long totalDeliCost = 0;
+
 	/** 판매건수 **/
 	private int totlaSellCount = 0;
 
@@ -132,6 +141,20 @@ public class SellerVo extends UserVo {
 	public long getTotalSellPrice(){return this.totalSellPrice;}
 
 	public void setTotalSellPrice(long price){this.totalSellPrice = price;}
+
+
+	public long getTotalSellOrgPrice(){return this.totalSellOrgPrice;}
+
+	public void setTotalSellOrgPrice(long price){this.totalSellOrgPrice = price;}
+	public long getDeliCost(){return this.deliCost;}
+
+	public void setDeliCost(long price){this.deliCost = price;}
+	public long getTotalDeliCost(){return this.totalDeliCost;}
+
+	public void setTotalDeliCost(long price){this.totalDeliCost = price;}
+
+
+
 
 	public int getCommission() {
 		return commission;

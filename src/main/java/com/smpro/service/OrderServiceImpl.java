@@ -225,13 +225,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/** 주문 상태 일괄 변경(배송중 처리) */
-	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo) {
-		return updateStatusForDelivery(seq, statusCode, loginSeq, deliSeq, deliNo, null);
+	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo,Integer[] boxCnt, Integer[] totalDeliCost) {
+		return updateStatusForDelivery(seq, statusCode, loginSeq, deliSeq, deliNo, boxCnt, totalDeliCost, null);
 	}
 
 	/** 주문 상태 일괄 변경 - 송장 일괄 업로드 */
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo, Integer sellerSeq) {
+	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo, Integer[] boxCnt, Integer[] totalDeliCost,Integer sellerSeq) {
 		int procCntTotal = 0;
 		if (seq != null) {
 			for (int i = 0; i < seq.length; i++) {
@@ -244,6 +244,9 @@ public class OrderServiceImpl implements OrderService {
 				if (deliSeq != null && deliSeq[i].intValue() > 0) {
 					vo.setDeliSeq(deliSeq[i]);
 					vo.setDeliNo(deliNo[i]);
+					vo.setBoxCnt(boxCnt[i]);
+					vo.setTotalDeliCost(totalDeliCost[i]);
+					System.out.println("### updateStatusForDelivery, seq:"+deliSeq[i]+", deliNo:"+deliNo[i]+", boxCnt:"+boxCnt[i]+", totalDeliCost:"+totalDeliCost[i]);
 				}
 
 				/* 1. 주문 변경 로그 VO 생성 */

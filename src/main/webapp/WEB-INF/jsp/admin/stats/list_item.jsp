@@ -63,6 +63,7 @@
 					</form>
 				</div>
 				<div class="box">
+					<c:set var="profit" value="0"/>
 					<!-- 소제목 -->
 					<div class="box-header with-border">
 						<!-- <h3 class="box-title"></h3> -->
@@ -70,8 +71,10 @@
 					</div>
 					<!-- 합계 -->
 					<div class="box-body">
+
 						<table id="sumlist" class="table table-bordered" ">
 							<colgroup>
+								<col style="width:150px"/>
 								<col style="width:150px"/>
 								<col style="width:150px"/>
 								<col style="width:150px"/>
@@ -81,28 +84,35 @@
 								<tr>
 									<th>구분</th>
 									<th>판매가합</th>
-									<th>공급가합</th>
-									<th>배송비합계</th>
+									<th>판매원가합</th>
+									<th>이익금</th>
+									<th>이익률(%)</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
 									<td class="text-center">정상주문</td>
 									<td class="text-right"><fmt:formatNumber value="${itemSum.sumPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${itemSum.supplyPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${itemSum.deliCost}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${itemSum.orgPrice}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${itemSum.sumPrice-itemSum.orgPrice}"/></td>
+									<c:set var="profit" value="${itemSum.sumPrice-itemSum.orgPrice}"/>
+									<td class="text-right"><fmt:formatNumber value="${profit/itemSum.sumPrice*100}"/></td>
 								</tr>
 								<tr>
 									<td class="text-center">취소주문</td>
 									<td class="text-right"><fmt:formatNumber value="${itemCancelSum.sumPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${itemCancelSum.supplyPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${itemCancelSum.deliCost}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${itemCancelSum.orgPrice}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${itemCancelSum.sumPrice-itemCancelSum.orgPrice}"/></td>
+									<c:set var="profit" value="${itemCancelSum.sumPrice-itemCancelSum.orgPrice}"/>
+									<td class="text-right"><fmt:formatNumber value="${profit/itemCancelSum.sumPrice*100}"/></td>
 								</tr>
 								<tr>
 									<td class="text-center">합계</td>
 									<td class="text-right"><fmt:formatNumber value="${itemSum.sumPrice-itemCancelSum.sumPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${itemSum.supplyPrice-itemCancelSum.supplyPrice}"/></td>
-									<td class="text-right"><fmt:formatNumber value="${itemSum.deliCost-itemCancelSum.deliCost}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${itemSum.orgPrice-itemCancelSum.orgPrice}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${(itemSum.sumPrice-itemCancelSum.sumPrice)-(itemSum.orgPrice-itemCancelSum.orgPrice)}"/></td>
+									<c:set var="profit" value="${(itemSum.sumPrice-itemCancelSum.sumPrice)-(itemSum.orgPrice-itemCancelSum.orgPrice)}"/>
+									<td class="text-right"><fmt:formatNumber value="${profit/(itemSum.sumPrice-itemCancelSum.sumPrice)*100}"/></td>
 								</tr>
 							</tbody>
 						</table>
@@ -111,11 +121,14 @@
 					<div class="box-body">
 						<table class="table table-bordered table-striped">
 							<colgroup>
-								<col style="width:15%;"/>
+								<col style="width:10%;"/>
 								<col style="width:*;"/>
 								<col style="width:*;"/>
-								<col style="width:15%;"/>
-								<col style="width:15%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
+								<col style="width:10%;"/>
 							</colgroup>
 							<thead>
 								<tr>
@@ -124,6 +137,9 @@
 									<th>규격</th>
 									<th>판매 수량</th>
 									<th>판매 금액</th>
+									<th>판매원가합</th>
+									<th>이익금</th>
+									<th>이익률(%)</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -137,6 +153,10 @@
 									</td>
 									<td class="text-right"><fmt:formatNumber value="${item.orderCnt}"/></td>
 									<td class="text-right"><fmt:formatNumber value="${item.sumPrice}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${item.orgPrice}"/></td>
+									<td class="text-right"><fmt:formatNumber value="${item.sumPrice-item.orgPrice}"/></td>
+									<c:set var="profit" value="${item.sumPrice-item.orgPrice}"/>
+									<td class="text-right"><fmt:formatNumber value="${profit/item.sumPrice*100}"/></td>
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">

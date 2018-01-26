@@ -140,7 +140,7 @@ public class OrderController {
 			return Const.ALERT_PAGE;
 		}
 
-		// 총금액을 구한다
+
 		int totalPrice = getTotalPrice(list, estimateFlag);
 
 		// 실결제금액
@@ -268,13 +268,21 @@ public class OrderController {
 		MallVo mallVo = (MallVo)request.getAttribute("mallVo");
 		ovo.setMallSeq(mallVo.getSeq());
 
+
 		// 주문할 상품 가져오기
 		List<ItemVo> list = getListItem(seqs, session, estimateFlag, model);
 		if(list == null) {
 			return Const.ALERT_PAGE;
 		}
 		// 주문 총 금액을 구한다
+		// 총금액을 구한다
+		for(int i = 0;i<list.size();i++){
+			System.out.println("### befor check totla deliCost :"+ list.get(i).getDeliCost());
+		}
 		int totalPrice = getTotalPrice(list, estimateFlag);
+		for(int i = 0;i<list.size();i++){
+			System.out.println("### after check totla deliCost :"+ list.get(i).getDeliCost());
+		}
 		// 실 결제 금액
 		int payPrice = totalPrice;
 
@@ -328,6 +336,7 @@ public class OrderController {
 		ovo.setTotalPrice(totalPrice);
 		ovo.setPayPrice(payPrice);
 		ovo.setMemberSeq(memberSeq);
+		ovo.setCheckBD("Y");
 
 		boolean flag=false;
 		//SMS 발송을 위해 암호화가 되기전의 휴대폰 번호를 저장한다.
@@ -815,27 +824,57 @@ public class OrderController {
 	/** 총금액을 구한다 */
 	private int getTotalPrice(List<ItemVo> list, String estimateFlag) {
 		int totalPrice = 0;
+		int subTotalPrice = 0;
+		int totalDeliCost = 0;
+		String sellerName = list.get(0).getSellerName();
+
 		for (int i = 0; i < list.size(); i++) {
-			if("Y".equals(estimateFlag)) {
+			if(!sellerName.equals(list.get(i).getSellerName())) {
+				sellerName = list.get(i).getSellerName();
+
+				if(subTotalPrice<Const.MIN_FREE_ORDER_PRICE){
+					totalDeliCost+=Const.DELI_COST;
+					list.get(i-1).setDeliCost(Const.DELI_COST);
+				}
+				else {
+					list.get(i-1).setDeliCost(0);
+				}
+
+				subTotalPrice = 0;
+			}
+			if ("Y".equals(estimateFlag)) {
 				totalPrice += list.get(i).getSellPrice();
 			} else {
 				totalPrice += list.get(i).getSellPrice() * list.get(i).getCount();
+				subTotalPrice += list.get(i).getSellPrice() * list.get(i).getCount();
 //				if (!("Y".equals(list.get(i).getFreeDeli()))) {
 //					totalPrice += list.get(i).getDeliCost();
 //				}
 			}
 		}
 
-		if(totalPrice<50000) {
-			for (int i = 0; i < list.size(); i++) {
-				if (!"Y".equals(estimateFlag)) {
-					if (!("Y".equals(list.get(i).getFreeDeli()))) {
-						totalPrice += list.get(i).getDeliCost();
-						break;
-					}
-				}
-			}
+//		if(totalPrice<50000) {
+//			for (int i = 0; i < list.size(); i++) {
+//				if (!"Y".equals(estimateFlag)) {
+//					if (!("Y".equals(list.get(i).getFreeDeli()))) {
+//						totalPrice += list.get(i).getDeliCost();
+//						break;
+//					}
+//				}
+//			}
+//		}
+
+
+
+		if(subTotalPrice<Const.MIN_FREE_ORDER_PRICE){
+			totalDeliCost+=Const.DELI_COST;
+			list.get(list.size()-1).setDeliCost(Const.DELI_COST);
 		}
+		else {
+			list.get(list.size()-1).setDeliCost(0);
+		}
+
+		totalPrice+=totalDeliCost;
 		return totalPrice;
 	}
 

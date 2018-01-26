@@ -64,17 +64,29 @@
 					<div class="box-body">
 						<table class="table table-bordered table-striped">
 							<colgroup>
+								<col style="width:10%;"/>
+								<col style="width:8%;"/>
+								<col style="width:8%;"/>
 								<col style="width:*;"/>
-								<col style="width:20%;"/>
-								<col style="width:30%;"/>
-								<col style="width:20%;"/>
-								<col style="width:20%;"/>
+								<col style="width:8%;"/>
+								<col style="width:8%;"/>
+								<col style="width:8%;"/>
+								<col style="width:8%;"/>
+								<col style="width:8%;"/>
+								<col style="width:8%;"/>
+								<col style="width:8%;"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<th>공급사명</th>
+									<th>판매몰</th>
 									<th>주문횟수</th>
 									<th>매출금액 <br/>(${vo.searchDate1} - ${vo.searchDate2})</th>
+									<th>배송비계</th>
+									<th>매출원가</th>
+									<th>실배송비</th>
+									<th>이익금</th>
+									<th>이익률(%)</th>
 									<th>수수료 %</th>
 									<th>수수료 금액</th>
 								</tr>
@@ -82,12 +94,58 @@
 							<tbody>
 
 							<c:forEach var="list" items="${lists}" varStatus="listStatus">
+								<c:set var="profit" value="${list.sumPrice-list.orgPrice+list.deliCost-list.totalDeliCost}" />
 									<tr>
-										<td class="text-center" >${list.sellerName}</td>
+										<td class="text-center"><strong class="text-primary">${list.sellerName}</strong></td>
+										<td>${list.mallName}</td>
 										<td class="text-center" >${list.orderCnt}</td>
 										<td class="text-right"><fmt:formatNumber value="${list.sumPrice}"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="${list.deliCost}"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="${list.orgPrice}"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="${list.totalDeliCost}"/>원</td>
+										<td><fmt:formatNumber value="${profit}"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="${profit*100/list.sumPrice}"/>%</td>
+										<td class="text-center"><fmt:formatNumber value="${list.masterCommission}"/>%</td>
+										<td class="text-right"><fmt:formatNumber value="${profit * list.masterCommission / 100}" pattern="#,###"/>원</td>
+									</tr>
+									<tr>
+										<td class="text-center" ></td>
+										<td>약국몰</td>
+										<td class="text-center" >0</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>%</td>
 										<td class="text-center"><fmt:formatNumber value="${list.masterCommission}"/>%</td>
 										<td class="text-right"><fmt:formatNumber value="${list.sumPrice * list.masterCommission / 100}" pattern="#,###"/>원</td>
+									</tr>
+									<tr>
+										<td class="text-center" ></td>
+										<td>B2B몰</td>
+										<td class="text-center" >0</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>원</td>
+										<td class="text-right"><fmt:formatNumber value="0"/>%</td>
+										<td class="text-center"><fmt:formatNumber value="${list.masterCommission}"/>%</td>
+										<td class="text-right"><fmt:formatNumber value="${list.sumPrice * list.masterCommission / 100}" pattern="#,###"/>원</td>
+									</tr>
+								<tr>
+									<td class="text-center" ></td>
+									<td><strong class="text-primary">계</strong></td>
+									<td class="text-center" ><strong class="text-primary">${list.orderCnt}</strong></td>
+									<td class="text-right"><strong class="text-primary"><fmt:formatNumber value="${list.sumPrice}"/>원</strong></td>
+									<td class="text-right"><strong class="text-primary"><fmt:formatNumber value="${list.deliCost}"/>원</strong></td>
+									<td class="text-right"><strong class="text-primary"><fmt:formatNumber value="${list.orgPrice}"/>원</strong></td>
+									<td class="text-right"><strong class="text-primary"><fmt:formatNumber value="${list.totalDeliCost}"/>원</strong></td>
+									<td class="text-right"><strong class="text-primary"><fmt:formatNumber value="${profit}"/>원</strong></td>
+									<td class="text-right"><strong class="text-primary"><fmt:formatNumber value="${profit*100/list.sumPrice}"/>%</strong></td>
+									<td class="text-center"><strong class="text-primary"><fmt:formatNumber value="${list.masterCommission}"/>%</strong></td>
+									<td class="text-right"><strong class="text-primary"><fmt:formatNumber value="${profit * list.masterCommission / 100}" pattern="#,###"/>원</strong></td>
 								</tr>
 							</c:forEach>
 

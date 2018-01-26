@@ -18,6 +18,10 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.getList(vo);
 	}
 
+	public List<BoardVo> getListAll(BoardVo vo) {
+		return boardDao.getListAll(vo);
+	}
+
 	public int getListCount(BoardVo vo) {
 		return boardDao.getListCount(vo);
 	}

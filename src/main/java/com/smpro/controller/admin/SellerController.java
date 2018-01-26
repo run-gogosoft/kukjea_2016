@@ -128,6 +128,9 @@ public class SellerController {
 				if(order.getSellerName().equals(seller.getName())){
 					seller.setTotalItemCount(order.getOrderCnt());
 					seller.setTotalSellPrice(order.getSumPrice());
+					seller.setDeliCost(order.getDeliCost());
+					seller.setTotalSellOrgPrice(order.getOrgPrice());
+					seller.setTotalDeliCost(order.getTotalDeliCost());
 					break;
 				}
 			}

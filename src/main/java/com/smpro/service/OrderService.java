@@ -56,10 +56,10 @@ public interface OrderService {
 	public int updateStatus(Integer[] seq, String statusCode, Integer loginSeq);
 
 	/** 주문 상태 일괄 변경(배송중 처리) */
-	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo);
+	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo, Integer[] boxCnt, Integer[] totalDeliCost);
 
 	/** 주문 상태 일괄 변경 - 송장 일괄 업로드 */
-	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo, Integer sellerSeq);
+	public int updateStatusForDelivery(Integer[] seq, String statusCode, Integer loginSeq, Integer[] deliSeq, String[] deliNo, Integer[] boxCnt, Integer[] totalDeliCost,Integer sellerSeq);
 
 	/** 송장정보 일괄 업로드 대상 주문 엑셀파일 포맷으로 생성 */
 	public HSSFWorkbook createDeliveryXlsFile(Integer sellerSeq) throws Exception;

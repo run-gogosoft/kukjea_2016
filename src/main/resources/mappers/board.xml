@@ -440,4 +440,29 @@
 			</if>
 		</if>
 	</select>
+
+
+
+	<select id="getListAll" parameterType="com.smpro.vo.BoardVo" resultType="com.smpro.vo.BoardVo">
+		SELECT
+			@rownum := @rownum + 1 AS rowNumber
+		  , b.seq
+		  , b.user_seq AS userSeq
+		  , b.group_code AS groupCode
+		  , b.cate_code AS categoryCode
+		  , b.answer
+		  , b.answer_flag AS answerFlag
+		  , b.view_cnt AS viewCount
+		  , m.name
+		  , m.nickname AS nickName
+		  , (SELECT name FROM sm_user WHERE type_code='M' AND seq=u.mall_seq) AS mallName
+		FROM
+		sm_board b LEFT OUTER JOIN
+		sm_user m ON(b.user_seq=m.seq) LEFT OUTER JOIN
+		sm_item i ON(b.integration_seq = i.seq) LEFT OUTER JOIN
+		sm_order_detail d ON(b.integration_seq = d.seq) LEFT OUTER JOIN
+		sm_member u ON(u.seq=m.seq), (SELECT @rownum := 0) r
+		ORDER BY b.seq DESC
+	</select>
+
 </mapper>

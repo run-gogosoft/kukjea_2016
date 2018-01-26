@@ -56,21 +56,36 @@
 								<div class="col-md-2 form-control-static">${vo.seq}</div>
 							</div>
 							<c:if test="${sessionScope.loginType eq 'A'}">
-							<div class="form-group">
-								<label class="col-md-2 control-label">판매 상태</label>
-								<div class="radio">
-									<c:choose>
-										<c:when test="${sessionScope.loginType eq 'A'}">
-											<label><input type="radio" name="statusCode" value="H" <c:if test="${vo.statusCode eq 'H' or vo.statusCode eq 'E'}">checked="checked"</c:if> /> 가승인</label>
-											<label><input type="radio" name="statusCode" value="Y" <c:if test="${vo.statusCode eq 'Y'}">checked="checked"</c:if> /> 판매중</label>
-										</c:when>
-										<c:when test="${sessionScope.loginType eq 'A' && vo.statusCode ne 'N'}">
-											<label><input type="radio" name="statusCode" value="${vo.statusCode}" checked="checked" style="display: none;"/></label>
-										</c:when>
-									</c:choose>
-									<label><input type="radio" name="statusCode" value="N" <c:if test="${vo.statusCode eq 'N'}">checked="checked"</c:if> /> 판매중지</label>
+
+								<div class="form-group">
+									<label class="col-md-2 control-label">관리코드</label>
+									<div class="col-md-3">
+										<input type="text" class="form-control" name="managedCode" value="${vo.managedCode}" maxlength="16" />
+									</div>
 								</div>
-							</div>
+								<div class="form-group">
+									<label class="col-md-2 control-label">바코드</label>
+									<div class="col-md-3">
+										<input type="text" class="form-control" name="barcode" value="${vo.barcode}" maxlength="16" />
+									</div>
+								</div>
+
+
+								<div class="form-group">
+									<label class="col-md-2 control-label">판매 상태</label>
+									<div class="radio">
+										<c:choose>
+											<c:when test="${sessionScope.loginType eq 'A'}">
+												<label><input type="radio" name="statusCode" value="H" <c:if test="${vo.statusCode eq 'H' or vo.statusCode eq 'E'}">checked="checked"</c:if> /> 가승인</label>
+												<label><input type="radio" name="statusCode" value="Y" <c:if test="${vo.statusCode eq 'Y'}">checked="checked"</c:if> /> 판매중</label>
+											</c:when>
+											<c:when test="${sessionScope.loginType eq 'A' && vo.statusCode ne 'N'}">
+												<label><input type="radio" name="statusCode" value="${vo.statusCode}" checked="checked" style="display: none;"/></label>
+											</c:when>
+										</c:choose>
+										<label><input type="radio" name="statusCode" value="N" <c:if test="${vo.statusCode eq 'N'}">checked="checked"</c:if> /> 판매중지</label>
+									</div>
+								</div>
 							</c:if>
 							<c:if test="${sessionScope.loginType eq 'S'}">
 								<input type="hidden" name="statusCode" value="${vo.statusCode}" />

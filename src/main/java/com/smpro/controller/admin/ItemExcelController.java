@@ -110,11 +110,11 @@ public class ItemExcelController {
 		/** 엑셀 컬럼 개수 */
 		String loginType = (String)session.getAttribute("loginType");
 
-		int LIST_SIZE = 18;
+		int LIST_SIZE = 20;
 		int OPTION_SIZE = 0;
 		if(loginType.equals("S")) {
 			//공급사인경우
-			OPTION_SIZE = 8;
+			OPTION_SIZE = 9;
 		}
 		
 
@@ -367,17 +367,18 @@ public class ItemExcelController {
 				List<ItemOptionVo> optionVoList = itemOptionService.getList(optionList.get(i).getItemSeq());
 				Integer optionSeq;
 				ItemOptionVo ovo;
-
+				System.out.println(">>> check optionVoList ... optionVoList :" + optionVoList);
 //				if(itemOptionService.getSeq(optionList.get(i).getItemSeq()) <=0){
 
 				if (optionVoList == null || optionVoList.size() <= 0) {
 					//해당 아이템의 가격이 없는 경우. 추가
 					ovo = new ItemOptionVo();
-
+					System.out.println(">>> optionVoList == null..add option list");
 					ovo.setOptionName(optionList.get(i).getOptionName());
 					ovo.setShowFlag("Y");
 					ovo.setItemSeq(optionList.get(i).getItemSeq());
 					optionSeq = itemOptionService.getSeq(optionList.get(i).getItemSeq());
+					System.out.println(">>> optionSeq :"+optionSeq);
 					if(optionSeq<=0) {
 						if (!itemOptionService.insertVo(ovo)) {
 							model.addAttribute("message", "옵션 데이터 삽입 도중 오류가 발생했습니다[4]");
@@ -393,6 +394,7 @@ public class ItemExcelController {
 					//optionvalue추가
 					ovo.setOptionSeq(optionSeq);
 					ovo.setValueName((String) session.getAttribute("loginName"));
+					ovo.setOriginalPrice(optionList.get(i).getOriginalPrice());
 					ovo.setOptionPrice(optionList.get(i).getOptionPrice());
 					ovo.setSalePrice(optionList.get(i).getSalePrice());
 					ovo.setSalePeriod(optionList.get(i).getSalePeriod());
@@ -401,7 +403,7 @@ public class ItemExcelController {
 					ovo.setFreeDeli(optionList.get(i).getFreeDeli());
 					ovo.setEventAdded(optionList.get(i).getEventAdded());
 					ovo.setSellerSeq((Integer) session.getAttribute("loginSeq"));
-
+					System.out.println(">>> call insertValueVo");
 					if (!itemOptionService.insertValueVo(ovo)) {
 						model.addAttribute("message", "옵션데이터 삽입 도중 오류가 발생했습니다[5]");
 						return Const.ALERT_PAGE;
@@ -423,6 +425,7 @@ public class ItemExcelController {
 						if (ovo.getSellerSeq() == 0) continue;
 						if (ovo.getSellerSeq() == ((Integer) session.getAttribute("loginSeq"))) {
 							//update
+							ovo.setOriginalPrice(optionList.get(i).getOriginalPrice());
 							ovo.setOptionPrice(optionList.get(i).getOptionPrice());
 							ovo.setSalePrice(optionList.get(i).getSalePrice());
 							ovo.setSalePeriod(optionList.get(i).getSalePeriod());
@@ -445,6 +448,7 @@ public class ItemExcelController {
 						} else if (ov == optionVoList.size() - 1) {
 							//추가
 							ovo.setValueName((String) session.getAttribute("loginName"));
+							ovo.setOriginalPrice(optionList.get(i).getOriginalPrice());
 							ovo.setOptionPrice(optionList.get(i).getOptionPrice());
 							ovo.setSalePrice(optionList.get(i).getSalePrice());
 							ovo.setSalePeriod(optionList.get(i).getSalePeriod());
@@ -541,7 +545,7 @@ public class ItemExcelController {
 			return errorList;
 		}
 
-		int index = 1;//index 0 = item_seq
+		int index = 3;//index 0 = item_seq
 		// 1대분류 코드(필수)
 		Map map = new HashMap();
 
@@ -905,6 +909,9 @@ public class ItemExcelController {
 		System.out.println("setOptionName:"+list.get(index));
 		vo.setOptionName(String.valueOf(list.get(index++)));
 
+		if("".equals(list.get(index))) return null;
+		System.out.println("setOriginalPrice:"+list.get(index));
+		vo.setOriginalPrice(Integer.valueOf("" +list.get(index++)));
 
 		if("".equals(list.get(index))) return null;
 		vo.setOptionPrice(Integer.valueOf("" +list.get(index++)));
@@ -935,15 +942,31 @@ public class ItemExcelController {
 
 		ItemVo vo = new ItemVo();
 		int index = 0;
-		// 1대분류 코드
-		Map map = new HashMap();
 
+
+		//item_seq
 		try {
 			vo.setSeq((Integer.valueOf("" + list.get(index++))).intValue());//item seq
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 
+		//관리코드 , 바코드
+		System.out.println("## 관리코드 String.valueOf(list.get(index)):"+String.valueOf(list.get(index)));
+		if(!StringUtil.isBlank(String.valueOf(list.get(index)))){
+			vo.setManagedCode(""+list.get(index++));
+		} else {
+			index++;
+		}
+		System.out.println("## 바코드 String.valueOf(list.get(index)):"+String.valueOf(list.get(index)));
+		if(!StringUtil.isBlank(String.valueOf(list.get(index)))){
+			vo.setBarcode(""+list.get(index++));
+		} else {
+			index++;
+		}
+
+		Map map = new HashMap();
+		// 1대분류 코드
 		map.put("seq", 0);
 		map.put("name", String.valueOf(list.get(index++)));
 		map.put("mallId",mallSeq);

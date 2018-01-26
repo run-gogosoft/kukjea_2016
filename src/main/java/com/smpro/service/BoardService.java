@@ -10,6 +10,8 @@ import java.util.List;
 public interface BoardService {
 	public List<BoardVo> getList(BoardVo vo);
 
+	public List<BoardVo> getListAll(BoardVo vo);
+
 	public int getListCount(BoardVo vo);
 
 	public int createSeq(BoardVo vo);

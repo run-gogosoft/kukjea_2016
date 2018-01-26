@@ -136,27 +136,44 @@
 							<%--</colgroup>--%>
 							<thead>
 								<tr>
-									<th>No.</th>
+									<%--<th>No.</th>--%>
+										<th>아이디</th>
+										<th>상호명</th>
 									<c:forEach var="mall" items="${mallList}" begin="0" step="1">
 										<th>${mall.name}<br>운영권한</th>
 									</c:forEach>
-									<th>아이디</th>
-									<th>상호명</th>
+
 									<th>수수료(%)</th>
 									<th>등록 상품수<br/>(판매중/전체)</th>
 									<th>상태</th>
-									<th>대표전화</th>
+									<%--<th>대표전화</th>--%>
 									<th>담당자<br/>연락처</th>
 									<th>이메일</th>
 									<th>판매건수</th>
 									<th>판매금액</th>
+									<th>원가계</th>
+									<th>이익률</th>
+									<th>배송비계</th>
+									<th>실배송비계</th>
 									<th>등록일자</th>
 								</tr>
 							</thead>
 							<tbody>
 							<c:forEach var="item" items="${list}">
 								<tr>
-									<td class="text-center">${item.seq}</td>
+									<%--<td class="text-center">${item.seq}</td>--%>
+										<td>
+											<c:choose>
+												<c:when test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 4)}">
+													<a href="/admin/seller/mod/${item.seq}">${item.id}</a>
+													<c:if test="${item.isFile eq 'Y'}"><span class="glyphicon glyphicon-floppy-disk" style="margin-left:5px" aria-hidden="true"></span></c:if>
+												</c:when>
+												<c:otherwise>
+													${item.id}<c:if test="${item.isFile eq 'Y'}"><span class="glyphicon glyphicon-floppy-disk" style="margin-left:5px" aria-hidden="true"></span></c:if>
+												</c:otherwise>
+											</c:choose>
+										</td>
+										<td>${item.name}</td>
 									<c:forEach var="access" items="${item.mallAccessVos}">
 										<c:if test="${access.accessStatus eq 'X'}"><td class="text-center"><span class="text-warning">미요청</span></td></c:if>
 										<c:if test="${access.accessStatus eq 'A'}"><td class="text-center"><span class="text-success">이용</span></td></c:if>
@@ -164,26 +181,27 @@
 										<c:if test="${access.accessStatus eq 'R'}"><td class="text-center"><span class="text-danger">요청</span></td></c:if>
 										<c:if test="${access.accessStatus eq 'H'}"><td class="text-center"><span class="text-warning">보류</span></td></c:if>
 									</c:forEach>
-									<td>
-										<c:choose>
-											<c:when test="${sessionScope.loginType eq 'A' and (sessionScope.gradeCode eq 0 or sessionScope.gradeCode eq 1 or sessionScope.gradeCode eq 2 or sessionScope.gradeCode eq 4)}">
-												<a href="/admin/seller/mod/${item.seq}">${item.id}</a>
-												<c:if test="${item.isFile eq 'Y'}"><span class="glyphicon glyphicon-floppy-disk" style="margin-left:5px" aria-hidden="true"></span></c:if>
-											</c:when>
-											<c:otherwise>
-												${item.id}<c:if test="${item.isFile eq 'Y'}"><span class="glyphicon glyphicon-floppy-disk" style="margin-left:5px" aria-hidden="true"></span></c:if>
-											</c:otherwise>
-										</c:choose>
-									</td>
-									<td>${item.name}</td>
+
 									<td class="text-center">${item.commission}%</td>
 									<td class="text-center">${item.sellItemCount}&nbsp;/&nbsp;${item.totalItemCount}</td>
 									<td class="text-center">${item.statusText}</td>
-									<td class="text-center">${item.tel}</td>
+									<%--<td class="text-center">${item.tel}</td>--%>
 									<td class="text-center">${item.salesTel}</td>
 									<td class="text-center">${item.salesEmail}</td>
 									<td class="text-center"><fmt:formatNumber value="${item.totalItemCount}"/>건</td>
 									<td class="text-center"><fmt:formatNumber value="${item.totalSellPrice}"/>원</td>
+									<td class="text-center"><fmt:formatNumber value="${item.totalSellOrgPrice}"/>원</td>
+									<c:set var="profit" value="${item.totalSellPrice-item.totalSellOrgPrice+item.deliCost-item.totalDeliCost}" />
+									<c:choose>
+										<c:when test="${profit>0}">
+											<td class="text-center"><fmt:formatNumber value="${profit*100/item.totalSellPrice}"/>%</td>
+										</c:when>
+										<c:otherwise>
+											<td class="text-center"><fmt:formatNumber value="${0}"/>%</td>
+										</c:otherwise>
+									</c:choose>
+									<td class="text-center"><fmt:formatNumber value="${item.deliCost}"/>원</td>
+									<td class="text-center"><fmt:formatNumber value="${item.totalDeliCost}"/>원</td>
 									<td class="text-center">${fn:substring(item.regDate,0,10)}</td>
 								</tr>
 							</c:forEach>

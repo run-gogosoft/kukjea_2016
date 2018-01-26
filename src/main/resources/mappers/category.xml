@@ -145,6 +145,7 @@
 			FROM
 				sm_item_category c
 			WHERE show_flag='Y'
+					AND mall_id=#{mallId}
 			<choose>
 				<when test="cateLv1Seq == null and cateLv2Seq == null and cateLv3Seq == null">
 					AND depth='1'

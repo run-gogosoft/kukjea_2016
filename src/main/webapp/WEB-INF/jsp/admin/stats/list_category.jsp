@@ -116,42 +116,65 @@
 													
 							<c:forEach var="item" items="${list}">
 								<c:set var="sumRow" value="0"/>
+								<c:set var="orgSumRow" value="0"/>
 								<tr>
 									<td class="text-center">
 										<a href="/admin/stats/list/category/detail?payDate=${item.payDate}">${item.payDate}</a>
 									</td>
 									<c:forEach items="${lv1CategoryList}" varStatus="status">
 										<c:set var="propName" value="sumPrice${status.index+1}"/>
+										<c:set var="orgPropName" value="orgSumPrice${status.index+1}"/>
 										<td class="text-right">
+											<%--${propName}</br>--%>
+											<%--${orgPropName}</br>--%>
 											<fmt:formatNumber value="${item[propName]}"/>
+											<div class="text-primary"><fmt:formatNumber value="${item[orgPropName]}"/></div>
 											<c:set var="sumRow" value="${sumRow + item[propName]}"/>
+											<c:set var="orgSumRow" value="${orgSumRow + item[orgPropName]}"/>
 										</td>
 									</c:forEach>
 									<td class="text-right">
 										<fmt:formatNumber value="${item.sumNull}"/>
+										<div class="text-primary"><fmt:formatNumber value="${item.sumNull}"/></div>
 										<c:set var="sumRow" value="${sumRow + item.sumNull}"/>
+										<c:set var="orgSumRow" value="${orgSumRow + item.sumNull}"/>
 									</td>
-									<td class="text-right"><fmt:formatNumber value="${sumRow}"/></td>
+									<td class="text-right">
+										<fmt:formatNumber value="${sumRow}"/>
+										<div class="text-primary"><fmt:formatNumber value="${orgSumRow}"/>
+									</td>
 								</tr>
 							</c:forEach>
 							<c:if test="${ fn:length(list)==0 }">
 								<tr><td class="text-center" colspan="${fn:length(lv1CategoryList)+2}">조회된 데이터가 없습니다.</td></tr>
 							</c:if>
 							<c:set var="sumRow" value="0"/>
+							<c:set var="orgSumRow" value="0"/>
 								<tr>
 									<td class="text-center"><strong>합계</strong></td>
 									<c:forEach items="${lv1CategoryList}" varStatus="status">
 										<c:set var="propName" value="sumPrice${status.index+1}"/>
+										<c:set var="orgPropName" value="orgSumPrice${status.index+1}"/>
 									<td class="text-right">
-										<span class="text-primary"><fmt:formatNumber value="${data[propName]}"/></span>
+										<%--<span class="text-primary">--%>
+											<fmt:formatNumber value="${data[propName]}"/></br>
+											<div class="text-primary"><fmt:formatNumber value="${data[orgPropName]}"/></div>
+										<%--</span>--%>
 										<c:set var="sumRow" value="${sumRow + data[propName]}"/>
+										<c:set var="orgSumRow" value="${orgSumRow + data[orgPropName]}"/>
 									</td>
 									</c:forEach>
 									<td class="text-right">
 										<span class="text-primary"><fmt:formatNumber value="${data.sumNull}"/></span>
 										<c:set var="sumRow" value="${sumRow + data.sumNull}"/>
+										<c:set var="orgSumRow" value="${orgSumRow + data.sumNull}"/>
 									</td>
-									<td class="text-right"><span class="text-primary"><fmt:formatNumber value="${sumRow}"/></span></td>
+									<td class="text-right">
+										<%--<span class="text-primary">--%>
+										<fmt:formatNumber value="${sumRow}"/></br>
+										<div class="text-primary"><fmt:formatNumber value="${orgSumRow}"/></div>
+										<%--</span>--%>
+									</td>
 								</tr>
 							</tbody>
 						</table>

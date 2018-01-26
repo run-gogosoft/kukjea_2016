@@ -141,6 +141,7 @@ public class LvController {
 		vo.setMemberTypeCode(memberTypeCode);
 		vo.setCateLv2Seq(seq);
 		vo.setStatusCode("Y");
+		vo.setMallId((Integer)session.getAttribute("mallSeq"));
 		if(request.getParameter("rowCount") == null || "".equals(request.getParameter("rowCount").trim())) {
 			vo.setRowCount(vo.getRowCount());
 		}

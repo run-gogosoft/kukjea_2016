@@ -49,6 +49,7 @@ public class Const {
 
 	//배송료
 	public static final int DELI_COST = 3300;
+	public static final int MIN_FREE_ORDER_PRICE = 50000;
 
 	/* 도메인 */
 	public static final String DOMAIN;
